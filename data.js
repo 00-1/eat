@@ -2,268 +2,790 @@
  * Food effects dataset.
  *
  * Each entry reflects the GENERAL direction of association observed when a food
- * is regularly ADDED to a typical free-living diet, based on prospective cohort
- * studies and meta-analyses (e.g. Nurses' Health Study, Health Professionals
- * Follow-up Study, EPIC, PURE, and pooled analyses). These are population-level
- * ASSOCIATIONS for outcomes like all-cause mortality, cardiovascular disease,
- * and type 2 diabetes — not causal guarantees or individual medical advice.
+ * is regularly ADDED to a typical free-living diet, primarily from prospective
+ * cohort studies and their meta-analyses, cross-checked against any randomized
+ * trial and mechanistic evidence.
  *
- * effect:      "positive" | "negative" | "neutral"
- * confidence:  "strong" | "moderate" | "limited"
- *   strong   = consistent across many large cohorts + meta-analyses
- *   moderate = generally consistent but with notable heterogeneity/debate
- *   limited  = fewer studies, mixed results, or short follow-up
+ * These are population-level ASSOCIATIONS for outcomes like all-cause mortality,
+ * cardiovascular disease, and type 2 diabetes — not causal guarantees and not
+ * individual medical advice. See METHODOLOGY.md (and the "Approach" tab in the
+ * app) for exactly how each label and certainty rating is derived, and how to
+ * challenge a conclusion.
+ *
+ * Schema per food:
+ *   id          stable slug (used for linking / challenges)
+ *   name        display name
+ *   category    food group
+ *   effect      "positive" | "negative" | "neutral"
+ *   certainty   "convincing" | "probable" | "limited" | "inconclusive"
+ *                 (World Cancer Research Fund-style tiers; see methodology)
+ *   outcomes    health outcomes the verdict is mainly based on
+ *   summary     one-line plain-language takeaway
+ *   rationale   how the evidence maps to the label under our methodology
+ *   considerations  the key methodological caveats for THIS food
+ *                   (substitution, confounding, doseResponse — any may be omitted)
+ *   studies     the actual evidence the verdict rests on. Each:
+ *                 citation  first author, year, journal
+ *                 type      study design
+ *                 finding   faithful one-line result (with effect size where known)
+ *                 search    PubMed search string (app builds a link from it)
+ *                 url       optional explicit link (overrides PubMed search)
+ *   lastReviewed  ISO date this entry was last assessed
+ *   revisions     log of changes to the verdict over time
  */
 
+const METHODOLOGY_VERSION = "0.1";
+
+// Where "Challenge this conclusion" buttons send people. Update to the real repo.
+const REPO_SLUG = "00-1/eat";
+
 const FOODS = [
-  // ---------- POSITIVE ----------
+  // ============================ POSITIVE ============================
   {
+    id: "tree-nuts",
     name: "Tree nuts (almonds, walnuts)",
     category: "Nuts & seeds",
     effect: "positive",
-    confidence: "strong",
-    note: "Eating a handful most days is linked to roughly 20% lower all-cause and cardiovascular mortality across large cohorts and pooled analyses, despite being calorie-dense. Associations hold after adjusting for overall diet quality.",
+    certainty: "probable",
+    outcomes: ["All-cause mortality", "Cardiovascular disease"],
+    summary: "A daily handful is linked to meaningfully lower mortality and heart disease risk.",
+    rationale:
+      "Large dose-response meta-analyses of cohorts agree on direction and magnitude, and a major dietary trial (PREDIMED) found fewer cardiovascular events on a nut-supplemented diet — so causal support is stronger than for most foods. Not graded 'convincing' because the trial tested a whole dietary pattern, not nuts alone.",
+    considerations: {
+      substitution: "Benefit is clearest when nuts replace refined snacks; they are calorie-dense, so 'added on top' may differ.",
+      confounding: "Nut eaters tend to be more health-conscious; cohorts adjust for this but residual confounding remains.",
+      doseResponse: "Risk reduction flattens above ~15–28 g/day — more is not proportionally better.",
+    },
+    studies: [
+      {
+        citation: "Aune D, et al. BMC Medicine. 2016.",
+        type: "Dose-response meta-analysis of 20+ cohorts (~819,000 participants)",
+        finding: "28 g/day of nuts associated with ~22% lower all-cause mortality and ~21% lower CVD mortality.",
+        search: "Aune nut consumption cardiovascular all-cause mortality 2016 BMC Medicine",
+      },
+      {
+        citation: "Bao Y, et al. New England Journal of Medicine. 2013.",
+        type: "Two prospective cohorts (Nurses' Health Study + HPFS, ~119,000)",
+        finding: "Daily nut consumers had ~20% lower mortality over up to 30 years of follow-up.",
+        search: "Bao nut consumption total cause-specific mortality 2013 NEJM",
+      },
+      {
+        citation: "Estruch R, et al. New England Journal of Medicine. 2018 (PREDIMED).",
+        type: "Randomized controlled trial (~7,400)",
+        finding: "Mediterranean diet supplemented with mixed nuts cut major cardiovascular events vs a control diet.",
+        search: "Estruch PREDIMED Mediterranean diet nuts cardiovascular 2018 NEJM",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "legumes",
     name: "Legumes (beans, lentils, chickpeas)",
     category: "Legumes",
     effect: "positive",
-    confidence: "strong",
-    note: "Regular intake is associated with lower risk of heart disease and type 2 diabetes, and was among the strongest dietary predictors of longevity in cross-cultural cohort work. High in fiber and resistant starch.",
+    certainty: "probable",
+    outcomes: ["Heart disease", "Type 2 diabetes", "Longevity"],
+    summary: "Regular beans/lentils track with lower heart disease and diabetes risk.",
+    rationale:
+      "Consistent inverse associations across cohorts and cuisines, biological plausibility (fiber, low glycemic load), and convergence with trial data on intermediate markers (LDL, glycemic control) support a positive label at 'probable' certainty.",
+    considerations: {
+      substitution: "Strongest signal when legumes replace red/processed meat or refined grains.",
+      confounding: "Often part of broader plant-forward patterns; hard to fully isolate.",
+    },
+    studies: [
+      {
+        citation: "Darmadi-Blackberry I, et al. Asia Pacific J Clinical Nutrition. 2004.",
+        type: "Cross-cultural prospective cohort of older adults",
+        finding: "Legume intake was the single strongest dietary predictor of survival (~7–8% lower mortality per 20 g/day).",
+        search: "Darmadi-Blackberry legumes most important dietary predictor survival older 2004",
+      },
+      {
+        citation: "Afshin A, et al. American J Clinical Nutrition. 2014.",
+        type: "Meta-analysis of cohorts",
+        finding: "4 servings/week of legumes associated with ~14% lower risk of coronary heart disease.",
+        search: "Afshin nuts legumes coronary heart disease meta-analysis 2014",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "whole-grains",
     name: "Whole grains (oats, barley, whole wheat)",
     category: "Grains",
     effect: "positive",
-    confidence: "strong",
-    note: "Dose-response cohort data show each additional serving is linked to lower mortality, heart disease, and diabetes risk — largely when displacing refined grains. Benefit is much weaker for refined-grain products.",
+    certainty: "convincing",
+    outcomes: ["All-cause mortality", "Cardiovascular disease", "Type 2 diabetes"],
+    summary: "Each extra serving of whole grains tracks with lower mortality and disease risk.",
+    rationale:
+      "One of the best-supported food groups: large dose-response meta-analyses, a clear biological mechanism via fiber, and supportive trial evidence on risk markers. Direction is consistent enough across outcomes to grade 'convincing' — provided whole grains displace refined grains.",
+    considerations: {
+      substitution: "Benefit is largely relative to replacing refined grains; 'whole grain' food products vary widely in quality.",
+      doseResponse: "Roughly linear up to ~90 g/day, then plateaus.",
+    },
+    studies: [
+      {
+        citation: "Aune D, et al. BMJ. 2016.",
+        type: "Dose-response meta-analysis of cohorts (~700,000+)",
+        finding: "90 g/day whole grains associated with ~17% lower all-cause mortality, lower CVD, cancer, and diabetes.",
+        search: "Aune whole grain consumption cardiovascular cancer mortality BMJ 2016",
+      },
+      {
+        citation: "Reynolds A, et al. Lancet. 2019.",
+        type: "Series of systematic reviews & meta-analyses (cohorts + RCTs)",
+        finding: "Higher whole-grain and fiber intake linked to 15–30% lower mortality and incidence of several chronic diseases.",
+        search: "Reynolds carbohydrate quality fiber whole grain Lancet 2019",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "fiber",
+    name: "Dietary fiber (from whole foods)",
+    category: "Other",
+    effect: "positive",
+    certainty: "convincing",
+    outcomes: ["All-cause mortality", "Cardiovascular disease", "Type 2 diabetes", "Colorectal cancer"],
+    summary: "Higher fiber from whole foods is one of the most robust dietary predictors of better outcomes.",
+    rationale:
+      "Convergent evidence from large cohorts AND randomized trials (on blood pressure, cholesterol, glycemia, weight) gives fiber unusually strong causal support for nutrition. Whole-food fiber outperforms isolated supplements.",
+    considerations: {
+      substitution: "High-fiber whole foods usually displace refined, energy-dense foods — part of the benefit.",
+      doseResponse: "Risk keeps falling up to ~25–29 g/day and beyond.",
+    },
+    studies: [
+      {
+        citation: "Reynolds A, et al. Lancet. 2019.",
+        type: "Systematic reviews & meta-analyses of cohorts + 58 RCTs",
+        finding: "25–29 g/day fiber associated with 15–30% lower all-cause and CVD mortality; RCTs confirm lower weight, BP, cholesterol.",
+        search: "Reynolds dietary fiber Lancet 2019 mortality randomised",
+      },
+      {
+        citation: "Threapleton DE, et al. BMJ. 2013.",
+        type: "Dose-response meta-analysis of cohorts",
+        finding: "7 g/day more fiber associated with ~9% lower coronary heart disease risk.",
+        search: "Threapleton dietary fibre coronary heart disease meta-analysis BMJ 2013",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
+  },
+  {
+    id: "leafy-greens",
     name: "Leafy green vegetables",
     category: "Vegetables",
     effect: "positive",
-    confidence: "strong",
-    note: "Higher intake tracks with lower cardiovascular risk and slower cognitive decline in cohorts. Among the most consistently beneficial food groups, though some effect reflects healthier overall lifestyles.",
+    certainty: "probable",
+    outcomes: ["Cardiovascular disease", "Cognitive decline"],
+    summary: "Higher intake tracks with lower cardiovascular risk and slower cognitive decline.",
+    rationale:
+      "Among the most consistently beneficial subgroups within fruit-and-vegetable research, with plausible mechanisms (nitrate, folate, potassium, fiber). Graded 'probable' rather than 'convincing' because healthy-user confounding is substantial and RCT outcome data are thin.",
+    considerations: {
+      confounding: "Greens strongly mark an overall healthy lifestyle; residual confounding likely inflates effect sizes.",
+    },
+    studies: [
+      {
+        citation: "Aune D, et al. International J Epidemiology. 2017.",
+        type: "Dose-response meta-analysis of cohorts (~2 million participants)",
+        finding: "Higher fruit & vegetable intake (esp. leafy greens) linked to lower CVD and all-cause mortality; benefit up to ~800 g/day.",
+        search: "Aune fruit vegetable intake cardiovascular cancer mortality 2017",
+      },
+      {
+        citation: "Morris MC, et al. Neurology. 2018.",
+        type: "Prospective cohort (Memory and Aging Project)",
+        finding: "~1 serving/day of leafy greens associated with slower cognitive decline (≈11 years younger in age).",
+        search: "Morris green leafy vegetables cognitive decline Neurology 2018",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
-    name: "Cruciferous vegetables (broccoli, cabbage)",
-    category: "Vegetables",
-    effect: "positive",
-    confidence: "moderate",
-    note: "Associated with modestly lower cardiovascular and total mortality. Some cohort and mechanistic evidence suggests benefit for certain cancers, but causal certainty is limited.",
-  },
-  {
-    name: "Berries",
+    id: "whole-fruit",
+    name: "Whole fruit (apples, citrus, berries)",
     category: "Fruit",
     effect: "positive",
-    confidence: "moderate",
-    note: "Anthocyanin-rich berries are linked to lower risk of heart attack and better cardiometabolic markers in cohorts. Whole fruit, not juice, drives the signal.",
+    certainty: "probable",
+    outcomes: ["All-cause mortality", "Type 2 diabetes"],
+    summary: "Whole fruit tracks with lower mortality and diabetes — but fruit juice does not.",
+    rationale:
+      "Consistent inverse associations for whole fruit across very large cohorts, with a clear contrast against fruit juice that argues against pure confounding. Graded 'probable'.",
+    considerations: {
+      substitution: "Whole fruit vs juice matters: juice shows neutral-to-harmful associations for diabetes.",
+      doseResponse: "Benefit plateaus around 2–3 servings/day.",
+    },
+    studies: [
+      {
+        citation: "Muraki I, et al. BMJ. 2013.",
+        type: "Three large US cohorts (~187,000)",
+        finding: "Whole fruit (esp. blueberries, grapes, apples) lowered type 2 diabetes risk; fruit juice raised it.",
+        search: "Muraki fruit consumption type 2 diabetes juice BMJ 2013",
+      },
+      {
+        citation: "Wang X, et al. BMJ. 2014.",
+        type: "Dose-response meta-analysis of cohorts",
+        finding: "Each serving/day of fruit associated with ~5–6% lower all-cause mortality.",
+        search: "Wang fruit vegetable consumption mortality dose-response BMJ 2014",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
-    name: "Whole fruit (apples, citrus, etc.)",
-    category: "Fruit",
-    effect: "positive",
-    confidence: "strong",
-    note: "Higher whole-fruit intake is consistently associated with lower mortality and diabetes risk. Fruit JUICE shows neutral-to-negative associations, so the form matters.",
-  },
-  {
+    id: "fatty-fish",
     name: "Fatty fish (salmon, sardines, mackerel)",
     category: "Seafood",
     effect: "positive",
-    confidence: "moderate",
-    note: "One to two servings per week is associated with lower cardiac death across cohorts. The signal is strongest for oily fish; benefit beyond a couple servings flattens out.",
+    certainty: "probable",
+    outcomes: ["Cardiac death", "Cardiovascular disease"],
+    summary: "One to two servings a week is linked to lower cardiac death.",
+    rationale:
+      "Cohorts consistently show lower coronary death with modest oily-fish intake, with plausible omega-3 mechanisms. Pure omega-3 supplement RCTs are mixed, so we credit the food (not capsules) and hold certainty at 'probable'.",
+    considerations: {
+      substitution: "Benefit partly reflects fish replacing red/processed meat.",
+      doseResponse: "Most of the benefit appears by ~250 mg/day omega-3 (≈1–2 servings/week); little added benefit beyond.",
+    },
+    studies: [
+      {
+        citation: "Mozaffarian D, Rimm EB. JAMA. 2006.",
+        type: "Pooled cohort evidence review",
+        finding: "Modest fish intake (~1–2 servings/week) associated with ~36% lower coronary heart disease death.",
+        search: "Mozaffarian Rimm fish intake contaminants human health JAMA 2006",
+      },
+      {
+        citation: "Zhang B, et al. (fish & mortality meta-analyses).",
+        type: "Meta-analyses of prospective cohorts",
+        finding: "Higher fish consumption associated with lower CVD and all-cause mortality in a dose-dependent way.",
+        search: "fish consumption all-cause cardiovascular mortality meta-analysis cohort",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "olive-oil",
     name: "Extra-virgin olive oil",
     category: "Fats & oils",
     effect: "positive",
-    confidence: "moderate",
-    note: "A core component of Mediterranean-style diets; higher intake is linked to lower cardiovascular and total mortality in cohorts, especially when replacing butter or margarine.",
+    certainty: "probable",
+    outcomes: ["Cardiovascular disease", "All-cause mortality"],
+    summary: "Higher intake, especially replacing butter/margarine, tracks with lower CVD and mortality.",
+    rationale:
+      "Backed by both large US cohorts and the PREDIMED trial (where extra-virgin olive oil was a core arm), giving better-than-usual causal support. Graded 'probable' since the trial tested a pattern, not the oil in isolation.",
+    considerations: {
+      substitution: "Clearest benefit when it replaces butter, margarine, or other animal fats.",
+    },
+    studies: [
+      {
+        citation: "Guasch-Ferré M, et al. J American College of Cardiology. 2022.",
+        type: "Two US cohorts (~92,000, 28-yr follow-up)",
+        finding: ">7 g/day olive oil associated with ~19% lower CVD mortality and lower total mortality.",
+        search: "Guasch-Ferre olive oil consumption cardiovascular mortality JACC 2022",
+      },
+      {
+        citation: "Estruch R, et al. NEJM. 2018 (PREDIMED).",
+        type: "Randomized controlled trial",
+        finding: "Mediterranean diet with extra-virgin olive oil reduced major cardiovascular events vs control.",
+        search: "Estruch PREDIMED olive oil cardiovascular 2018 NEJM",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "yogurt",
     name: "Yogurt & fermented dairy",
     category: "Dairy",
     effect: "positive",
-    confidence: "moderate",
-    note: "Regular yogurt intake is associated with modestly lower type 2 diabetes risk and better weight trajectories in cohorts — among the more favorable dairy forms.",
+    certainty: "limited",
+    outcomes: ["Type 2 diabetes"],
+    summary: "Regular yogurt is linked to modestly lower type 2 diabetes risk.",
+    rationale:
+      "Fairly consistent inverse association with diabetes across cohorts, but no strong trial evidence on hard outcomes and meaningful confounding — so 'limited (suggestive)'.",
+    considerations: {
+      substitution: "Often replaces less healthy snacks; choosing unsweetened matters.",
+      confounding: "Yogurt eaters tend to have healthier overall diets.",
+    },
+    studies: [
+      {
+        citation: "Chen M, et al. BMC Medicine. 2014.",
+        type: "Three US cohorts + meta-analysis",
+        finding: "One serving/day of yogurt associated with ~18% lower type 2 diabetes risk.",
+        search: "Chen yogurt dairy type 2 diabetes BMC Medicine 2014",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "coffee",
     name: "Coffee",
     category: "Beverages",
     effect: "positive",
-    confidence: "moderate",
-    note: "Habitual coffee (3–4 cups/day) is associated with lower all-cause mortality, type 2 diabetes, and liver disease across very large cohorts. Holds for caffeinated and decaf; loaded sugary versions are different.",
+    certainty: "probable",
+    outcomes: ["All-cause mortality", "Type 2 diabetes", "Liver disease"],
+    summary: "Habitual coffee (3–4 cups/day) tracks with lower mortality and diabetes risk.",
+    rationale:
+      "An umbrella review across dozens of meta-analyses found mostly benefit and few harms, holding for caffeinated and decaf — which argues against caffeine-driven confounding. Graded 'probable'. Sugary coffee drinks are a different question.",
+    considerations: {
+      confounding: "Smoking historically confounded coffee studies; modern analyses adjust for it.",
+      doseResponse: "Lowest mortality around 3–4 cups/day; benefit reverses at very high intakes for some outcomes.",
+    },
+    studies: [
+      {
+        citation: "Poole R, et al. BMJ. 2017.",
+        type: "Umbrella review of 200+ meta-analyses",
+        finding: "3–4 cups/day associated with ~17% lower all-cause mortality and lower CVD, diabetes, and liver disease.",
+        search: "Poole coffee consumption health umbrella review BMJ 2017",
+      },
+      {
+        citation: "Gunter MJ, et al. Annals of Internal Medicine. 2017.",
+        type: "EPIC cohort (~520,000 across 10 countries)",
+        finding: "Higher coffee intake associated with lower all-cause and digestive-disease mortality.",
+        search: "Gunter coffee mortality EPIC 2017 Annals Internal Medicine",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
-    name: "Green & black tea",
-    category: "Beverages",
-    effect: "positive",
-    confidence: "limited",
-    note: "Regular tea drinking shows modest associations with lower cardiovascular risk in cohorts, though confounding by lifestyle is hard to rule out.",
-  },
-  {
+    id: "avocado",
     name: "Avocado",
     category: "Fruit",
     effect: "positive",
-    confidence: "limited",
-    note: "Cohort data link regular avocado intake to lower cardiovascular risk, particularly when replacing butter, cheese, or processed meats. Evidence base is still relatively small.",
-  },
-  {
-    name: "Extra fiber (from whole foods)",
-    category: "Other",
-    effect: "positive",
-    confidence: "strong",
-    note: "Across cohorts and trials, higher dietary fiber is one of the most robust predictors of lower mortality, heart disease, and diabetes. Whole-food sources outperform isolated supplements.",
-  },
-  {
-    name: "Allium vegetables (garlic, onions)",
-    category: "Vegetables",
-    effect: "positive",
-    confidence: "limited",
-    note: "Higher allium intake shows modest inverse associations with some cancers and cardiovascular risk, but evidence is observational and prone to confounding.",
+    certainty: "limited",
+    outcomes: ["Cardiovascular disease"],
+    summary: "Regular avocado intake is linked to lower cardiovascular risk, on a small evidence base.",
+    rationale:
+      "Promising cohort signal and favorable lipid effects in feeding studies, but few large studies and short follow-up — 'limited (suggestive)'.",
+    considerations: {
+      substitution: "Benefit largest when avocado replaces butter, cheese, or processed meats.",
+    },
+    studies: [
+      {
+        citation: "Pacheco LS, et al. J American Heart Association. 2022.",
+        type: "Two US cohorts (~110,000, 30-yr follow-up)",
+        finding: "≥2 servings/week associated with ~16–21% lower cardiovascular disease risk.",
+        search: "Pacheco avocado consumption cardiovascular disease JAHA 2022",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
 
-  // ---------- NEGATIVE ----------
+  // ============================ NEGATIVE ============================
   {
+    id: "processed-meat",
     name: "Processed meats (bacon, sausage, deli)",
     category: "Meat",
     effect: "negative",
-    confidence: "strong",
-    note: "Among the most consistent harmful signals in nutrition epidemiology: each ~50g/day is linked to higher colorectal cancer, heart disease, and mortality risk across many large cohorts.",
+    certainty: "convincing",
+    outcomes: ["Colorectal cancer", "Cardiovascular disease", "All-cause mortality"],
+    summary: "Among the most consistent harmful signals in nutrition; raises colorectal cancer and heart disease risk.",
+    rationale:
+      "Consistent dose-response harm across many large cohorts, biological plausibility (nitrosamines, heme iron, sodium), and a formal IARC carcinogen classification for colorectal cancer. One of the few foods graded 'convincing'.",
+    considerations: {
+      substitution: "Risk is partly relative to what it displaces; replacing with legumes/fish/poultry lowers risk in models.",
+      doseResponse: "Risk rises roughly per 50 g/day, with no clear safe threshold for cancer.",
+    },
+    studies: [
+      {
+        citation: "Bouvard V, et al. (IARC Monograph). Lancet Oncology. 2015.",
+        type: "Expert evidence review (800+ studies)",
+        finding: "Processed meat classified Group 1 carcinogen; 50 g/day raises colorectal cancer risk ~18%.",
+        search: "Bouvard IARC processed meat carcinogenicity Lancet Oncology 2015",
+      },
+      {
+        citation: "Micha R, et al. Circulation. 2010.",
+        type: "Meta-analysis of cohorts",
+        finding: "50 g/day processed meat associated with ~42% higher CHD and ~19% higher diabetes risk; unprocessed red meat much weaker.",
+        search: "Micha red processed meat coronary heart disease diabetes Circulation 2010",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "sugary-drinks",
     name: "Sugar-sweetened beverages (soda)",
     category: "Beverages",
     effect: "negative",
-    confidence: "strong",
-    note: "Regular intake is robustly associated with weight gain, type 2 diabetes, and cardiovascular disease in cohorts, with supporting trial evidence on metabolic markers.",
+    certainty: "convincing",
+    outcomes: ["Type 2 diabetes", "Weight gain", "Cardiovascular disease"],
+    summary: "Regular sugary drinks robustly raise diabetes, weight, and heart disease risk.",
+    rationale:
+      "Cohort consistency plus supporting randomized evidence on weight and metabolic markers, with a clear mechanism (rapid liquid sugar, low satiety). Graded 'convincing'.",
+    considerations: {
+      substitution: "Replacing with water or unsweetened drinks reverses much of the risk in modeling studies.",
+      doseResponse: "Risk rises per serving/day with no apparent threshold.",
+    },
+    studies: [
+      {
+        citation: "Malik VS, et al. Diabetes Care. 2010.",
+        type: "Meta-analysis of cohorts (~310,000)",
+        finding: "1–2 servings/day associated with ~26% higher type 2 diabetes and higher metabolic syndrome risk.",
+        search: "Malik sugar-sweetened beverages diabetes metabolic syndrome Diabetes Care 2010",
+      },
+      {
+        citation: "Malik VS, et al. Circulation. 2019.",
+        type: "Two large US cohorts",
+        finding: "Higher SSB intake associated with higher cardiovascular and all-cause mortality.",
+        search: "Malik sugar-sweetened beverages mortality Circulation 2019",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "trans-fat",
     name: "Trans fats / partially hydrogenated oils",
     category: "Fats & oils",
     effect: "negative",
-    confidence: "strong",
-    note: "Industrial trans fats raise heart disease risk more than any other fat per calorie — strong enough that many countries banned them. Now rare in the food supply but still appear in some products.",
+    certainty: "convincing",
+    outcomes: ["Cardiovascular disease"],
+    summary: "Industrial trans fat raises heart disease risk more than any other fat per calorie.",
+    rationale:
+      "Strong, coherent evidence (cohorts + controlled feeding trials showing adverse LDL/HDL shifts) — strong enough that WHO called for global elimination and many countries banned it. 'Convincing'. Now rare but still in some products.",
+    considerations: {
+      doseResponse: "Even 2% of energy from trans fat measurably raises CHD risk.",
+    },
+    studies: [
+      {
+        citation: "Mozaffarian D, et al. NEJM. 2006.",
+        type: "Evidence review (cohorts + metabolic trials)",
+        finding: "A 2%-energy increase in trans fat associated with ~23% higher coronary heart disease risk.",
+        search: "Mozaffarian trans fatty acids cardiovascular disease NEJM 2006",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
-    name: "Sugary foods & added sugar",
-    category: "Sweets",
-    effect: "negative",
-    confidence: "moderate",
-    note: "High added-sugar intake is associated with higher cardiovascular mortality and weight gain in cohorts, largely via excess calories and metabolic effects.",
-  },
-  {
+    id: "ultra-processed",
     name: "Ultra-processed foods (general)",
     category: "Other",
     effect: "negative",
-    confidence: "moderate",
-    note: "Higher consumption is linked to greater mortality, obesity, and cardiometabolic disease across cohorts; one tightly controlled trial showed they drive overeating. The category is broad and heterogeneous.",
+    certainty: "probable",
+    outcomes: ["All-cause mortality", "Obesity", "Cardiovascular disease"],
+    summary: "Higher intake tracks with more obesity, heart disease, and mortality.",
+    rationale:
+      "Consistent cohort associations PLUS a tightly controlled inpatient trial showing these foods cause overeating give this category unusual causal weight for nutrition. Held at 'probable' because the category is broad and heterogeneous (not all UPFs behave alike).",
+    considerations: {
+      confounding: "UPF intake correlates with lower income and other risks; cohorts adjust imperfectly.",
+      substitution: "Effect reflects displacement of minimally processed foods as much as the processing itself.",
+    },
+    studies: [
+      {
+        citation: "Hall KD, et al. Cell Metabolism. 2019.",
+        type: "Randomized controlled inpatient feeding trial",
+        finding: "On an ultra-processed diet, people ate ~500 kcal/day more and gained weight vs an unprocessed diet.",
+        search: "Hall ultra-processed diet ad libitum food intake Cell Metabolism 2019",
+      },
+      {
+        citation: "Pagliai G, et al. British J Nutrition. 2021.",
+        type: "Meta-analysis of cohorts",
+        finding: "Highest vs lowest UPF intake associated with higher all-cause mortality, CVD, and overweight/obesity.",
+        search: "Pagliai ultra-processed food health meta-analysis British Journal Nutrition 2021",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
-    name: "Deep-fried fast food",
-    category: "Prepared foods",
-    effect: "negative",
-    confidence: "moderate",
-    note: "Frequent fried-food intake is associated with higher heart disease and diabetes risk in cohorts, reflecting both cooking method and the overall dietary pattern it accompanies.",
-  },
-  {
+    id: "refined-grains",
     name: "Refined grains (white bread, pastries)",
     category: "Grains",
     effect: "negative",
-    confidence: "moderate",
-    note: "High refined-grain intake is linked to higher cardiovascular and diabetes risk, mainly when displacing whole grains. The harm is relative — context and what it replaces matter.",
-  },
-  {
-    name: "Salty processed snacks (chips, crackers)",
-    category: "Prepared foods",
-    effect: "negative",
-    confidence: "limited",
-    note: "Tied to higher sodium intake and weight gain in cohorts. Most of the signal overlaps with the broader ultra-processed-food pattern rather than salt alone.",
+    certainty: "limited",
+    outcomes: ["Cardiovascular disease", "Type 2 diabetes"],
+    summary: "High intake is linked to higher heart disease and diabetes risk — largely vs whole grains.",
+    rationale:
+      "The harm is mostly relative (displacing whole grains and raising glycemic load) rather than absolute, and global cohort data are mixed by region. Graded 'limited'.",
+    considerations: {
+      substitution: "Much of the risk is the flip side of NOT eating whole grains.",
+    },
+    studies: [
+      {
+        citation: "Swaminathan S, et al. (PURE). BMJ. 2021.",
+        type: "Global prospective cohort (~137,000 across 21 countries)",
+        finding: "Highest refined-grain intake associated with higher mortality and major cardiovascular events.",
+        search: "Swaminathan refined grains PURE mortality cardiovascular BMJ 2021",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
 
-  // ---------- NEUTRAL / MIXED ----------
+  // ============================ NEUTRAL / MIXED ============================
   {
+    id: "eggs",
     name: "Eggs",
     category: "Other",
     effect: "neutral",
-    confidence: "moderate",
-    note: "For most people, moderate intake (up to ~1/day) shows little association with cardiovascular risk in cohorts. Some studies find higher risk in people with diabetes, so the picture is mixed.",
+    certainty: "probable",
+    outcomes: ["Cardiovascular disease"],
+    summary: "For most people, moderate intake shows little net association with heart disease.",
+    rationale:
+      "Large cohorts and meta-analyses mostly land near no effect for the general population, though results split (some show higher risk in people with diabetes). We grade the NEUTRAL direction as 'probable' precisely because high-quality studies disagree but cluster around null.",
+    considerations: {
+      substitution: "What eggs replace matters (vs pastries vs processed meat).",
+      confounding: "Egg intake correlates with breakfast patterns and other behaviors.",
+    },
+    studies: [
+      {
+        citation: "Drouin-Chartier JP, et al. BMJ. 2020.",
+        type: "Three US cohorts + updated meta-analysis (>1.7 million)",
+        finding: "Moderate egg intake (~1/day) not associated with cardiovascular disease risk overall.",
+        search: "Drouin-Chartier egg consumption cardiovascular disease BMJ 2020",
+      },
+      {
+        citation: "Zhong VW, et al. JAMA. 2019.",
+        type: "Pooled US cohorts",
+        finding: "Found higher egg/cholesterol intake associated with modestly higher CVD risk — illustrating the genuine disagreement.",
+        search: "Zhong egg dietary cholesterol cardiovascular disease mortality JAMA 2019",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "red-meat",
     name: "Unprocessed red meat (beef, pork)",
     category: "Meat",
     effect: "neutral",
-    confidence: "limited",
-    note: "Associations are weaker and more debated than for processed meat. Some cohorts show modestly higher mortality/diabetes risk; the certainty of evidence is low and contested among researchers.",
+    certainty: "inconclusive",
+    outcomes: ["All-cause mortality", "Type 2 diabetes"],
+    summary: "Associations are weak, contested, and of low certainty — distinct from processed meat.",
+    rationale:
+      "Some cohorts show modestly higher risk, but a major systematic review judged the certainty low and the absolute effects small; experts genuinely disagree. We label this NEUTRAL/contested at 'inconclusive' rather than asserting harm.",
+    considerations: {
+      substitution: "Risk estimates depend heavily on the comparison food (poultry/fish/legumes lower modeled risk).",
+      confounding: "Red-meat intake clusters with smoking, low veg intake, etc.",
+    },
+    studies: [
+      {
+        citation: "Zeraatkar D, et al. (NutriRECS). Annals of Internal Medicine. 2019.",
+        type: "Systematic review of cohorts with GRADE certainty rating",
+        finding: "Low-certainty evidence; possible small risk reduction from cutting red meat, judged not compelling.",
+        search: "Zeraatkar red processed meat reduction NutriRECS Annals Internal Medicine 2019",
+      },
+      {
+        citation: "Wang X, et al. (red meat & mortality).",
+        type: "Meta-analysis of cohorts",
+        finding: "Modest higher all-cause and CVD mortality at high intakes — smaller and less consistent than for processed meat.",
+        search: "red meat consumption all-cause cardiovascular mortality meta-analysis cohort",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "poultry",
     name: "Poultry (chicken, turkey)",
     category: "Meat",
     effect: "neutral",
-    confidence: "moderate",
-    note: "Generally neutral for cardiovascular outcomes in cohorts — neither clearly beneficial nor harmful, and often a 'better than red/processed meat' substitute.",
+    certainty: "probable",
+    outcomes: ["Cardiovascular disease"],
+    summary: "Generally neutral for cardiovascular outcomes; often a 'better-than-red-meat' swap.",
+    rationale:
+      "Cohorts cluster near no association for heart disease, and poultry usually appears as the favorable comparator in substitution analyses. Direction (neutral) is reasonably well supported — 'probable'.",
+    considerations: {
+      substitution: "Looks beneficial mainly because it replaces red/processed meat; cooking method (fried) can change this.",
+    },
+    studies: [
+      {
+        citation: "Substitution analyses across US cohorts (e.g., NHS/HPFS).",
+        type: "Prospective cohorts with isocaloric substitution modeling",
+        finding: "Swapping poultry for red/processed meat lowers modeled mortality; poultry itself ≈ neutral.",
+        search: "poultry red meat substitution mortality cardiovascular cohort",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "milk",
     name: "Milk (whole or low-fat)",
     category: "Dairy",
     effect: "neutral",
-    confidence: "moderate",
-    note: "Overall associations with mortality and heart disease are largely neutral in cohorts and the fat content matters less than once assumed. Effects vary by outcome.",
+    certainty: "probable",
+    outcomes: ["All-cause mortality", "Cardiovascular disease"],
+    summary: "Overall associations with mortality and heart disease are roughly neutral.",
+    rationale:
+      "Large global cohorts find little net association with hard outcomes, and the long-assumed penalty for whole-fat milk is not well supported. Neutral direction graded 'probable'.",
+    considerations: {
+      substitution: "Fat content matters less than expected; what milk replaces (e.g., soda) can dominate.",
+    },
+    studies: [
+      {
+        citation: "Dehghan M, et al. (PURE). Lancet. 2018.",
+        type: "Global prospective cohort (~136,000 across 21 countries)",
+        finding: "Dairy intake associated with lower mortality and CVD; whole-fat not worse than low-fat.",
+        search: "Dehghan dairy consumption cardiovascular mortality PURE Lancet 2018",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "cheese",
     name: "Cheese",
     category: "Dairy",
     effect: "neutral",
-    confidence: "moderate",
-    note: "Despite saturated fat and sodium, cohort and meta-analytic data show roughly neutral-to-slightly-favorable associations with heart disease — the 'dairy matrix' effect.",
+    certainty: "probable",
+    outcomes: ["Cardiovascular disease"],
+    summary: "Despite saturated fat and salt, associations with heart disease are roughly neutral.",
+    rationale:
+      "Meta-analyses show a flat or slightly favorable relationship, attributed to the fermented 'dairy matrix'. Neutral direction is fairly consistent — 'probable'.",
+    considerations: {
+      confounding: "Cheese is embedded in varied dietary patterns; hard to isolate.",
+      doseResponse: "Some analyses suggest a shallow U-shape (modest intake ≈ lowest risk).",
+    },
+    studies: [
+      {
+        citation: "de Goede J, et al. (cheese & CVD).",
+        type: "Dose-response meta-analysis of cohorts",
+        finding: "Modest cheese intake (~40 g/day) associated with slightly lower CHD/stroke risk; overall near-neutral.",
+        search: "de Goede cheese coronary heart disease stroke dose-response meta-analysis",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "butter",
     name: "Butter",
     category: "Fats & oils",
     effect: "neutral",
-    confidence: "moderate",
-    note: "Meta-analyses find butter only weakly associated with mortality and not clearly with heart disease. Outcomes depend heavily on what it replaces (worse than olive oil, better than trans fat).",
+    certainty: "limited",
+    outcomes: ["All-cause mortality", "Cardiovascular disease"],
+    summary: "Only weakly associated with mortality and not clearly with heart disease.",
+    rationale:
+      "A meta-analysis found small, mostly non-significant associations. The verdict is highly substitution-dependent (worse than olive oil, better than trans fat), so we label neutral at 'limited'.",
+    considerations: {
+      substitution: "Replacing butter with olive/seed oils lowers modeled CVD risk; replacing trans fat with butter lowers it.",
+    },
+    studies: [
+      {
+        citation: "Pimpin L, et al. PLoS ONE. 2016.",
+        type: "Meta-analysis of cohorts (~636,000)",
+        finding: "Each 14 g/day butter associated with a small higher all-cause mortality and slightly LOWER diabetes risk; weak overall.",
+        search: "Pimpin butter mortality cardiovascular diabetes meta-analysis PLoS ONE 2016",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "potatoes",
     name: "White potatoes (boiled/baked)",
     category: "Vegetables",
     effect: "neutral",
-    confidence: "limited",
-    note: "Non-fried potatoes show roughly neutral associations in most cohorts. French fries are a separate, less favorable story.",
+    certainty: "limited",
+    outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
+    summary: "Non-fried potatoes look roughly neutral; fries are a separate, worse story.",
+    rationale:
+      "Associations for boiled/baked potatoes are weak and inconsistent, while French fries show clearer harm — so we keep plain potatoes neutral at 'limited' and call out preparation.",
+    considerations: {
+      substitution: "High glycemic load means swaps to whole grains/legumes look better in models.",
+      doseResponse: "Risk signals appear mainly at high intakes and for fried forms.",
+    },
+    studies: [
+      {
+        citation: "Mu L, et al. / potato & cardiometabolic cohorts.",
+        type: "Prospective cohorts",
+        finding: "Fried potatoes associated with higher mortality/diabetes; non-fried potatoes near-neutral.",
+        search: "potato consumption fried type 2 diabetes mortality cohort",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
-    name: "White rice",
-    category: "Grains",
-    effect: "neutral",
-    confidence: "limited",
-    note: "Associations with diabetes are mixed and population-dependent (stronger in some Asian cohorts). Generally closer to neutral than clearly harmful, especially within a varied diet.",
-  },
-  {
-    name: "Dark chocolate (moderate)",
-    category: "Sweets",
-    effect: "neutral",
-    confidence: "limited",
-    note: "Some cohorts link moderate cocoa-rich chocolate to lower cardiovascular risk, but added sugar and confounding muddy the signal. Best viewed as neutral rather than a health food.",
-  },
-  {
+    id: "alcohol",
     name: "Moderate alcohol",
     category: "Beverages",
     effect: "neutral",
-    confidence: "limited",
-    note: "Older cohorts suggested a benefit, but newer analyses correcting for biases (e.g. 'sick quitters') point toward no safe protective level and net harm rising with intake. Increasingly viewed as not beneficial.",
+    certainty: "limited",
+    outcomes: ["All-cause mortality", "Cancer"],
+    summary: "Once-claimed benefits largely vanish after correcting for bias; increasingly seen as not protective.",
+    rationale:
+      "Earlier cohorts suggested a J-curve, but analyses correcting for 'sick-quitter' and abstainer biases find no clear protection and rising harm with intake (cancer risk increases from low levels). We label NEUTRAL (no net benefit) at 'limited', trending toward harm. This is an active area of revision.",
+    considerations: {
+      confounding: "Light drinkers are healthier for reasons other than alcohol; former drinkers contaminate the 'abstainer' group.",
+      doseResponse: "Cancer risk rises roughly linearly from low intake; cardiovascular 'benefit' is contested.",
+    },
+    studies: [
+      {
+        citation: "Zhao J, et al. JAMA Network Open. 2023.",
+        type: "Meta-analysis of 107 cohort studies, bias-adjusted",
+        finding: "No significant mortality protection from low/moderate intake after adjusting for study-design biases.",
+        search: "Zhao alcohol all-cause mortality meta-analysis JAMA Network Open 2023",
+      },
+      {
+        citation: "GBD 2016 Alcohol Collaborators. Lancet. 2018.",
+        type: "Global systematic analysis",
+        finding: "The level of alcohol that minimizes total health loss is zero.",
+        search: "Global Burden Disease alcohol no safe level Lancet 2018",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [
+      {
+        date: "2026-06-28",
+        change: "Moved from 'positive (J-curve)' framing to NEUTRAL/contested, reflecting bias-corrected meta-analyses.",
+      },
+    ],
   },
   {
+    id: "artificial-sweeteners",
     name: "Artificial sweeteners",
     category: "Other",
     effect: "neutral",
-    confidence: "limited",
-    note: "Evidence is genuinely mixed: some cohorts associate them with cardiometabolic risk (likely partly reverse causation), while substitution trials for sugary drinks show short-term benefit. Net effect uncertain.",
+    certainty: "inconclusive",
+    outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
+    summary: "Genuinely mixed evidence; net long-term effect is uncertain.",
+    rationale:
+      "Some cohorts link them to cardiometabolic risk (likely partly reverse causation — at-risk people switch to them), while substitution trials replacing sugary drinks show short-term benefit. We label NEUTRAL at 'inconclusive' and flag this as unsettled.",
+    considerations: {
+      confounding: "Strong reverse causation: people already at risk choose diet products.",
+      substitution: "Compared with sugary drinks they look better; compared with water, possibly not.",
+    },
+    studies: [
+      {
+        citation: "Debras C, et al. (NutriNet-Santé). PLoS Medicine. 2022.",
+        type: "Large prospective cohort (~103,000)",
+        finding: "Higher artificial-sweetener intake associated with modestly higher cardiovascular risk (association, not proof).",
+        search: "Debras artificial sweeteners cardiovascular NutriNet-Sante PLoS Medicine 2022",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
   {
+    id: "coconut-oil",
     name: "Coconut oil",
     category: "Fats & oils",
     effect: "neutral",
-    confidence: "limited",
-    note: "Raises LDL cholesterol like other saturated fats, but direct cohort outcome data are sparse. No strong evidence of special benefit or unusual harm — treat as a saturated fat.",
+    certainty: "limited",
+    outcomes: ["Cardiovascular risk markers"],
+    summary: "Raises LDL like other saturated fats; little direct outcome data — treat as a saturated fat.",
+    rationale:
+      "Controlled trials show it raises LDL cholesterol versus unsaturated oils, but there is little direct cohort evidence on heart attacks or mortality, and no support for special benefit. Neutral-pending at 'limited'.",
+    considerations: {
+      substitution: "Worse than olive/seed oils for LDL; better than butter/trans fat is not established.",
+    },
+    studies: [
+      {
+        citation: "Neelakantan N, et al. Circulation. 2020.",
+        type: "Meta-analysis of randomized trials",
+        finding: "Coconut oil raised LDL cholesterol significantly vs non-tropical vegetable oils.",
+        search: "Neelakantan coconut oil LDL cholesterol meta-analysis Circulation 2020",
+      },
+    ],
+    lastReviewed: "2026-06-28",
+    revisions: [],
   },
 ];

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Diet Effects — what really happens when you add a food</title>
-  <meta name="description" content="Whether common foods generally have a positive, negative, or neutral effect when added to your diet, based on free-living observational data." />
+  <meta name="description" content="Whether common foods generally have a positive, negative, or neutral effect when added to a diet, with the studies behind each verdict and a transparent, revisable method." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -13,29 +13,33 @@
       <h1>Does adding this food help, hurt, or do nothing?</h1>
       <p class="tagline">
         Common foods rated by what generally happens when they’re <strong>added</strong> to
-        a real-world diet — drawn from large observational cohort studies and meta-analyses.
+        a real-world diet — each verdict is tied to the actual studies behind it and a
+        <strong>transparent, revisable method</strong> you can challenge.
       </p>
+      <nav class="tabs" role="tablist" aria-label="Sections">
+        <button class="tab is-active" role="tab" data-view="foods" aria-selected="true">Foods</button>
+        <button class="tab" role="tab" data-view="approach" aria-selected="false">The approach</button>
+      </nav>
     </div>
   </header>
 
-  <main class="wrap">
+  <!-- ============================ FOODS VIEW ============================ -->
+  <main id="view-foods" class="wrap view">
     <section class="controls" aria-label="Filter foods">
       <input
         type="search"
         id="search"
         class="search"
-        placeholder="Search foods (e.g. nuts, soda, eggs)…"
+        placeholder="Search foods, e.g. nuts, soda, eggs…"
         autocomplete="off"
         aria-label="Search foods"
       />
-
       <div class="filter-row" role="group" aria-label="Filter by effect">
         <button class="chip is-active" data-effect="all">All</button>
         <button class="chip" data-effect="positive">Positive</button>
         <button class="chip" data-effect="neutral">Neutral / mixed</button>
         <button class="chip" data-effect="negative">Negative</button>
       </div>
-
       <label class="select-wrap">
         <span class="visually-hidden">Filter by category</span>
         <select id="category" class="select" aria-label="Filter by category">
@@ -45,34 +49,144 @@
     </section>
 
     <p id="count" class="count" aria-live="polite"></p>
-
     <ul id="list" class="grid" aria-live="polite"></ul>
-
     <p id="empty" class="empty" hidden>No foods match your filters.</p>
-  </main>
 
-  <footer class="site-footer">
-    <div class="wrap">
-      <h2>How to read this</h2>
-      <p>
-        Ratings reflect the <strong>general direction of association</strong> seen in
-        prospective cohort studies and meta-analyses (think Nurses’ Health Study, EPIC,
-        PURE, and pooled analyses) for outcomes such as all-cause mortality,
-        cardiovascular disease, and type 2 diabetes — i.e. what tends to happen when
-        people <em>add</em> a food to how they already eat.
-      </p>
+    <section class="legend-block">
+      <h2>How to read a verdict</h2>
       <ul class="legend">
         <li><span class="dot positive"></span><strong>Positive</strong> — added intake is associated with better outcomes</li>
         <li><span class="dot neutral"></span><strong>Neutral / mixed</strong> — little net association, or evidence points both ways</li>
         <li><span class="dot negative"></span><strong>Negative</strong> — added intake is associated with worse outcomes</li>
       </ul>
+      <p class="legend-note">
+        Each card also shows a <strong>certainty</strong> tier (convincing → probable → limited →
+        inconclusive) and, when expanded, the <strong>studies</strong> the verdict rests on, the
+        <strong>reasoning</strong>, and the key <strong>caveats</strong>. Disagree? Use
+        <em>“Challenge this conclusion.”</em> See <a href="#" class="to-approach">The approach</a>
+        for exactly how verdicts are decided.
+      </p>
+    </section>
+  </main>
+
+  <!-- ========================== APPROACH VIEW ========================== -->
+  <main id="view-approach" class="wrap view" hidden>
+    <article class="approach">
+      <p class="method-version">Methodology <strong id="method-ver"></strong> · living document</p>
+      <h2>How these verdicts are decided</h2>
+      <p class="lede">
+        Nutrition is hard to study: we mostly can’t randomize what people eat for decades, so
+        most evidence is <em>observational</em> — we watch what happens to people who already
+        eat differently. That can mislead. This project’s whole point is to be honest about that:
+        to show the evidence, grade our confidence, and change our mind when the evidence does.
+      </p>
+
+      <section>
+        <h3>1. The question we actually answer</h3>
+        <p>
+          For each food we ask: <strong>when this food is regularly added to a typical
+          free-living diet, what tends to happen to long-term health outcomes</strong> —
+          mainly all-cause mortality, cardiovascular disease, and type 2 diabetes? “Free-living”
+          means real people eating normally, not a metabolic ward. Crucially, the answer often
+          depends on <strong>what the food replaces</strong> (see substitution, below).
+        </p>
+      </section>
+
+      <section>
+        <h3>2. What counts as evidence (in priority order)</h3>
+        <ol class="method-list">
+          <li><strong>Randomized controlled trials (RCTs)</strong> on real health outcomes — strongest, but rare in diet.</li>
+          <li><strong>Meta-analyses of prospective cohort studies</strong> — our main workhorse; pooled long-term follow-up of large populations.</li>
+          <li><strong>Individual large cohorts</strong> — especially with dose-response and substitution analysis.</li>
+          <li><strong>RCTs on risk markers</strong> (LDL, blood pressure, glucose) and mechanism — used as supporting, not decisive, evidence.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h3>3. The label: positive, negative, or neutral</h3>
+        <p>We assign a direction from the pooled effect on the outcomes above:</p>
+        <ul class="method-list">
+          <li><span class="dot positive"></span><strong>Positive</strong> — adding the food is consistently associated with <em>lower</em> risk.</li>
+          <li><span class="dot negative"></span><strong>Negative</strong> — consistently associated with <em>higher</em> risk.</li>
+          <li><span class="dot neutral"></span><strong>Neutral / mixed</strong> — associations cluster near no effect, are small, or high-quality studies genuinely disagree.</li>
+        </ul>
+        <p class="muted">
+          A verdict is only as good as its certainty tier — a “neutral” backed by conflicting
+          strong studies is very different from a “neutral” backed by two small ones.
+        </p>
+      </section>
+
+      <section>
+        <h3>4. The certainty tier</h3>
+        <p>
+          Adapted from the World Cancer Research Fund / AICR grading and GRADE. It reflects how
+          much we trust the <em>direction</em>, not how big the effect is:
+        </p>
+        <ul class="tier-list">
+          <li><span class="tier convincing">Convincing</span> Consistent across many large studies, dose-response, plausible mechanism, and ideally trial support. Unlikely to reverse.</li>
+          <li><span class="tier probable">Probable</span> Generally consistent good-quality evidence, but with some gaps or unexplained heterogeneity.</li>
+          <li><span class="tier limited">Limited</span> Suggestive but sparse, inconsistent, or short follow-up.</li>
+          <li><span class="tier inconclusive">Inconclusive</span> Evidence is genuinely conflicting or too weak to take a side; we say so.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>5. The traps we explicitly account for</h3>
+        <p>These are why observational nutrition findings so often fail to replicate. Each food card calls out the ones that matter most for it.</p>
+        <dl class="traps">
+          <dt>Confounding &amp; the healthy-user effect</dt>
+          <dd>People who eat “healthy” foods differ in dozens of ways (exercise, smoking, income). Good studies adjust for these, but <em>residual</em> confounding always remains — so we discount effects that ride on lifestyle.</dd>
+          <dt>Reverse causation</dt>
+          <dd>Sometimes illness changes diet, not the other way around (e.g. people at risk switch to diet soda). We watch for it and weight studies that exclude early follow-up.</dd>
+          <dt>The substitution problem</dt>
+          <dd>“Adding” a food means something else gives way. Nuts <em>instead of</em> chips ≠ nuts on top of everything. We prefer studies that model substitution, and we name the relevant swap.</dd>
+          <dt>Measurement error</dt>
+          <dd>Diet is usually self-reported via food-frequency questionnaires, which are noisy. This generally blurs real effects toward zero and adds uncertainty.</dd>
+          <dt>Observational ≠ causal</dt>
+          <dd>Association is not proof. We use the <strong>Bradford Hill</strong> considerations — consistency, strength, dose-response, plausibility, and (where it exists) experimental evidence — to judge how causal a pattern looks.</dd>
+        </dl>
+      </section>
+
+      <section>
+        <h3>6. How verdicts change — and how you can challenge them</h3>
+        <p>
+          This is a living document. Conclusions are dated, versioned, and meant to be revised as
+          evidence accrues or when someone shows our reasoning is wrong. Every food card has a
+          <strong>“Challenge this conclusion”</strong> button that opens a structured issue where
+          you can point to a study we missed, a bias we underweighted, or a better substitution model.
+        </p>
+        <p>A challenge is acted on when it shows one of:</p>
+        <ul class="method-list">
+          <li>A study (or studies) we didn’t account for that shifts the pooled picture;</li>
+          <li>A methodological flaw in how we weighed the existing evidence;</li>
+          <li>New higher-tier evidence (e.g. a trial) that supersedes older cohorts.</li>
+        </ul>
+        <p>When a verdict changes, the change is recorded in that food’s <strong>revision log</strong>, visible on the card.</p>
+      </section>
+
+      <section>
+        <h3>7. Honest limitations</h3>
+        <ul class="method-list">
+          <li>The food list is curated and not exhaustive.</li>
+          <li>Study selection still involves judgement; we cite sources so you can check us.</li>
+          <li>Verdicts are population averages — individuals (age, genetics, conditions) can differ a lot.</li>
+          <li>This is not medical or dietary advice.</li>
+        </ul>
+        <p class="muted">
+          Methodology and sources are also documented in <code>METHODOLOGY.md</code> in the
+          repository, with the full research notes behind this approach.
+        </p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
       <p class="caveat">
-        <strong>Important caveats.</strong> These are population-level <em>associations</em>
-        from observational data, not proof of cause and effect, and not personal medical
-        or dietary advice. Effects depend heavily on <em>what a food replaces</em> (e.g. nuts
-        instead of chips), your overall pattern of eating, quantity, and individual health.
-        Observational studies can be confounded by lifestyle. Talk to a qualified
-        professional about your own diet.
+        <strong>Important.</strong> These are population-level <em>associations</em> from mostly
+        observational data — not proof of cause and effect, and not personal medical or dietary
+        advice. Effects depend on what a food replaces, overall eating pattern, quantity, and
+        individual health. Talk to a qualified professional about your own diet.
       </p>
     </div>
   </footer>
