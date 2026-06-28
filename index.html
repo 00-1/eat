@@ -60,8 +60,8 @@
         <li><span class="dot negative"></span><strong>Negative</strong> — added intake is associated with worse outcomes</li>
       </ul>
       <p class="legend-note">
-        Each card also shows a <strong>certainty</strong> tier (convincing → probable → limited →
-        inconclusive) and, when expanded, the <strong>studies</strong> the verdict rests on, the
+        Each card also shows a <strong>certainty</strong> tier (high → moderate → low →
+        very&nbsp;low) and, when expanded, the <strong>studies</strong> the verdict rests on, the
         <strong>reasoning</strong>, and the key <strong>caveats</strong>. Disagree? Use
         <em>“Challenge this conclusion.”</em> See <a href="#" class="to-approach">The approach</a>
         for exactly how verdicts are decided.
@@ -104,34 +104,65 @@
 
       <section>
         <h3>3. The label: positive, negative, or neutral</h3>
-        <p>We assign a direction from the pooled effect on the outcomes above:</p>
+        <p>
+          Direction comes from the <em>conservatively-estimated</em> association — the
+          approach the IHME/GBD <strong>Burden of Proof</strong> method uses: take the
+          closest-to-null effect the evidence reasonably supports (after accounting for how
+          much studies disagree), and only call a direction if its uncertainty interval
+          <strong>excludes “no effect.”</strong>
+        </p>
         <ul class="method-list">
-          <li><span class="dot positive"></span><strong>Positive</strong> — adding the food is consistently associated with <em>lower</em> risk.</li>
-          <li><span class="dot negative"></span><strong>Negative</strong> — consistently associated with <em>higher</em> risk.</li>
-          <li><span class="dot neutral"></span><strong>Neutral / mixed</strong> — associations cluster near no effect, are small, or high-quality studies genuinely disagree.</li>
+          <li><span class="dot positive"></span><strong>Positive</strong> — the conservative estimate shows <em>lower</em> risk, consistently, with the interval excluding no-effect.</li>
+          <li><span class="dot negative"></span><strong>Negative</strong> — same, but <em>higher</em> risk.</li>
+          <li><span class="dot neutral"></span><strong>Neutral / mixed</strong> — the conservative interval crosses no-effect, the effect is trivially small, or high-quality studies genuinely disagree.</li>
         </ul>
         <p class="muted">
-          A verdict is only as good as its certainty tier — a “neutral” backed by conflicting
-          strong studies is very different from a “neutral” backed by two small ones.
+          This makes <strong>neutral the default</strong>: it is harder to earn a directional
+          label than to stay neutral.
         </p>
       </section>
 
       <section>
         <h3>4. The certainty tier</h3>
         <p>
-          Adapted from the World Cancer Research Fund / AICR grading and GRADE. It reflects how
-          much we trust the <em>direction</em>, not how big the effect is:
+          We rate certainty on the <strong>NutriGrade</strong> scale, built specifically to grade
+          meta-analyses of cohort studies. It scores nine things — risk of bias, precision,
+          heterogeneity, directness, publication and funding bias, study design, effect size, and
+          dose-response — and lands in one of four tiers:
         </p>
         <ul class="tier-list">
-          <li><span class="tier convincing">Convincing</span> Consistent across many large studies, dose-response, plausible mechanism, and ideally trial support. Unlikely to reverse.</li>
-          <li><span class="tier probable">Probable</span> Generally consistent good-quality evidence, but with some gaps or unexplained heterogeneity.</li>
-          <li><span class="tier limited">Limited</span> Suggestive but sparse, inconsistent, or short follow-up.</li>
-          <li><span class="tier inconclusive">Inconclusive</span> Evidence is genuinely conflicting or too weak to take a side; we say so.</li>
+          <li><span class="tier high">High</span> Consistent across many good-quality studies, dose-response, plausible mechanism, ideally trial support. Unlikely to reverse.</li>
+          <li><span class="tier moderate">Moderate</span> Generally consistent good-quality evidence, with gaps or some unexplained heterogeneity.</li>
+          <li><span class="tier low">Low</span> Suggestive but sparse, inconsistent, or short follow-up.</li>
+          <li><span class="tier very-low">Very low</span> Genuinely conflicting or too weak to take a side; we say so.</li>
         </ul>
+        <p class="muted">
+          We apply these as a <em>structured rubric of judgement</em>, not by mechanically
+          recomputing a score for every food. Where an official NutriGrade score or GBD
+          Burden-of-Proof star rating exists for a food–outcome pair, we defer to it.
+        </p>
       </section>
 
       <section>
-        <h3>5. The traps we explicitly account for</h3>
+        <h3>5. The rule that ties it together</h3>
+        <p>No published source prescribes the <em>final</em> combined rule, so this one is <strong>ours</strong> — stated plainly so you can challenge it:</p>
+        <ol class="method-list">
+          <li><strong>Default to neutral.</strong></li>
+          <li>Assign <strong>positive/negative</strong> only if the conservative estimate excludes no-effect in a consistent direction <em>and</em> certainty is at least <strong>Moderate</strong>.</li>
+          <li>A real-looking effect with only <strong>Low / Very-low</strong> certainty stays <strong>neutral (leaning …)</strong>, noted in the reasoning — not a hard verdict.</li>
+          <li><strong>Foods affecting several outcomes:</strong> the verdict follows the net direction across priority outcomes (all-cause mortality first); reported certainty is the <em>lowest</em> tier among the outcomes driving it.</li>
+          <li><strong>When grades disagree,</strong> take the more conservative one.</li>
+        </ol>
+        <p class="muted">
+          One honest caveat baked into this: the Burden-of-Proof score blends <em>effect size</em>
+          with <em>evidence strength</em>, so a small-but-certain effect scores low. We treat
+          magnitude and certainty as separate things, and the method itself is
+          <a href="https://www.nature.com/articles/s41591-022-01973-2" target="_blank" rel="noopener">contested</a>.
+        </p>
+      </section>
+
+      <section>
+        <h3>6. The traps we explicitly account for</h3>
         <p>These are why observational nutrition findings so often fail to replicate. Each food card calls out the ones that matter most for it.</p>
         <dl class="traps">
           <dt>Confounding &amp; the healthy-user effect</dt>
@@ -139,7 +170,7 @@
           <dt>Reverse causation</dt>
           <dd>Sometimes illness changes diet, not the other way around (e.g. people at risk switch to diet soda). We watch for it and weight studies that exclude early follow-up.</dd>
           <dt>The substitution problem</dt>
-          <dd>“Adding” a food means something else gives way. Nuts <em>instead of</em> chips ≠ nuts on top of everything. We prefer studies that model substitution, and we name the relevant swap.</dd>
+          <dd>“Adding” a food means something else gives way. Nuts <em>instead of</em> chips ≠ nuts on top of everything. We prefer studies that model substitution and we name the relevant swap — but cautiously: a 2026 review found <strong>53% of substitution-modeling studies used unvalidated food-frequency-questionnaire inputs</strong>, so we treat substitution ambiguity as confidence-lowering, not solved.</dd>
           <dt>Measurement error</dt>
           <dd>Diet is usually self-reported via food-frequency questionnaires, which are noisy. This generally blurs real effects toward zero and adds uncertainty.</dd>
           <dt>Observational ≠ causal</dt>
@@ -148,7 +179,7 @@
       </section>
 
       <section>
-        <h3>6. How verdicts change — and how you can challenge them</h3>
+        <h3>7. How verdicts change — and how you can challenge them</h3>
         <p>
           This is a living document. Conclusions are dated, versioned, and meant to be revised as
           evidence accrues or when someone shows our reasoning is wrong. Every food card has a
@@ -165,7 +196,7 @@
       </section>
 
       <section>
-        <h3>7. Honest limitations</h3>
+        <h3>8. Honest limitations</h3>
         <ul class="method-list">
           <li>The food list is curated and not exhaustive.</li>
           <li>Study selection still involves judgement; we cite sources so you can check us.</li>
@@ -173,8 +204,9 @@
           <li>This is not medical or dietary advice.</li>
         </ul>
         <p class="muted">
-          Methodology and sources are also documented in <code>METHODOLOGY.md</code> in the
-          repository, with the full research notes behind this approach.
+          The full method lives in <code>METHODOLOGY.md</code>, and the fact-checked research
+          behind it (NutriGrade, Burden of Proof, the substitution-bias evidence, with sources)
+          is in <code>research/methodology-research.md</code>.
         </p>
       </section>
     </article>

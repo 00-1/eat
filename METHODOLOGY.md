@@ -1,13 +1,14 @@
 # Methodology
 
-**Version 0.1 — living document.** This file is the canonical description of how
+**Version 0.2 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
-food. It is meant to be revised. When the method changes, bump the version in
-`data.js` (`METHODOLOGY_VERSION`) and record what changed in the
-[Changelog](#changelog).
+food, with an explicit certainty rating. It is meant to be revised. When the
+method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
+the [Changelog](#changelog).
 
-The same content is summarized in the app's **“The approach”** tab; this file is
-the fuller reference with sources.
+The same content is summarized in the app's **“The approach”** tab. The source
+research behind this method — multi-source and fact-checked — is in
+[`research/methodology-research.md`](./research/methodology-research.md).
 
 ---
 
@@ -17,116 +18,130 @@ For each food we answer one specific question:
 
 > **When this food is regularly _added_ to a typical free-living diet, what tends
 > to happen to long-term health outcomes** — primarily all-cause mortality,
-> cardiovascular disease, and type 2 diabetes (plus outcome-specific evidence
-> such as colorectal cancer where it is strong)?
+> cardiovascular disease, and type 2 diabetes (plus outcome-specific evidence such
+> as colorectal cancer where it is strong)?
 
-Two words matter:
+- **Added** — eating more than you do now. Because diets are roughly
+  calorie-bounded, adding one food usually displaces another, so the honest answer
+  often depends on **what it replaces** (a substitution question — see §6).
+- **Free-living** — real people eating normally over years, not a metabolic-ward
+  study of a biomarker for six weeks.
 
-- **Added** — eating more of the food than you do now. Because diets are roughly
-  calorie-bounded, adding one food usually means displacing another, so the
-  honest answer often depends on **what it replaces** (see §5).
-- **Free-living** — real people eating normally over years, not a tightly
-  controlled metabolic-ward study of a biomarker for six weeks.
+## 2. Why we grade confidence instead of asserting facts
 
-We are deliberately answering a *population-average, real-world* question, not
-"is this molecule good for you in a dish."
-
----
-
-## 2. Why this is hard (and why we grade our confidence)
-
-We usually cannot randomize what people eat for decades, so most diet evidence is
-**observational**: we compare people who already eat differently. That is prone
-to bias (§5). The honest response is not to pretend we have proof, nor to dismiss
-all of it, but to:
-
-1. weight the strongest study designs most,
-2. attach an explicit **certainty tier** to every verdict, and
-3. **change the verdict when the evidence changes** (§6).
+We usually cannot randomize diets for decades, so most evidence is
+**observational**: we compare people who already eat differently, which is prone
+to bias (§6). The honest response is to weight the strongest designs, attach an
+explicit **certainty tier** to every verdict, and **revise** as evidence changes
+(§7). RCTs remain the higher-certainty standard; where they exist, labels defer
+to them.
 
 ## 3. Evidence hierarchy
 
-In rough priority order:
+1. **RCTs on real health outcomes** — strongest, rare in nutrition (e.g. PREDIMED).
+2. **Meta-analyses of prospective cohorts** — the workhorse: pooled long-term
+   follow-up, ideally with dose-response.
+3. **Individual large cohorts** — especially with dose-response and **substitution**
+   modeling.
+4. **RCTs on risk markers** (LDL, BP, glucose) and mechanism — *supporting* only.
 
-1. **RCTs on real health outcomes** — strongest, but rare in nutrition
-   (e.g. PREDIMED for a Mediterranean pattern).
-2. **Meta-analyses of prospective cohort studies** — the main workhorse: pooled,
-   long-term follow-up of large populations, ideally with dose-response.
-3. **Individual large cohorts** — especially those with dose-response and
-   **substitution** analysis.
-4. **RCTs on risk markers** (LDL, blood pressure, glucose) and mechanistic data —
-   *supporting* evidence that raises or lowers our confidence, not decisive on
-   its own.
+## 4. The certainty tier (NutriGrade-aligned)
 
-We prefer evidence that pools many populations and reports **dose-response**
-(risk per serving/day), because a consistent dose-response gradient is one of the
-stronger hints of a real effect.
+We rate certainty on the **NutriGrade** scale, which was built specifically to
+grade meta-analyses of cohort studies. NutriGrade scores nine items out of 10 —
+risk of bias, precision, heterogeneity, directness, publication bias, funding
+bias, study design, effect size, and dose-response — and maps the total to four
+tiers:
 
-## 4. Assigning the label and the certainty tier
+| Our tier | NutriGrade score | Meaning |
+|----------|------------------|---------|
+| **High** | 8–10 | Consistent across many good-quality studies; dose-response; plausible mechanism; ideally trial support. Unlikely to reverse. |
+| **Moderate** | 6–7.99 | Generally consistent good-quality evidence, with gaps or some unexplained heterogeneity. |
+| **Low** | 4–5.99 | Suggestive but sparse, inconsistent, or short follow-up. |
+| **Very low** | 0–3.99 | Genuinely conflicting or too weak to take a side. |
 
-### 4a. Direction (the label)
+> **Honest note.** We apply these criteria as a **structured rubric of judgement**,
+> not by mechanically re-computing a published NutriGrade score for every food.
+> Where an official NutriGrade score or a GBD Burden-of-Proof star rating exists
+> for a food–outcome pair, we defer to it.
+> _(Source: Schwingshackl et al., NutriGrade, Adv Nutr 2016.)_
 
-From the pooled effect on the outcomes in §1:
+## 5. The direction label (Burden-of-Proof logic)
 
-| Label | Meaning |
-|-------|---------|
-| 🟢 **Positive** | Adding the food is consistently associated with **lower** risk. |
-| 🔴 **Negative** | Consistently associated with **higher** risk. |
-| 🟡 **Neutral / mixed** | Associations cluster near no effect, are very small, or high-quality studies genuinely disagree. |
+Direction comes from the **sign of the conservatively-estimated association**, the
+way the IHME/GBD **Burden of Proof Risk Function** does it: take the
+closest-to-null effect compatible with the evidence (accounting for between-study
+heterogeneity), and only call a direction if its **uncertainty interval excludes
+the null** across the data-dense exposure range.
 
-As a rough quantitative anchor (not a hard rule), we treat pooled relative risks
-within roughly **0.95–1.05 per typical serving** as "neutral" territory unless a
-clear dose-response or trial says otherwise. Larger consistent deviations move
-the label, scaled by certainty.
+| Label | Rule |
+|-------|------|
+| 🟢 **Positive** | Conservative pooled estimate shows **lower** risk with the interval excluding the null, consistently. |
+| 🔴 **Negative** | Conservative pooled estimate shows **higher** risk with the interval excluding the null, consistently. |
+| 🟡 **Neutral / mixed** | The conservative interval **crosses the null**, the effect is trivially small, or high-quality studies genuinely disagree. |
 
-### 4b. Certainty tier
+This deliberately makes **neutral the default** until the evidence clears a bar —
+it is harder to earn a directional label than to stay neutral.
 
-Adapted from the **World Cancer Research Fund / AICR** evidence-grading criteria
-and the **GRADE** approach. It describes how much we trust the **direction**, not
-how big the effect is.
+> The Burden-of-Proof method is itself **contested** (a 2023 *Nat Med* critique
+> argues its conservatism can overstate uncertainty). We adopt its *logic* — be
+> conservative, require the interval to exclude the null — without claiming its
+> exact star thresholds are settled. Note too that its Risk-Outcome Score
+> **conflates effect size with evidence strength**, so a small-but-certain effect
+> scores low; we treat magnitude and certainty as separate axes.
 
-| Tier | Bar |
-|------|-----|
-| **Convincing** | Consistent across many large, good-quality studies; dose-response; plausible mechanism; ideally trial support. Unlikely to reverse. |
-| **Probable** | Generally consistent good-quality evidence, but with gaps or unexplained heterogeneity. |
-| **Limited** | Suggestive but sparse, inconsistent, or short follow-up. |
-| **Inconclusive** | Genuinely conflicting or too weak to take a side — we say so rather than force a verdict. |
+### Our combined decision rule (this project's synthesis)
 
-A "neutral" at *probable* (strong studies that converge on no effect) is a very
-different claim from a "neutral" at *inconclusive* (we don't yet know).
+No published source prescribes the *final* combined rule; this is **ours**, stated
+so it can be challenged:
 
-## 5. The biases we explicitly account for
+1. **Default = Neutral.**
+2. Assign **Positive/Negative** only if the conservative pooled estimate excludes
+   the null in a consistent direction **and** certainty is at least **Moderate**.
+3. A null-excluding effect with only **Low/Very-low** certainty → still **Neutral
+   (leaning …)**, noted in the rationale, not a hard directional verdict.
+4. **Multi-outcome foods:** the overall "add-to-diet" verdict follows the net
+   direction across the priority outcomes (all-cause mortality weighted first); the
+   reported certainty is the **lowest** tier among the outcomes that drive the
+   verdict.
+5. **When grades disagree** (e.g. NutriGrade vs a BoP star rating), take the **more
+   conservative** (lower) certainty.
 
-Each food card names the ones that matter most for that food.
+## 6. The biases we explicitly account for
 
-- **Confounding / healthy-user effect.** People who eat "healthy" foods differ in
-  many ways (exercise, smoking, income, screening). Studies adjust for measured
-  confounders, but **residual confounding** always remains — so we discount
-  effects that plausibly ride on overall lifestyle, and lean on dose-response and
-  trials to cut through it.
-- **Reverse causation.** Early disease can change diet (e.g. at-risk people switch
-  to diet drinks; people losing weight from illness eat less of something). We
-  favor studies that exclude early follow-up and watch for this pattern.
-- **The substitution problem.** "Adding" a food displaces something. The same
-  food can look good or bad depending on the comparator (nuts *instead of* chips
-  vs. on top of everything). We prefer **substitution / isocaloric** analyses and
-  state the relevant swap.
-- **Measurement error.** Diet is usually self-reported via food-frequency
-  questionnaires, which are noisy. This typically biases associations **toward the
-  null** and widens uncertainty.
-- **Publication and analytic flexibility.** Single striking studies are discounted
-  in favor of pre-registered analyses and comprehensive meta-analyses.
+Each food card names the ones that matter most for it.
+
+- **Confounding / healthy-user effect.** "Healthy" eaters differ in many ways;
+  studies adjust for measured confounders but **residual** confounding remains. We
+  discount effects that plausibly ride on lifestyle and lean on dose-response and
+  trials.
+- **Reverse causation.** Early disease can change diet. We favor studies that
+  exclude early follow-up.
+- **The substitution problem.** "Adding" displaces something; the same food can
+  look good or bad depending on the comparator. We prefer **substitution /
+  isocaloric** analyses and state the relevant swap — **but** we treat their
+  conclusions cautiously: a 2026 review found 53% of substitution-modeling studies
+  used **unvalidated** food-frequency-questionnaire inputs (FFQ-vs-reference
+  correlations median ~0.43). Substitution ambiguity is a **confidence-lowering**
+  factor, not a solved problem.
+- **Measurement error.** FFQs are noisy; this usually biases associations **toward
+  the null** and widens uncertainty.
+- **Publication / analytic flexibility.** Single striking studies are discounted in
+  favor of comprehensive meta-analyses.
 
 ### Causal judgement: Bradford Hill
 
-To decide how *causal* an association looks (not just how statistically clear), we
-informally apply the **Bradford Hill** considerations — especially **consistency**
-across studies, **strength** of association, **dose-response** (biological
-gradient), **plausibility/coherence** with mechanism, and **experiment** (any RCT
-evidence). No single criterion is required or sufficient; together they raise or
-lower the certainty tier.
+To judge how *causal* an association looks we informally apply the **Bradford
+Hill** considerations — especially **consistency**, **strength**, **dose-response**,
+**plausibility/coherence**, and **experiment** (any RCT). None is required or
+sufficient alone; together they raise or lower the certainty tier.
 
-## 6. How verdicts change — and how to challenge one
+> _Attribution: WCRF/AICR, GRADE, and Bradford Hill are standard frameworks used
+> here from general knowledge; the verified research run behind this method
+> specifically substantiated the **NutriGrade** and **Burden-of-Proof** components
+> (see the research file). We flag this so the provenance of each piece is clear._
+
+## 7. How verdicts change — and how to challenge one
 
 This is the core commitment: **conclusions are provisional, dated, and revisable.**
 
@@ -134,47 +149,41 @@ This is the core commitment: **conclusions are provisional, dated, and revisable
 - Every food card has a **“Challenge this conclusion”** button that opens a
   structured GitHub issue.
 - A challenge is acted on when it demonstrates at least one of:
-  1. **Missed evidence** — study/studies we didn't account for that shift the
-     pooled picture;
-  2. **A methodological flaw** — we weighed the existing evidence wrongly
-     (e.g. ignored substitution, over-trusted a confounded cohort);
-  3. **Superseding evidence** — new higher-tier evidence (e.g. a trial) that
-     outranks the older cohorts.
-- When a verdict (or its certainty) changes, the change is appended to that
-  food's **`revisions`** log and shown on the card, and `METHODOLOGY_VERSION` is
-  bumped if the *method itself* changed.
+  1. **Missed evidence** that shifts the pooled picture;
+  2. **A methodological flaw** in how we weighed the evidence (e.g. ignored
+     substitution, over-trusted a confounded cohort);
+  3. **Superseding evidence** (e.g. a trial, or a re-issued GBD grade) that
+     outranks older cohorts.
+- When a verdict or its certainty changes, the change is appended to that food's
+  **`revisions`** log and shown on the card. If the *method itself* changes, bump
+  `METHODOLOGY_VERSION`.
 
-We try to state what *would* change our mind for each contested food, so the
-verdict is falsifiable rather than just an opinion.
+We try to state what *would* change our mind, so verdicts are falsifiable.
 
-## 7. Honest limitations
+## 8. Honest limitations
 
 - The food list is **curated, not exhaustive.**
-- Selecting and weighting studies still involves judgement; we cite sources so you
-  can check and contest us.
-- Verdicts are **population averages.** Individuals (age, genetics, conditions,
-  baseline diet) can differ substantially.
-- Outcomes considered are mostly mortality/CVD/diabetes; a food can be neutral for
-  these and still matter for other outcomes.
+- Selecting/weighting studies still involves judgement; we cite sources so you can
+  check us.
+- Verdicts are **population averages**; individuals can differ substantially.
+- We grade certainty as a rubric, not by recomputing every published score.
 - **This is not medical or dietary advice.**
 
 ---
 
 ## Reference frameworks
 
-- **World Cancer Research Fund / AICR** — Continuous Update Project evidence-grading
-  criteria (convincing / probable / limited–suggestive / limited–no conclusion /
-  substantial effect unlikely) and the evidence "matrix."
-- **GRADE** — Grading of Recommendations, Assessment, Development and Evaluations,
-  for rating certainty of evidence.
-- **Bradford Hill (1965)** — viewpoints for distinguishing association from
-  causation.
-- **IHME / Global Burden of Disease "Burden of Proof"** — risk-function and star
-  ratings approach to conservative effect estimation.
-- **Cochrane risk-of-bias** tooling for appraising individual studies.
+- **NutriGrade** — Schwingshackl et al., *Adv Nutr* 2016 (certainty scoring for
+  cohort/RCT meta-analyses). *[verified in research run]*
+- **IHME / GBD Burden of Proof Risk Function** — Zheng et al., *Nat Med* 2022;
+  GBD 2021, *Lancet* 2024 (conservative effect + star ratings). *[verified]*
+- **World Cancer Research Fund / AICR** — CUP grading criteria & evidence matrix.
+- **GRADE** — certainty-of-evidence grading.
+- **Bradford Hill (1965)** — viewpoints on association vs causation.
+- **Cochrane risk-of-bias** — appraising individual studies.
 
-> A fuller, source-by-source research write-up of these frameworks lives in
-> `research/methodology-research.md`.
+Full source list and verification notes:
+[`research/methodology-research.md`](./research/methodology-research.md).
 
 ---
 
@@ -182,4 +191,5 @@ verdict is falsifiable rather than just an opinion.
 
 | Version | Date | Change |
 |---------|------|--------|
-| 0.1 | 2026-06-28 | Initial methodology: question framing, evidence hierarchy, label + WCRF/GRADE-style certainty tiers, bias handling, Bradford Hill, and the challenge/revision process. |
+| 0.2 | 2026-06-28 | Adopted NutriGrade-aligned certainty tiers (High/Moderate/Low/Very low) and Burden-of-Proof direction logic (label only when the conservative interval excludes the null; neutral by default). Added the explicit combined decision rule, multi-outcome and grade-disagreement rules, the substitution/FFQ confidence-lowering caveat, and provenance attribution. Grounded in the verified research write-up. |
+| 0.1 | 2026-06-28 | Initial methodology: question framing, evidence hierarchy, WCRF-style tiers, bias handling, Bradford Hill, challenge/revision process. |

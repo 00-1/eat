@@ -22,12 +22,12 @@
   // ---- Constants ----
   const EFFECT_LABEL = { positive: "Positive", negative: "Negative", neutral: "Neutral / mixed" };
   const EFFECT_ORDER = { positive: 0, neutral: 1, negative: 2 };
-  const CERTAINTY_RANK = { convincing: 4, probable: 3, limited: 2, inconclusive: 1 };
+  const CERTAINTY_RANK = { high: 4, moderate: 3, low: 2, "very-low": 1 };
   const CERTAINTY_LABEL = {
-    convincing: "Convincing",
-    probable: "Probable",
-    limited: "Limited",
-    inconclusive: "Inconclusive",
+    high: "High certainty",
+    moderate: "Moderate certainty",
+    low: "Low certainty",
+    "very-low": "Very low certainty",
   };
 
   // ---- Helpers ----

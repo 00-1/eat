@@ -17,8 +17,8 @@
  *   name        display name
  *   category    food group
  *   effect      "positive" | "negative" | "neutral"
- *   certainty   "convincing" | "probable" | "limited" | "inconclusive"
- *                 (World Cancer Research Fund-style tiers; see methodology)
+ *   certainty   "high" | "moderate" | "low" | "very-low"
+ *                 (NutriGrade-aligned certainty tiers; see methodology)
  *   outcomes    health outcomes the verdict is mainly based on
  *   summary     one-line plain-language takeaway
  *   rationale   how the evidence maps to the label under our methodology
@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.1";
+const METHODOLOGY_VERSION = "0.2";
 
 // Where "Challenge this conclusion" buttons send people. Update to the real repo.
 const REPO_SLUG = "00-1/eat";
@@ -46,11 +46,11 @@ const FOODS = [
     name: "Tree nuts (almonds, walnuts)",
     category: "Nuts & seeds",
     effect: "positive",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["All-cause mortality", "Cardiovascular disease"],
     summary: "A daily handful is linked to meaningfully lower mortality and heart disease risk.",
     rationale:
-      "Large dose-response meta-analyses of cohorts agree on direction and magnitude, and a major dietary trial (PREDIMED) found fewer cardiovascular events on a nut-supplemented diet — so causal support is stronger than for most foods. Not graded 'convincing' because the trial tested a whole dietary pattern, not nuts alone.",
+      "Large dose-response meta-analyses of cohorts agree on direction and magnitude, and a major dietary trial (PREDIMED) found fewer cardiovascular events on a nut-supplemented diet — so causal support is stronger than for most foods. Not graded 'High' certainty because the trial tested a whole dietary pattern, not nuts alone.",
     considerations: {
       substitution: "Benefit is clearest when nuts replace refined snacks; they are calorie-dense, so 'added on top' may differ.",
       confounding: "Nut eaters tend to be more health-conscious; cohorts adjust for this but residual confounding remains.",
@@ -84,11 +84,11 @@ const FOODS = [
     name: "Legumes (beans, lentils, chickpeas)",
     category: "Legumes",
     effect: "positive",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["Heart disease", "Type 2 diabetes", "Longevity"],
     summary: "Regular beans/lentils track with lower heart disease and diabetes risk.",
     rationale:
-      "Consistent inverse associations across cohorts and cuisines, biological plausibility (fiber, low glycemic load), and convergence with trial data on intermediate markers (LDL, glycemic control) support a positive label at 'probable' certainty.",
+      "Consistent inverse associations across cohorts and cuisines, biological plausibility (fiber, low glycemic load), and convergence with trial data on intermediate markers (LDL, glycemic control) support a positive label at 'Moderate' certainty.",
     considerations: {
       substitution: "Strongest signal when legumes replace red/processed meat or refined grains.",
       confounding: "Often part of broader plant-forward patterns; hard to fully isolate.",
@@ -115,11 +115,11 @@ const FOODS = [
     name: "Whole grains (oats, barley, whole wheat)",
     category: "Grains",
     effect: "positive",
-    certainty: "convincing",
+    certainty: "high",
     outcomes: ["All-cause mortality", "Cardiovascular disease", "Type 2 diabetes"],
     summary: "Each extra serving of whole grains tracks with lower mortality and disease risk.",
     rationale:
-      "One of the best-supported food groups: large dose-response meta-analyses, a clear biological mechanism via fiber, and supportive trial evidence on risk markers. Direction is consistent enough across outcomes to grade 'convincing' — provided whole grains displace refined grains.",
+      "One of the best-supported food groups: large dose-response meta-analyses, a clear biological mechanism via fiber, and supportive trial evidence on risk markers. Direction is consistent enough across outcomes to grade 'High' certainty — provided whole grains displace refined grains.",
     considerations: {
       substitution: "Benefit is largely relative to replacing refined grains; 'whole grain' food products vary widely in quality.",
       doseResponse: "Roughly linear up to ~90 g/day, then plateaus.",
@@ -146,7 +146,7 @@ const FOODS = [
     name: "Dietary fiber (from whole foods)",
     category: "Other",
     effect: "positive",
-    certainty: "convincing",
+    certainty: "high",
     outcomes: ["All-cause mortality", "Cardiovascular disease", "Type 2 diabetes", "Colorectal cancer"],
     summary: "Higher fiber from whole foods is one of the most robust dietary predictors of better outcomes.",
     rationale:
@@ -177,11 +177,11 @@ const FOODS = [
     name: "Leafy green vegetables",
     category: "Vegetables",
     effect: "positive",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["Cardiovascular disease", "Cognitive decline"],
     summary: "Higher intake tracks with lower cardiovascular risk and slower cognitive decline.",
     rationale:
-      "Among the most consistently beneficial subgroups within fruit-and-vegetable research, with plausible mechanisms (nitrate, folate, potassium, fiber). Graded 'probable' rather than 'convincing' because healthy-user confounding is substantial and RCT outcome data are thin.",
+      "Among the most consistently beneficial subgroups within fruit-and-vegetable research, with plausible mechanisms (nitrate, folate, potassium, fiber). Graded 'Moderate' rather than 'High' certainty because healthy-user confounding is substantial and RCT outcome data are thin.",
     considerations: {
       confounding: "Greens strongly mark an overall healthy lifestyle; residual confounding likely inflates effect sizes.",
     },
@@ -207,11 +207,11 @@ const FOODS = [
     name: "Whole fruit (apples, citrus, berries)",
     category: "Fruit",
     effect: "positive",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["All-cause mortality", "Type 2 diabetes"],
     summary: "Whole fruit tracks with lower mortality and diabetes — but fruit juice does not.",
     rationale:
-      "Consistent inverse associations for whole fruit across very large cohorts, with a clear contrast against fruit juice that argues against pure confounding. Graded 'probable'.",
+      "Consistent inverse associations for whole fruit across very large cohorts, with a clear contrast against fruit juice that argues against pure confounding. Graded 'Moderate'.",
     considerations: {
       substitution: "Whole fruit vs juice matters: juice shows neutral-to-harmful associations for diabetes.",
       doseResponse: "Benefit plateaus around 2–3 servings/day.",
@@ -238,11 +238,11 @@ const FOODS = [
     name: "Fatty fish (salmon, sardines, mackerel)",
     category: "Seafood",
     effect: "positive",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["Cardiac death", "Cardiovascular disease"],
     summary: "One to two servings a week is linked to lower cardiac death.",
     rationale:
-      "Cohorts consistently show lower coronary death with modest oily-fish intake, with plausible omega-3 mechanisms. Pure omega-3 supplement RCTs are mixed, so we credit the food (not capsules) and hold certainty at 'probable'.",
+      "Cohorts consistently show lower coronary death with modest oily-fish intake, with plausible omega-3 mechanisms. Pure omega-3 supplement RCTs are mixed, so we credit the food (not capsules) and hold certainty at 'Moderate'.",
     considerations: {
       substitution: "Benefit partly reflects fish replacing red/processed meat.",
       doseResponse: "Most of the benefit appears by ~250 mg/day omega-3 (≈1–2 servings/week); little added benefit beyond.",
@@ -269,11 +269,11 @@ const FOODS = [
     name: "Extra-virgin olive oil",
     category: "Fats & oils",
     effect: "positive",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["Cardiovascular disease", "All-cause mortality"],
     summary: "Higher intake, especially replacing butter/margarine, tracks with lower CVD and mortality.",
     rationale:
-      "Backed by both large US cohorts and the PREDIMED trial (where extra-virgin olive oil was a core arm), giving better-than-usual causal support. Graded 'probable' since the trial tested a pattern, not the oil in isolation.",
+      "Backed by both large US cohorts and the PREDIMED trial (where extra-virgin olive oil was a core arm), giving better-than-usual causal support. Graded 'Moderate' since the trial tested a pattern, not the oil in isolation.",
     considerations: {
       substitution: "Clearest benefit when it replaces butter, margarine, or other animal fats.",
     },
@@ -299,11 +299,11 @@ const FOODS = [
     name: "Yogurt & fermented dairy",
     category: "Dairy",
     effect: "positive",
-    certainty: "limited",
+    certainty: "low",
     outcomes: ["Type 2 diabetes"],
     summary: "Regular yogurt is linked to modestly lower type 2 diabetes risk.",
     rationale:
-      "Fairly consistent inverse association with diabetes across cohorts, but no strong trial evidence on hard outcomes and meaningful confounding — so 'limited (suggestive)'.",
+      "Fairly consistent inverse association with diabetes across cohorts, but no strong trial evidence on hard outcomes and meaningful confounding — so 'Low' certainty.",
     considerations: {
       substitution: "Often replaces less healthy snacks; choosing unsweetened matters.",
       confounding: "Yogurt eaters tend to have healthier overall diets.",
@@ -324,11 +324,11 @@ const FOODS = [
     name: "Coffee",
     category: "Beverages",
     effect: "positive",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["All-cause mortality", "Type 2 diabetes", "Liver disease"],
     summary: "Habitual coffee (3–4 cups/day) tracks with lower mortality and diabetes risk.",
     rationale:
-      "An umbrella review across dozens of meta-analyses found mostly benefit and few harms, holding for caffeinated and decaf — which argues against caffeine-driven confounding. Graded 'probable'. Sugary coffee drinks are a different question.",
+      "An umbrella review across dozens of meta-analyses found mostly benefit and few harms, holding for caffeinated and decaf — which argues against caffeine-driven confounding. Graded 'Moderate'. Sugary coffee drinks are a different question.",
     considerations: {
       confounding: "Smoking historically confounded coffee studies; modern analyses adjust for it.",
       doseResponse: "Lowest mortality around 3–4 cups/day; benefit reverses at very high intakes for some outcomes.",
@@ -355,11 +355,11 @@ const FOODS = [
     name: "Avocado",
     category: "Fruit",
     effect: "positive",
-    certainty: "limited",
+    certainty: "low",
     outcomes: ["Cardiovascular disease"],
     summary: "Regular avocado intake is linked to lower cardiovascular risk, on a small evidence base.",
     rationale:
-      "Promising cohort signal and favorable lipid effects in feeding studies, but few large studies and short follow-up — 'limited (suggestive)'.",
+      "Promising cohort signal and favorable lipid effects in feeding studies, but few large studies and short follow-up — 'Low' certainty.",
     considerations: {
       substitution: "Benefit largest when avocado replaces butter, cheese, or processed meats.",
     },
@@ -381,11 +381,11 @@ const FOODS = [
     name: "Processed meats (bacon, sausage, deli)",
     category: "Meat",
     effect: "negative",
-    certainty: "convincing",
+    certainty: "high",
     outcomes: ["Colorectal cancer", "Cardiovascular disease", "All-cause mortality"],
     summary: "Among the most consistent harmful signals in nutrition; raises colorectal cancer and heart disease risk.",
     rationale:
-      "Consistent dose-response harm across many large cohorts, biological plausibility (nitrosamines, heme iron, sodium), and a formal IARC carcinogen classification for colorectal cancer. One of the few foods graded 'convincing'.",
+      "Consistent dose-response harm across many large cohorts, biological plausibility (nitrosamines, heme iron, sodium), and a formal IARC carcinogen classification for colorectal cancer. One of the few foods graded 'High' certainty.",
     considerations: {
       substitution: "Risk is partly relative to what it displaces; replacing with legumes/fish/poultry lowers risk in models.",
       doseResponse: "Risk rises roughly per 50 g/day, with no clear safe threshold for cancer.",
@@ -412,11 +412,11 @@ const FOODS = [
     name: "Sugar-sweetened beverages (soda)",
     category: "Beverages",
     effect: "negative",
-    certainty: "convincing",
+    certainty: "high",
     outcomes: ["Type 2 diabetes", "Weight gain", "Cardiovascular disease"],
     summary: "Regular sugary drinks robustly raise diabetes, weight, and heart disease risk.",
     rationale:
-      "Cohort consistency plus supporting randomized evidence on weight and metabolic markers, with a clear mechanism (rapid liquid sugar, low satiety). Graded 'convincing'.",
+      "Cohort consistency plus supporting randomized evidence on weight and metabolic markers, with a clear mechanism (rapid liquid sugar, low satiety). Graded 'High' certainty.",
     considerations: {
       substitution: "Replacing with water or unsweetened drinks reverses much of the risk in modeling studies.",
       doseResponse: "Risk rises per serving/day with no apparent threshold.",
@@ -443,11 +443,11 @@ const FOODS = [
     name: "Trans fats / partially hydrogenated oils",
     category: "Fats & oils",
     effect: "negative",
-    certainty: "convincing",
+    certainty: "high",
     outcomes: ["Cardiovascular disease"],
     summary: "Industrial trans fat raises heart disease risk more than any other fat per calorie.",
     rationale:
-      "Strong, coherent evidence (cohorts + controlled feeding trials showing adverse LDL/HDL shifts) — strong enough that WHO called for global elimination and many countries banned it. 'Convincing'. Now rare but still in some products.",
+      "Strong, coherent evidence (cohorts + controlled feeding trials showing adverse LDL/HDL shifts) — strong enough that WHO called for global elimination and many countries banned it. Graded 'High' certainty. Now rare but still in some products.",
     considerations: {
       doseResponse: "Even 2% of energy from trans fat measurably raises CHD risk.",
     },
@@ -467,11 +467,11 @@ const FOODS = [
     name: "Ultra-processed foods (general)",
     category: "Other",
     effect: "negative",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["All-cause mortality", "Obesity", "Cardiovascular disease"],
     summary: "Higher intake tracks with more obesity, heart disease, and mortality.",
     rationale:
-      "Consistent cohort associations PLUS a tightly controlled inpatient trial showing these foods cause overeating give this category unusual causal weight for nutrition. Held at 'probable' because the category is broad and heterogeneous (not all UPFs behave alike).",
+      "Consistent cohort associations PLUS a tightly controlled inpatient trial showing these foods cause overeating give this category unusual causal weight for nutrition. Held at 'Moderate' because the category is broad and heterogeneous (not all UPFs behave alike).",
     considerations: {
       confounding: "UPF intake correlates with lower income and other risks; cohorts adjust imperfectly.",
       substitution: "Effect reflects displacement of minimally processed foods as much as the processing itself.",
@@ -498,11 +498,11 @@ const FOODS = [
     name: "Refined grains (white bread, pastries)",
     category: "Grains",
     effect: "negative",
-    certainty: "limited",
+    certainty: "low",
     outcomes: ["Cardiovascular disease", "Type 2 diabetes"],
     summary: "High intake is linked to higher heart disease and diabetes risk — largely vs whole grains.",
     rationale:
-      "The harm is mostly relative (displacing whole grains and raising glycemic load) rather than absolute, and global cohort data are mixed by region. Graded 'limited'.",
+      "The harm is mostly relative (displacing whole grains and raising glycemic load) rather than absolute, and global cohort data are mixed by region. Graded 'Low'.",
     considerations: {
       substitution: "Much of the risk is the flip side of NOT eating whole grains.",
     },
@@ -524,11 +524,11 @@ const FOODS = [
     name: "Eggs",
     category: "Other",
     effect: "neutral",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["Cardiovascular disease"],
     summary: "For most people, moderate intake shows little net association with heart disease.",
     rationale:
-      "Large cohorts and meta-analyses mostly land near no effect for the general population, though results split (some show higher risk in people with diabetes). We grade the NEUTRAL direction as 'probable' precisely because high-quality studies disagree but cluster around null.",
+      "Large cohorts and meta-analyses mostly land near no effect for the general population, though results split (some show higher risk in people with diabetes). We grade the NEUTRAL direction as 'Moderate' precisely because high-quality studies disagree but cluster around null.",
     considerations: {
       substitution: "What eggs replace matters (vs pastries vs processed meat).",
       confounding: "Egg intake correlates with breakfast patterns and other behaviors.",
@@ -555,11 +555,11 @@ const FOODS = [
     name: "Unprocessed red meat (beef, pork)",
     category: "Meat",
     effect: "neutral",
-    certainty: "inconclusive",
+    certainty: "very-low",
     outcomes: ["All-cause mortality", "Type 2 diabetes"],
     summary: "Associations are weak, contested, and of low certainty — distinct from processed meat.",
     rationale:
-      "Some cohorts show modestly higher risk, but a major systematic review judged the certainty low and the absolute effects small; experts genuinely disagree. We label this NEUTRAL/contested at 'inconclusive' rather than asserting harm.",
+      "Some cohorts show modestly higher risk, but a major systematic review judged the certainty low and the absolute effects small; experts genuinely disagree. We label this NEUTRAL/contested at 'Very low' certainty rather than asserting harm.",
     considerations: {
       substitution: "Risk estimates depend heavily on the comparison food (poultry/fish/legumes lower modeled risk).",
       confounding: "Red-meat intake clusters with smoking, low veg intake, etc.",
@@ -586,11 +586,11 @@ const FOODS = [
     name: "Poultry (chicken, turkey)",
     category: "Meat",
     effect: "neutral",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["Cardiovascular disease"],
     summary: "Generally neutral for cardiovascular outcomes; often a 'better-than-red-meat' swap.",
     rationale:
-      "Cohorts cluster near no association for heart disease, and poultry usually appears as the favorable comparator in substitution analyses. Direction (neutral) is reasonably well supported — 'probable'.",
+      "Cohorts cluster near no association for heart disease, and poultry usually appears as the favorable comparator in substitution analyses. Direction (neutral) is reasonably well supported — 'Moderate'.",
     considerations: {
       substitution: "Looks beneficial mainly because it replaces red/processed meat; cooking method (fried) can change this.",
     },
@@ -610,11 +610,11 @@ const FOODS = [
     name: "Milk (whole or low-fat)",
     category: "Dairy",
     effect: "neutral",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["All-cause mortality", "Cardiovascular disease"],
     summary: "Overall associations with mortality and heart disease are roughly neutral.",
     rationale:
-      "Large global cohorts find little net association with hard outcomes, and the long-assumed penalty for whole-fat milk is not well supported. Neutral direction graded 'probable'.",
+      "Large global cohorts find little net association with hard outcomes, and the long-assumed penalty for whole-fat milk is not well supported. Neutral direction graded 'Moderate'.",
     considerations: {
       substitution: "Fat content matters less than expected; what milk replaces (e.g., soda) can dominate.",
     },
@@ -634,11 +634,11 @@ const FOODS = [
     name: "Cheese",
     category: "Dairy",
     effect: "neutral",
-    certainty: "probable",
+    certainty: "moderate",
     outcomes: ["Cardiovascular disease"],
     summary: "Despite saturated fat and salt, associations with heart disease are roughly neutral.",
     rationale:
-      "Meta-analyses show a flat or slightly favorable relationship, attributed to the fermented 'dairy matrix'. Neutral direction is fairly consistent — 'probable'.",
+      "Meta-analyses show a flat or slightly favorable relationship, attributed to the fermented 'dairy matrix'. Neutral direction is fairly consistent — 'Moderate'.",
     considerations: {
       confounding: "Cheese is embedded in varied dietary patterns; hard to isolate.",
       doseResponse: "Some analyses suggest a shallow U-shape (modest intake ≈ lowest risk).",
@@ -659,11 +659,11 @@ const FOODS = [
     name: "Butter",
     category: "Fats & oils",
     effect: "neutral",
-    certainty: "limited",
+    certainty: "low",
     outcomes: ["All-cause mortality", "Cardiovascular disease"],
     summary: "Only weakly associated with mortality and not clearly with heart disease.",
     rationale:
-      "A meta-analysis found small, mostly non-significant associations. The verdict is highly substitution-dependent (worse than olive oil, better than trans fat), so we label neutral at 'limited'.",
+      "A meta-analysis found small, mostly non-significant associations. The verdict is highly substitution-dependent (worse than olive oil, better than trans fat), so we label neutral at 'Low'.",
     considerations: {
       substitution: "Replacing butter with olive/seed oils lowers modeled CVD risk; replacing trans fat with butter lowers it.",
     },
@@ -683,11 +683,11 @@ const FOODS = [
     name: "White potatoes (boiled/baked)",
     category: "Vegetables",
     effect: "neutral",
-    certainty: "limited",
+    certainty: "low",
     outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
     summary: "Non-fried potatoes look roughly neutral; fries are a separate, worse story.",
     rationale:
-      "Associations for boiled/baked potatoes are weak and inconsistent, while French fries show clearer harm — so we keep plain potatoes neutral at 'limited' and call out preparation.",
+      "Associations for boiled/baked potatoes are weak and inconsistent, while French fries show clearer harm — so we keep plain potatoes neutral at 'Low' and call out preparation.",
     considerations: {
       substitution: "High glycemic load means swaps to whole grains/legumes look better in models.",
       doseResponse: "Risk signals appear mainly at high intakes and for fried forms.",
@@ -708,11 +708,11 @@ const FOODS = [
     name: "Moderate alcohol",
     category: "Beverages",
     effect: "neutral",
-    certainty: "limited",
+    certainty: "low",
     outcomes: ["All-cause mortality", "Cancer"],
     summary: "Once-claimed benefits largely vanish after correcting for bias; increasingly seen as not protective.",
     rationale:
-      "Earlier cohorts suggested a J-curve, but analyses correcting for 'sick-quitter' and abstainer biases find no clear protection and rising harm with intake (cancer risk increases from low levels). We label NEUTRAL (no net benefit) at 'limited', trending toward harm. This is an active area of revision.",
+      "Earlier cohorts suggested a J-curve, but analyses correcting for 'sick-quitter' and abstainer biases find no clear protection and rising harm with intake (cancer risk increases from low levels). We label NEUTRAL (no net benefit) at 'Low', trending toward harm. This is an active area of revision.",
     considerations: {
       confounding: "Light drinkers are healthier for reasons other than alcohol; former drinkers contaminate the 'abstainer' group.",
       doseResponse: "Cancer risk rises roughly linearly from low intake; cardiovascular 'benefit' is contested.",
@@ -744,11 +744,11 @@ const FOODS = [
     name: "Artificial sweeteners",
     category: "Other",
     effect: "neutral",
-    certainty: "inconclusive",
+    certainty: "very-low",
     outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
     summary: "Genuinely mixed evidence; net long-term effect is uncertain.",
     rationale:
-      "Some cohorts link them to cardiometabolic risk (likely partly reverse causation — at-risk people switch to them), while substitution trials replacing sugary drinks show short-term benefit. We label NEUTRAL at 'inconclusive' and flag this as unsettled.",
+      "Some cohorts link them to cardiometabolic risk (likely partly reverse causation — at-risk people switch to them), while substitution trials replacing sugary drinks show short-term benefit. We label NEUTRAL at 'Very low' certainty and flag this as unsettled.",
     considerations: {
       confounding: "Strong reverse causation: people already at risk choose diet products.",
       substitution: "Compared with sugary drinks they look better; compared with water, possibly not.",
@@ -769,11 +769,11 @@ const FOODS = [
     name: "Coconut oil",
     category: "Fats & oils",
     effect: "neutral",
-    certainty: "limited",
+    certainty: "low",
     outcomes: ["Cardiovascular risk markers"],
     summary: "Raises LDL like other saturated fats; little direct outcome data — treat as a saturated fat.",
     rationale:
-      "Controlled trials show it raises LDL cholesterol versus unsaturated oils, but there is little direct cohort evidence on heart attacks or mortality, and no support for special benefit. Neutral-pending at 'limited'.",
+      "Controlled trials show it raises LDL cholesterol versus unsaturated oils, but there is little direct cohort evidence on heart attacks or mortality, and no support for special benefit. Neutral-pending at 'Low'.",
     considerations: {
       substitution: "Worse than olive/seed oils for LDL; better than butter/trans fat is not established.",
     },

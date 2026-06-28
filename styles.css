@@ -199,10 +199,10 @@ a { color: var(--accent); }
   border-radius: 999px;
   border: 1px solid transparent;
 }
-.tier.convincing  { background: #e4f0ff; color: #1559b0; border-color: #c9e0fb; }
-.tier.probable    { background: #e9f6ee; color: #1f7a46; border-color: #cdebd8; }
-.tier.limited     { background: #fdf3e2; color: #9a6b08; border-color: #f3e2bf; }
-.tier.inconclusive{ background: #eef0ee; color: #5a655e; border-color: #dfe3df; }
+.tier.high      { background: #e4f0ff; color: #1559b0; border-color: #c9e0fb; }
+.tier.moderate  { background: #e9f6ee; color: #1f7a46; border-color: #cdebd8; }
+.tier.low       { background: #fdf3e2; color: #9a6b08; border-color: #f3e2bf; }
+.tier.very-low  { background: #eef0ee; color: #5a655e; border-color: #dfe3df; }
 
 /* Expanded detail */
 .card-detail { padding: 4px 18px 18px; border-top: 1px solid var(--line); margin-top: 4px; }

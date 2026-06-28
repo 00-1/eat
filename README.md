@@ -14,8 +14,8 @@ can be challenged.
 Each food has:
 
 - a **verdict** — 🟢 positive · 🟡 neutral/mixed · 🔴 negative;
-- a **certainty tier** — convincing → probable → limited → inconclusive
-  (World Cancer Research Fund / GRADE-style);
+- a **certainty tier** — high → moderate → low → very low
+  (NutriGrade-aligned);
 - the **studies** the verdict rests on (mostly cohort meta-analyses and large
   prospective cohorts, cross-checked against trials), each linking to PubMed;
 - the **reasoning** for the verdict and the **key caveats** that matter for that
@@ -81,7 +81,7 @@ caveats, and the studies behind it:
   name: "Tree nuts (almonds, walnuts)",
   category: "Nuts & seeds",
   effect: "positive",            // "positive" | "negative" | "neutral"
-  certainty: "probable",         // convincing | probable | limited | inconclusive
+  certainty: "moderate",         // high | moderate | low | very-low (NutriGrade-aligned)
   outcomes: ["All-cause mortality", "Cardiovascular disease"],
   summary: "One-line takeaway.",
   rationale: "How the evidence maps to the label under our methodology.",
