@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diet Effects — what really happens when you add a food</title>
+  <meta name="description" content="Whether common foods generally have a positive, negative, or neutral effect when added to your diet, based on free-living observational data." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <h1>Does adding this food help, hurt, or do nothing?</h1>
+      <p class="tagline">
+        Common foods rated by what generally happens when they’re <strong>added</strong> to
+        a real-world diet — drawn from large observational cohort studies and meta-analyses.
+      </p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="controls" aria-label="Filter foods">
+      <input
+        type="search"
+        id="search"
+        class="search"
+        placeholder="Search foods (e.g. nuts, soda, eggs)…"
+        autocomplete="off"
+        aria-label="Search foods"
+      />
+
+      <div class="filter-row" role="group" aria-label="Filter by effect">
+        <button class="chip is-active" data-effect="all">All</button>
+        <button class="chip" data-effect="positive">Positive</button>
+        <button class="chip" data-effect="neutral">Neutral / mixed</button>
+        <button class="chip" data-effect="negative">Negative</button>
+      </div>
+
+      <label class="select-wrap">
+        <span class="visually-hidden">Filter by category</span>
+        <select id="category" class="select" aria-label="Filter by category">
+          <option value="all">All categories</option>
+        </select>
+      </label>
+    </section>
+
+    <p id="count" class="count" aria-live="polite"></p>
+
+    <ul id="list" class="grid" aria-live="polite"></ul>
+
+    <p id="empty" class="empty" hidden>No foods match your filters.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <h2>How to read this</h2>
+      <p>
+        Ratings reflect the <strong>general direction of association</strong> seen in
+        prospective cohort studies and meta-analyses (think Nurses’ Health Study, EPIC,
+        PURE, and pooled analyses) for outcomes such as all-cause mortality,
+        cardiovascular disease, and type 2 diabetes — i.e. what tends to happen when
+        people <em>add</em> a food to how they already eat.
+      </p>
+      <ul class="legend">
+        <li><span class="dot positive"></span><strong>Positive</strong> — added intake is associated with better outcomes</li>
+        <li><span class="dot neutral"></span><strong>Neutral / mixed</strong> — little net association, or evidence points both ways</li>
+        <li><span class="dot negative"></span><strong>Negative</strong> — added intake is associated with worse outcomes</li>
+      </ul>
+      <p class="caveat">
+        <strong>Important caveats.</strong> These are population-level <em>associations</em>
+        from observational data, not proof of cause and effect, and not personal medical
+        or dietary advice. Effects depend heavily on <em>what a food replaces</em> (e.g. nuts
+        instead of chips), your overall pattern of eating, quantity, and individual health.
+        Observational studies can be confounded by lifestyle. Talk to a qualified
+        professional about your own diet.
+      </p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
