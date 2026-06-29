@@ -63,7 +63,8 @@ tiers:
 ### 4a. The reproducible scoring engine
 
 Certainty is **computed, not assigned.** We do not hand-pick a tier or even the
-sub-scores. Instead, for each food we record a set of **objective evidence facts**,
+sub-scores. Instead, for each food we record a set of **evidence facts** (some
+objective like sample size, some recorded judgements like heterogeneity),
 and a deterministic function (`scoring.js`) turns those facts into eight 0–2
 sub-scores, a total (max 16), and the tier. Human judgement lives only in the
 *rules* (which facts matter, where the thresholds sit) — applied identically to

@@ -296,6 +296,7 @@
               "<span class='tier " + food.certainty + "'>" + CERTAINTY_LABEL[food.certainty] + "</span>" +
               magnitudeChip(food) +
               basisChip(food) +
+              verifiedChip(food) +
               "<span class='outcomes'>" + escapeHtml((food.outcomes || []).join(" · ")) + "</span>" +
               "<span class='expand-hint'>Evidence ▾</span>" +
             "</div>" +
@@ -330,6 +331,31 @@
       filtered.length === total
         ? "Showing all " + total + " foods"
         : "Showing " + filtered.length + " of " + total + " foods";
+  }
+
+  // ---- Provenance: are a food's recorded facts source-verified yet? ----
+  function isVerified(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    return !!(a && a.verified);
+  }
+  function verifiedChip(food) {
+    return isVerified(food)
+      ? "<span class='prov prov-yes' title='Recorded facts checked against the cited sources'>✓ source-verified</span>"
+      : "<span class='prov prov-no' title='Figures are best-estimates from background knowledge, not yet individually checked against sources'>facts estimated</span>";
+  }
+
+  // Honest, always-visible status of how well-grounded the data is.
+  function renderDataStatus() {
+    const el = document.getElementById("data-status");
+    if (!el) return;
+    const total = FOODS.length;
+    const verified = FOODS.filter(isVerified).length;
+    el.innerHTML =
+      "<strong>Data status:</strong> " + verified + " of " + total +
+      " foods source-verified. The <em>method</em> is tested and reproducible, but most of the " +
+      "underlying figures (relative risks, sample sizes, prevalences) are best-estimates from " +
+      "background knowledge, not yet individually checked against the cited papers — so treat " +
+      "verdicts as <strong>provisional</strong>. (Verification is the top item in the roadmap.)";
   }
 
   // ---- Highlights: the sure, high-impact bets in each direction ----
@@ -451,6 +477,7 @@
   document.getElementById("method-ver").textContent =
     "v" + (typeof METHODOLOGY_VERSION !== "undefined" ? METHODOLOGY_VERSION : "?");
   populateCategories();
+  renderDataStatus();
   renderHighlights();
   render();
 })();

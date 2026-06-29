@@ -100,4 +100,5 @@ this is a planned next step (see `ROADMAP.md`).
 819000`, `heterogeneity low`, `outcomeType hard`, `doseResponse graded`, `rctLevel
 pattern` (PREDIMED), `pubBias tested-clean`, `confoundingRisk moderate` → engine
 computes 14/16 → **high certainty**, **large** magnitude, **observation-led** →
-**Gold standard**. We did not type any of those four conclusions; the facts did.
+**Gold standard**. We didn't hand-set any of those four conclusions — they're
+computed from the recorded facts (which themselves still need source-verifying).

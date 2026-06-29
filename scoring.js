@@ -1,7 +1,9 @@
 /*
  * Deterministic scoring engine.
  *
- * Scores are a PURE FUNCTION of recorded evidence facts — never hand-assigned.
+ * Scores are deterministic given the recorded inputs — they're computed, not
+ * hand-assigned. (The determinism is real; the inputs themselves are recorded
+ * judgements, many not yet source-verified — see the data-status note in the app.)
  * Human judgement lives only in these rules (which facts matter and where the
  * thresholds sit), applied identically to every food. Change an input fact and
  * the score recomputes; change a rule here and every food re-scores.

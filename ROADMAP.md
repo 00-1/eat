@@ -34,9 +34,13 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
 **Provenance (the central concern) — make data as inspectable as the method:**
 - [ ] **A1/A3** — add a `source` (PMID/DOI/figure) per score-driving fact incl.
       ordinal calls; test that score-driving facts are sourced.
-- [ ] **A2/E1** — surface provenance/uncertainty in the UI: a per-food `verified`
-      flag + a persistent "facts not yet source-verified / not medical advice"
-      banner on cards and the highlights block.
+- [x] **A2/E1** — provenance is now surfaced: a persistent honest "Data status"
+      banner ("N of 26 source-verified … treat verdicts as provisional") + a
+      per-food `verified` flag rendered as a "facts estimated / ✓ source-verified"
+      chip. The flags flip to true as the verification pass (A1/A3) lands.
+- [x] **G2** — softened "objective/pure/we didn't type these" language to
+      "deterministic given the recorded judgements" across scoring.js/METHODOLOGY/
+      ADDING-FOODS/the Approach tab.
 - [ ] **B5/B6/G3** — record RRs that match a real reported figure for the stated
       outcome (flag extrapolations like trans-fat 1.35); replace placeholder
       citations; store PMIDs/DOIs.
@@ -96,6 +100,18 @@ The list is 26 foods; the framework should scale to hundreds. Needed:
 - [ ] Consider a batch research workflow that, given a food name, returns the
       structured `evidence` + `exceptions` + draft studies for human review.
 - [ ] Decide list scope/priorities (most-eaten foods first? most-asked-about?).
+
+## Policy
+
+**Highlight inadequacies, don't hide them.** Going forward, any known weakness —
+unverified inputs, coverage gaps, contested verdicts, method limitations — is
+surfaced in the app/docs by default rather than left implicit. Transparency about
+what we *don't* know is a feature, not an embarrassment.
+
+## Publishing  ⟶ *backlog*
+
+- [ ] Deploy as a GitHub Pages site (static, no build step — should be trivial).
+      Not yet published; no viewer yet.
 
 ## 3. Absolute impact (beyond relative effect)  ⟶ *idea*
 
