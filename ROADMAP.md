@@ -54,7 +54,9 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
       carcinogens like alcohol). Cancer outcomes present where grade is strong
       (processed meat→colorectal, soy→cancer mortality). Broader cancer-outcome
       coverage waits on the per-outcome model + grounding.
-- [ ] **D2** — record per-food per-category exception status (checked-clear vs n/a).
+- [ ] **D2** (deferred — deliberate data task, lower value): record per-food
+      per-exception-type status (checked-clear vs n/a) so the fixed checklist's
+      coverage is visible. Verbose (31 foods × ~7 types); do as its own pass.
 - [~] **D3** — placeholder DONE (v0.17): foods with no steelman now show an honest
       "no counter-argument assessed yet — known gap" note (8 foods: fiber, olive-oil,
       coffee, avocado, trans-fat, poultry, green-tea, tomatoes). Finishing the
@@ -139,15 +141,16 @@ group(s) it belongs to**, all computed by the same engine.
       strength.
 - [x] Compact group chip on the collapsed card (v0.24) — tomatoes shows
       "⊕ Vegetables: Positive" at a glance.
-- [ ] **Processing classes as groups, not items.** Ultra-processed foods and
-      refined grains are *classes*, not things you eat directly (same problem as
-      fibre) — but they have real outcome evidence (Hall RCT for UPF), so they
-      survive as **groups** with member items (soda, white bread, white rice…), not
-      standalone rows.
-- [ ] **Item-splitting where one row hides two foods.** Potatoes bundles
-      boiled/baked (≈neutral) with fries (worse); cocoa bundles the flavanol extract
-      (trialled) with the chocolate bar (sugar+fat). Split into distinct items where
-      the outcome genuinely differs by form/preparation.
+- [x] **Processing classes — DECIDED: keep as items.** Unlike fibre (a molecule you
+      can't eat), ultra-processed food and refined grains are *consumable dietary
+      patterns* you can meaningfully shift toward/away from, with direct outcome
+      evidence (the Hall RCT literally fed "an ultra-processed diet"). So they stay
+      as verdict-bearing items; specific members (soda→sugary-drinks, white rice) are
+      also their own items. No disruptive refactor.
+- [~] **Item-splitting.** Cocoa: RESOLVED via the component-context layer (v0.23) —
+      one "dark chocolate" item with the flavanol-vs-bar distinction shown as context,
+      no separate item needed. Potatoes→fries: the one genuine split still pending —
+      gated on a sourced fried-potato figure (in the running groups/splits batch).
 - [ ] **Fermented dairy** as a group: yogurt + cheese (+ kefir, quark…) are all
       fermented dairy but currently scattered as separate items with different
       outcomes/verdicts. The old "Yogurt & fermented dairy" name double-counted
@@ -170,6 +173,12 @@ group(s) it belongs to**, all computed by the same engine.
 Three issues the food-by-food review exposed where the engine is behaving but the
 *calibration* is questionable. None is a bug; all are "highlight inadequacies."
 
+- [~] **PER-OUTCOME MODEL (next big build; partly research-gated).** The remaining
+      architectural piece, unblocking (a), (a2), per-outcome dose curves, and broader
+      cancer coverage (D1). Design: additive `outcomeVerdicts` on a food (each its own
+      evidence → engine → verdict + curve), rendered like the group conclusions —
+      NOT a full restructure of every food. Gated on sourced per-outcome figures:
+      red-meat→T2D RR, alcohol→cancer RR. Build when those land.
 - [ ] **(a) Red-meat vs white-rice diabetes inconsistency.** White rice is
       Negative/Moderate for type-2 diabetes (RR 1.18, CI excludes null) while
       unprocessed red meat lands Neutral (RR 1.10, CI crosses null) — yet red
