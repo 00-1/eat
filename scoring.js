@@ -301,6 +301,10 @@
       note: "Benefit rises then flattens — past the plateau, extra intake adds little." },
     "plateau-harm": { label: "Plateau (harm)", dir: "harm",
       note: "Harm rises then flattens at higher intake." },
+    "threshold-harm": { label: "Safe up to a point", dir: "harm",
+      note: "Little change at low intake, then risk climbs once a threshold is passed." },
+    "threshold-benefit": { label: "Kicks in past a point", dir: "benefit",
+      note: "Little change at low intake, then benefit appears above a threshold." },
     "j-u-curve": { label: "J / U-shaped", dir: "mixed",
       note: "A sweet spot — lowest risk at moderate intake, higher at the extremes." },
     "flat": { label: "No dose-response", dir: "neutral",
@@ -331,10 +335,13 @@
     var changes = 0;
     for (var j = 1; j < nz.length; j++) if (nz[j] !== nz[j - 1]) changes++;
     if (changes >= 1) return "j-u-curve"; // a genuine reversal of direction
-    var last = dirs[dirs.length - 1];
-    if (anyDown && !anyUp) return last === 0 ? "plateau-benefit" : "monotonic-benefit";
-    if (anyUp && !anyDown) return last === 0 ? "plateau-harm" : "monotonic-harm";
-    return null;
+    // monotonic overall (no reversal). Distinguish a leading flat run (threshold:
+    // little happens, then it moves) from a trailing flat run (plateau: it moves,
+    // then levels off) from neither (steady monotonic).
+    var sign = nz[0]; // +1 harm, -1 benefit
+    if (dirs[0] === 0) return sign < 0 ? "threshold-benefit" : "threshold-harm";
+    if (dirs[dirs.length - 1] === 0) return sign < 0 ? "plateau-benefit" : "plateau-harm";
+    return sign < 0 ? "monotonic-benefit" : "monotonic-harm";
   }
 
   var api = {

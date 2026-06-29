@@ -227,10 +227,9 @@ make a shaky input look authoritative, so this is the top priority.
       (`directionallyConsistent`). Whole grains gained the credit (11→12) but stays
       Moderate — to reach High it would also need stronger experimental/precision
       support, which is the honest result. No tier flips.
-- [ ] **White-rice threshold curve.** Its association is non-linear (≈neutral to
-      ~300 g/day, then rising) — needs a `threshold-harm` shape in the dose-curve
-      vocabulary before it can be charted honestly (current shapes would mislabel it
-      "dose makes the poison").
+- [x] **White-rice threshold curve.** DONE (v0.17): added `threshold-harm` /
+      `threshold-benefit` shapes (classifier distinguishes leading-flat threshold
+      from trailing-flat plateau) and charted white rice's verified non-linear curve.
 - [ ] **Exception prevalence** (`exceptions.js`): replace estimate-with-basis
       figures with sourced numbers (allergy %, lactose malabsorption, celiac,
       IBS, G6PD, PKU, etc.).

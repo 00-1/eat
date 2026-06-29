@@ -289,6 +289,10 @@ test("classifyDoseShape derives the shape from the curve points", () => {
   assert.equal(c([{ x: 0, rr: 1.0 }, { x: 15, rr: 0.86 }, { x: 28, rr: 0.78 }, { x: 45, rr: 0.8 }]), "plateau-benefit");
   // plateau harm — rises then flattens
   assert.equal(c([{ x: 0, rr: 1.0 }, { x: 1, rr: 1.2 }, { x: 2, rr: 1.35 }, { x: 3, rr: 1.36 }]), "plateau-harm");
+  // threshold harm — flat at low intake, then climbs (white rice)
+  assert.equal(c([{ x: 0, rr: 1.0 }, { x: 158, rr: 0.97 }, { x: 300, rr: 1.02 }, { x: 450, rr: 1.16 }]), "threshold-harm");
+  // threshold benefit — flat then falls
+  assert.equal(c([{ x: 0, rr: 1.0 }, { x: 1, rr: 1.0 }, { x: 2, rr: 0.9 }, { x: 3, rr: 0.8 }]), "threshold-benefit");
   // J/U — down then up (a real reversal)
   assert.equal(c([{ x: 0, rr: 1.0 }, { x: 1, rr: 0.85 }, { x: 2, rr: 0.9 }, { x: 4, rr: 1.2 }]), "j-u-curve");
   // flat — barely moves

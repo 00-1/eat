@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.16";
+const METHODOLOGY_VERSION = "0.17";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1181,6 +1181,12 @@ const ASSESSMENTS = {
     sources: {
       pooledRR: { figure: "RR 1.16 (1.02–1.32) extreme categories; non-linear (RR 0.97 at ~158 g/day, 1.13 per serving above ~300 g/day); I²=73%", cite: "Yu/Balaji 2022 BMJ Open", id: "PMID:36167362" },
       participants: { figure: "577,426 participants, 25,956 cases, 8 cohorts", cite: "Yu/Balaji 2022 BMJ Open", id: "PMID:36167362" },
+    },
+    doseCurve: {
+      outcome: "Type 2 diabetes", unit: "g/day", shape: "threshold-harm", normalRange: [0, 300],
+      points: [ { x: 0, rr: 1.0 }, { x: 158, rr: 0.97, lo: 0.92, hi: 1.02 }, { x: 300, rr: 1.02 }, { x: 450, rr: 1.16, lo: 1.02, hi: 1.32 } ],
+      note: "Roughly neutral up to ~1 serving/day; risk climbs only above ~300 g/day — which is why the harm is large in rice-staple populations and small in Western diets.",
+      source: { cite: "Yu/Balaji 2022 BMJ Open", id: "PMID:36167362" }, verified: false,
     },
   },
   "soy": {
