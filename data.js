@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.27";
+const METHODOLOGY_VERSION = "0.28";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1219,7 +1219,16 @@ const ASSESSMENTS = {
   },
   "red-meat": {
     evidence: { pooledRR: 1.1, ciExcludesNull: false, participants: 1000000, heterogeneity: "high", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "highest vs lowest habitual intake" },
-    effectEstimate: "Small, inconsistent excess risk; a GRADE review judged certainty low; interval near/over no-effect → contested.",
+    effectEstimate: "On all-cause/CV mortality: small, inconsistent excess risk; a GRADE review judged certainty low; interval near/over no-effect → contested (headline = neutral). But see the per-outcome diabetes verdict below.",
+    outcomeVerdicts: [
+      {
+        outcome: "Type 2 diabetes", effect: "negative",
+        evidence: { pooledRR: 1.10, ciExcludesNull: true, participants: 1970000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "per 100 g/day" },
+        rationale: "Unlike the contested mortality signal, the diabetes association is consistent: HR 1.10 (1.06–1.15) per 100 g/day in the largest IPD meta-analysis (1.97M; Shi 2023 puts it higher at 1.27). Modest and confounding-prone, so Low certainty — but directional. This is why red meat reads neutral overall yet negative for diabetes (mirroring white rice).",
+        source: { cite: "Li 2024 Lancet Diabetes Endocrinol (IPD, 1.97M); Shi 2023 EHJ", id: "PMID:39174153" },
+        verified: true,
+      },
+    ],
   },
   "poultry": {
     evidence: { pooledRR: 1, ciExcludesNull: false, participants: 300000, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake" },
@@ -1267,13 +1276,22 @@ const ASSESSMENTS = {
   },
   "alcohol": {
     evidence: { pooledRR: 1, ciExcludesNull: false, participants: 4800000, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "high", intakeBasis: "moderate intake vs none (bias-adjusted)" },
-    effectEstimate: "No significant mortality protection after bias adjustment; cancer risk rises from low intake → net neutral, trending harmful.",
-    doseCurve: {
-      outcome: "Cancer (breast, colorectal, liver, oral)", unit: "drinks/day", shape: "monotonic-harm", normalRange: [0, 2],
-      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 1.05 }, { x: 2, rr: 1.13 }, { x: 4, rr: 1.32 } ],
-      note: "This is the CANCER curve — risk rises from the very first drink (alcohol is an IARC Group 1 carcinogen). The all-cause-mortality curve is the contested 'J'; the headline chip reflects mortality, this shows why 'neutral' understates the cancer story.",
-      source: { cite: "GBD 2018 Alcohol, Lancet; Zhao 2023 JAMA Netw Open", id: "10.1016/S0140-6736(18)31310-2" }, verified: false,
-    },
+    effectEstimate: "On all-cause mortality: no significant protection after bias adjustment → headline neutral. But cancer risk rises from low intake — see the per-outcome cancer verdict below.",
+    outcomeVerdicts: [
+      {
+        outcome: "Cancer (breast, aerodigestive)", effect: "negative",
+        evidence: { pooledRR: 1.10, ciExcludesNull: true, participants: 600000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~1–2 drinks/day vs none" },
+        rationale: "Alcohol is an IARC Group 1 carcinogen and breast-cancer risk rises monotonically from the first drink — RR 1.071 (1.055–1.087) per 10 g/day (Collaborative Group 2002); light drinking already significant (1.05). No safe threshold. This is the harm the mortality headline understates.",
+        doseCurve: {
+          outcome: "Cancer (breast, aerodigestive)", unit: "drinks/day", shape: "monotonic-harm", normalRange: [0, 2],
+          points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 1.07 }, { x: 2, rr: 1.15 }, { x: 4, rr: 1.32 } ],
+          note: "Risk rises from the very first drink — there is no safe threshold for cancer.",
+          source: { cite: "Collaborative Group 2002 Br J Cancer; Bagnardi 2013", id: "PMID:12439712" }, verified: true,
+        },
+        source: { cite: "Collaborative Group on Hormonal Factors in Breast Cancer 2002", id: "PMID:12439712" },
+        verified: true,
+      },
+    ],
   },
   "artificial-sweeteners": {
     evidence: { pooledRR: 1.09, ciExcludesNull: false, participants: 100000, heterogeneity: "high", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "high vs no intake" },

@@ -137,11 +137,10 @@ group(s) it belongs to**, all computed by the same engine.
       total dairy population-dependent). Fruit/legumes/whole-grains groups NOT added —
       they'd overlap the existing same-name *items*; resolving that needs an item
       rename (e.g. "legumes" item → "beans & lentils" + a legumes group). Queued.
-- [ ] Re-ground items that were riding a group's evidence: walk **cruciferous** and
-      **leafy greens** self-verdicts back to their honest (thinner) food-specific
-      level (needs per-food evidence work — their current self RR is borrowed from
-      the F&V umbrella). Now lower-stakes since the group conclusion carries the
-      strength.
+- [ ] Re-ground **cruciferous** and **leafy greens** self-verdicts (their current RR
+      is borrowed from the F&V umbrella). Cruciferous/leafy-green-SPECIFIC outcome
+      figures **could not be verified** in the last research round — still gated on a
+      targeted source. Low-stakes now that the Vegetables group carries the strength.
 - [x] Compact group chip on the collapsed card (v0.24) — tomatoes shows
       "⊕ Vegetables: Positive" at a glance.
 - [x] **Processing classes — DECIDED: keep as items.** Unlike fibre (a molecule you
@@ -174,12 +173,17 @@ group(s) it belongs to**, all computed by the same engine.
 Three issues the food-by-food review exposed where the engine is behaving but the
 *calibration* is questionable. None is a bug; all are "highlight inadequacies."
 
-- [~] **PER-OUTCOME MODEL.** FRAMEWORK DONE (v0.27, in parallel with the running
-      research): additive `outcomeVerdicts` (each own evidence + optional dose curve,
-      scored live) rendered as a "By individual outcome" block; tested. Just needs
-      POPULATING with the sourced figures (red-meat→T2D, alcohol→cancer) from the
-      running batch — then (a), (a2), and per-outcome curves all close.
-- [ ] **(a) Red-meat vs white-rice diabetes inconsistency.** White rice is
+- [x] **PER-OUTCOME MODEL — DONE (v0.27 framework, v0.28 populated).** Red meat
+      (negative-on-diabetes, Li 2024 Lancet IPD) and alcohol (negative-on-cancer,
+      Collaborative 2002, with the monotonic-harm curve) now carry per-outcome
+      verdicts. Closes (a), (a2), and per-outcome dose curves.
+- [x] **(a) Red-meat vs white-rice diabetes inconsistency — RESOLVED (v0.28)** via
+      the per-outcome model: red meat now carries an explicit negative-on-diabetes
+      verdict (Li 2024 Lancet IPD HR 1.10/100 g/day), like white rice.
+- [x] **(a2) Alcohol under-called — RESOLVED (v0.28):** alcohol now carries a
+      negative-on-cancer per-outcome verdict (Collaborative 2002, rises from the first
+      drink) alongside the neutral mortality headline.
+- [ ] (orig a) White rice is
       Negative/Moderate for type-2 diabetes (RR 1.18, CI excludes null) while
       unprocessed red meat lands Neutral (RR 1.10, CI crosses null) — yet red
       meat's T2D association (heme iron, repeated cohorts) is at least as
@@ -189,13 +193,8 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       "neutral overall, negative-for-diabetes." Fold into the multi-conclusion work
       (per-outcome, not just per-group). Audit that foods sharing an outcome get
       `ciExcludesNull` set by a consistent rule, not case-by-case.
-- [ ] **(a2) Alcohol may be under-called as neutral.** "Neutral" rests on
-      bias-adjusted all-cause mortality at *moderate* intake; but alcohol is an
-      IARC Group 1 carcinogen with cancer risk rising from low intake. On the cancer
-      outcome it's clearly negative. Another per-outcome case (neutral-on-mortality,
-      negative-on-cancer); for a tool about *adding* a food from zero, the headline
-      arguably should lean negative. Revisit once cancer outcomes land (D1) and the
-      per-outcome model exists.
+- [x] **(a2) Alcohol under-call — RESOLVED (v0.28)** via the per-outcome cancer verdict
+      (see above).
 - [x] **(a3) Surface WHO 2023 non-sugar-sweetener guidance** in the artificial-
       sweeteners steelmanning. DONE (v0.16): added as an attributed counter-argument,
       evaluated honestly (conditional, low-certainty, reverse-causation-prone →
