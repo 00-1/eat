@@ -200,10 +200,10 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       sweeteners steelmanning. DONE (v0.16): added as an attributed counter-argument,
       evaluated honestly (conditional, low-certainty, reverse-causation-prone →
       reinforces neutral, not harm).
-- [ ] **(a4) Olive oil PREDIMED `rctLevel` call.** Currently `pattern` (1 pt) →
-      Low certainty. The EVOO arm arguably tests the oil closer to `outcomes` (2 pts)
-      → would lift to Moderate. Settle during the grounding pass (note PREDIMED's
-      2018 retraction/republication).
+- [x] **(a4) Olive oil PREDIMED `rctLevel` — RESOLVED (v0.25).** Grounding confirmed
+      PREDIMED tested the whole Mediterranean *pattern* (EVOO supplied to the MedDiet
+      arm), not the oil in isolation → `rctLevel: pattern` is correct; olive oil stays
+      Low. Verified on Guasch-Ferré 2022 (HR 0.81).
 - [ ] **(b) All-cause-mortality magnitude bump over-fires.** The one-tier bump for
       acting on all-cause mortality pushes moderate-RR foods (coffee RR 0.83,
       |ln|≈0.19 → moderate) up to "large," the same tier as trans fat. Recalibrate:
@@ -240,8 +240,10 @@ make a shaky input look authoritative, so this is the top priority.
       - **Batch 3 done (v0.22):** coffee (Poole 2017, RR 0.83, 0.79–0.88; + U-shaped
         dose curve) and processed-meat colorectal cancer (Chan 2011/IARC, RR 1.18,
         1.10–1.28; dose curve now source-verified). **9 of 31 source-verified.**
-      - **Batch 2 (walkthrough flags):** fatty fish (RR 0.64 likely optimistic vs
-        modern analyses & null supplement RCTs); olive oil (PREDIMED rctLevel, a4).
+      - **Batch 2 done (v0.25):** fatty fish corrected (0.64→0.85, Zhang 2020/Ricci
+        2023; magnitude Large→Moderate, stays Moderate; Asian-vs-Western noted;
+        supplement RCTs null). Olive oil verified (Guasch-Ferré 2022, 0.81) and (a4)
+        settled — PREDIMED is pattern-level, stays Low. **11 of 31 source-verified.**
 - [x] **Cheese verdict — resolved BY THE RULE (v0.19), neutral → Positive (Low).**
       Not a maintainer call: Chen 2017's verified CVD RR 0.90 (0.82–0.99) excludes
       null, so the direction rule + multi-outcome rule produce Positive · Low

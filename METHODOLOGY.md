@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.24 — living document.** This file is the canonical description of how
+**Version 0.25 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -376,6 +376,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.25 | 2026-06-29 | **Grounding batch 2.** **Fatty fish** corrected: the old RR 0.64 (~36%, Mozaffarian 2006) was materially optimistic — modern meta-analyses give RR ~0.85 (Zhang 2020 CHD-mortality) to 0.93 (Ricci 2023 CVD); pooledRR 0.64→0.85, N 250k→1.14M, magnitude Large→Moderate, certainty stays Moderate. Noted the Asian-vs-Western gap and that omega-3 *supplement* RCTs are null (Cochrane) — the signal is the food, not pills. **Olive oil** verified (Guasch-Ferré 2022 JACC, HR 0.81) and the open (a4) question settled: PREDIMED tested the whole Mediterranean *pattern*, not the oil alone, so `rctLevel: pattern` is correct and certainty stays Low. **11 of 31 source-verified.** |
 | 0.24 | 2026-06-29 | Collapsed-row **group chip** (a food's group verdict shows at a glance — tomatoes reads "⊕ Vegetables: Positive" without expanding). Added the **outcome-selection bias** limitation (D1): verdicts lean on mortality/CVD/T2D, cancer is under-represented (can under-call carcinogens like alcohol); cancer outcomes added where the grade is strong. |
 | 0.23 | 2026-06-29 | **Component-context layer** (multi-conclusion model). Foods can carry a "What's in it" block: each constituent worry (saturated fat, sugar) is shown with how the food's *own outcomes* adjudicate it — a component **never sets the verdict**. Cocoa: its saturated fat is largely stearic acid (≈LDL-neutral); sugar caveat noted but outcomes are neutral. The **matrix-not-molecule** contrast is now an explicit feature: the *same* sugar reads Positive in whole fruit and Negative in soda, because the outcomes — not the molecule — decide. |
 | 0.22 | 2026-06-29 | **Grounding batch 3.** Verified the last two batch-1 holdouts. **Coffee**: RR 0.83 (0.79–0.88) all-cause mortality at 3–4 cups/day (Poole 2017 BMJ umbrella, corrected; corroborated Crippa 2014, Kim 2019) — added a U-shaped "sweet spot" dose curve. **Processed meat / colorectal cancer**: RR 1.18 (1.10–1.28) per 50 g/day (Chan 2011 PLoS ONE; IARC 2015; WCRF/CUP 2017) — its dose curve is now the first **source-verified** curve. **9 of 31 foods source-verified.** |

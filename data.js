@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.24";
+const METHODOLOGY_VERSION = "0.25";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -222,29 +222,38 @@ const FOODS = [
     effect: "positive",
     certainty: "moderate",
     outcomes: ["Cardiac death", "Cardiovascular disease"],
-    summary: "One to two servings a week is linked to lower cardiac death.",
+    summary: "One to two servings a week tracks with modestly lower cardiac death — smaller than older estimates, and mainly from the food, not fish-oil pills.",
     rationale:
-      "Cohorts consistently show lower coronary death with modest oily-fish intake, with plausible omega-3 mechanisms. Pure omega-3 supplement RCTs are mixed, so we credit the food (not capsules) and hold certainty at 'Moderate'.",
+      "Modern dose-response meta-analyses (Zhang 2020, Ricci 2023) show a modest inverse association with cardiac/CVD death — RR ~0.85–0.93, weaker than the ~0.64 older reviews suggested, and stronger in Asian than Western cohorts. Omega-3 SUPPLEMENT RCTs are essentially null (Cochrane), so we credit the food, not capsules, and hold certainty at 'Moderate'.",
     considerations: {
       substitution: "Benefit partly reflects fish replacing red/processed meat.",
-      doseResponse: "Most of the benefit appears by ~250 mg/day omega-3 (≈1–2 servings/week); little added benefit beyond.",
+      confounding: "Effect is stronger in Asian cohorts and weaker/U-shaped in Western ones — population-dependent.",
+      doseResponse: "Most of the benefit appears by ~1–2 servings/week; little added beyond.",
     },
     studies: [
       {
-        citation: "Mozaffarian D, Rimm EB. JAMA. 2006.",
-        type: "Pooled cohort evidence review",
-        finding: "Modest fish intake (~1–2 servings/week) associated with ~36% lower coronary heart disease death.",
-        search: "Mozaffarian Rimm fish intake contaminants human health JAMA 2006",
+        citation: "Zhang B, et al. Nutrients. 2020.",
+        type: "Meta-analysis (27 studies, ~1.14 million)",
+        finding: "Highest vs lowest fish intake associated with ~15% lower CHD mortality (RR 0.85, 0.77–0.94).",
+        search: "Zhang fish consumption coronary heart disease meta-analysis Nutrients 2020",
       },
       {
-        citation: "Zhang B, et al. (fish & mortality meta-analyses).",
-        type: "Meta-analyses of prospective cohorts",
-        finding: "Higher fish consumption associated with lower CVD and all-cause mortality in a dose-dependent way.",
-        search: "fish consumption all-cause cardiovascular mortality meta-analysis cohort",
+        citation: "Ricci H, et al. Nutrients. 2023.",
+        type: "Meta-analysis (~1.44 million)",
+        finding: "~7% lower CVD at 2–3 servings/week (RR 0.93, 0.91–0.96).",
+        search: "Ricci fish consumption cardiovascular disease meta-analysis Nutrients 2023",
+      },
+      {
+        citation: "Abdelhamid AS, et al. Cochrane. (omega-3 supplements).",
+        type: "Cochrane review of RCTs (~143,000)",
+        finding: "Omega-3 SUPPLEMENTS show little/no effect on CVD events (RR 0.96, 0.92–1.01) — contrast with the dietary-fish signal.",
+        search: "Abdelhamid omega-3 fatty acids cardiovascular Cochrane",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Source-verified (grounding pass): pooledRR 0.64 → 0.85 — the old ~36% figure (Mozaffarian 2006) was materially optimistic; modern meta-analyses (Zhang 2020 CHD-mortality 0.85, Ricci 2023 CVD 0.93) are weaker. Participants 250k → 1.14M. Magnitude drops Large → Moderate; certainty stays Moderate; verdict (positive) unchanged. Noted the Asian-vs-Western gap and null supplement RCTs." },
+    ],
   },
   {
     id: "olive-oil",
@@ -273,8 +282,10 @@ const FOODS = [
         search: "Estruch PREDIMED olive oil cardiovascular 2018 NEJM",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Source-verified (grounding pass): HR 0.81 (0.78–0.84) all-cause / 0.81 (0.75–0.87) CVD mortality at >7 g/day (Guasch-Ferré 2022 JACC). Settles the open (a4) question — PREDIMED tested EVOO within a whole Mediterranean pattern, not the oil alone, so rctLevel stays 'pattern' and certainty stays Low. Verdict unchanged." },
+    ],
   },
   {
     id: "yogurt",
@@ -1078,12 +1089,22 @@ const ASSESSMENTS = {
     effectEstimate: "At ~2–3 servings/day, whole fruit tracks with ~10% lower mortality (RR ≈ 0.90) and lower type 2 diabetes; fruit JUICE goes the other way.",
   },
   "fatty-fish": {
-    evidence: { pooledRR: 0.64, ciExcludesNull: true, participants: 250000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "1–2 servings/week vs none" },
-    effectEstimate: "≈36% lower coronary death at 1–2 servings/week (RR ≈ 0.64); interval excludes no-effect; benefit plateaus.",
+    evidence: { pooledRR: 0.85, ciExcludesNull: true, participants: 1140000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (~1–2 servings/week)" },
+    effectEstimate: "CHD-mortality RR 0.85 (95% CI 0.77–0.94) highest vs lowest (Zhang 2020); broad CVD ~0.93 at 2–3 servings/week (Ricci 2023). Modest, stronger in Asian than Western cohorts. Omega-3 SUPPLEMENT RCTs are null (Cochrane) — the signal is for the food, not capsules.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "CHD-mortality RR 0.85 (0.77–0.94) highest vs lowest; I²=51%, 27 studies", cite: "Zhang 2020 Nutrients", id: "10.3390/nu12082278" },
+      participants: { figure: "1,139,553 participants (Zhang 2020); corroborated 1.44M (Ricci 2023)", cite: "Zhang 2020 Nutrients", id: "10.3390/nu12082278" },
+    },
   },
   "olive-oil": {
-    evidence: { pooledRR: 0.81, ciExcludesNull: true, participants: 92000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "pattern", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: ">7 g/day vs minimal" },
-    effectEstimate: "≈19% lower CVD mortality at >7 g/day (RR ≈ 0.81); supported by the PREDIMED trial arm; small outcome-cohort base.",
+    evidence: { pooledRR: 0.81, ciExcludesNull: true, participants: 92000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "pattern", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: ">7 g/day vs never/rarely" },
+    effectEstimate: "All-cause mortality HR 0.81 (95% CI 0.78–0.84) and CVD-mortality 0.81 (0.75–0.87) at >7 g/day (Guasch-Ferré 2022, two US cohorts). PREDIMED supplied EVOO within a whole Mediterranean PATTERN, so it's trial evidence for the pattern, not the oil alone → rctLevel stays 'pattern', certainty Low.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "All-cause mortality HR 0.81 (0.78–0.84); CVD-mortality 0.81 (0.75–0.87), >7 g/day", cite: "Guasch-Ferré 2022 JACC", id: "PMID:35027106" },
+      participants: { figure: "~92,000 across two US cohorts (NHS + HPFS, 28-yr follow-up)", cite: "Guasch-Ferré 2022 JACC", id: "PMID:35027106" },
+    },
   },
   "yogurt": {
     evidence: { pooledRR: 0.82, ciExcludesNull: true, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~1 serving/day vs none" },
