@@ -108,6 +108,15 @@ group(s) it belongs to**, all computed by the same engine.
 - [ ] Re-ground items that were riding a group's evidence: walk **cruciferous** and
       **leafy greens** self-verdicts back to their honest (thinner) food-specific
       level, with strength now living in the Vegetables / Cruciferous group rows.
+- [ ] **Processing classes as groups, not items.** Ultra-processed foods and
+      refined grains are *classes*, not things you eat directly (same problem as
+      fibre) — but they have real outcome evidence (Hall RCT for UPF), so they
+      survive as **groups** with member items (soda, white bread, white rice…), not
+      standalone rows.
+- [ ] **Item-splitting where one row hides two foods.** Potatoes bundles
+      boiled/baked (≈neutral) with fries (worse); cocoa bundles the flavanol extract
+      (trialled) with the chocolate bar (sugar+fat). Split into distinct items where
+      the outcome genuinely differs by form/preparation.
 - [ ] **Fermented dairy** as a group: yogurt + cheese (+ kefir, quark…) are all
       fermented dairy but currently scattered as separate items with different
       outcomes/verdicts. The old "Yogurt & fermented dairy" name double-counted
@@ -183,7 +192,9 @@ make a shaky input look authoritative, so this is the top priority.
 - [ ] **Evidence facts** (`data.js` → `ASSESSMENTS[id].evidence`): verify
       `pooledRR`, `participants`, and the ordinal calls (`heterogeneity`,
       `confoundingRisk`, `pubBias`, …) against the cited studies; attach a source
-      to each non-obvious one.
+      to each non-obvious one. **Batch 2 candidates flagged by the walkthrough:**
+      fatty fish (RR 0.64 likely optimistic vs modern analyses & null supplement
+      RCTs); trans fat (1.35 extrapolation); olive oil (PREDIMED rctLevel, item a4).
 - [ ] **Exception prevalence** (`exceptions.js`): replace estimate-with-basis
       figures with sourced numbers (allergy %, lactose malabsorption, celiac,
       IBS, G6PD, PKU, etc.).
