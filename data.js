@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.25";
+const METHODOLOGY_VERSION = "0.26";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -719,22 +719,59 @@ const FOODS = [
     outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
     summary: "Non-fried potatoes look roughly neutral; fries are a separate, worse story.",
     rationale:
-      "Associations for boiled/baked potatoes are weak and inconsistent, while French fries show clearer harm — so we keep plain potatoes neutral and call out preparation. High heterogeneity (preparation matters) keeps certainty to 'Low'.",
+      "With fried potatoes split out (see French fries), boiled/baked/mashed potatoes are near-neutral: Mousavi 2025 (BMJ, three US cohorts) found them not associated with type-2 diabetes (HR 1.01, 0.98–1.05). High glycemic load, but the outcome data are flat — neutral at Low certainty.",
     considerations: {
       substitution: "High glycemic load means swaps to whole grains/legumes look better in models.",
-      doseResponse: "Risk signals appear mainly at high intakes and for fried forms.",
+      doseResponse: "Risk signals appear mainly for fried forms (now a separate item).",
     },
     studies: [
       {
-        citation: "Mu L, et al. / potato & cardiometabolic cohorts.",
-        type: "Prospective cohorts",
-        finding: "Fried potatoes associated with higher mortality/diabetes; non-fried potatoes near-neutral.",
-        search: "potato consumption fried type 2 diabetes mortality cohort",
+        citation: "Mousavi SM, et al. BMJ. 2025.",
+        type: "Three US cohorts (~205,000; 22,299 T2D cases)",
+        finding: "Baked/boiled/mashed potatoes not associated with type-2 diabetes (HR 1.01, 0.98–1.05); French fries were (1.20).",
+        search: "Mousavi potato french fries type 2 diabetes BMJ 2025",
+        url: "https://www.bmj.com/content/390/bmj-2025-082121",
       },
     ],
     lastReviewed: "2026-06-29",
     revisions: [
       { date: "2026-06-29", change: "Very-low → Low under v0.11 neutral-scoring (data exists but is heterogeneous by preparation). Verdict unchanged." },
+      { date: "2026-06-29", change: "Source-verified + scoped to non-fried (v0.26): Mousavi 2025 BMJ confirms baked/boiled/mashed potatoes are null for T2D (HR 1.01, 0.98–1.05); fried potatoes split into a separate 'French fries' item. pooledRR 1.05 → 1.01. Verdict (neutral) unchanged." },
+    ],
+  },
+  {
+    id: "french-fries",
+    name: "French fries / fried potatoes",
+    category: "Vegetables",
+    effect: "negative",
+    certainty: "low",
+    outcomes: ["Type 2 diabetes"],
+    summary: "Unlike plain potatoes, fries raise type-2 diabetes risk — a clean 'preparation matters' contrast.",
+    rationale:
+      "Split out from potatoes on the strength of Mousavi 2025 (BMJ, three US cohorts): +3 servings/week of French fries raised type-2 diabetes risk 20% (HR 1.20, 1.12–1.28), while baked/boiled/mashed potatoes were null — the difference is the frying (added fat, very high glycemic load, acrylamide). Certainty is Low: one (strong, recent) cohort set, heavily confounded by overall diet.",
+    considerations: {
+      substitution: "Swapping ~3 servings/week of fries for whole grains lowers modeled T2D risk ~17–19%.",
+      confounding: "Fries strongly mark an unhealthy overall pattern (fast food, low veg); residual confounding likely.",
+    },
+    components: [
+      {
+        name: "The frying (fat + high GL + acrylamide)",
+        worry: "It's still just potato — why is this negative when boiled potato is neutral?",
+        resolution: "Same base food, different outcome: in the same cohorts fries raise T2D (HR 1.20) while baked/boiled are null (1.01). The preparation, not the potato, carries the harm — which is exactly why we score the food-as-eaten, not the raw ingredient.",
+      },
+    ],
+    studies: [
+      {
+        citation: "Mousavi SM, et al. BMJ. 2025.",
+        type: "Three US cohorts (~205,000; 5.2M person-years)",
+        finding: "+3 servings/week French fries: type-2 diabetes HR 1.20 (1.12–1.28); baked/boiled/mashed null (1.01).",
+        search: "Mousavi french fries fried potato type 2 diabetes BMJ 2025",
+        url: "https://www.bmj.com/content/390/bmj-2025-082121",
+      },
+    ],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "New item (v0.26), split from potatoes and source-verified on Mousavi 2025 BMJ — French fries are negative for T2D (HR 1.20) where plain potatoes are null." },
     ],
   },
   {
@@ -1211,8 +1248,22 @@ const ASSESSMENTS = {
     },
   },
   "potatoes": {
-    evidence: { pooledRR: 1.05, ciExcludesNull: false, participants: 150000, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower (non-fried) intake" },
-    effectEstimate: "Non-fried ≈ neutral; fried associated with higher risk; interval spans no-effect for plain potatoes.",
+    evidence: { pooledRR: 1.01, ciExcludesNull: false, participants: 205107, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "baked/boiled/mashed, per 3 servings/week" },
+    effectEstimate: "Baked/boiled/mashed potatoes null for T2D (HR 1.01, 0.98–1.05; Mousavi 2025); interval spans no-effect → neutral. Fried potatoes (separate item) are harmful.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Baked/boiled/mashed potatoes vs T2D HR 1.01 (0.98–1.05) per 3 servings/week (null)", cite: "Mousavi 2025 BMJ", id: "PMID:40769531" },
+      participants: { figure: "205,107 across three US cohorts; 22,299 T2D cases", cite: "Mousavi 2025 BMJ", id: "PMID:40769531" },
+    },
+  },
+  "french-fries": {
+    evidence: { pooledRR: 1.20, ciExcludesNull: true, participants: 205107, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "+3 servings/week vs none" },
+    effectEstimate: "Type-2 diabetes HR 1.20 (95% CI 1.12–1.28) per +3 servings/week (Mousavi 2025 BMJ); baked/boiled null in the same cohorts → the frying carries the harm.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "French fries vs T2D HR 1.20 (1.12–1.28) per +3 servings/week", cite: "Mousavi 2025 BMJ", id: "PMID:40769531" },
+      participants: { figure: "205,107 across three US cohorts; 5.2M person-years", cite: "Mousavi 2025 BMJ", id: "PMID:40769531" },
+    },
   },
   "alcohol": {
     evidence: { pooledRR: 1, ciExcludesNull: false, participants: 4800000, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "high", intakeBasis: "moderate intake vs none (bias-adjusted)" },

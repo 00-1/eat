@@ -320,6 +320,15 @@ const EXCEPTIONS = {
       mitigation: "Discard green or heavily sprouted parts; store cool and dark.",
     },
   ],
+  "french-fries": [
+    {
+      type: "contaminant",
+      group: "High-temperature fried/baked starches form acrylamide (a probable carcinogen)",
+      prevalence: { estimate: "present in most commercially fried potato products", source: "EFSA/FDA acrylamide guidance" },
+      severity: "caution",
+      mitigation: "Fry/bake to golden (not brown), avoid charring; eat occasionally.",
+    },
+  ],
   "alcohol": [
     {
       type: "life-stage",

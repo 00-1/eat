@@ -132,8 +132,11 @@ group(s) it belongs to**, all computed by the same engine.
       member cards, scored live. **Phase 1 shipped the Vegetables group** (members
       tomatoes/leafy-greens/cruciferous) — tomatoes now shows neutral-self +
       Vegetables-positive. Tested.
-- [ ] **More groups** with real evidence: fermented dairy (yogurt+cheese), legumes
-      (legumes+soy), whole grains as a group, fruit. Each needs a sourced group RR.
+- [~] **More groups** with real evidence. DONE (v0.26): **Fermented dairy** + **Dairy**
+      groups added (Guo 2017 / PURE; both neutral — fermented dairy below the floor,
+      total dairy population-dependent). Fruit/legumes/whole-grains groups NOT added —
+      they'd overlap the existing same-name *items*; resolving that needs an item
+      rename (e.g. "legumes" item → "beans & lentils" + a legumes group). Queued.
 - [ ] Re-ground items that were riding a group's evidence: walk **cruciferous** and
       **leafy greens** self-verdicts back to their honest (thinner) food-specific
       level (needs per-food evidence work — their current self RR is borrowed from
@@ -147,17 +150,15 @@ group(s) it belongs to**, all computed by the same engine.
       evidence (the Hall RCT literally fed "an ultra-processed diet"). So they stay
       as verdict-bearing items; specific members (soda→sugary-drinks, white rice) are
       also their own items. No disruptive refactor.
-- [~] **Item-splitting.** Cocoa: RESOLVED via the component-context layer (v0.23) —
-      one "dark chocolate" item with the flavanol-vs-bar distinction shown as context,
-      no separate item needed. Potatoes→fries: the one genuine split still pending —
-      gated on a sourced fried-potato figure (in the running groups/splits batch).
-- [ ] **Fermented dairy** as a group: yogurt + cheese (+ kefir, quark…) are all
-      fermented dairy but currently scattered as separate items with different
-      outcomes/verdicts. The old "Yogurt & fermented dairy" name double-counted
-      cheese (fixed by renaming to "Yogurt", v0.13). Model "fermented dairy" as a
-      group both belong to, with its own group-level evidence if it exists. Likewise
-      audit the broader **Dairy** category for the same scatter (milk/cheese/butter/
-      yogurt each carry a slice).
+- [x] **Item-splitting.** Cocoa: resolved via component-context (v0.23). Potatoes→fries:
+      DONE (v0.26) — **French fries** split into its own item (Mousavi 2025 BMJ, T2D
+      HR 1.20 vs null for baked/boiled); both source-verified.
+- [ ] **Fermented dairy / dairy scatter** — the broad **Dairy** audit is now partly
+      addressed by the Dairy group; the legumes/fruit/whole-grains item-vs-group rename
+      is the remaining structural cleanup.
+- [x] **Fermented dairy** as a group — DONE (v0.26): yogurt + cheese map to a
+      Fermented-dairy group (Guo 2017, neutral); milk/cheese/butter/yogurt map to a
+      broader Dairy group (PURE/Guo, neutral). Both scored live.
 - [x] **Tomatoes**: self neutral/low + Vegetables (positive) group conclusion. DONE (v0.20).
 - [x] **Cocoa/dark chocolate**: DONE (v0.23). Stays neutral; sugar/sat-fat rendered
       as component context that does NOT set the verdict, noting cocoa-butter sat fat
