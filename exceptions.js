@@ -77,15 +77,6 @@ const EXCEPTIONS = {
       mitigation: "Sourdough and oats are lower-FODMAP; reduce portion or switch grain.",
     },
   ],
-  "fiber": [
-    {
-      type: "intolerance",
-      group: "Anyone increasing fiber quickly; pronounced in IBS",
-      prevalence: { estimate: "transient gas/bloating is near-universal if increased too fast", source: "clinical consensus" },
-      severity: "mitigate",
-      mitigation: "Increase gradually over a few weeks and drink more water.",
-    },
-  ],
   "leafy-greens": [
     {
       type: "condition",

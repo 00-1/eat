@@ -122,15 +122,22 @@ group(s) it belongs to**, all computed by the same engine.
   certainty — see coconut oil).
 
 **Concrete tasks:**
-- [ ] **Remove `fiber` as a standalone item** (a nutrient, not a food); its message
-      already lives in whole grains / legumes / fruit / veg. Reframe fibre as
-      component context. (Drops one High-positive row — the honest move.)
-- [ ] Add a `GROUPS` entity set (own `evidence` → engine → verdict) + a food→groups
-      membership map; reuse/merge with the existing `FOOD_TAGS`/`SHARED_CLAIMS`
-      machinery in `counter-arguments.js`.
+- [x] **Remove `fiber` as a standalone item** (v0.20) — a nutrient, not a food; its
+      message lives in whole grains / legumes / fruit. 31 foods now.
+- [x] Add a `GROUPS` entity set (own `evidence` → engine → verdict) + a food→groups
+      membership map (`groups.js`); rendered as an "as part of a food group" block on
+      member cards, scored live. **Phase 1 shipped the Vegetables group** (members
+      tomatoes/leafy-greens/cruciferous) — tomatoes now shows neutral-self +
+      Vegetables-positive. Tested.
+- [ ] **More groups** with real evidence: fermented dairy (yogurt+cheese), legumes
+      (legumes+soy), whole grains as a group, fruit. Each needs a sourced group RR.
 - [ ] Re-ground items that were riding a group's evidence: walk **cruciferous** and
       **leafy greens** self-verdicts back to their honest (thinner) food-specific
-      level, with strength now living in the Vegetables / Cruciferous group rows.
+      level (needs per-food evidence work — their current self RR is borrowed from
+      the F&V umbrella). Now lower-stakes since the group conclusion carries the
+      strength.
+- [ ] Optionally surface a compact group chip on the collapsed card (so the group
+      verdict is visible at a glance, not only when expanded).
 - [ ] **Processing classes as groups, not items.** Ultra-processed foods and
       refined grains are *classes*, not things you eat directly (same problem as
       fibre) — but they have real outcome evidence (Hall RCT for UPF), so they

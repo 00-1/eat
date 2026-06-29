@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.19";
+const METHODOLOGY_VERSION = "0.20";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -144,37 +144,6 @@ const FOODS = [
     revisions: [
       { date: "2026-06-29", change: "High → Moderate under the grounding pass (v0.15): the verified Aune 2016 BMJ figure (RR 0.83, 0.77–0.90 per 90 g/day) carries I²=83% heterogeneity, so the consistency sub-score drops. Direction (positive) unchanged. Surfaced a rubric tension — high I² with directional agreement arguably shouldn't be penalised like genuine directional disagreement; queued for review." },
     ],
-  },
-  {
-    id: "fiber",
-    name: "Dietary fiber (from whole foods)",
-    category: "Other",
-    effect: "positive",
-    certainty: "high",
-    outcomes: ["All-cause mortality", "Cardiovascular disease", "Type 2 diabetes", "Colorectal cancer"],
-    summary: "Higher fiber from whole foods is one of the most robust dietary predictors of better outcomes.",
-    rationale:
-      "Convergent evidence from large cohorts AND randomized trials (on blood pressure, cholesterol, glycemia, weight) gives fiber unusually strong causal support for nutrition. Whole-food fiber outperforms isolated supplements.",
-    considerations: {
-      substitution: "High-fiber whole foods usually displace refined, energy-dense foods — part of the benefit.",
-      doseResponse: "Risk keeps falling up to ~25–29 g/day and beyond.",
-    },
-    studies: [
-      {
-        citation: "Reynolds A, et al. Lancet. 2019.",
-        type: "Systematic reviews & meta-analyses of cohorts + 58 RCTs",
-        finding: "25–29 g/day fiber associated with 15–30% lower all-cause and CVD mortality; RCTs confirm lower weight, BP, cholesterol.",
-        search: "Reynolds dietary fiber Lancet 2019 mortality randomised",
-      },
-      {
-        citation: "Threapleton DE, et al. BMJ. 2013.",
-        type: "Dose-response meta-analysis of cohorts",
-        finding: "7 g/day more fiber associated with ~9% lower coronary heart disease risk.",
-        search: "Threapleton dietary fibre coronary heart disease meta-analysis BMJ 2013",
-      },
-    ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
   },
   {
     id: "leafy-greens",
@@ -1069,10 +1038,6 @@ const ASSESSMENTS = {
       note: "Risk falls roughly linearly up to ~90 g/day (about 3 servings), then plateaus.",
       source: { cite: "Aune 2016 BMJ", id: "PMID:27301975" }, verified: false,
     },
-  },
-  "fiber": {
-    evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 500000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~25–29 g/day vs low intake" },
-    effectEstimate: "≈15–30% lower all-cause/CVD mortality at 25–29 g/day; interval excludes no-effect; RCTs confirm risk-factor effects.",
   },
   "leafy-greens": {
     evidence: { pooledRR: 0.9, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "high vs low habitual intake (part of ~800 g/day fruit & veg)" },

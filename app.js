@@ -75,6 +75,40 @@
     return "<span class='mag mag-" + mag + "' title='How much it moves the needle'>" + escapeHtml(Scoring.MAGNITUDE_LABEL[mag]) + "</span>";
   }
 
+  // ---- "As part of a food group" — the broader-class conclusion(s) ----
+  // A food carries its own verdict PLUS the verdict(s) of the food group(s) it
+  // belongs to, each scored live by the same engine. This is how tomatoes can read
+  // "neutral on its own, but part of Vegetables (positive)" without either claim
+  // swallowing the other.
+  function groupConclusionsHtml(food) {
+    if (typeof groupsFor !== "function" || typeof Scoring === "undefined") return "";
+    const groups = groupsFor(food.id);
+    if (!groups.length) return "";
+    const items = groups
+      .map(function (g) {
+        const A = Scoring.assess(g.evidence, g.outcomes);
+        const mag = Scoring.classifyMagnitude(g.evidence, g.outcomes);
+        const magChip = mag && mag !== "minimal"
+          ? "<span class='mag mag-" + mag + "'>" + escapeHtml(Scoring.MAGNITUDE_LABEL[mag]) + "</span>" : "";
+        return (
+          "<li class='group-item'>" +
+            "<div class='group-head'>" +
+              "<span class='group-name'>" + escapeHtml(g.name) + "</span>" +
+              "<span class='badge " + g.effect + "'>" + EFFECT_LABEL[g.effect] + "</span>" +
+              "<span class='tier " + A.tier + "'>" + CERTAINTY_LABEL[A.tier] + "</span>" +
+              magChip +
+            "</div>" +
+            "<p class='group-rationale'>" + escapeHtml(g.rationale) + "</p>" +
+          "</li>"
+        );
+      })
+      .join("");
+    return (
+      "<h4 class='block-h'>As part of a food group <span class='block-sub'>— what's known about the broader class, scored the same way</span></h4>" +
+      "<ul class='group-list'>" + items + "</ul>"
+    );
+  }
+
   // ---- Dose-response curve (a single RR is one point on this line) ----
   // Small zero-dependency inline SVG. Green where the curve sits below the
   // no-effect line (benefit), red where above (harm); the normal-intake range is
@@ -401,6 +435,7 @@
           "<div class='card-detail'>" +
             "<h4 class='block-h'>Why this verdict</h4>" +
             "<p class='rationale'>" + escapeHtml(food.rationale) + "</p>" +
+            groupConclusionsHtml(food) +
             doseResponseHtml(food) +
             assessmentHtml(food) +
             studiesHtml(food) +

@@ -318,6 +318,19 @@ a { color: var(--accent); }
 
 .block-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
 
+/* "As part of a food group" conclusions */
+.group-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.group-item {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent, #2456a6);
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: var(--surface);
+}
+.group-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.group-name { font-weight: 700; font-size: 0.95rem; }
+.group-rationale { margin: 0; font-size: 0.86rem; color: var(--ink-soft); }
+
 /* Dose-response curve */
 .dose {
   margin: 14px 0 4px;
