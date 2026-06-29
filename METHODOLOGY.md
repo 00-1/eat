@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.12 — living document.** This file is the canonical description of how
+**Version 0.13 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -202,6 +202,31 @@ threshold eased — e.g. trans fat sits just below Bin fodder on magnitude, and
 coffee/fish just below Gold standard on certainty. Both lists are *computed*, so
 they update automatically as facts/rules change.
 
+### 4d. Conclusions are derived live — and you can re-run the rule
+
+Nothing in the app reads a stored conclusion. The certainty tier shown on a card,
+used to sort, and used to compute the shortlists is **recomputed from the recorded
+`evidence` facts at render time** by the same `Scoring.assess()` engine the tests
+exercise. (`data.js` still carries a `certainty` field, but only as a regression
+snapshot a test asserts equals the computed value — it is never displayed.) This
+enforces the core policy: every conclusion is reproducibly generated from one
+dataset, so a fact can't drift out of sync with the verdict it implies.
+
+Because the rule is a function of the data, we can also run it under a **different
+rule** and show what moves. The **Explore** panel applies a named criteria preset
+and renders a **diff** — the foods whose certainty tier shifts — while leaving the
+published verdicts untouched:
+
+| Preset | Rule | What it reveals |
+|--------|------|-----------------|
+| Default | All recorded evidence | The published verdicts. |
+| Observational only | Zero out the experimental/validated-pathway dimension (keep it in the denominator) | What the cohort data alone supports — e.g. **trans fat drops High → Moderate**, because its high certainty leans on the validated LDL pathway. |
+| Trials & mechanism only | Judge *only* on the experimental dimension | Which verdicts have any causal/trial backing at all vs. rest purely on observation. |
+
+The presets live in `Scoring.PRESETS` and are covered by unit tests, so the diff is
+itself reproducible. This is a transparency tool, not a second set of conclusions:
+the canonical verdict is always the all-evidence one.
+
 ## 5. The direction label (Burden-of-Proof logic)
 
 Direction comes from the **sign of the conservatively-estimated association**, the
@@ -332,6 +357,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.13 | 2026-06-29 | **Conclusions are now derived live from the data, not stored.** The certainty tier on every card/highlight/sort is recomputed from the recorded `evidence` facts at render time via `Scoring.assess()` (`data.js`'s `certainty` is kept only as a tested regression snapshot). Added an **Explore** panel: pick an alternate evidence rule (e.g. *Observational only* — ignore trial/mechanism corroboration; *Trials & mechanism only*) and see a **diff** of exactly which verdicts shift, leaving the published verdicts unchanged. This makes concrete that everything is reproducibly generated from one dataset — e.g. observational-only weakens trans fat from High. Rules live in `Scoring.PRESETS`; covered by tests. |
 | 0.12 | 2026-06-29 | Added 6 research-grounded foods (26 → 32): green tea (+), white rice (− for diabetes), soy (+), cruciferous veg (+), tomatoes (neutral — biomarker-weak), dark chocolate/cocoa (neutral — COSMOS RCT). Scored under the current rules; category steelman claims auto-attach via tags. Foods the research couldn't ground (berries-specific, garlic, shellfish, fried food, salty snacks, sweets) deliberately not added. All facts carry the "estimated, not source-verified" provenance flag. |
 | 0.11 | 2026-06-29 | Fixed a structural conflation (audit follow-up): **neutral verdicts are now scored on the six evidence-quality dimensions (/12)**, not penalised by effect-size/dose-response (which a null can't have) — so a well-established neutral can reach High, while thin/contested ones stay Very-low. Rescored neutrals: butter Low→Moderate; red meat, potatoes, artificial sweeteners Very-low→Low (verdicts unchanged; coconut oil correctly stays Very-low). |
 | 0.10 | 2026-06-29 | Honest default (audit C1): unknown/unreported `heterogeneity` now scores **0** for consistency (was 1) — absence of evidence isn't scored as adequate. No tier changes (avocado/coconut-oil stay put). Also adopted the "highlight inadequacies" policy: an honest data-status banner + per-food source-verification chip, and softened over-claiming language. |

@@ -62,6 +62,18 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
 The grounding items (A1/A2/A3, B5, D1) overlap with §1 below and should be done
 together.
 
+## Live-derived conclusions + Explore diff  ⟶ *done (v0.13)*
+
+- [x] Conclusions are no longer stored: the certainty tier on every card, sort, and
+      shortlist is recomputed from the recorded `evidence` facts at render time via
+      `Scoring.assess()`. `data.js`'s `certainty` is retained only as a tested
+      regression snapshot.
+- [x] **Explore** panel: a criteria preset (`Scoring.PRESETS`) re-runs the rule and
+      shows a diff of which verdicts shift, leaving the published verdicts unchanged.
+      "Observational only" weakens trans fat High → Moderate (the worked example);
+      "Trials & mechanism only" isolates causal backing. Covered by unit + data
+      tests and a browser smoke check.
+
 ## 1. Verify and tighten the inputs  ⟶ *in progress*
 
 The scoring engine is sound, but several recorded facts are well-established

@@ -60,6 +60,17 @@
 
     <section id="highlights" class="highlights" aria-label="Standout foods"></section>
 
+    <section class="explore" aria-label="Explore alternate criteria">
+      <div class="explore-head">
+        <label class="select-wrap explore-select">
+          <span class="explore-k">What if we judged on…</span>
+          <select id="explore" class="select" aria-label="Explore alternate evidence criteria"></select>
+        </label>
+        <p id="explore-note" class="explore-note"></p>
+      </div>
+      <div id="explore-diff" class="explore-diff" aria-live="polite"></div>
+    </section>
+
     <p id="count" class="count" aria-live="polite"></p>
     <ul id="list" class="grid" aria-live="polite"></ul>
     <p id="empty" class="empty" hidden>No foods match your filters.</p>
@@ -198,6 +209,20 @@
           a food when the outcome data says otherwise. That’s why carb-heavy whole foods stay
           positive and coconut oil stays neutral — but trans fat, where the causal pathway is
           validated <em>and</em> cohorts agree, earns high certainty.
+        </p>
+
+        <h4 style="margin-top:22px">Derived live — and you can re-run the rule</h4>
+        <p>
+          Nothing here reads a stored conclusion. Every certainty tier you see is
+          <strong>recomputed from the recorded evidence facts</strong> at the moment the page
+          renders, by the same engine the tests check — so a fact can’t drift out of sync with the
+          verdict it implies. Because the verdict is a <em>function</em> of the data, the
+          <strong>Explore</strong> control on the Foods tab can run that function under a different
+          rule and show a <strong>diff</strong> of exactly which verdicts shift, while the published
+          verdicts stay put. For example, <em>“observational only”</em> ignores trial and
+          mechanistic corroboration — which drops trans fat from High to Moderate, because its high
+          certainty leans on the validated LDL pathway. It’s a transparency tool, not a second set
+          of conclusions.
         </p>
       </section>
 

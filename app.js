@@ -18,7 +18,7 @@
     approach: document.getElementById("view-approach"),
   };
 
-  const state = { query: "", effect: "all", category: "all", sort: "default" };
+  const state = { query: "", effect: "all", category: "all", sort: "default", preset: "default" };
 
   // ---- Constants ----
   const EFFECT_LABEL = { positive: "Positive", negative: "Negative", neutral: "Neutral / mixed" };
@@ -53,6 +53,14 @@
         escapeHtml(Scoring.BASIS_LABEL[basis]) +
       "</span>"
     );
+  }
+
+  // Canonical certainty, DERIVED live from the evidence (not read from storage).
+  // (data.js still carries `certainty` as a regression snapshot the tests check.)
+  function certaintyOf(food, settings) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.evidence || typeof Scoring === "undefined") return food.certainty;
+    return Scoring.assess(a.evidence, food.outcomes, settings).tier;
   }
 
   // How much the food moves the needle (direction-agnostic magnitude).
@@ -142,7 +150,7 @@
     if (state.sort === "impact") {
       const m = magRank(b) - magRank(a);
       if (m !== 0) return m;
-      const conf = (CERTAINTY_RANK[b.certainty] || 0) - (CERTAINTY_RANK[a.certainty] || 0);
+      const conf = (CERTAINTY_RANK[certaintyOf(b)] || 0) - (CERTAINTY_RANK[certaintyOf(a)] || 0);
       if (conf !== 0) return conf;
       return a.name.localeCompare(b.name);
     }
@@ -150,7 +158,7 @@
     if (EFFECT_ORDER[a.effect] !== EFFECT_ORDER[b.effect]) {
       return EFFECT_ORDER[a.effect] - EFFECT_ORDER[b.effect];
     }
-    const conf = (CERTAINTY_RANK[b.certainty] || 0) - (CERTAINTY_RANK[a.certainty] || 0);
+    const conf = (CERTAINTY_RANK[certaintyOf(b)] || 0) - (CERTAINTY_RANK[certaintyOf(a)] || 0);
     if (conf !== 0) return conf;
     return a.name.localeCompare(b.name);
   }
@@ -250,7 +258,7 @@
     // categories — we compare the claim to each member food's score).
     const verdictLine =
       "<p class='ca-ground'><span class='counter-k'>Our verdict for " + escapeHtml(food.name) + ":</span> " +
-      EFFECT_LABEL[food.effect] + " · " + CERTAINTY_LABEL[food.certainty] + "</p>";
+      EFFECT_LABEL[food.effect] + " · " + CERTAINTY_LABEL[certaintyOf(food)] + "</p>";
     const items = list
       .map(function (c) {
         return (
@@ -299,7 +307,7 @@
             "</div>" +
             "<p class='summary'>" + escapeHtml(food.summary) + "</p>" +
             "<div class='card-meta'>" +
-              "<span class='tier " + food.certainty + "'>" + CERTAINTY_LABEL[food.certainty] + "</span>" +
+              (function () { var t = certaintyOf(food); return "<span class='tier " + t + "'>" + CERTAINTY_LABEL[t] + "</span>"; })() +
               magnitudeChip(food) +
               basisChip(food) +
               verifiedChip(food) +
@@ -368,7 +376,8 @@
   // Why a marginal food is short of qualifying (for the chip tooltip/label).
   function shortfall(food) {
     const bits = [];
-    if (food.certainty !== "high") bits.push(CERTAINTY_LABEL[food.certainty].toLowerCase());
+    var cert = certaintyOf(food);
+    if (cert !== "high") bits.push(CERTAINTY_LABEL[cert].toLowerCase());
     const mag = magnitudeOf(food);
     if (mag !== "large") bits.push((Scoring.MAGNITUDE_LABEL[mag] || mag).toLowerCase());
     return bits.join(", ");
@@ -377,7 +386,7 @@
   function renderHighlights() {
     const el = document.getElementById("highlights");
     if (!el || typeof Scoring === "undefined") return;
-    const tagOf = (f) => Scoring.standout(f.effect, f.certainty, magnitudeOf(f));
+    const tagOf = (f) => Scoring.standout(f.effect, certaintyOf(f), magnitudeOf(f));
     const pick = (tag) => FOODS.filter((f) => tagOf(f) === tag);
     const gold = pick("gold"), bin = pick("bin");
     const marginalGold = pick("marginal-gold"), marginalBin = pick("marginal-bin");
@@ -417,20 +426,113 @@
     // Clicking a highlight chip jumps to that card and opens it.
     el.querySelectorAll(".hl-chip").forEach(function (chip) {
       chip.addEventListener("click", function () {
-        const id = chip.dataset.food;
-        // clear filters so the target is visible
-        state.query = ""; state.effect = "all"; state.category = "all";
-        searchEl.value = ""; categoryEl.value = "all";
-        chips.forEach((c) => c.classList.toggle("is-active", c.dataset.effect === "all"));
-        render();
-        const card = listEl.querySelector("[data-food-card='" + id + "']");
-        if (card) {
-          const details = card.querySelector("details");
-          if (details) details.open = true;
-          card.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
+        jumpToFood(chip.dataset.food);
       });
     });
+  }
+
+  // ---- Explore: live what-if diff between canonical and alternate criteria ----
+  // The published verdicts (the cards above) always reflect ALL the evidence.
+  // This panel re-derives the certainty tier under a narrower rule and shows ONLY
+  // what moves — making concrete that everything is reproducibly generated from
+  // the same dataset (e.g. "observational only" weakens trans fat from High).
+  function renderExplore() {
+    const sel = document.getElementById("explore");
+    const noteEl = document.getElementById("explore-note");
+    const diffEl = document.getElementById("explore-diff");
+    if (!sel || !diffEl || typeof Scoring === "undefined" || !Scoring.PRESETS) return;
+
+    const presets = Scoring.PRESETS;
+    const preset = presets[state.preset] || presets["default"];
+    noteEl.textContent = preset && preset.note ? preset.note : "";
+
+    if (!preset || !preset.settings) {
+      diffEl.innerHTML =
+        "<p class='explore-empty'>Pick an alternate rule above to see which verdicts would shift " +
+        "if we judged the same data differently. The published verdicts don’t change.</p>";
+      return;
+    }
+
+    // Compare each food's canonical tier to its tier under the alternate rule.
+    const rows = FOODS.map(function (food) {
+      const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+      if (!a || !a.evidence) return null;
+      const before = certaintyOf(food);
+      const after = certaintyOf(food, preset.settings);
+      if (before === after) return null;
+      const dir = (CERTAINTY_RANK[after] || 0) - (CERTAINTY_RANK[before] || 0);
+      return { food: food, before: before, after: after, dir: dir };
+    }).filter(Boolean);
+
+    rows.sort(function (x, y) {
+      if (x.dir !== y.dir) return x.dir - y.dir; // biggest drops first
+      return x.food.name.localeCompare(y.food.name);
+    });
+
+    if (!rows.length) {
+      diffEl.innerHTML =
+        "<p class='explore-empty'>No verdicts shift under this rule — the certainty tiers are " +
+        "robust to it across all " + FOODS.length + " foods.</p>";
+      return;
+    }
+
+    const items = rows
+      .map(function (r) {
+        const cls = r.dir < 0 ? "diff-down" : "diff-up";
+        const arrow = r.dir < 0 ? "↓" : "↑";
+        return (
+          "<li class='diff-row " + cls + "' data-food='" + escapeHtml(r.food.id) + "'>" +
+            "<button class='diff-jump' data-food='" + escapeHtml(r.food.id) + "'>" + escapeHtml(r.food.name) + "</button>" +
+            "<span class='diff-change'>" +
+              "<span class='tier " + r.before + "'>" + CERTAINTY_LABEL[r.before] + "</span>" +
+              "<span class='diff-arrow'>" + arrow + "</span>" +
+              "<span class='tier " + r.after + "'>" + CERTAINTY_LABEL[r.after] + "</span>" +
+            "</span>" +
+          "</li>"
+        );
+      })
+      .join("");
+
+    const drops = rows.filter(function (r) { return r.dir < 0; }).length;
+    const ups = rows.length - drops;
+    const summary =
+      "<p class='diff-summary'>" + rows.length + " of " + FOODS.length + " verdicts shift" +
+      (drops ? " · " + drops + " weaker" : "") + (ups ? " · " + ups + " stronger" : "") +
+      " <span class='diff-summary-note'>(certainty only; published verdicts unchanged)</span></p>";
+
+    diffEl.innerHTML = summary + "<ul class='diff-list'>" + items + "</ul>";
+
+    diffEl.querySelectorAll(".diff-jump").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        jumpToFood(btn.dataset.food);
+      });
+    });
+  }
+
+  // Clear filters, render, and open a food's card.
+  function jumpToFood(id) {
+    state.query = ""; state.effect = "all"; state.category = "all";
+    searchEl.value = ""; categoryEl.value = "all";
+    chips.forEach((c) => c.classList.toggle("is-active", c.dataset.effect === "all"));
+    render();
+    const card = listEl.querySelector("[data-food-card='" + id + "']");
+    if (card) {
+      const details = card.querySelector("details");
+      if (details) details.open = true;
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+
+  function populateExplore() {
+    const sel = document.getElementById("explore");
+    if (!sel || typeof Scoring === "undefined" || !Scoring.PRESETS) return;
+    Object.keys(Scoring.PRESETS).forEach(function (key) {
+      const opt = document.createElement("option");
+      opt.value = key;
+      opt.textContent = Scoring.PRESETS[key].label;
+      sel.appendChild(opt);
+    });
+    sel.value = state.preset;
   }
 
   // ---- View switching ----
@@ -459,6 +561,13 @@
     state.sort = sortEl.value;
     render();
   });
+  const exploreEl = document.getElementById("explore");
+  if (exploreEl) {
+    exploreEl.addEventListener("change", function () {
+      state.preset = exploreEl.value;
+      renderExplore();
+    });
+  }
   chips.forEach(function (chip) {
     chip.addEventListener("click", function () {
       chips.forEach((c) => c.classList.remove("is-active"));
@@ -483,7 +592,9 @@
   document.getElementById("method-ver").textContent =
     "v" + (typeof METHODOLOGY_VERSION !== "undefined" ? METHODOLOGY_VERSION : "?");
   populateCategories();
+  populateExplore();
   renderDataStatus();
   renderHighlights();
+  renderExplore();
   render();
 })();

@@ -224,6 +224,49 @@ test("magnitude reflects relative effect size, with an all-cause-mortality bump"
   assert.equal(S.classifyMagnitude({ pooledRR: 1.0 }, ["All-cause mortality"]), "minimal"); // null isn't bumped
 });
 
+test("assess settings.zero forces a dim to 0 but keeps it in the denominator", () => {
+  // A directional food carried partly by experimental evidence; zeroing it lowers
+  // the total but not the max, so the tier can drop — the explore "observational
+  // only" rule.
+  const pathwayBacked = ev({
+    pooledRR: 0.78, ciExcludesNull: true, participants: 500000, heterogeneity: "low",
+    outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway",
+    funding: "independent", pubBias: "tested-clean", confoundingRisk: "low",
+  });
+  const full = S.assess(pathwayBacked);
+  const obsOnly = S.assess(pathwayBacked, null, { zero: ["experimental"] });
+  assert.equal(full.max, 16);
+  assert.equal(obsOnly.max, 16); // denominator unchanged
+  assert.equal(obsOnly.total, full.total - 2); // lost the 2 experimental points
+  assert.ok(S.CERTAINTY_ORDER[obsOnly.tier] <= S.CERTAINTY_ORDER[full.tier]);
+});
+
+test("assess settings.only judges on a subset (numerator AND denominator)", () => {
+  const pathwayBacked = ev({
+    pooledRR: 0.78, ciExcludesNull: true, participants: 500000, heterogeneity: "low",
+    outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway",
+    funding: "independent", pubBias: "tested-clean", confoundingRisk: "low",
+  });
+  const only = S.assess(pathwayBacked, null, { only: ["experimental"] });
+  assert.equal(only.max, 2); // one dim in scope
+  assert.equal(only.total, 2); // pathway scores 2
+  assert.equal(only.tier, "high");
+});
+
+test("PRESETS expose the explore rules and default is a no-op", () => {
+  assert.ok(S.PRESETS["default"]);
+  assert.equal(S.PRESETS["default"].settings, null);
+  assert.deepEqual(S.PRESETS["observational"].settings, { zero: ["experimental"] });
+  assert.deepEqual(S.PRESETS["mechanism"].settings, { only: ["experimental"] });
+  // default settings (null) leaves assess identical to no settings at all
+  const someEv = ev({
+    pooledRR: 0.78, ciExcludesNull: true, participants: 500000, heterogeneity: "low",
+    outcomeType: "hard", doseResponse: "graded", rctLevel: "outcomes",
+    funding: "independent", pubBias: "tested-clean", confoundingRisk: "low",
+  });
+  assert.deepEqual(S.assess(someEv, null, S.PRESETS["default"].settings), S.assess(someEv));
+});
+
 test("GUARDRAIL: mechanism does not override good observational outcome data", () => {
   // The "carbs spike sugar → carbs bad" trap: a food with strong observational
   // BENEFIT and an adverse biomarker stays observation-led and benefits stand —

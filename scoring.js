@@ -194,12 +194,25 @@
 
   // Convenience: evidence -> { scores, total, max, tier, basis, magnitude, neutralScored }.
   // Tier is computed over the dimensions that apply to the verdict's kind.
-  function assess(ev, outcomes) {
+  //
+  // Optional `settings` runs a WHAT-IF under alternate criteria (for the explore
+  // diff), without changing the data:
+  //   settings.zero = [dimKeys]  -> force those scores to 0 but keep them in the
+  //                                 denominator ("we have no such evidence")
+  //   settings.only = [dimKeys]  -> judge ONLY on these dims (numerator AND max)
+  function assess(ev, outcomes, settings) {
     var scores = computeScores(ev);
     var neutral = ev && ev.ciExcludesNull === false;
     var dims = neutral ? NEUTRAL_DIMS : DIRECTIONAL_DIMS;
-    var total = sumDims(scores, dims);
-    var max = dims.length * 2;
+    var zero = (settings && settings.zero) || [];
+    var only = settings && settings.only;
+    var total = 0, max = 0;
+    for (var i = 0; i < dims.length; i++) {
+      var d = dims[i];
+      if (only && only.indexOf(d) === -1) continue; // restrict to subset (num+max)
+      max += 2;
+      total += zero.indexOf(d) !== -1 ? 0 : (scores[d] || 0);
+    }
     return {
       scores: scores,
       total: total,
@@ -210,6 +223,21 @@
       neutralScored: neutral,
     };
   }
+
+  // Named criteria presets for the explore/diff view.
+  var PRESETS = {
+    "default": { label: "Default (all evidence)", settings: null },
+    "observational": {
+      label: "Observational only",
+      note: "Ignore trial & mechanistic corroboration — judge on cohort data alone.",
+      settings: { zero: ["experimental"] },
+    },
+    "mechanism": {
+      label: "Trials & mechanism only",
+      note: "Judge ONLY on experimental / validated-pathway evidence.",
+      settings: { only: ["experimental"] },
+    },
+  };
 
   var BASIS_LABEL = {
     convergent: "Convergent",
@@ -261,6 +289,7 @@
     DIRECTIONAL_DIMS: DIRECTIONAL_DIMS,
     NEUTRAL_DIMS: NEUTRAL_DIMS,
     assess: assess,
+    PRESETS: PRESETS,
     BASIS_LABEL: BASIS_LABEL,
     BASIS_NOTE: BASIS_NOTE,
     MAGNITUDE_ORDER: MAGNITUDE_ORDER,

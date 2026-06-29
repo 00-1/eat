@@ -122,6 +122,33 @@ test("directional verdicts obey the relaxed rule (>= Low; very-low falls back to
   }
 });
 
+test("explore: the observational-only preset weakens trans fat (worked example)", () => {
+  // The headline case from the methodology: trans fat's High certainty leans on
+  // its validated causal pathway, so judging on cohort data alone drops it.
+  const tf = ASSESSMENTS["trans-fat"];
+  assert.ok(tf, "expected a trans-fat assessment to exist");
+  const canonical = S.assess(tf.evidence);
+  const obsOnly = S.assess(tf.evidence, null, S.PRESETS["observational"].settings);
+  assert.equal(canonical.tier, "high");
+  assert.ok(
+    S.CERTAINTY_ORDER[obsOnly.tier] < S.CERTAINTY_ORDER[canonical.tier],
+    `expected observational-only to weaken trans fat from ${canonical.tier}, got ${obsOnly.tier}`
+  );
+});
+
+test("explore: a preset never invents certainty (each food's diff is down or unchanged for observational-only)", () => {
+  // Removing experimental credit can only lower or hold the tier, never raise it.
+  for (const f of FOODS) {
+    const e = ASSESSMENTS[f.id].evidence;
+    const before = S.assess(e).tier;
+    const after = S.assess(e, null, S.PRESETS["observational"].settings).tier;
+    assert.ok(
+      S.CERTAINTY_ORDER[after] <= S.CERTAINTY_ORDER[before],
+      `${f.id}: observational-only raised certainty ${before} -> ${after}`
+    );
+  }
+});
+
 test("ciExcludesNull is consistent with a directional verdict", () => {
   // A positive/negative verdict should rest on an interval that excludes no-effect;
   // a neutral verdict should not claim one.
