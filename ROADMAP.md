@@ -56,7 +56,9 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
 - [ ] **D2** — record per-food per-category exception status (checked-clear vs n/a).
 - [ ] **D3** — render "no counter-arguments assessed yet" placeholder; finish the
       steelman backlog (second research pass — see §1).
-- [ ] **F2/F3** — add jsdom UI tests + cross-field data-coherence tests.
+- [~] **F2/F3** — cross-field data-coherence tests added (pooledRR-direction match,
+      outcomes non-empty, dose-curve schema/shape; v0.16). jsdom UI tests (F2) still
+      pending — the Playwright smoke covers the live path for now.
 - [ ] **E2** — reconsider the "Manageable" severity label.
 
 The grounding items (A1/A2/A3, B5, D1) overlap with §1 below and should be done
@@ -190,14 +192,11 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       ≥ small, or make the bump a half-step, or gate it on absolute burden once
       §3 lands. Several foods currently inherit "large" this way — list them and
       decide per case.
-- [ ] **(c) Neutral-/12 vs directional-/16 cross-scale optics.** Butter reads
-      Moderate-certainty *neutral* (8/12) while olive oil reads Low-certainty
-      *positive* (8/16) — i.e. we look more sure butter does nothing than that olive
-      oil helps. Partly real (butter's null rests on a far larger meta-analysis),
-      partly an artifact of the two denominators. Action: check whether the /12 and
-      /16 tier cut-points are fairly comparable across a matched evidence base, and
-      either adjust or add an explicit note in METHODOLOGY that the two scales
-      aren't directly comparable.
+- [x] **(c) Neutral-/12 vs directional-/16 cross-scale optics.** DONE (note option,
+      v0.16): added an explicit METHODOLOGY caveat that the two scales aren't directly
+      comparable (the butter-vs-olive-oil case spelled out), so the certainty tier is
+      read as "how solid for *this kind* of verdict," not a cross-verdict ranking. A
+      deeper recalibration of the cut-points remains optional/open.
 
 ## 1. Verify and tighten the inputs  ⟶ *in progress*
 

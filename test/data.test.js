@@ -192,6 +192,22 @@ test("explore: a preset never invents certainty (each food's diff is down or unc
   }
 });
 
+test("COHERENCE: a directional verdict's pooledRR points the right way", () => {
+  // positive => protective (RR < 1); negative => harmful (RR > 1). Catches a
+  // verdict whose recorded effect size contradicts its label.
+  for (const f of FOODS) {
+    const rr = ASSESSMENTS[f.id].evidence.pooledRR;
+    if (f.effect === "positive") assert.ok(rr < 1, `${f.id}: positive but pooledRR ${rr} >= 1`);
+    if (f.effect === "negative") assert.ok(rr > 1, `${f.id}: negative but pooledRR ${rr} <= 1`);
+  }
+});
+
+test("COHERENCE: every food declares at least one outcome", () => {
+  for (const f of FOODS) {
+    assert.ok(Array.isArray(f.outcomes) && f.outcomes.length >= 1, `${f.id}: no outcomes`);
+  }
+});
+
 test("ciExcludesNull is consistent with a directional verdict", () => {
   // A positive/negative verdict should rest on an interval that excludes no-effect;
   // a neutral verdict should not claim one.

@@ -133,6 +133,17 @@ outcome data) stays Very-low. A null isn't *rewarded* for being null — it just
 isn't penalised for it. The card shows the neutral dimensions as `n/a` and the
 total out of 12.
 
+> **Caveat — the two scales aren't directly comparable.** Because directional
+> verdicts use /16 and neutral verdicts use /12 (same 80/60/40% cut-points), a
+> "Moderate-certainty neutral" and a "Moderate-certainty positive" are *not*
+> measuring the same thing on the same yardstick: the neutral can't earn (or lose)
+> effect-size/dose points at all. A visible consequence is that butter reads
+> **Moderate-certainty neutral** while olive oil reads **Low-certainty positive** —
+> we look more sure butter does nothing than that olive oil helps. Part of that is
+> real (butter's null rests on a far larger meta-analysis), but part is the
+> two-denominator artefact. Read the certainty tier as "how solid is the evidence
+> for *this kind of verdict*," not as a cross-verdict ranking.
+
 ### 4b. Evidence basis — which evidence carries the verdict
 
 Two foods can share a tier for very different reasons. So we also derive, from the
