@@ -163,6 +163,32 @@
     return "<span class='challenge-note'>Disagree? Verdicts are reviewed and revised — see “The approach.”</span>";
   }
 
+  const STANCE_LABEL = { holds: "Our verdict holds", partial: "Partly valid", valid: "Valid limitation" };
+
+  function counterArgsHtml(food) {
+    const list = typeof COUNTER_ARGUMENTS !== "undefined" ? COUNTER_ARGUMENTS[food.id] : null;
+    if (!list || !list.length) return "";
+    const items = list
+      .map(function (c) {
+        return (
+          "<li class='counter counter-" + c.stance + "'>" +
+            "<div class='counter-head'>" +
+              "<span class='counter-claim'>“" + escapeHtml(c.claim) + "”</span>" +
+              "<span class='stance stance-" + c.stance + "'>" + STANCE_LABEL[c.stance] + "</span>" +
+            "</div>" +
+            "<p class='counter-who'>" + escapeHtml(c.proponents) + "</p>" +
+            (c.evidenceCited ? "<p class='counter-eD'><span class='counter-k'>Cites:</span> " + escapeHtml(c.evidenceCited) + "</p>" : "") +
+            "<p class='counter-assess'><span class='counter-k'>Our take:</span> " + escapeHtml(c.assessment) + "</p>" +
+          "</li>"
+        );
+      })
+      .join("");
+    return (
+      "<h4 class='block-h'>Popular counter-arguments</h4>" +
+      "<ul class='counters'>" + items + "</ul>"
+    );
+  }
+
   function revisionsHtml(food) {
     if (!food.revisions || !food.revisions.length) return "";
     const items = food.revisions
@@ -200,6 +226,7 @@
             assessmentHtml(food) +
             studiesHtml(food) +
             considerationsHtml(food) +
+            counterArgsHtml(food) +
             revisionsHtml(food) +
             "<div class='card-foot'>" +
               "<span class='reviewed'>Last reviewed " + escapeHtml(food.lastReviewed || "—") + "</span>" +

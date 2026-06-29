@@ -70,6 +70,7 @@ python3 -m http.server 8000   # then visit http://localhost:8000
 | `app.js`                       | Filtering, sorting, expandable evidence (UI only)         |
 | `scoring.js`                   | Deterministic scoring engine (facts → scores → tier)      |
 | `data.js`                      | Food dataset: verdicts, studies, and recorded evidence    |
+| `counter-arguments.js`         | Real, attributed counter-arguments + our assessment       |
 | `test/`                        | Unit + data-integrity tests (`npm test`)                  |
 | `METHODOLOGY.md`               | Canonical, versioned description of how verdicts are made |
 | `research/`                    | Source research behind the methodology                    |
@@ -126,6 +127,15 @@ To change a verdict you change the **facts**, not the score. New categories appe
 in the filter automatically. When you change a verdict, add a `revisions` entry;
 when you change the *method* (the rules in `scoring.js`), bump
 `METHODOLOGY_VERSION` in `data.js` and update `METHODOLOGY.md`.
+
+## Counter-arguments
+
+Each card surfaces **popular, real, attributed** counter-arguments to its verdict
+(`counter-arguments.js`), each weighed honestly with a stance: **holds** (our
+verdict survives — and why the argument fails under our approach), **partial**
+(partly right / matches our stated uncertainty), or **valid** (a genuine
+limitation we concede). The aim is to pressure-test the model against positions
+people actually hold — not strawmen — so attributions must name real sources.
 
 ## Tests
 
