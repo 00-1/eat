@@ -225,12 +225,12 @@ make a shaky input look authoritative, so this is the top priority.
         could-not-verify twice; need a dedicated pass.
       - **Batch 2 (walkthrough flags):** fatty fish (RR 0.64 likely optimistic vs
         modern analyses & null supplement RCTs); olive oil (PREDIMED rctLevel, a4).
-- [ ] **Cheese verdict question (open).** Chen 2017 (15 cohorts) shows significant
-      modest CVD protection — total CVD RR 0.90 (0.82–0.99), CHD 0.86 (0.77–0.96),
-      peak ~40 g/day — while de Goede 2016 stroke is null (0.97). Per our rule the
-      CVD interval excludes null → cheese could flip **neutral → positive (low)**.
-      Borderline (upper CI 0.99, confounding-prone, stroke null). Awaiting a call;
-      citations updated, verdict held at neutral for now.
+- [x] **Cheese verdict — resolved BY THE RULE (v0.19), neutral → Positive (Low).**
+      Not a maintainer call: Chen 2017's verified CVD RR 0.90 (0.82–0.99) excludes
+      null, so the direction rule + multi-outcome rule produce Positive · Low
+      automatically; the borderline/confounding-prone evidence is carried by the Low
+      tier. Confirms the reproducibility principle — borderline cases settle by rule,
+      not discretion.
 - [ ] **(b2) Magnitude floor for directionality.** Butter exposed that our
       `ciExcludesNull` flag conflates "statistically excludes null" with "meaningfully
       directional": its CI excludes null (1.0003) but the ~1% effect is trivially

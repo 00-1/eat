@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.18";
+const METHODOLOGY_VERSION = "0.19";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -655,12 +655,12 @@ const FOODS = [
     id: "cheese",
     name: "Cheese",
     category: "Dairy",
-    effect: "neutral",
+    effect: "positive",
     certainty: "low",
     outcomes: ["Cardiovascular disease"],
-    summary: "Despite saturated fat and salt, associations with heart disease are roughly neutral.",
+    summary: "Despite saturated fat and salt, higher intake tracks with modestly LOWER cardiovascular risk — but only at low certainty.",
     rationale:
-      "Meta-analyses show a flat or slightly favorable relationship, attributed to the fermented 'dairy matrix'. The neutral direction is fairly consistent, but rests on a thin evidence base with no trials on hard outcomes — so certainty is 'Low'.",
+      "The strongest cheese-CVD meta-analysis (Chen 2017, 15 cohorts) finds modest protection — total CVD RR 0.90 (0.82–0.99), CHD 0.86 — peaking near 40 g/day, plausibly via the fermented 'dairy matrix'. The interval excludes no-effect, so by our rule this earns a directional (positive) label rather than neutral; but it is borderline (upper CI 0.99), high-vs-low (not dose-response), confounding-prone, with a null stroke result and no hard-outcome trials — so certainty computes to Low. 'Positive · Low' is the honest reading of a marginal protective signal.",
     considerations: {
       confounding: "Cheese is embedded in varied dietary patterns; hard to isolate.",
       doseResponse: "Some analyses suggest a shallow U-shape (modest intake ≈ lowest risk).",
@@ -682,6 +682,7 @@ const FOODS = [
     lastReviewed: "2026-06-28",
     revisions: [
       { date: "2026-06-28", change: "Certainty refined from Moderate to Low under v0.3 explicit scoring (thin evidence base; the neutral verdict is unchanged)." },
+      { date: "2026-06-29", change: "Neutral → Positive (Low) under the grounding pass (v0.19): source-verified on Chen 2017 (the strongest cheese-CVD MA), total CVD RR 0.90 (0.82–0.99) excludes null. Resolved BY THE RULE, not by judgement — a CI excluding null earns a directional label and the borderline evidence is carried by the Low certainty tier (stroke is null; confounding-prone). pooledRR 0.96 → 0.90." },
     ],
   },
   {
@@ -1160,8 +1161,13 @@ const ASSESSMENTS = {
     effectEstimate: "≈ neutral for mortality/CVD (PURE); whole-fat not worse than low-fat; interval spans no-effect.",
   },
   "cheese": {
-    evidence: { pooledRR: 0.96, ciExcludesNull: false, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~40 g/day vs none" },
-    effectEstimate: "Flat-to-slightly-protective (~RR 0.96 at ~40 g/day); interval near no-effect → neutral.",
+    evidence: { pooledRR: 0.90, ciExcludesNull: true, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest (~40 g/day, peak protection)" },
+    effectEstimate: "Total CVD RR 0.90 (95% CI 0.82–0.99) high vs low, peak ~40 g/day (Chen 2017); CHD 0.86 (0.77–0.96). Interval excludes null → directional, but borderline (upper CI 0.99) and confounding-prone, so Low certainty. Stroke is null (0.97).",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Total CVD RR 0.90 (0.82–0.99), CHD 0.86 (0.77–0.96), high vs low; non-linear, peak ~40 g/day", cite: "Chen 2017 Eur J Nutr", id: "PMID:27517544" },
+      participants: { figure: "15 prospective cohorts (CVD); de Goede 2016 stroke pool ~762,000 (null)", cite: "Chen 2017 Eur J Nutr", id: "PMID:27517544" },
+    },
   },
   "butter": {
     evidence: { pooledRR: 1.01, ciExcludesNull: false, participants: 636151, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~14 g/day (1 tbsp) vs none" },
