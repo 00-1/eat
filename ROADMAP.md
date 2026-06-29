@@ -74,6 +74,50 @@ together.
       "Trials & mechanism only" isolates causal backing. Covered by unit + data
       tests and a browser smoke check.
 
+## Multi-conclusion model (self-verdict + food-group verdicts; components as context)  ⟶ *queued (next major design)*
+
+From the food-by-food walkthrough (tomatoes/cocoa). A single verdict per row is
+sometimes dishonest in two opposite ways: it over-credits a specific food with its
+group's evidence (we quietly gave cruciferous/leafy-greens the vegetable-group RR),
+or it buries a real group signal under a thin food-specific one (tomatoes). Fix:
+let an item carry **its own outcome verdict plus the verdict(s) of the food
+group(s) it belongs to**, all computed by the same engine.
+
+**Settled design decisions:**
+- **Items = things you can actually eat/add** (whole foods + addable supplements
+  like fish-oil capsules) are the only verdict-bearing rows.
+- **Food groups** (vegetables, fruit, legumes, nuts, whole grains…) are sets of
+  whole foods with their *own* observed outcomes; each is a scored entity and shows
+  on a member's card as a secondary **"as part of …"** conclusion (propagates down
+  because it's a collection of edible whole foods). Primary card view stays
+  food-centric, not a separate group list.
+- **Components/nutrients** (fibre, omega-3, sugar, saturated fat, polyphenols) are
+  **never items and never verdicts** — only a context layer the food's own outcome
+  *adjudicates*. **Direction of inference is whole-food/group → verdict, never
+  component → food** (codifies/strengthens the existing "mechanism corroborates,
+  never overrides" guardrail; the engine already starves mechanism-only entities of
+  certainty — see coconut oil).
+
+**Concrete tasks:**
+- [ ] **Remove `fiber` as a standalone item** (a nutrient, not a food); its message
+      already lives in whole grains / legumes / fruit / veg. Reframe fibre as
+      component context. (Drops one High-positive row — the honest move.)
+- [ ] Add a `GROUPS` entity set (own `evidence` → engine → verdict) + a food→groups
+      membership map; reuse/merge with the existing `FOOD_TAGS`/`SHARED_CLAIMS`
+      machinery in `counter-arguments.js`.
+- [ ] Re-ground items that were riding a group's evidence: walk **cruciferous** and
+      **leafy greens** self-verdicts back to their honest (thinner) food-specific
+      level, with strength now living in the Vegetables / Cruciferous group rows.
+- [ ] **Tomatoes**: self neutral/low + Vegetables (positive) group conclusion.
+- [ ] **Cocoa/dark chocolate**: keep neutral (adjudicated by COSMOS + cohorts);
+      render sugar/sat-fat as component context that does NOT set the verdict, noting
+      cocoa-butter sat fat is largely stearic (≈LDL-neutral).
+- [ ] Surface the matrix-not-molecule contrast as a feature (sugar in whole fruit =
+      positive vs sugar in soda = negative).
+- [ ] UI: card shows primary food verdict + "as part of" group chips (each with its
+      own live-derived tier) + a component-context block; explore/shortlists/tests
+      updated. Engine untouched.
+
 ## 1. Verify and tighten the inputs  ⟶ *in progress*
 
 The scoring engine is sound, but several recorded facts are well-established
