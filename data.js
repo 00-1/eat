@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.17";
+const METHODOLOGY_VERSION = "0.18";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -76,8 +76,10 @@ const FOODS = [
         search: "Estruch PREDIMED Mediterranean diet nuts cardiovascular 2018 NEJM",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Source-verified (grounding pass): RR 0.78 (0.72–0.84) per 28 g/day confirmed (Aune 2016 BMC Medicine); heterogeneity corrected low → moderate (I²=66%). Certainty stays High (13/16); verdict unchanged." },
+    ],
   },
   {
     id: "legumes",
@@ -469,6 +471,7 @@ const FOODS = [
     revisions: [
       { date: "2026-06-29", change: "Moderate → High under v0.5: scoring now credits a validated causal pathway (feeding-trial-proven LDL/HDL mechanism), and the cohort dose-response was recorded. Verdict (negative) unchanged." },
       { date: "2026-06-29", change: "v0.7: effect size re-based to realistic habitual intake (was 'per 2% energy', which understated it) → magnitude now Large, so trans fat joins the Bin fodder shortlist. Verdict unchanged." },
+      { date: "2026-06-29", change: "Source-verified (grounding pass): industrial trans fat CHD RR 1.42 (1.05–1.92) highest vs lowest (de Souza 2015 BMJ); per-2%-energy 1.23 (1.11–1.37) (Mozaffarian 2006). pooledRR 1.35 → 1.42. Ruminant trans fat confirmed null. Certainty stays High; verdict unchanged." },
     ],
   },
   {
@@ -664,10 +667,16 @@ const FOODS = [
     },
     studies: [
       {
-        citation: "de Goede J, et al. (cheese & CVD).",
-        type: "Dose-response meta-analysis of cohorts",
-        finding: "Modest cheese intake (~40 g/day) associated with slightly lower CHD/stroke risk; overall near-neutral.",
-        search: "de Goede cheese coronary heart disease stroke dose-response meta-analysis",
+        citation: "Chen GC, et al. European Journal of Nutrition. 2017.",
+        type: "Meta-analysis of 15 prospective cohorts",
+        finding: "Higher cheese intake associated with lower total CVD (RR 0.90, 0.82–0.99) and CHD (0.86, 0.77–0.96); non-linear, largest reduction ~40 g/day. (Modest, high-vs-low, confounding-prone.)",
+        search: "Chen cheese consumption cardiovascular disease meta-analysis European Journal Nutrition 2017",
+      },
+      {
+        citation: "de Goede J, et al. J Am Heart Assoc. 2016.",
+        type: "Dose-response meta-analysis (stroke; 18 studies, ~762,000)",
+        finding: "Cheese ~marginally inversely associated with stroke (RR 0.97, 0.94–1.01 per 40 g/day) — not significant (null).",
+        search: "de Goede cheese stroke dose-response meta-analysis JAHA 2016",
       },
     ],
     lastReviewed: "2026-06-28",
@@ -699,6 +708,7 @@ const FOODS = [
     lastReviewed: "2026-06-29",
     revisions: [
       { date: "2026-06-29", change: "Low → Moderate under v0.11: neutral verdicts are now scored on the strength of the null evidence; butter's near-null is well-established (large meta-analysis), so Moderate. Verdict unchanged." },
+      { date: "2026-06-29", change: "Source-verified (grounding pass): RR 1.0134 (1.0003–1.0266, P=0.045) per 14 g/day, I²=0% (Pimpin 2016). Heterogeneity corrected moderate → low. The CI marginally excludes null but the ~1% effect is trivially small, so kept neutral (not a 'butter is back' benefit — it's a tiny harm/null). Certainty stays Moderate." },
     ],
   },
   {
@@ -1026,8 +1036,13 @@ const NUTRIGRADE_RUBRIC = {
 // it as unverified.
 const ASSESSMENTS = {
   "tree-nuts": {
-    evidence: { pooledRR: 0.78, ciExcludesNull: true, participants: 819000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pattern", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~28 g/day (a daily handful) vs none" },
-    effectEstimate: "Pooled RR ≈ 0.78 for all-cause mortality at ~28 g/day; interval excludes no-effect → lower risk.",
+    evidence: { pooledRR: 0.78, ciExcludesNull: true, participants: 819448, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "pattern", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~28 g/day (a daily handful) vs none" },
+    effectEstimate: "RR 0.78 (95% CI 0.72–0.84) for all-cause mortality per 28 g/day; interval excludes no-effect → lower risk. I²=66% (dose-response).",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "RR 0.78 (0.72–0.84) per 28 g/day, all-cause mortality; I²=66%", cite: "Aune 2016 BMC Medicine", id: "PMID:27916000" },
+      participants: { figure: "819,448 participants, 85,870 deaths, 15 cohorts", cite: "Aune 2016 BMC Medicine", id: "PMID:27916000" },
+    },
     doseCurve: {
       outcome: "All-cause mortality", unit: "g/day", shape: "plateau-benefit", normalRange: [0, 30],
       points: [ { x: 0, rr: 1.0 }, { x: 15, rr: 0.86 }, { x: 28, rr: 0.78, lo: 0.72, hi: 0.84 }, { x: 45, rr: 0.80 } ],
@@ -1112,8 +1127,13 @@ const ASSESSMENTS = {
     },
   },
   "trans-fat": {
-    evidence: { pooledRR: 1.35, ciExcludesNull: true, participants: 150000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway", funding: "independent", pubBias: "untested", confoundingRisk: "low", intakeBasis: "regular intake of trans-fat-rich foods (~3–4% of energy) vs avoidance" },
-    effectEstimate: "At realistic intake (regularly eating trans-fat-rich foods vs avoiding them) CHD risk rises ~35%+; the ~23%-per-2%-energy figure scales up at the amounts people actually consume. Feeding RCTs prove the LDL/HDL pathway.",
+    evidence: { pooledRR: 1.42, ciExcludesNull: true, participants: 150000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway", funding: "independent", pubBias: "untested", confoundingRisk: "low", intakeBasis: "highest vs lowest INDUSTRIAL trans-fat intake (ruminant trans fat is null)" },
+    effectEstimate: "Industrial trans fat, highest vs lowest: CHD RR 1.42 (95% CI 1.05–1.92); CHD-mortality 1.18 (1.04–1.33) (de Souza 2015). Per 2% of energy: CHD RR 1.23 (1.11–1.37) (Mozaffarian 2006). Ruminant trans fat is null. Feeding RCTs prove the LDL/HDL causal pathway.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Industrial trans fat, CHD RR 1.42 (1.05–1.92) highest vs lowest; per-2%-energy RR 1.23 (1.11–1.37)", cite: "de Souza 2015 BMJ; Mozaffarian 2006 NEJM", id: "PMID:26268692" },
+      participants: { figure: "4 prospective cohorts (Mozaffarian 2006); industrial-vs-ruminant isolated in de Souza 2015", cite: "Mozaffarian 2006 NEJM", id: "PMID:16611951" },
+    },
   },
   "ultra-processed": {
     evidence: { pooledRR: 1.25, ciExcludesNull: true, participants: 300000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (cohort quintiles)" },
@@ -1144,8 +1164,13 @@ const ASSESSMENTS = {
     effectEstimate: "Flat-to-slightly-protective (~RR 0.96 at ~40 g/day); interval near no-effect → neutral.",
   },
   "butter": {
-    evidence: { pooledRR: 1.01, ciExcludesNull: false, participants: 636000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~14 g/day vs none" },
-    effectEstimate: "Small, mostly non-significant association with mortality; interval spans no-effect; highly substitution-dependent.",
+    evidence: { pooledRR: 1.01, ciExcludesNull: false, participants: 636151, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~14 g/day (1 tbsp) vs none" },
+    effectEstimate: "RR 1.0134 (95% CI 1.0003–1.0266, P=0.045) per 14 g/day — a ~1% HIGHER mortality risk (not protective), I²=0%. The interval marginally excludes null but the effect is trivially small, so recorded as non-directional (neutral). Null for CVD/CHD/stroke; slightly protective for diabetes (0.96). Highly substitution-dependent.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "RR 1.0134 (1.0003–1.0266, P=0.045) per 14 g/day, all-cause mortality; I²=0%", cite: "Pimpin 2016 PLoS ONE", id: "PMID:27355649" },
+      participants: { figure: "636,151 participants, 28,271 deaths, 9 cohorts", cite: "Pimpin 2016 PLoS ONE", id: "PMID:27355649" },
+    },
   },
   "potatoes": {
     evidence: { pooledRR: 1.05, ciExcludesNull: false, participants: 150000, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower (non-fried) intake" },

@@ -215,12 +215,28 @@ make a shaky input look authoritative, so this is the top priority.
       to each non-obvious one.
       - **Batch 1 done (v0.15):** whole grains (→ Moderate, I²=83%), sugary drinks,
         white rice verified with PMID/DOI sources; red meat strengthened (Shi 2023).
-      - **Batch 1b (proxy-blocked, re-run):** tree nuts (Aune 2016 BMC Med), trans
-        fat (Mozaffarian 2006 + realistic-intake), butter (Pimpin 2016), cheese
-        (de Goede), coffee (Poole 2017), and the **processed-meat colorectal-cancer**
-        per-50 g figure (IARC) — none verified this round.
+      - **Batch 1b done (v0.18):** tree nuts (0.78, I²=66% → het moderate, stays
+        High), trans fat (de Souza 2015 industrial CHD 1.42 + Mozaffarian 1.23;
+        1.35→1.42, stays High), butter (Pimpin 2016, 1.0134, I²=0%; stays neutral,
+        "not butter-is-back"). Cheese citations corrected (Chen 2017 + de Goede) —
+        verdict question open (below). **6 foods now source-verified.**
+      - **Batch 3 (still proxy-blocked):** coffee/all-cause mortality (Poole 2017)
+        and the **processed-meat colorectal-cancer** per-50 g figure (IARC/Chan) —
+        could-not-verify twice; need a dedicated pass.
       - **Batch 2 (walkthrough flags):** fatty fish (RR 0.64 likely optimistic vs
         modern analyses & null supplement RCTs); olive oil (PREDIMED rctLevel, a4).
+- [ ] **Cheese verdict question (open).** Chen 2017 (15 cohorts) shows significant
+      modest CVD protection — total CVD RR 0.90 (0.82–0.99), CHD 0.86 (0.77–0.96),
+      peak ~40 g/day — while de Goede 2016 stroke is null (0.97). Per our rule the
+      CVD interval excludes null → cheese could flip **neutral → positive (low)**.
+      Borderline (upper CI 0.99, confounding-prone, stroke null). Awaiting a call;
+      citations updated, verdict held at neutral for now.
+- [ ] **(b2) Magnitude floor for directionality.** Butter exposed that our
+      `ciExcludesNull` flag conflates "statistically excludes null" with "meaningfully
+      directional": its CI excludes null (1.0003) but the ~1% effect is trivially
+      small, so we lean on the methodology's "trivially small → neutral" clause and
+      keep `ciExcludesNull: false`. Consider encoding an explicit effect-size floor
+      so this is a rule, not a per-food judgement.
 - [ ] **Audit all `heterogeneity` inputs.** Whole grains was recorded `low` but the
       verified I² is 83% (`high`). Other foods' heterogeneity may be similarly
       optimistic — re-check each against its source during grounding.
