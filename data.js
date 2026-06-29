@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.21";
+const METHODOLOGY_VERSION = "0.22";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -324,8 +324,10 @@ const FOODS = [
         search: "Gunter coffee mortality EPIC 2017 Annals Internal Medicine",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Source-verified (grounding pass): RR 0.83 (0.79–0.88) all-cause mortality at 3–4 cups/day (Poole 2017 BMJ umbrella, corrected), corroborated by Crippa 2014 & Kim 2019. Added a U-shaped dose curve. Certainty/verdict unchanged." },
+    ],
   },
   {
     id: "avocado",
@@ -381,8 +383,10 @@ const FOODS = [
         search: "Micha red processed meat coronary heart disease diabetes Circulation 2010",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Source-verified (grounding pass): colorectal-cancer RR 1.18 (1.10–1.28) per 50 g/day (Chan 2011 PLoS ONE; IARC 2015; WCRF/CUP 2017); dose curve now source-verified. Certainty (High) / verdict unchanged." },
+    ],
   },
   {
     id: "sugary-drinks",
@@ -1061,7 +1065,18 @@ const ASSESSMENTS = {
   },
   "coffee": {
     evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 520000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "3–4 cups/day vs none" },
-    effectEstimate: "≈17% lower all-cause mortality at 3–4 cups/day; consistent across many meta-analyses; no RCT on hard outcomes.",
+    effectEstimate: "RR 0.83 (95% CI 0.79–0.88) for all-cause mortality at 3–4 cups/day (Poole 2017 umbrella); U-shaped, nadir ~3 cups; corroborated by Crippa 2014 (0.84) and Kim 2019 (0.85). No RCT on hard outcomes.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "RR 0.83 (0.79–0.88) at 3–4 cups/day, all-cause mortality (corrected per erratum)", cite: "Poole 2017 BMJ umbrella review", id: "PMID:29167102" },
+      participants: { figure: "umbrella of 201 meta-analyses; corroborated in 997,464 (Crippa 2014) and 3.85M (Kim 2019)", cite: "Crippa 2014 AJE; Kim 2019 Eur J Epidemiol", id: "PMID:25156996" },
+    },
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "cups/day", shape: "j-u-curve", normalRange: [0, 5],
+      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 0.92 }, { x: 3.5, rr: 0.83, lo: 0.79, hi: 0.88 }, { x: 6, rr: 0.88 } ],
+      note: "A 'sweet spot' near 3–4 cups/day; benefit attenuates at very high intake but stays protective across the normal range.",
+      source: { cite: "Poole 2017 BMJ; Crippa 2014 AJE", id: "PMID:29167102" }, verified: false,
+    },
   },
   "avocado": {
     evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 110000, heterogeneity: "unknown", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "≥2 servings/week vs none" },
@@ -1069,12 +1084,17 @@ const ASSESSMENTS = {
   },
   "processed-meat": {
     evidence: { pooledRR: 1.18, ciExcludesNull: true, participants: 800000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "mechanism", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~50 g/day (about one serving) vs none" },
-    effectEstimate: "+18% colorectal cancer (and ~+42% CHD) per 50 g/day; interval excludes no-effect; IARC Group 1 carcinogen.",
+    effectEstimate: "Colorectal cancer RR 1.18 (95% CI 1.10–1.28) per 50 g/day (Chan 2011; adopted by IARC 2015, reconfirmed WCRF/CUP 2017); ~+42% CHD (Micha 2010); interval excludes null; IARC Group 1 carcinogen.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Colorectal cancer RR 1.18 (1.10–1.28) per 50 g/day", cite: "Chan 2011 PLoS ONE; IARC/Bouvard 2015", id: "PMID:21674008" },
+      participants: { figure: "dose-response meta-analysis underlying the IARC Group 1 classification (800+ studies reviewed)", cite: "Chan 2011 PLoS ONE", id: "PMID:21674008" },
+    },
     doseCurve: {
       outcome: "Colorectal cancer", unit: "g/day", shape: "monotonic-harm", normalRange: [0, 50],
-      points: [ { x: 0, rr: 1.0 }, { x: 25, rr: 1.09 }, { x: 50, rr: 1.18, lo: 1.10, hi: 1.27 }, { x: 100, rr: 1.36 } ],
+      points: [ { x: 0, rr: 1.0 }, { x: 25, rr: 1.09 }, { x: 50, rr: 1.18, lo: 1.10, hi: 1.28 }, { x: 100, rr: 1.36 } ],
       note: "Risk rises ~18% per 50 g/day with no clear safe threshold for cancer.",
-      source: { cite: "Bouvard 2015 (IARC), Lancet Oncology", id: "10.1016/S1470-2045(15)00444-1" }, verified: false,
+      source: { cite: "Chan 2011 PLoS ONE; IARC/Bouvard 2015", id: "PMID:21674008" }, verified: true,
     },
   },
   "sugary-drinks": {

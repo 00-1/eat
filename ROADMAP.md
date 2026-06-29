@@ -224,9 +224,9 @@ make a shaky input look authoritative, so this is the top priority.
         1.35→1.42, stays High), butter (Pimpin 2016, 1.0134, I²=0%; stays neutral,
         "not butter-is-back"). Cheese citations corrected (Chen 2017 + de Goede) —
         verdict question open (below). **6 foods now source-verified.**
-      - **Batch 3 (still proxy-blocked):** coffee/all-cause mortality (Poole 2017)
-        and the **processed-meat colorectal-cancer** per-50 g figure (IARC/Chan) —
-        could-not-verify twice; need a dedicated pass.
+      - **Batch 3 done (v0.22):** coffee (Poole 2017, RR 0.83, 0.79–0.88; + U-shaped
+        dose curve) and processed-meat colorectal cancer (Chan 2011/IARC, RR 1.18,
+        1.10–1.28; dose curve now source-verified). **9 of 31 source-verified.**
       - **Batch 2 (walkthrough flags):** fatty fish (RR 0.64 likely optimistic vs
         modern analyses & null supplement RCTs); olive oil (PREDIMED rctLevel, a4).
 - [x] **Cheese verdict — resolved BY THE RULE (v0.19), neutral → Positive (Low).**
