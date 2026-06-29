@@ -155,7 +155,8 @@
   //   else             -> minimal (a true null moves nothing)
   var MAGNITUDE_ORDER = { minimal: 0, small: 1, moderate: 2, large: 3 };
   function classifyMagnitude(ev, outcomes) {
-    var rr = ev && ev.pooledRR;
+    if (!ev || ev.ciExcludesNull === false) return "minimal"; // no claimed effect → moves nothing
+    var rr = ev.pooledRR;
     if (typeof rr !== "number" || rr <= 0) return "minimal";
     var m = Math.abs(Math.log(rr));
     var tier = m >= 0.22 ? 3 : m >= 0.1 ? 2 : m > 0.03 ? 1 : 0;

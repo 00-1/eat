@@ -6,6 +6,8 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
 const S = require("../scoring.js");
 const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION } = require("../data.js");
 
@@ -91,6 +93,22 @@ test("CENTRAL INVARIANT: stored certainty equals the computed tier for every foo
       computed.tier,
       `${f.id}: stored certainty "${f.certainty}" != computed "${computed.tier}" (total ${computed.total}/${S.MAX})`
     );
+  }
+});
+
+test("METHODOLOGY.md header version matches METHODOLOGY_VERSION", () => {
+  const md = fs.readFileSync(path.join(__dirname, "..", "METHODOLOGY.md"), "utf8");
+  const m = md.match(/Version\s+(\d+\.\d+)/);
+  assert.ok(m, "no version found in METHODOLOGY.md header");
+  assert.equal(m[1], METHODOLOGY_VERSION, "doc header version != METHODOLOGY_VERSION");
+});
+
+test("a neutral food never advertises a non-minimal magnitude", () => {
+  for (const f of FOODS) {
+    const mag = S.classifyMagnitude(ASSESSMENTS[f.id].evidence, f.outcomes);
+    if (f.effect === "neutral") {
+      assert.equal(mag, "minimal", `${f.id}: neutral but magnitude=${mag}`);
+    }
   }
 });
 

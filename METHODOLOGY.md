@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.6 — living document.** This file is the canonical description of how
+**Version 0.8 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in

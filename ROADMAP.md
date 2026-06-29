@@ -4,6 +4,54 @@ Queued work, roughly in priority order. The model and app architecture are in
 place (see `METHODOLOGY.md`); these are the things that make it trustworthy and
 comprehensive.
 
+## 0. Audit-driven fixes (from `AUDIT.md`, 2026-06-29) ⟶ *top of queue*
+
+Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to `AUDIT.md`.
+
+**Now (small, verified, low-judgement):** — DONE (v0.8.1)
+- [x] **F1** — fixed the live crash: renamed the local `chips` → `chipsHtml` in
+      `renderHighlights`. (jsdom click test still queued under F2; covered by the
+      Playwright smoke for now.)
+- [x] **G1** — reconciled version numbers; added a test that the `METHODOLOGY.md`
+      header matches `METHODOLOGY_VERSION`.
+- [x] **B1** — magnitude is now `minimal` when `ciExcludesNull === false`; added
+      unit + per-food coherence tests (no neutral food advertises an effect).
+
+**Consistency & honest defaults:**
+- [ ] **B2** — gate the all-cause magnitude bump on `ciExcludesNull`; stop
+      inflating borderline RRs; correct the trans-fat narrative in README/METHODOLOGY.
+- [ ] **C1** — score `heterogeneity: unknown → 0` (conservative); make unknown
+      enum values throw in tests.
+- [ ] **C3** — resolve the directional-at-Low contradiction: either downgrade
+      legumes/olive-oil/yogurt/avocado/refined-grains to "neutral (leaning…)" or
+      revise the §5 rule; add a test enforcing whichever we choose.
+- [ ] **B3** — set `doseResponse: none` for null associations (eggs, milk, cheese)
+      or justify the gradient.
+- [ ] **G2** — soften "objective/pure/we didn't type these" language to
+      "deterministic given the recorded judgements."
+
+**Provenance (the central concern) — make data as inspectable as the method:**
+- [ ] **A1/A3** — add a `source` (PMID/DOI/figure) per score-driving fact incl.
+      ordinal calls; test that score-driving facts are sourced.
+- [ ] **A2/E1** — surface provenance/uncertainty in the UI: a per-food `verified`
+      flag + a persistent "facts not yet source-verified / not medical advice"
+      banner on cards and the highlights block.
+- [ ] **B5/B6/G3** — record RRs that match a real reported figure for the stated
+      outcome (flag extrapolations like trans-fat 1.35); replace placeholder
+      citations; store PMIDs/DOIs.
+
+**Coverage:**
+- [ ] **D1** — add cancer outcomes where WCRF/CUP grades are strong; state the
+      CVD/mortality bias as a limitation.
+- [ ] **D2** — record per-food per-category exception status (checked-clear vs n/a).
+- [ ] **D3** — render "no counter-arguments assessed yet" placeholder; finish the
+      steelman backlog (second research pass — see §1).
+- [ ] **F2/F3** — add jsdom UI tests + cross-field data-coherence tests.
+- [ ] **E2** — reconsider the "Manageable" severity label.
+
+The grounding items (A1/A2/A3, B5, D1) overlap with §1 below and should be done
+together.
+
 ## 1. Verify and tighten the inputs  ⟶ *in progress*
 
 The scoring engine is sound, but several recorded facts are well-established

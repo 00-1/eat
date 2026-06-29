@@ -173,6 +173,14 @@ test("standout: qualifying needs top tier on both axes; marginal is one notch sh
   assert.equal(S.standout("positive", "high", "bogus"), null);
 });
 
+test("magnitude is minimal when the interval crosses the null (no claimed effect)", () => {
+  // A neutral food must not advertise an effect size, however large the point RR.
+  assert.equal(S.classifyMagnitude({ pooledRR: 0.5, ciExcludesNull: false }, ["All-cause mortality"]), "minimal");
+  assert.equal(S.classifyMagnitude({ pooledRR: 1.5, ciExcludesNull: false }, []), "minimal");
+  // still reports magnitude when the interval excludes the null
+  assert.equal(S.classifyMagnitude({ pooledRR: 0.64, ciExcludesNull: true }, []), "large");
+});
+
 test("GUARDRAIL: a hard-to-no-observation poison can still be certain via a pathway", () => {
   // The user's case: demonstrable mechanistic poison, little/no cohort data.
   const poison = ev({

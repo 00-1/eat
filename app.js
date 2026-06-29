@@ -350,7 +350,7 @@
     const gold = pick("gold"), bin = pick("bin");
     const marginalGold = pick("marginal-gold"), marginalBin = pick("marginal-bin");
 
-    const chips = (foods) =>
+    const chipsHtml = (foods) =>
       foods.map((f) => "<button class='hl-chip' data-food='" + escapeHtml(f.id) + "'>" + escapeHtml(f.name) + "</button>").join("");
     const cuspChips = (foods) =>
       foods
@@ -372,13 +372,13 @@
       "<div class='hl-card hl-gold'>" +
         "<h2>★ Gold standard</h2>" +
         "<p class='hl-sub'>High certainty, large positive effect — the surest things to add.</p>" +
-        "<div class='hl-chips'>" + (gold.length ? chips(gold) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+        "<div class='hl-chips'>" + (gold.length ? chipsHtml(gold) : "<span class='hl-empty'>none yet</span>") + "</div>" +
         cusp(marginalGold) +
       "</div>" +
       "<div class='hl-card hl-bin'>" +
         "<h2>✕ Bin fodder</h2>" +
         "<p class='hl-sub'>High certainty, large negative effect — the surest things to drop.</p>" +
-        "<div class='hl-chips'>" + (bin.length ? chips(bin) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+        "<div class='hl-chips'>" + (bin.length ? chipsHtml(bin) : "<span class='hl-empty'>none yet</span>") + "</div>" +
         cusp(marginalBin) +
       "</div>";
 
