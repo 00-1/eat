@@ -60,7 +60,9 @@
   }
 
   function scoreConsistency(h) {
-    return h === "low" ? 2 : h === "moderate" ? 1 : h === "high" ? 0 : 1; // unknown -> 1
+    // unknown / unreported / unrecognised -> 0 (absence of evidence is not
+    // scored as adequate consistency).
+    return h === "low" ? 2 : h === "moderate" ? 1 : 0;
   }
 
   function scoreDirectness(o) {

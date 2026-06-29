@@ -63,12 +63,12 @@ test("precision steps on sample size", () => {
   assert.equal(S.computeScores(ev({ participants: 99999 })).precision, 0);
 });
 
-test("consistency maps heterogeneity (unknown defaults to mid)", () => {
+test("consistency maps heterogeneity (unknown/unreported scores 0)", () => {
   assert.equal(S.computeScores(ev({ heterogeneity: "low" })).consistency, 2);
   assert.equal(S.computeScores(ev({ heterogeneity: "moderate" })).consistency, 1);
   assert.equal(S.computeScores(ev({ heterogeneity: "high" })).consistency, 0);
-  assert.equal(S.computeScores(ev({ heterogeneity: "unknown" })).consistency, 1);
-  assert.equal(S.computeScores(ev({ heterogeneity: "garbage" })).consistency, 1);
+  assert.equal(S.computeScores(ev({ heterogeneity: "unknown" })).consistency, 0);
+  assert.equal(S.computeScores(ev({ heterogeneity: "garbage" })).consistency, 0);
 });
 
 test("directness maps outcome type", () => {

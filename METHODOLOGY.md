@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.9 — living document.** This file is the canonical description of how
+**Version 0.10 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -319,6 +319,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.10 | 2026-06-29 | Honest default (audit C1): unknown/unreported `heterogeneity` now scores **0** for consistency (was 1) — absence of evidence isn't scored as adequate. No tier changes (avocado/coconut-oil stay put). Also adopted the "highlight inadequacies" policy: an honest data-status banner + per-food source-verification chip, and softened over-claiming language. |
 | 0.9 | 2026-06-29 | Relaxed the directional-verdict rule: a positive/negative label needs only the conservative interval to exclude the null; the **certainty tier carries the confidence** (so "Positive · Low" stands), with a Very-low → Neutral(leaning) fallback — more transparent than collapsing low-certainty reads to "neutral." Added a test enforcing it. Also: ran an independent gap audit (`AUDIT.md`); fixed a live highlights-chip crash, made magnitude `minimal` when the interval crosses the null, and reconciled version numbers (with a test). Added the "Criticisms of this approach" section and integrated the counter-arguments research. |
 | 0.8 | 2026-06-29 | Input-verification sweep of the effect-size basis: recorded an `intakeBasis` for every food (the realistic high-vs-low intake its `pooledRR` refers to), enforced by a test. Re-based whole fruit from per-serving to 2–3 servings/day (RR ≈ 0.90) → Low → Moderate certainty, now on the cusp of Gold standard. |
 | 0.7 | 2026-06-29 | Standardised the **effect-size / magnitude intake basis**: `pooledRR` is now the relative risk at realistic habitual high-vs-low intake (what people actually eat), not per arbitrary small unit — so calorie-dense foods eaten in quantity aren't understated. Re-based trans fat off "per 2% energy" → Large magnitude, moving it into Bin fodder. |

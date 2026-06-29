@@ -20,8 +20,13 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
 **Consistency & honest defaults:**
 - [ ] **B2** — gate the all-cause magnitude bump on `ciExcludesNull`; stop
       inflating borderline RRs; correct the trans-fat narrative in README/METHODOLOGY.
-- [ ] **C1** — score `heterogeneity: unknown → 0` (conservative); make unknown
-      enum values throw in tests.
+- [x] **C1** — `heterogeneity: unknown → 0` (conservative); test updated. No tier
+      changes. (v0.10)
+- [ ] **B3** — `doseResponse` for null associations: open question — naive
+      "set none for RR≈1" wrongly catches alcohol (real harm gradient). Needs
+      per-food judgement (eggs/milk/cheese yes; alcohol/potatoes no), and it
+      interacts with how neutral-verdict certainty should treat absence-of-gradient.
+      *Pending decision.*
 - [x] **C3** — resolved by **relaxing** the rule (v0.9): directional labels need
       only a null-excluding interval; the certainty chip carries confidence;
       Very-low falls back to neutral. No verdicts changed (none were directional at
