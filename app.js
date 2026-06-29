@@ -229,18 +229,33 @@
 
   const STANCE_LABEL = { holds: "Our verdict holds", partial: "Partly valid", valid: "Valid limitation" };
 
+  function scopeLabelFor(claim) {
+    if (!claim.shared || typeof TAG_LABEL === "undefined") return "";
+    const labels = claim.scope.map(function (t) { return TAG_LABEL[t] || t; }).join(", ");
+    return "<span class='ca-scope'>Category claim · " + escapeHtml(labels) + "</span>";
+  }
+
   function counterArgsHtml(food) {
-    const list = typeof COUNTER_ARGUMENTS !== "undefined" ? COUNTER_ARGUMENTS[food.id] : null;
-    if (!list || !list.length) return "";
+    const list = typeof counterArgumentsFor === "function"
+      ? counterArgumentsFor(food.id)
+      : (typeof COUNTER_ARGUMENTS !== "undefined" ? COUNTER_ARGUMENTS[food.id] || [] : []);
+    if (!list.length) return "";
+    // For a category claim, ground it in THIS food's own verdict (we don't score
+    // categories — we compare the claim to each member food's score).
+    const verdictLine =
+      "<p class='ca-ground'><span class='counter-k'>Our verdict for " + escapeHtml(food.name) + ":</span> " +
+      EFFECT_LABEL[food.effect] + " · " + CERTAINTY_LABEL[food.certainty] + "</p>";
     const items = list
       .map(function (c) {
         return (
-          "<li class='counter counter-" + c.stance + "'>" +
+          "<li class='counter counter-" + c.stance + (c.shared ? " counter-shared" : "") + "'>" +
             "<div class='counter-head'>" +
               "<span class='counter-claim'>“" + escapeHtml(c.claim) + "”</span>" +
               "<span class='stance stance-" + c.stance + "'>" + STANCE_LABEL[c.stance] + "</span>" +
             "</div>" +
+            scopeLabelFor(c) +
             "<p class='counter-who'>" + escapeHtml(c.proponents) + "</p>" +
+            (c.shared ? verdictLine : "") +
             (c.evidenceCited ? "<p class='counter-eD'><span class='counter-k'>Cites:</span> " + escapeHtml(c.evidenceCited) + "</p>" : "") +
             "<p class='counter-assess'><span class='counter-k'>Our take:</span> " + escapeHtml(c.assessment) + "</p>" +
           "</li>"

@@ -152,6 +152,15 @@ FFQ unreliability, industry funding) are answered in the Approach tab's
 **"Criticisms of this approach,"** with sources in
 `research/counter-arguments-research.md`.
 
+**Category claims.** Many real claims target a whole category ("fruit", "carbs",
+"saturated fat"), not one food. Those live in `SHARED_CLAIMS`, scoped to a tag, and
+resolve onto every food carrying that tag (`FOOD_TAGS`). We don't score categories —
+a category claim is compared to **each member food's own verdict**, shown beside the
+claim. So "carbs are bad" appears on whole grains (our verdict: Positive → it fails
+there) and on soda (Negative → it holds there), with a category-level assessment
+that states the split. Directional agreement is never treated as endorsing the
+claim's mechanism (refined grains are negative, but not because of gluten).
+
 ## Exceptions ("who should be careful")
 
 A verdict is a population average; it can be wrong for *you*. So every food is run

@@ -353,6 +353,21 @@ a { color: var(--accent); }
 .counter-eD { margin: 4px 0 0; font-size: 0.82rem; color: var(--ink-soft); }
 .counter-assess { margin: 6px 0 0; font-size: 0.86rem; }
 .counter-k { font-weight: 600; }
+.counter-shared { border-left-style: dashed; }
+.ca-scope {
+  display: inline-block;
+  margin: 4px 0 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+.ca-ground { margin: 6px 0 0; font-size: 0.84rem; color: var(--ink-soft); }
 
 /* Exceptions — "who should be careful" */
 .exc-none { margin: 0; font-size: 0.86rem; color: var(--ink-soft); }
