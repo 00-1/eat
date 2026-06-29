@@ -69,6 +69,7 @@ test("every food has an assessment with valid evidence facts", () => {
     assert.ok(typeof e.pooledRR === "number" && e.pooledRR > 0, `${f.id}: bad pooledRR`);
     assert.ok(typeof e.ciExcludesNull === "boolean", `${f.id}: bad ciExcludesNull`);
     assert.ok(typeof e.participants === "number" && e.participants > 0, `${f.id}: bad participants`);
+    assert.ok(e.intakeBasis && e.intakeBasis.trim().length > 0, `${f.id}: missing intakeBasis (pooledRR must state its realistic-intake basis)`);
     for (const key of Object.keys(ENUMS)) {
       assert.ok(ENUMS[key].includes(e[key]), `${f.id}: bad ${key}=${e[key]}`);
     }

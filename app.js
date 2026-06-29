@@ -94,6 +94,7 @@
       "<p class='basis-line'><span class='basis basis-" + basis + "'>" + escapeHtml(Scoring.BASIS_LABEL[basis]) + "</span> " +
         "<span class='basis-note'>" + escapeHtml(Scoring.BASIS_NOTE[basis]) + "</span></p>" +
       "<p class='effect-line'><span class='effect-k'>Conservative estimate:</span> " + escapeHtml(a.effectEstimate) + "</p>" +
+      (a.evidence.intakeBasis ? "<p class='effect-line intake-line'><span class='effect-k'>At intake:</span> " + escapeHtml(a.evidence.intakeBasis) + "</p>" : "") +
       "<div class='scores'>" + rows + "</div>"
     );
   }

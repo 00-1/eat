@@ -4,12 +4,15 @@ Queued work, roughly in priority order. The model and app architecture are in
 place (see `METHODOLOGY.md`); these are the things that make it trustworthy and
 comprehensive.
 
-## 1. Verify and tighten the inputs  ⟶ *queued*
+## 1. Verify and tighten the inputs  ⟶ *in progress*
 
 The scoring engine is sound, but several recorded facts are well-established
 estimates entered from knowledge, not yet citation-verified. The machinery can
 make a shaky input look authoritative, so this is the top priority.
 
+- [x] **Effect-size intake basis**: ensure every `pooledRR` is at realistic
+      habitual intake (not per arbitrary small unit), and record the intake each
+      RR refers to (`intakeBasis`). *(v0.7–v0.8)*
 - [ ] **Evidence facts** (`data.js` → `ASSESSMENTS[id].evidence`): verify
       `pooledRR`, `participants`, and the ordinal calls (`heterogeneity`,
       `confoundingRisk`, `pubBias`, …) against the cited studies; attach a source
@@ -21,12 +24,13 @@ make a shaky input look authoritative, so this is the top priority.
       proponent attribution against a real source; expand coverage to the foods
       not yet covered (eggs/cholesterol, dairy/raw-milk/A1-A2, coffee, nuts,
       leafy greens/oxalates, artificial sweeteners both directions, …).
+      *(deep-research pass running; integrate when it lands.)*
 - [ ] Pull the model-level critiques of nutritional epidemiology (Ioannidis,
       healthy-user bias, FFQ unreliability) into a **"Criticisms of this approach"**
-      block in the Approach tab.
+      block in the Approach tab. *(from the same research pass.)*
 
-A dedicated deep-research pass is the intended mechanism (one is already running
-for the counter-arguments).
+A dedicated deep-research pass is the intended mechanism (one is running for the
+counter-arguments + model-level critiques as of v0.7).
 
 ## 2. A reproducible pipeline to expand the food list  ⟶ *queued*
 

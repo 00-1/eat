@@ -31,6 +31,8 @@
  *   funding         "independent" | "mixed" | "industry" | "unknown"
  *   pubBias         "tested-clean" | "suspected" | "untested"
  *   confoundingRisk "low" | "moderate" | "high"
+ *   intakeBasis     string — the realistic high-vs-low intake the pooledRR refers
+ *                   to (documentation/transparency; not used in scoring)
  */
 (function (global) {
   "use strict";

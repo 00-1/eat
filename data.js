@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.7";
+const METHODOLOGY_VERSION = "0.8";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -207,11 +207,11 @@ const FOODS = [
     name: "Whole fruit (apples, citrus, berries)",
     category: "Fruit",
     effect: "positive",
-    certainty: "low",
+    certainty: "moderate",
     outcomes: ["All-cause mortality", "Type 2 diabetes"],
     summary: "Whole fruit tracks with lower mortality and diabetes — but fruit juice does not.",
     rationale:
-      "Consistent inverse associations for whole fruit across very large cohorts, with a clear contrast against fruit juice that argues against pure confounding. The per-serving effect on mortality is small, which caps certainty.",
+      "Consistent inverse associations for whole fruit across very large cohorts, with a clear contrast against fruit juice that argues against pure confounding. Assessed at realistic intake (2–3 servings/day) the effect is meaningful rather than marginal, which supports moderate certainty.",
     considerations: {
       substitution: "Whole fruit vs juice matters: juice shows neutral-to-harmful associations for diabetes.",
       doseResponse: "Benefit plateaus around 2–3 servings/day.",
@@ -230,8 +230,10 @@ const FOODS = [
         search: "Wang fruit vegetable consumption mortality dose-response BMJ 2014",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Low → Moderate under v0.8: effect size re-based from per-serving to realistic 2–3 servings/day intake (RR ≈ 0.90). Now on the cusp of the Gold standard list. Verdict (positive) unchanged." },
+    ],
   },
   {
     id: "fatty-fish",
@@ -825,118 +827,120 @@ const NUTRIGRADE_RUBRIC = {
     { key: "experimental", label: "Experimental / mechanistic corroboration" },
   ],
 };
+
 // Per-food evidence FACTS. Scores are computed from these by scoring.js — never
 // hand-assigned. Numeric facts (pooledRR, participants) come from the cited
 // studies; ordinal facts (heterogeneity, confoundingRisk, etc.) are recorded,
-// individually inspectable judgements about the evidence base. Correct any fact
-// and the score (and tier) recompute. `effectEstimate` is the plain-language
-// conservative direction summary. See scoring.js for the field meanings.
+// individually inspectable judgements about the evidence base. `pooledRR` is the
+// risk at REALISTIC habitual intake (see `intakeBasis`), not per arbitrary small
+// unit. Correct any fact and the score (and tier) recompute.
 const ASSESSMENTS = {
   "tree-nuts": {
-    evidence: { pooledRR: 0.78, ciExcludesNull: true, participants: 819000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pattern", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.78, ciExcludesNull: true, participants: 819000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pattern", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~28 g/day (a daily handful) vs none" },
     effectEstimate: "Pooled RR ≈ 0.78 for all-cause mortality at ~28 g/day; interval excludes no-effect → lower risk.",
   },
   "legumes": {
-    evidence: { pooledRR: 0.86, ciExcludesNull: true, participants: 250000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.86, ciExcludesNull: true, participants: 250000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~4 servings/week vs rarely" },
     effectEstimate: "Pooled RR ≈ 0.86 for coronary heart disease at ~4 servings/week; interval excludes no-effect.",
   },
   "whole-grains": {
-    evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 700000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 700000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~90 g/day vs low intake" },
     effectEstimate: "≈17% lower all-cause mortality at 90 g/day (RR ≈ 0.83); clear dose-response, interval excludes no-effect.",
   },
   "fiber": {
-    evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 500000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 500000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~25–29 g/day vs low intake" },
     effectEstimate: "≈15–30% lower all-cause/CVD mortality at 25–29 g/day; interval excludes no-effect; RCTs confirm risk-factor effects.",
   },
   "leafy-greens": {
-    evidence: { pooledRR: 0.90, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.9, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "high vs low habitual intake (part of ~800 g/day fruit & veg)" },
     effectEstimate: "Part of the fruit-and-veg dose-response; lower CVD/mortality up to ~800 g/day F&V; interval excludes no-effect.",
   },
   "whole-fruit": {
-    evidence: { pooledRR: 0.94, ciExcludesNull: true, participants: 800000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate" },
-    effectEstimate: "≈5–6% lower mortality per serving/day (RR ≈ 0.94); whole fruit lowers type 2 diabetes while juice raises it.",
+    evidence: { pooledRR: 0.9, ciExcludesNull: true, participants: 800000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~2–3 servings/day vs low intake" },
+    effectEstimate: "At ~2–3 servings/day, whole fruit tracks with ~10% lower mortality (RR ≈ 0.90) and lower type 2 diabetes; fruit JUICE goes the other way.",
   },
   "fatty-fish": {
-    evidence: { pooledRR: 0.64, ciExcludesNull: true, participants: 250000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.64, ciExcludesNull: true, participants: 250000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "1–2 servings/week vs none" },
     effectEstimate: "≈36% lower coronary death at 1–2 servings/week (RR ≈ 0.64); interval excludes no-effect; benefit plateaus.",
   },
   "olive-oil": {
-    evidence: { pooledRR: 0.81, ciExcludesNull: true, participants: 92000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "pattern", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.81, ciExcludesNull: true, participants: 92000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "pattern", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: ">7 g/day vs minimal" },
     effectEstimate: "≈19% lower CVD mortality at >7 g/day (RR ≈ 0.81); supported by the PREDIMED trial arm; small outcome-cohort base.",
   },
   "yogurt": {
-    evidence: { pooledRR: 0.82, ciExcludesNull: true, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.82, ciExcludesNull: true, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~1 serving/day vs none" },
     effectEstimate: "≈18% lower type 2 diabetes at 1 serving/day; single-outcome, no hard-outcome trials.",
   },
   "coffee": {
-    evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 520000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 520000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "3–4 cups/day vs none" },
     effectEstimate: "≈17% lower all-cause mortality at 3–4 cups/day; consistent across many meta-analyses; no RCT on hard outcomes.",
   },
   "avocado": {
-    evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 110000, heterogeneity: "unknown", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 110000, heterogeneity: "unknown", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "≥2 servings/week vs none" },
     effectEstimate: "≈16–21% lower CVD at ≥2 servings/week; small evidence base, wide interval.",
   },
   "processed-meat": {
-    evidence: { pooledRR: 1.18, ciExcludesNull: true, participants: 800000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "mechanism", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 1.18, ciExcludesNull: true, participants: 800000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "mechanism", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~50 g/day (about one serving) vs none" },
     effectEstimate: "+18% colorectal cancer (and ~+42% CHD) per 50 g/day; interval excludes no-effect; IARC Group 1 carcinogen.",
   },
   "sugary-drinks": {
-    evidence: { pooledRR: 1.26, ciExcludesNull: true, participants: 310000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 1.26, ciExcludesNull: true, participants: 310000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "1–2 servings/day vs none" },
     effectEstimate: "+26% type 2 diabetes at 1–2 servings/day; interval excludes no-effect; RCT support on weight/metabolic markers.",
   },
   "trans-fat": {
-    evidence: { pooledRR: 1.35, ciExcludesNull: true, participants: 150000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway", funding: "independent", pubBias: "untested", confoundingRisk: "low" },
+    evidence: { pooledRR: 1.35, ciExcludesNull: true, participants: 150000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway", funding: "independent", pubBias: "untested", confoundingRisk: "low", intakeBasis: "regular intake of trans-fat-rich foods (~3–4% of energy) vs avoidance" },
     effectEstimate: "At realistic intake (regularly eating trans-fat-rich foods vs avoiding them) CHD risk rises ~35%+; the ~23%-per-2%-energy figure scales up at the amounts people actually consume. Feeding RCTs prove the LDL/HDL pathway.",
   },
   "ultra-processed": {
-    evidence: { pooledRR: 1.25, ciExcludesNull: true, participants: 300000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 1.25, ciExcludesNull: true, participants: 300000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (cohort quintiles)" },
     effectEstimate: "Higher mortality/CVD at highest intake; an inpatient RCT showed ~500 kcal/day overeating; category is heterogeneous.",
   },
   "refined-grains": {
-    evidence: { pooledRR: 1.27, ciExcludesNull: true, participants: 137000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 1.27, ciExcludesNull: true, participants: 137000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (cohort quintiles)" },
     effectEstimate: "Higher mortality/major CVD at highest intake (PURE); mostly relative to whole grains; region-dependent.",
   },
   "eggs": {
-    evidence: { pooledRR: 1.00, ciExcludesNull: false, participants: 1700000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 1, ciExcludesNull: false, participants: 1700000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~1 egg/day vs rarely" },
     effectEstimate: "Pooled RR ≈ 1.0 for CVD in the general population; interval spans no-effect → neutral; subgroups disagree.",
   },
   "red-meat": {
-    evidence: { pooledRR: 1.10, ciExcludesNull: false, participants: 1000000, heterogeneity: "high", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high" },
+    evidence: { pooledRR: 1.1, ciExcludesNull: false, participants: 1000000, heterogeneity: "high", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "highest vs lowest habitual intake" },
     effectEstimate: "Small, inconsistent excess risk; a GRADE review judged certainty low; interval near/over no-effect → contested.",
   },
   "poultry": {
-    evidence: { pooledRR: 1.00, ciExcludesNull: false, participants: 300000, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 1, ciExcludesNull: false, participants: 300000, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake" },
     effectEstimate: "≈ no association with CVD; interval spans no-effect → neutral; looks favorable mainly as a substitute.",
   },
   "milk": {
-    evidence: { pooledRR: 0.98, ciExcludesNull: false, participants: 400000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.98, ciExcludesNull: false, participants: 400000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake" },
     effectEstimate: "≈ neutral for mortality/CVD (PURE); whole-fat not worse than low-fat; interval spans no-effect.",
   },
   "cheese": {
-    evidence: { pooledRR: 0.96, ciExcludesNull: false, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 0.96, ciExcludesNull: false, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~40 g/day vs none" },
     effectEstimate: "Flat-to-slightly-protective (~RR 0.96 at ~40 g/day); interval near no-effect → neutral.",
   },
   "butter": {
-    evidence: { pooledRR: 1.01, ciExcludesNull: false, participants: 636000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 1.01, ciExcludesNull: false, participants: 636000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~14 g/day vs none" },
     effectEstimate: "Small, mostly non-significant association with mortality; interval spans no-effect; highly substitution-dependent.",
   },
   "potatoes": {
-    evidence: { pooledRR: 1.05, ciExcludesNull: false, participants: 150000, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 1.05, ciExcludesNull: false, participants: 150000, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower (non-fried) intake" },
     effectEstimate: "Non-fried ≈ neutral; fried associated with higher risk; interval spans no-effect for plain potatoes.",
   },
   "alcohol": {
-    evidence: { pooledRR: 1.00, ciExcludesNull: false, participants: 4800000, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "high" },
+    evidence: { pooledRR: 1, ciExcludesNull: false, participants: 4800000, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "high", intakeBasis: "moderate intake vs none (bias-adjusted)" },
     effectEstimate: "No significant mortality protection after bias adjustment; cancer risk rises from low intake → net neutral, trending harmful.",
   },
   "artificial-sweeteners": {
-    evidence: { pooledRR: 1.09, ciExcludesNull: false, participants: 100000, heterogeneity: "high", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "high" },
+    evidence: { pooledRR: 1.09, ciExcludesNull: false, participants: 100000, heterogeneity: "high", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "high vs no intake" },
     effectEstimate: "Conflicting: some cohorts show higher CVD (likely reverse causation); substitution trials show benefit → net uncertain.",
   },
   "coconut-oil": {
-    evidence: { pooledRR: 1.00, ciExcludesNull: false, participants: 1000, heterogeneity: "unknown", outcomeType: "surrogate", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },
+    evidence: { pooledRR: 1, ciExcludesNull: false, participants: 1000, heterogeneity: "unknown", outcomeType: "surrogate", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "regular use vs none (LDL surrogate)" },
     effectEstimate: "Raises LDL vs unsaturated oils (RCTs); essentially no direct outcome data → neutral pending.",
   },
 };
+
 
 // Allow Node (tests) to import this data while the browser loads it as a script.
 if (typeof module !== "undefined" && module.exports) {
