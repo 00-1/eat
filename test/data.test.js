@@ -202,6 +202,17 @@ test("COHERENCE: a directional verdict's pooledRR points the right way", () => {
   }
 });
 
+test("component-context entries (where present) are well-formed", () => {
+  for (const f of FOODS) {
+    if (!f.components) continue;
+    assert.ok(Array.isArray(f.components) && f.components.length, `${f.id}: empty components`);
+    for (const c of f.components) {
+      assert.ok(c.name && c.name.length, `${f.id}: component missing name`);
+      assert.ok(c.resolution && c.resolution.length, `${f.id}: component "${c.name}" missing resolution`);
+    }
+  }
+});
+
 test("COHERENCE: every food declares at least one outcome", () => {
   for (const f of FOODS) {
     assert.ok(Array.isArray(f.outcomes) && f.outcomes.length >= 1, `${f.id}: no outcomes`);

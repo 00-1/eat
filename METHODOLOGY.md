@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.22 — living document.** This file is the canonical description of how
+**Version 0.23 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -368,6 +368,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.23 | 2026-06-29 | **Component-context layer** (multi-conclusion model). Foods can carry a "What's in it" block: each constituent worry (saturated fat, sugar) is shown with how the food's *own outcomes* adjudicate it — a component **never sets the verdict**. Cocoa: its saturated fat is largely stearic acid (≈LDL-neutral); sugar caveat noted but outcomes are neutral. The **matrix-not-molecule** contrast is now an explicit feature: the *same* sugar reads Positive in whole fruit and Negative in soda, because the outcomes — not the molecule — decide. |
 | 0.22 | 2026-06-29 | **Grounding batch 3.** Verified the last two batch-1 holdouts. **Coffee**: RR 0.83 (0.79–0.88) all-cause mortality at 3–4 cups/day (Poole 2017 BMJ umbrella, corrected; corroborated Crippa 2014, Kim 2019) — added a U-shaped "sweet spot" dose curve. **Processed meat / colorectal cancer**: RR 1.18 (1.10–1.28) per 50 g/day (Chan 2011 PLoS ONE; IARC 2015; WCRF/CUP 2017) — its dose curve is now the first **source-verified** curve. **9 of 31 foods source-verified.** |
 | 0.21 | 2026-06-29 | Rule cleanups. **(b2) Directionality floor:** a verdict is directional only if its CI excludes null AND the effect clears a trivially-small floor (\|ln RR\| > 0.03) — `Scoring.isDirectional()`. Butter (RR 1.0134, CI excludes null but ~1% effect) now records `ciExcludesNull: true` honestly and stays neutral *by rule*, not by a hand-set flag. **E2:** severity label "Manageable" → "Minor". **B3 resolved:** dose-response gradient for null associations is moot — neutral verdicts are scored on the six quality dims, which exclude dose-response, so it can't affect a neutral's certainty. |
 | 0.20 | 2026-06-29 | **Multi-conclusion model — phase 1.** A food now carries its own verdict PLUS the verdict(s) of the food **group(s)** it belongs to. Groups (`groups.js`) are evidence-bearing classes of *whole foods* (vegetables, …), each scored by the same engine from its own `evidence` — so tomatoes reads "Neutral on its own, but part of **Vegetables → Positive**" without either claim swallowing the other. Direction of inference is whole-food/group → verdict, never component → food (nutrient abstractions like fibre stay context-only). Shipped the **Vegetables** group (Aune 2017) with members tomatoes/leafy-greens/cruciferous. Also **removed `fiber` as a standalone item** (a nutrient, not a food you eat; its message lives in whole grains/legumes/fruit). 31 foods. More groups (fermented dairy, legumes, whole grains) and the per-food self-verdict walk-backs are queued. |

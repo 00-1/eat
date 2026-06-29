@@ -151,12 +151,12 @@ group(s) it belongs to**, all computed by the same engine.
       group both belong to, with its own group-level evidence if it exists. Likewise
       audit the broader **Dairy** category for the same scatter (milk/cheese/butter/
       yogurt each carry a slice).
-- [ ] **Tomatoes**: self neutral/low + Vegetables (positive) group conclusion.
-- [ ] **Cocoa/dark chocolate**: keep neutral (adjudicated by COSMOS + cohorts);
-      render sugar/sat-fat as component context that does NOT set the verdict, noting
-      cocoa-butter sat fat is largely stearic (≈LDL-neutral).
-- [ ] Surface the matrix-not-molecule contrast as a feature (sugar in whole fruit =
-      positive vs sugar in soda = negative).
+- [x] **Tomatoes**: self neutral/low + Vegetables (positive) group conclusion. DONE (v0.20).
+- [x] **Cocoa/dark chocolate**: DONE (v0.23). Stays neutral; sugar/sat-fat rendered
+      as component context that does NOT set the verdict, noting cocoa-butter sat fat
+      is largely stearic (≈LDL-neutral).
+- [x] **Matrix-not-molecule** contrast surfaced as a feature (v0.23): same sugar reads
+      Positive in whole fruit, Negative in soda — component-context blocks on both.
 - [ ] UI: card shows primary food verdict + "as part of" group chips (each with its
       own live-derived tier) + a component-context block; explore/shortlists/tests
       updated. Engine untouched.

@@ -350,6 +350,28 @@
     return "<h4 class='block-h'>Who should be careful</h4><ul class='excs'>" + items + "</ul>";
   }
 
+  // Component context: "what's in it" worries that the food's OUTCOME adjudicates —
+  // they never set the verdict (direction of inference is whole-food → verdict,
+  // never component → food). This is where the matrix-not-molecule story lives.
+  function componentsHtml(food) {
+    if (!Array.isArray(food.components) || !food.components.length) return "";
+    const items = food.components
+      .map(function (c) {
+        return (
+          "<li class='component'>" +
+            "<span class='comp-name'>" + escapeHtml(c.name) + "</span>" +
+            (c.worry ? "<p class='comp-worry'><span class='counter-k'>The worry:</span> " + escapeHtml(c.worry) + "</p>" : "") +
+            (c.resolution ? "<p class='comp-res'><span class='counter-k'>But the outcomes say:</span> " + escapeHtml(c.resolution) + "</p>" : "") +
+          "</li>"
+        );
+      })
+      .join("");
+    return (
+      "<h4 class='block-h'>What's in it <span class='block-sub'>— component worries, judged by the food's own outcomes (a component never sets the verdict)</span></h4>" +
+      "<ul class='components'>" + items + "</ul>"
+    );
+  }
+
   const STANCE_LABEL = { holds: "Our verdict holds", partial: "Partly valid", valid: "Valid limitation" };
 
   function scopeLabelFor(claim) {
@@ -440,6 +462,7 @@
             assessmentHtml(food) +
             studiesHtml(food) +
             considerationsHtml(food) +
+            componentsHtml(food) +
             exceptionsHtml(food) +
             counterArgsHtml(food) +
             revisionsHtml(food) +

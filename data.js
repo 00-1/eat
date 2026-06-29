@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.22";
+const METHODOLOGY_VERSION = "0.23";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -189,6 +189,13 @@ const FOODS = [
       substitution: "Whole fruit vs juice matters: juice shows neutral-to-harmful associations for diabetes.",
       doseResponse: "Benefit plateaus around 2–3 servings/day.",
     },
+    components: [
+      {
+        name: "Sugar (in the whole-fruit matrix)",
+        worry: "Fruit is high in sugar, which spikes blood glucose — so fruit must be bad.",
+        resolution: "Sugar bound up with fibre, water and polyphenols in whole fruit behaves nothing like liquid sugar: whole-fruit outcomes are positive (lower diabetes), while fruit JUICE and soda go the other way. The matrix, not the molecule, is what the outcomes track — so 'contains sugar' never sets the verdict.",
+      },
+    ],
     studies: [
       {
         citation: "Muraki I, et al. BMJ. 2013.",
@@ -402,6 +409,13 @@ const FOODS = [
       substitution: "Replacing with water or unsweetened drinks reverses much of the risk in modeling studies.",
       doseResponse: "Risk rises per serving/day with no apparent threshold.",
     },
+    components: [
+      {
+        name: "Sugar (as liquid, no matrix)",
+        worry: "It's just sugar — the same sugar that's in fruit, which we call positive.",
+        resolution: "Same molecule, opposite outcome: liquid sugar with no fibre, water or polyphenols is absorbed fast with little satiety, and the cohorts show clear harm (diabetes, weight) — the mirror image of whole fruit. This is exactly why the model judges foods by outcomes, not by their component sugar.",
+      },
+    ],
     studies: [
       {
         citation: "Malik VS, et al. Diabetes Care. 2010.",
@@ -948,6 +962,18 @@ const FOODS = [
     considerations: {
       substitution: "Dark chocolate the food ≠ the flavanol extract trialled; added sugar/fat matter.",
     },
+    components: [
+      {
+        name: "Saturated fat (cocoa butter)",
+        worry: "Saturated fat raises LDL cholesterol, so chocolate must be bad for the heart.",
+        resolution: "Cocoa butter's saturated fat is largely stearic acid (18:0), which is broadly LDL-neutral — unlike the palmitic/myristic acid in processed meat. The component label hides this; the outcome data (COSMOS null, not harmful) is what adjudicates.",
+      },
+      {
+        name: "Added sugar",
+        worry: "A chocolate bar carries sugar the trialled flavanol extract didn't.",
+        resolution: "A fair caveat — it's why we judge the food, not the extract. But the observed cardiovascular outcomes for chocolate are roughly neutral, not the harm a sugar-only lens predicts; the verdict follows the outcomes.",
+      },
+    ],
     studies: [
       {
         citation: "Sesso HD, et al. (COSMOS). American Journal of Clinical Nutrition. 2022.",

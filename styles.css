@@ -318,6 +318,17 @@ a { color: var(--accent); }
 
 .block-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
 
+/* Component context ("what's in it") */
+.components { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.component {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 9px 13px;
+  background: var(--surface);
+}
+.comp-name { font-weight: 700; font-size: 0.9rem; }
+.comp-worry, .comp-res { margin: 5px 0 0; font-size: 0.85rem; color: var(--ink-soft); }
+
 /* "As part of a food group" conclusions */
 .group-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .group-item {
