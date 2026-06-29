@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.26 — living document.** This file is the canonical description of how
+**Version 0.27 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -376,6 +376,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.27 | 2026-06-29 | **Per-outcome verdict framework** (scaffold). A food can carry optional `outcomeVerdicts` — additional outcome-specific verdicts (each its own evidence + optional dose curve), scored live by the same engine and rendered as a "By individual outcome" block, additive to the headline verdict. This is the machinery for "red meat ≈ neutral on mortality but negative on diabetes" and "alcohol neutral on mortality, negative on cancer". Tested and ready; the figures are in a running grounding batch, so no food carries one yet. |
 | 0.26 | 2026-06-29 | **Groups/splits grounding.** Added two food groups: **Fermented dairy** and **Dairy** (Guo 2017, PURE) — both compute to **neutral** (fermented dairy's RR 0.98 is below the directionality floor; total dairy is genuinely population-dependent, protective in PURE / null in Western cohorts). Yogurt/cheese/milk/butter now show their dairy-group conclusions. **Split out French fries** from potatoes: Mousavi 2025 (BMJ, ~205k) shows fries raise T2D (HR 1.20) while baked/boiled/mashed are null (1.01) — a clean preparation-matters split; both now source-verified. 32 foods, **13 source-verified.** |
 | 0.25 | 2026-06-29 | **Grounding batch 2.** **Fatty fish** corrected: the old RR 0.64 (~36%, Mozaffarian 2006) was materially optimistic — modern meta-analyses give RR ~0.85 (Zhang 2020 CHD-mortality) to 0.93 (Ricci 2023 CVD); pooledRR 0.64→0.85, N 250k→1.14M, magnitude Large→Moderate, certainty stays Moderate. Noted the Asian-vs-Western gap and that omega-3 *supplement* RCTs are null (Cochrane) — the signal is the food, not pills. **Olive oil** verified (Guasch-Ferré 2022 JACC, HR 0.81) and the open (a4) question settled: PREDIMED tested the whole Mediterranean *pattern*, not the oil alone, so `rctLevel: pattern` is correct and certainty stays Low. **11 of 31 source-verified.** |
 | 0.24 | 2026-06-29 | Collapsed-row **group chip** (a food's group verdict shows at a glance — tomatoes reads "⊕ Vegetables: Positive" without expanding). Added the **outcome-selection bias** limitation (D1): verdicts lean on mortality/CVD/T2D, cancer is under-represented (can under-call carcinogens like alcohol); cancer outcomes added where the grade is strong. |

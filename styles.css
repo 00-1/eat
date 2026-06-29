@@ -347,6 +347,13 @@ a { color: var(--accent); }
   padding: 10px 14px;
   background: var(--surface);
 }
+.outcome-item {
+  border: 1px solid var(--line);
+  border-left: 4px solid #c8881f;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: var(--surface);
+}
 .group-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
 .group-name { font-weight: 700; font-size: 0.95rem; }
 .group-rationale { margin: 0; font-size: 0.86rem; color: var(--ink-soft); }

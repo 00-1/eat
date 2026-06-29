@@ -109,6 +109,45 @@
     );
   }
 
+  // ---- By individual outcome (per-outcome verdicts) ----
+  // A food can act differently on different outcomes (red meat ≈ neutral on
+  // mortality but negative on diabetes; alcohol neutral on mortality but negative on
+  // cancer). Each per-outcome verdict carries its own evidence (and optional dose
+  // curve), scored live by the same engine — additive to the headline verdict.
+  function outcomeVerdictsHtml(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !Array.isArray(a.outcomeVerdicts) || !a.outcomeVerdicts.length || typeof Scoring === "undefined") return "";
+    const items = a.outcomeVerdicts
+      .map(function (ov) {
+        const A = Scoring.assess(ov.evidence, [ov.outcome]);
+        const mag = Scoring.classifyMagnitude(ov.evidence, [ov.outcome]);
+        const magChip = mag && mag !== "minimal"
+          ? "<span class='mag mag-" + mag + "'>" + escapeHtml(Scoring.MAGNITUDE_LABEL[mag]) + "</span>" : "";
+        const prov = ov.verified
+          ? "<span class='prov prov-yes' title='Recorded facts checked against the source'>✓ source-verified</span>"
+          : "<span class='prov prov-no' title='Figures are best-estimates, not yet source-checked'>facts estimated</span>";
+        const curve = ov.doseCurve ? buildDoseSvg(ov.doseCurve) : "";
+        return (
+          "<li class='outcome-item'>" +
+            "<div class='group-head'>" +
+              "<span class='group-name'>" + escapeHtml(ov.outcome) + "</span>" +
+              "<span class='badge " + ov.effect + "'>" + EFFECT_LABEL[ov.effect] + "</span>" +
+              "<span class='tier " + A.tier + "'>" + CERTAINTY_LABEL[A.tier] + "</span>" +
+              magChip +
+            "</div>" +
+            (ov.rationale ? "<p class='group-rationale'>" + escapeHtml(ov.rationale) + "</p>" : "") +
+            curve +
+            "<p class='dr-src'>" + (ov.source ? escapeHtml(ov.source.cite) + " " : "") + prov + "</p>" +
+          "</li>"
+        );
+      })
+      .join("");
+    return (
+      "<h4 class='block-h'>By individual outcome <span class='block-sub'>— where this food acts differently on different outcomes</span></h4>" +
+      "<ul class='group-list'>" + items + "</ul>"
+    );
+  }
+
   // ---- Dose-response curve (a single RR is one point on this line) ----
   // Small zero-dependency inline SVG. Green where the curve sits below the
   // no-effect line (benefit), red where above (harm); the normal-intake range is
@@ -474,6 +513,7 @@
             "<h4 class='block-h'>Why this verdict</h4>" +
             "<p class='rationale'>" + escapeHtml(food.rationale) + "</p>" +
             groupConclusionsHtml(food) +
+            outcomeVerdictsHtml(food) +
             doseResponseHtml(food) +
             assessmentHtml(food) +
             studiesHtml(food) +

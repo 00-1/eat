@@ -109,6 +109,32 @@ test("dose-response curves are well-formed and their shape label is derived, not
   }
 });
 
+test("per-outcome verdicts (where present) are well-formed and directionally coherent", () => {
+  for (const f of FOODS) {
+    const ovs = ASSESSMENTS[f.id].outcomeVerdicts;
+    if (!ovs) continue;
+    assert.ok(Array.isArray(ovs) && ovs.length, `${f.id}: empty outcomeVerdicts`);
+    for (const ov of ovs) {
+      assert.ok(ov.outcome && ov.outcome.length, `${f.id}: outcomeVerdict missing outcome`);
+      assert.ok(["positive", "negative", "neutral"].includes(ov.effect), `${f.id}: bad ov effect ${ov.effect}`);
+      assert.ok(ov.evidence && typeof ov.evidence.pooledRR === "number", `${f.id}: ov "${ov.outcome}" bad evidence`);
+      // direction must match the evidence (same rule as foods)
+      if (ov.effect === "neutral") {
+        assert.ok(!S.isDirectional(ov.evidence), `${f.id}: ov "${ov.outcome}" neutral but evidence is directional`);
+      } else {
+        assert.ok(S.isDirectional(ov.evidence), `${f.id}: ov "${ov.outcome}" directional but evidence isn't`);
+        const rr = ov.evidence.pooledRR;
+        if (ov.effect === "positive") assert.ok(rr < 1, `${f.id}: ov "${ov.outcome}" positive but RR>=1`);
+        if (ov.effect === "negative") assert.ok(rr > 1, `${f.id}: ov "${ov.outcome}" negative but RR<=1`);
+      }
+      if (ov.doseCurve) {
+        const derived = S.classifyDoseShape(ov.doseCurve.points);
+        if (derived) assert.equal(ov.doseCurve.shape, derived, `${f.id}: ov "${ov.outcome}" curve shape mismatch`);
+      }
+    }
+  }
+});
+
 test("PROVENANCE: a source-verified food must cite its score-driving figures", () => {
   // The grounding pass flips `verified: true` only once the numeric facts that
   // drive the score (pooledRR, participants) are pinned to a real citation with a

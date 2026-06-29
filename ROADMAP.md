@@ -174,12 +174,11 @@ group(s) it belongs to**, all computed by the same engine.
 Three issues the food-by-food review exposed where the engine is behaving but the
 *calibration* is questionable. None is a bug; all are "highlight inadequacies."
 
-- [~] **PER-OUTCOME MODEL (next big build; partly research-gated).** The remaining
-      architectural piece, unblocking (a), (a2), per-outcome dose curves, and broader
-      cancer coverage (D1). Design: additive `outcomeVerdicts` on a food (each its own
-      evidence → engine → verdict + curve), rendered like the group conclusions —
-      NOT a full restructure of every food. Gated on sourced per-outcome figures:
-      red-meat→T2D RR, alcohol→cancer RR. Build when those land.
+- [~] **PER-OUTCOME MODEL.** FRAMEWORK DONE (v0.27, in parallel with the running
+      research): additive `outcomeVerdicts` (each own evidence + optional dose curve,
+      scored live) rendered as a "By individual outcome" block; tested. Just needs
+      POPULATING with the sourced figures (red-meat→T2D, alcohol→cancer) from the
+      running batch — then (a), (a2), and per-outcome curves all close.
 - [ ] **(a) Red-meat vs white-rice diabetes inconsistency.** White rice is
       Negative/Moderate for type-2 diabetes (RR 1.18, CI excludes null) while
       unprocessed red meat lands Neutral (RR 1.10, CI crosses null) — yet red
