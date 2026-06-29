@@ -212,9 +212,24 @@
   //   settings.zero = [dimKeys]  -> force those scores to 0 but keep them in the
   //                                 denominator ("we have no such evidence")
   //   settings.only = [dimKeys]  -> judge ONLY on these dims (numerator AND max)
+  // A verdict is DIRECTIONAL only if its interval excludes the null AND the effect
+  // is more than trivially small. The floor (|ln RR| > 0.03, the same boundary
+  // below which magnitude is "minimal") stops a statistically-significant-but-tiny
+  // association from being scored as a real direction — e.g. butter's RR 1.0134
+  // (CI 1.0003–1.0266) excludes null yet is a ~1% effect, so it stays neutral. This
+  // makes the methodology's "trivially small effect → neutral" clause a rule, not a
+  // per-food judgement.
+  var DIRECTION_FLOOR = 0.03;
+  function isDirectional(ev) {
+    if (!ev || ev.ciExcludesNull !== true) return false;
+    var rr = ev.pooledRR;
+    if (typeof rr !== "number" || rr <= 0) return false;
+    return Math.abs(Math.log(rr)) > DIRECTION_FLOOR;
+  }
+
   function assess(ev, outcomes, settings) {
     var scores = computeScores(ev);
-    var neutral = ev && ev.ciExcludesNull === false;
+    var neutral = !isDirectional(ev);
     var dims = neutral ? NEUTRAL_DIMS : DIRECTIONAL_DIMS;
     var zero = (settings && settings.zero) || [];
     var only = settings && settings.only;
@@ -357,6 +372,7 @@
     DIRECTIONAL_DIMS: DIRECTIONAL_DIMS,
     NEUTRAL_DIMS: NEUTRAL_DIMS,
     assess: assess,
+    isDirectional: isDirectional,
     PRESETS: PRESETS,
     BASIS_LABEL: BASIS_LABEL,
     BASIS_NOTE: BASIS_NOTE,

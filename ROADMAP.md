@@ -22,19 +22,16 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
       inflating borderline RRs; correct the trans-fat narrative in README/METHODOLOGY.
 - [x] **C1** — `heterogeneity: unknown → 0` (conservative); test updated. No tier
       changes. (v0.10)
-- [ ] **B3** — `doseResponse` for null associations: open question — naive
-      "set none for RR≈1" wrongly catches alcohol (real harm gradient). Needs
-      per-food judgement (eggs/milk/cheese yes; alcohol/potatoes no), and it
-      interacts with how neutral-verdict certainty should treat absence-of-gradient.
-      *Pending decision.*
+- [x] **B3** — RESOLVED (v0.21): moot. Neutral verdicts are scored on the six
+      quality dims, which exclude dose-response, so `doseResponse` cannot affect a
+      neutral food's certainty. (Cheese is now directional and its "some" gradient is
+      justified by Chen 2017's non-linear dose-response.)
 - [x] **C3** — resolved by **relaxing** the rule (v0.9): directional labels need
       only a null-excluding interval; the certainty chip carries confidence;
       Very-low falls back to neutral. No verdicts changed (none were directional at
       very-low). Test added enforcing it.
-- [ ] **B3** — set `doseResponse: none` for null associations (eggs, milk, cheese)
-      or justify the gradient.
-- [ ] **G2** — soften "objective/pure/we didn't type these" language to
-      "deterministic given the recorded judgements."
+- [x] **B3** (dup) — resolved above.
+- [x] **G2** (dup) — done (line 46).
 
 **Provenance (the central concern) — make data as inspectable as the method:**
 - [ ] **A1/A3** — add a `source` (PMID/DOI/figure) per score-driving fact incl.
@@ -61,7 +58,7 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
 - [~] **F2/F3** — cross-field data-coherence tests added (pooledRR-direction match,
       outcomes non-empty, dose-curve schema/shape; v0.16). jsdom UI tests (F2) still
       pending — the Playwright smoke covers the live path for now.
-- [ ] **E2** — reconsider the "Manageable" severity label.
+- [x] **E2** — DONE (v0.21): "Manageable" → "Minor".
 
 The grounding items (A1/A2/A3, B5, D1) overlap with §1 below and should be done
 together.
@@ -238,12 +235,9 @@ make a shaky input look authoritative, so this is the top priority.
       automatically; the borderline/confounding-prone evidence is carried by the Low
       tier. Confirms the reproducibility principle — borderline cases settle by rule,
       not discretion.
-- [ ] **(b2) Magnitude floor for directionality.** Butter exposed that our
-      `ciExcludesNull` flag conflates "statistically excludes null" with "meaningfully
-      directional": its CI excludes null (1.0003) but the ~1% effect is trivially
-      small, so we lean on the methodology's "trivially small → neutral" clause and
-      keep `ciExcludesNull: false`. Consider encoding an explicit effect-size floor
-      so this is a rule, not a per-food judgement.
+- [x] **(b2) Magnitude floor for directionality.** DONE (v0.21): `Scoring.isDirectional()`
+      requires CI-excludes-null AND \|ln RR\| > 0.03. Butter now records
+      `ciExcludesNull: true` honestly and stays neutral by rule. Tested.
 - [ ] **Audit all `heterogeneity` inputs.** Whole grains was recorded `low` but the
       verified I² is 83% (`high`). Other foods' heterogeneity may be similarly
       optimistic — re-check each against its source during grounding.

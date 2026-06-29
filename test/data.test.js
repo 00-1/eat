@@ -208,15 +208,15 @@ test("COHERENCE: every food declares at least one outcome", () => {
   }
 });
 
-test("ciExcludesNull is consistent with a directional verdict", () => {
-  // A positive/negative verdict should rest on an interval that excludes no-effect;
-  // a neutral verdict should not claim one.
+test("directionality is consistent with the verdict (CI excludes null AND effect > floor)", () => {
+  // A positive/negative verdict must rest on a directional interval (excludes null
+  // AND the effect clears the trivially-small floor). A neutral verdict must not.
   for (const f of FOODS) {
     const e = ASSESSMENTS[f.id].evidence;
     if (f.effect === "neutral") {
-      assert.equal(e.ciExcludesNull, false, `${f.id}: neutral but ciExcludesNull=true`);
+      assert.ok(!S.isDirectional(e), `${f.id}: neutral but evidence is directional by rule`);
     } else {
-      assert.equal(e.ciExcludesNull, true, `${f.id}: directional but ciExcludesNull=false`);
+      assert.ok(S.isDirectional(e), `${f.id}: directional but evidence isn't (CI crosses null or effect below floor)`);
     }
   }
 });

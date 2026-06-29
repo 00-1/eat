@@ -315,7 +315,7 @@
     return "<span class='challenge-note'>Disagree? Verdicts are reviewed and revised — see “The approach.”</span>";
   }
 
-  const SEVERITY_LABEL = { avoid: "Avoid", caution: "Caution", mitigate: "Manageable" };
+  const SEVERITY_LABEL = { avoid: "Avoid", caution: "Caution", mitigate: "Minor" };
 
   function exceptionsHtml(food) {
     if (typeof EXCEPTIONS === "undefined") return "";

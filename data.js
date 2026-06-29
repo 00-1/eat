@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.20";
+const METHODOLOGY_VERSION = "0.21";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1135,7 +1135,7 @@ const ASSESSMENTS = {
     },
   },
   "butter": {
-    evidence: { pooledRR: 1.01, ciExcludesNull: false, participants: 636151, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~14 g/day (1 tbsp) vs none" },
+    evidence: { pooledRR: 1.01, ciExcludesNull: true, participants: 636151, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~14 g/day (1 tbsp) vs none" },
     effectEstimate: "RR 1.0134 (95% CI 1.0003–1.0266, P=0.045) per 14 g/day — a ~1% HIGHER mortality risk (not protective), I²=0%. The interval marginally excludes null but the effect is trivially small, so recorded as non-directional (neutral). Null for CVD/CHD/stroke; slightly protective for diabetes (0.96). Highly substitution-dependent.",
     verified: true,
     sources: {

@@ -279,6 +279,19 @@ test("PRESETS expose the explore rules and default is a no-op", () => {
   assert.deepEqual(S.assess(someEv, null, S.PRESETS["default"].settings), S.assess(someEv));
 });
 
+test("isDirectional: needs CI excluding null AND effect above the trivially-small floor", () => {
+  assert.equal(S.isDirectional({ pooledRR: 0.78, ciExcludesNull: true }), true);
+  assert.equal(S.isDirectional({ pooledRR: 1.26, ciExcludesNull: true }), true);
+  // CI crosses null -> not directional regardless of size
+  assert.equal(S.isDirectional({ pooledRR: 0.78, ciExcludesNull: false }), false);
+  // excludes null but trivially small (~1%, butter) -> not directional
+  assert.equal(S.isDirectional({ pooledRR: 1.0134, ciExcludesNull: true }), false);
+  assert.equal(S.isDirectional({ pooledRR: 0.98, ciExcludesNull: true }), false); // |ln|=0.020 < 0.03
+  assert.equal(S.isDirectional({ pooledRR: 0.96, ciExcludesNull: true }), true);  // |ln|=0.041 > 0.03
+  // and a below-floor food is scored as neutral (/12) by assess
+  assert.equal(S.assess({ pooledRR: 1.0134, ciExcludesNull: true }).neutralScored, true);
+});
+
 test("classifyDoseShape derives the shape from the curve points", () => {
   const c = S.classifyDoseShape;
   // monotonic harm — rises throughout
