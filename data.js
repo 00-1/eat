@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.14";
+const METHODOLOGY_VERSION = "0.15";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -115,11 +115,11 @@ const FOODS = [
     name: "Whole grains (oats, barley, whole wheat)",
     category: "Grains",
     effect: "positive",
-    certainty: "high",
+    certainty: "moderate",
     outcomes: ["All-cause mortality", "Cardiovascular disease", "Type 2 diabetes"],
     summary: "Each extra serving of whole grains tracks with lower mortality and disease risk.",
     rationale:
-      "One of the best-supported food groups: large dose-response meta-analyses, a clear biological mechanism via fiber, and supportive trial evidence on risk markers. Direction is consistent enough across outcomes to grade 'High' certainty — provided whole grains displace refined grains.",
+      "One of the best-supported food groups by direction: large dose-response meta-analyses agree it lowers mortality, with a fibre mechanism and supportive trial evidence on risk markers. Graded Moderate (not High) because the verified pooled estimate (Aune 2016 BMJ) carries high between-study heterogeneity (I²=83%) — the cohorts agree on direction but not magnitude, and our rubric maps high I² to lower consistency. (This may revert to High if we refine the consistency rule to credit directional agreement; see the roadmap.) Benefit is relative to displacing refined grains.",
     considerations: {
       substitution: "Benefit is largely relative to replacing refined grains; 'whole grain' food products vary widely in quality.",
       doseResponse: "Roughly linear up to ~90 g/day, then plateaus.",
@@ -138,8 +138,10 @@ const FOODS = [
         search: "Reynolds carbohydrate quality fiber whole grain Lancet 2019",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "High → Moderate under the grounding pass (v0.15): the verified Aune 2016 BMJ figure (RR 0.83, 0.77–0.90 per 90 g/day) carries I²=83% heterogeneity, so the consistency sub-score drops. Direction (positive) unchanged. Surfaced a rubric tension — high I² with directional agreement arguably shouldn't be penalised like genuine directional disagreement; queued for review." },
+    ],
   },
   {
     id: "fiber",
@@ -579,6 +581,12 @@ const FOODS = [
         search: "Zeraatkar red processed meat reduction NutriRECS Annals Internal Medicine 2019",
       },
       {
+        citation: "Shi W, et al. European Heart Journal. 2023.",
+        type: "Meta-analysis of cohorts (~4.5 million, 43 studies)",
+        finding: "Unprocessed red meat: CVD HR 1.11 (1.05–1.16) per 100 g/day; the type 2 diabetes association is materially stronger and more consistent than the CVD/mortality one — supporting an outcome-specific split.",
+        search: "Shi unprocessed processed red meat cardiovascular diabetes meta-analysis European Heart Journal 2023",
+      },
+      {
         citation: "Wang X, et al. (red meat & mortality).",
         type: "Meta-analysis of cohorts",
         finding: "Modest higher all-cause and CVD mortality at high intakes — smaller and less consistent than for processed meat.",
@@ -851,10 +859,11 @@ const FOODS = [
     },
     studies: [
       {
-        citation: "Eshaghian N, et al. Critical Reviews in Food Science and Nutrition. 2022.",
-        type: "Dose-response meta-analysis (28 cohorts, ~1.5 million)",
-        finding: "Highest vs lowest white-rice intake associated with ~18% higher type 2 diabetes risk; null for CVD/cancer.",
-        search: "white rice type 2 diabetes dose-response meta-analysis Critical Reviews Food Science 2022",
+        citation: "Yu J, Balaji B, et al. BMJ Open. 2022.",
+        type: "Systematic review & meta-analysis (8 cohorts, ~577,000; 25,956 cases)",
+        finding: "Extreme-category white rice RR 1.16 (1.02–1.32) for type 2 diabetes; non-linear (≈neutral to ~1 serving/day, rising above ~300 g/day); brown rice protective (RR 0.89).",
+        search: "Yu Balaji white rice brown rice type 2 diabetes meta-analysis BMJ Open 2022",
+        url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9516166/",
       },
       {
         citation: "Hu EA, et al. BMJ. 2012.",
@@ -864,7 +873,9 @@ const FOODS = [
       },
     ],
     lastReviewed: "2026-06-29",
-    revisions: [],
+    revisions: [
+      { date: "2026-06-29", change: "Re-grounded under the grounding pass (v0.15) on Yu/Balaji 2022 BMJ Open (the strongest current MA): extreme-category RR 1.18 → 1.16 (95% CI 1.02–1.32), participants/source corrected, and the association recorded as non-linear (≈neutral to ~300 g/day, then rising — which explains the Asian-vs-Western gap). Verdict (negative for diabetes) and certainty unchanged; now source-verified." },
+    ],
   },
   {
     id: "soy",
@@ -1029,8 +1040,13 @@ const ASSESSMENTS = {
     effectEstimate: "Pooled RR ≈ 0.86 for coronary heart disease at ~4 servings/week; interval excludes no-effect.",
   },
   "whole-grains": {
-    evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 700000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~90 g/day vs low intake" },
-    effectEstimate: "≈17% lower all-cause mortality at 90 g/day (RR ≈ 0.83); clear dose-response, interval excludes no-effect.",
+    evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 700000, heterogeneity: "high", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~90 g/day vs low intake" },
+    effectEstimate: "≈17% lower all-cause mortality at 90 g/day (RR ≈ 0.83, 95% CI 0.77–0.90); clear dose-response, interval excludes no-effect. High between-study heterogeneity (I²=83%) — cohorts agree on direction, not magnitude.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "RR 0.83 (0.77–0.90) per 90 g/day, all-cause mortality; I²=83%, 11 cohorts", cite: "Aune 2016 BMJ", id: "PMID:27301975" },
+      participants: { figure: "11 prospective cohorts, ~100,726 deaths (aggregate N ≥ 500,000)", cite: "Aune 2016 BMJ", id: "PMID:27301975" },
+    },
     doseCurve: {
       outcome: "All-cause mortality", unit: "g/day", shape: "plateau-benefit", normalRange: [0, 90],
       points: [ { x: 0, rr: 1.0 }, { x: 30, rr: 0.93 }, { x: 90, rr: 0.83, lo: 0.79, hi: 0.88 }, { x: 120, rr: 0.82 } ],
@@ -1081,8 +1097,13 @@ const ASSESSMENTS = {
     },
   },
   "sugary-drinks": {
-    evidence: { pooledRR: 1.26, ciExcludesNull: true, participants: 310000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "1–2 servings/day vs none" },
-    effectEstimate: "+26% type 2 diabetes at 1–2 servings/day; interval excludes no-effect; RCT support on weight/metabolic markers.",
+    evidence: { pooledRR: 1.26, ciExcludesNull: true, participants: 310819, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "1–2 servings/day vs none (highest vs lowest)" },
+    effectEstimate: "+26% type 2 diabetes, highest vs lowest intake (RR 1.26, 95% CI 1.12–1.41); per-serving dose-response ≈ RR 1.13–1.27; RCT support on weight/metabolic markers.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "RR 1.26 (1.12–1.41), highest vs lowest SSB intake, type 2 diabetes", cite: "Malik 2010 Diabetes Care", id: "PMID:20693348" },
+      participants: { figure: "310,819 participants, 15,043 cases, 8 T2D cohorts", cite: "Malik 2010 Diabetes Care", id: "PMID:20693348" },
+    },
     doseCurve: {
       outcome: "Type 2 diabetes", unit: "servings/day", shape: "monotonic-harm", normalRange: [0, 2],
       points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 1.13 }, { x: 2, rr: 1.26, lo: 1.13, hi: 1.40 }, { x: 3, rr: 1.42 } ],
@@ -1154,8 +1175,13 @@ const ASSESSMENTS = {
     effectEstimate: "≈4% lower CVD mortality and stroke per cup/day; ~0.88 at a realistic 3 cups/day; plateaus, no hard-outcome trial.",
   },
   "white-rice": {
-    evidence: { pooledRR: 1.18, ciExcludesNull: true, participants: 1527198, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (≈ +150 g/day steps)" },
-    effectEstimate: "+18% type 2 diabetes (highest vs lowest); null for CVD/cancer/mortality; far larger in rice-staple populations.",
+    evidence: { pooledRR: 1.16, ciExcludesNull: true, participants: 577426, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (non-linear; harm above ~300 g/day)" },
+    effectEstimate: "+16% type 2 diabetes, highest vs lowest (RR 1.16, 95% CI 1.02–1.32); NON-LINEAR — ≈neutral to ~1 serving/day (RR 0.97), rising above ~300 g/day; far larger in rice-staple populations. Brown rice is protective.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "RR 1.16 (1.02–1.32) extreme categories; non-linear (RR 0.97 at ~158 g/day, 1.13 per serving above ~300 g/day); I²=73%", cite: "Yu/Balaji 2022 BMJ Open", id: "PMID:36167362" },
+      participants: { figure: "577,426 participants, 25,956 cases, 8 cohorts", cite: "Yu/Balaji 2022 BMJ Open", id: "PMID:36167362" },
+    },
   },
   "soy": {
     evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 331000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "high vs low intake (~25–40 mg isoflavones/day)" },

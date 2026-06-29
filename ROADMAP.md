@@ -208,12 +208,32 @@ make a shaky input look authoritative, so this is the top priority.
 - [x] **Effect-size intake basis**: ensure every `pooledRR` is at realistic
       habitual intake (not per arbitrary small unit), and record the intake each
       RR refers to (`intakeBasis`). *(v0.7–v0.8)*
-- [ ] **Evidence facts** (`data.js` → `ASSESSMENTS[id].evidence`): verify
+- [~] **Evidence facts** (`data.js` → `ASSESSMENTS[id].evidence`): verify
       `pooledRR`, `participants`, and the ordinal calls (`heterogeneity`,
       `confoundingRisk`, `pubBias`, …) against the cited studies; attach a source
-      to each non-obvious one. **Batch 2 candidates flagged by the walkthrough:**
-      fatty fish (RR 0.64 likely optimistic vs modern analyses & null supplement
-      RCTs); trans fat (1.35 extrapolation); olive oil (PREDIMED rctLevel, item a4).
+      to each non-obvious one.
+      - **Batch 1 done (v0.15):** whole grains (→ Moderate, I²=83%), sugary drinks,
+        white rice verified with PMID/DOI sources; red meat strengthened (Shi 2023).
+      - **Batch 1b (proxy-blocked, re-run):** tree nuts (Aune 2016 BMC Med), trans
+        fat (Mozaffarian 2006 + realistic-intake), butter (Pimpin 2016), cheese
+        (de Goede), coffee (Poole 2017), and the **processed-meat colorectal-cancer**
+        per-50 g figure (IARC) — none verified this round.
+      - **Batch 2 (walkthrough flags):** fatty fish (RR 0.64 likely optimistic vs
+        modern analyses & null supplement RCTs); olive oil (PREDIMED rctLevel, a4).
+- [ ] **Audit all `heterogeneity` inputs.** Whole grains was recorded `low` but the
+      verified I² is 83% (`high`). Other foods' heterogeneity may be similarly
+      optimistic — re-check each against its source during grounding.
+- [ ] **(c2) Consistency rubric: I² vs directional agreement.** The whole-grains
+      downgrade exposed that our consistency dimension penalises high statistical
+      heterogeneity (I²) even when every cohort points the same direction. Consider
+      scoring consistency on *directional* agreement (or giving partial credit when
+      I² is high but the sign is unanimous), so a robust-but-heterogeneous protective
+      finding isn't treated like genuine disagreement. (Whole grains may return to
+      High if this lands.) Relates to calibration item (c).
+- [ ] **White-rice threshold curve.** Its association is non-linear (≈neutral to
+      ~300 g/day, then rising) — needs a `threshold-harm` shape in the dose-curve
+      vocabulary before it can be charted honestly (current shapes would mislabel it
+      "dose makes the poison").
 - [ ] **Exception prevalence** (`exceptions.js`): replace estimate-with-basis
       figures with sourced numbers (allergy %, lactose malabsorption, celiac,
       IBS, G6PD, PKU, etc.).
