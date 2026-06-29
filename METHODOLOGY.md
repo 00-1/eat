@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.4 — living document.** This file is the canonical description of how
+**Version 0.5 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -98,7 +98,7 @@ each one is challengeable on its own, and correcting it recomputes the score.
 | Effect size | strong (≈ RR ≤ 0.8 or ≥ 1.25) | modest | trivial / null |
 | Dose-response | clear gradient | some | none |
 | Freedom from publication / funding bias | tested / independent | possible / mixed | likely / industry-driven |
-| Experimental / mechanistic corroboration | direct RCT on the food–outcome | pattern-level RCT or mechanistic/marker RCTs | none |
+| Experimental / mechanistic corroboration | RCT on hard outcomes, **or a validated causal pathway** (a robust surrogate→outcome link with an unambiguous, un-offset food effect) | pattern-level RCT, or a weaker/offset surrogate, or mechanism only | none |
 
 Total → tier (mirrors NutriGrade's 80 / 60 / 40% cut-points):
 
@@ -118,6 +118,40 @@ precision uses ≥ 500k participants → 2 and ≥ 100k → 1).
 > NutriGrade score or a GBD Burden-of-Proof star rating exists for a food–outcome
 > pair, we defer to it.
 > _(Source: Schwingshackl et al., NutriGrade, Adv Nutr 2016.)_
+
+### 4b. Evidence basis — which evidence carries the verdict
+
+Two foods can share a tier for very different reasons. So we also derive, from the
+same scores, **what the certainty rests on** (shown as a chip on each card):
+
+- **Convergent** — strong cohort data *and* causal/trial evidence agree (e.g. trans fat).
+- **Observation-led** — carried by direct cohort outcome data (e.g. nuts, coffee).
+- **Mechanism/trial-led** — thin cohort data, but a validated causal pathway or
+  hard-outcome trial carries it. This is how a demonstrable poison with little
+  observational data can still earn a confident verdict.
+- **Limited / contested** — neither route is strong; held cautiously (e.g. coconut oil).
+
+#### The guardrail: mechanism corroborates, it never overrides
+
+This is the principle that keeps the model honest in both directions:
+
+> **Direction comes from what is *observed to happen* when the food is added to
+> real diets. Mechanism can fill a vacuum (when outcome data is sparse) or
+> corroborate — but it can never overturn good observational outcome data, and a
+> biomarker movement alone never convicts a food.**
+
+Two worked cases:
+
+- *"Carbs spike blood sugar, so carbs are bad."* A glucose spike is a surrogate.
+  Whole grains, fruit, and legumes are carb-heavy and show **observed** benefit in
+  large cohorts, so they score positive. The biomarker does not override the
+  outcome data. (Carry only ≤ 1 experimental point for such a surrogate.)
+- *Coconut oil raises LDL.* True, but LDL here is partly offset (HDL also rises)
+  and there is essentially **no** outcome data — so it stays neutral / *limited*,
+  not "bad." We decline to convict on a biomarker.
+
+Contrast trans fat, where the surrogate link **is** validated (LDL↑ *and* HDL↓,
+with a robust LDL→CVD link) and cohorts agree — so mechanism legitimately lifts it.
 
 ## 5. The direction label (Burden-of-Proof logic)
 
@@ -245,6 +279,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.5 | 2026-06-29 | Added a **validated causal pathway** tier to experimental evidence (scores 2), so mechanism-and-trial-led harms aren't undersold — trans fat → High (basis: convergent). Added a derived **evidence-basis** label (convergent / observation-led / mechanism-led / limited) surfaced on each card, and codified the **guardrail** that mechanism corroborates but never overrides observed outcomes (with tests). |
 | 0.4 | 2026-06-29 | Made scoring **deterministic and reproducible**: scores are now COMPUTED from recorded objective evidence facts by a pure engine (`scoring.js`), not hand-assigned. Added unit tests for every scoring rule and a data test asserting computed tier == stored certainty. Recomputation shifted eight certainty tiers (verdict directions unchanged): tree-nuts → High; legumes, whole-fruit, olive-oil, milk → Low; trans-fat → Moderate; potatoes, coconut-oil → Very low. |
 | 0.3 | 2026-06-28 | Made certainty **reproducible**: added the explicit 8-dimension, 0–2 scoring rubric (max 16) with documented tier cut-points, and a per-food `ASSESSMENTS` record (sub-scores + conservative effect estimate) surfaced on each card. Re-derived certainty from the scores (poultry and cheese moved Moderate → Low; verdict directions unchanged). Challenges are handled by the maintainer directly (no public submission form). |
 | 0.2 | 2026-06-28 | Adopted NutriGrade-aligned certainty tiers (High/Moderate/Low/Very low) and Burden-of-Proof direction logic (label only when the conservative interval excludes the null; neutral by default). Added the explicit combined decision rule, multi-outcome and grade-disagreement rules, the substitution/FFQ confidence-lowering caveat, and provenance attribution. Grounded in the verified research write-up. |

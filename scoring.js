@@ -60,9 +60,18 @@
     return d === "graded" ? 2 : d === "some" ? 1 : 0;
   }
 
-  // Any experimental/mechanistic corroboration beyond pure observation.
+  // Experimental / causal corroboration beyond pure observation.
+  //   outcomes  RCT on hard health outcomes               -> 2 (gold)
+  //   pathway   trial on a VALIDATED causal pathway: the surrogate->outcome
+  //             link is itself robust AND the food's effect on it is
+  //             unambiguous and not offset (e.g. trans fat raising LDL while
+  //             lowering HDL, with the LDL->CVD link established) -> 2
+  //   pattern   RCT on a dietary pattern containing the food -> 1
+  //   markers   trial on a surrogate with a weaker/offset outcome link -> 1
+  //   mechanism mechanistic plausibility only             -> 1
+  //   none                                                -> 0
   function scoreExperimental(r) {
-    if (r === "outcomes") return 2;
+    if (r === "outcomes" || r === "pathway") return 2;
     if (r === "pattern" || r === "markers" || r === "mechanism") return 1;
     return 0;
   }
@@ -96,6 +105,25 @@
     return t;
   }
 
+  // Evidence basis: WHICH kind of evidence carries the verdict. Derived from the
+  // same computed sub-scores, so it is reproducible (not a hand-written claim).
+  //   observation = breadth/quality/consistency of direct outcome cohort data
+  //   causal      = experimental / validated-pathway corroboration (or clean
+  //                 confounding, which implies experimental backing)
+  // This is also where the guiding principle lives: a verdict can be confident
+  // via strong observation OR strong causal evidence; mechanism is a fallback,
+  // never an override of good observational outcome data (the DIRECTION is taken
+  // from the observed association, not invented from mechanism).
+  function classifyBasis(scores) {
+    var observationStrong =
+      scores.consistency + scores.precision + scores.directness + scores.doseResponse >= 5;
+    var causalStrong = scores.experimental >= 2 || scores.quality === 2;
+    if (observationStrong && causalStrong) return "convergent";
+    if (observationStrong) return "observation-led";
+    if (causalStrong) return "mechanism-led";
+    return "limited";
+  }
+
   function tierFromTotal(total) {
     return total >= THRESHOLDS.high
       ? "high"
@@ -106,12 +134,30 @@
       : "very-low";
   }
 
-  // Convenience: evidence -> { scores, total, tier }.
+  // Convenience: evidence -> { scores, total, tier, basis }.
   function assess(ev) {
     var scores = computeScores(ev);
     var total = totalScore(scores);
-    return { scores: scores, total: total, tier: tierFromTotal(total) };
+    return {
+      scores: scores,
+      total: total,
+      tier: tierFromTotal(total),
+      basis: classifyBasis(scores),
+    };
   }
+
+  var BASIS_LABEL = {
+    convergent: "Convergent",
+    "observation-led": "Observation-led",
+    "mechanism-led": "Mechanism/trial-led",
+    limited: "Limited / contested",
+  };
+  var BASIS_NOTE = {
+    convergent: "Cohort outcome data and causal/trial evidence agree.",
+    "observation-led": "Carried by direct cohort outcome data.",
+    "mechanism-led": "Rests on a validated causal pathway or trial, not large cohorts.",
+    limited: "Neither cohort nor causal evidence is strong — held cautiously.",
+  };
 
   var api = {
     MAX: MAX,
@@ -119,7 +165,10 @@
     computeScores: computeScores,
     totalScore: totalScore,
     tierFromTotal: tierFromTotal,
+    classifyBasis: classifyBasis,
     assess: assess,
+    BASIS_LABEL: BASIS_LABEL,
+    BASIS_NOTE: BASIS_NOTE,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

@@ -42,6 +42,18 @@
     return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(study.search || study.citation);
   }
 
+  // Compact evidence-basis chip (what kind of evidence carries the verdict).
+  function basisChip(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.evidence || typeof Scoring === "undefined") return "";
+    const basis = Scoring.classifyBasis(Scoring.computeScores(a.evidence));
+    return (
+      "<span class='basis basis-" + basis + "' title='" + escapeHtml(Scoring.BASIS_NOTE[basis]) + "'>" +
+        escapeHtml(Scoring.BASIS_LABEL[basis]) +
+      "</span>"
+    );
+  }
+
   // Scores are COMPUTED from recorded evidence facts by the shared engine —
   // never read from the data file. (scoring.js exposes window.Scoring.)
   function assessmentHtml(food) {
@@ -49,6 +61,7 @@
     if (!a || !a.evidence || typeof Scoring === "undefined") return "";
     const scores = Scoring.computeScores(a.evidence);
     const total = Scoring.totalScore(scores);
+    const basis = Scoring.classifyBasis(scores);
     const max = Scoring.MAX;
     const rows = NUTRIGRADE_RUBRIC.dimensions
       .map(function (d) {
@@ -66,6 +79,8 @@
       .join("");
     return (
       "<h4 class='block-h'>Evidence assessment <span class='rubric-note'>(computed, " + total + "/" + max + " → " + CERTAINTY_LABEL[Scoring.tierFromTotal(total)] + ")</span></h4>" +
+      "<p class='basis-line'><span class='basis basis-" + basis + "'>" + escapeHtml(Scoring.BASIS_LABEL[basis]) + "</span> " +
+        "<span class='basis-note'>" + escapeHtml(Scoring.BASIS_NOTE[basis]) + "</span></p>" +
       "<p class='effect-line'><span class='effect-k'>Conservative estimate:</span> " + escapeHtml(a.effectEstimate) + "</p>" +
       "<div class='scores'>" + rows + "</div>"
     );
@@ -174,6 +189,7 @@
             "<p class='summary'>" + escapeHtml(food.summary) + "</p>" +
             "<div class='card-meta'>" +
               "<span class='tier " + food.certainty + "'>" + CERTAINTY_LABEL[food.certainty] + "</span>" +
+              basisChip(food) +
               "<span class='outcomes'>" + escapeHtml((food.outcomes || []).join(" · ")) + "</span>" +
               "<span class='expand-hint'>Evidence ▾</span>" +
             "</div>" +

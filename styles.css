@@ -204,6 +204,22 @@ a { color: var(--accent); }
 .tier.low       { background: #fdf3e2; color: #9a6b08; border-color: #f3e2bf; }
 .tier.very-low  { background: #eef0ee; color: #5a655e; border-color: #dfe3df; }
 
+/* Evidence-basis chip */
+.basis {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.basis-convergent      { background: #e4f6ec; color: #1f7a46; border-color: #c7e8d4; }
+.basis-observation-led { background: #eaf1fb; color: #2456a6; border-color: #d3e2f7; }
+.basis-mechanism-led   { background: #f1ebfb; color: #6b3fb0; border-color: #e0d3f5; }
+.basis-limited         { background: #eef0ee; color: #5a655e; border-color: #dfe3df; }
+.basis-line { margin: 0 0 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.basis-note { font-size: 0.82rem; color: var(--ink-soft); }
+
 /* Expanded detail */
 .card-detail { padding: 4px 18px 18px; border-top: 1px solid var(--line); margin-top: 4px; }
 .block-h {

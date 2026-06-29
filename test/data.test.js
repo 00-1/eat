@@ -16,7 +16,7 @@ const ENUMS = {
   heterogeneity: ["low", "moderate", "high", "unknown"],
   outcomeType: ["hard", "surrogate", "indirect"],
   doseResponse: ["graded", "some", "none"],
-  rctLevel: ["outcomes", "pattern", "markers", "mechanism", "none"],
+  rctLevel: ["outcomes", "pathway", "pattern", "markers", "mechanism", "none"],
   funding: ["independent", "mixed", "industry", "unknown"],
   pubBias: ["tested-clean", "suspected", "untested"],
   confoundingRisk: ["low", "moderate", "high"],

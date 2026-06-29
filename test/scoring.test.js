@@ -140,3 +140,43 @@ test("engine constants are internally consistent", () => {
   assert.equal(S.MAX, 16);
   assert.deepEqual(S.THRESHOLDS, { high: 13, moderate: 10, low: 7 });
 });
+
+test("experimental: a validated causal pathway scores like an outcome RCT", () => {
+  assert.equal(S.computeScores(ev({ rctLevel: "pathway" })).experimental, 2);
+  assert.equal(S.computeScores(ev({ rctLevel: "outcomes" })).experimental, 2);
+  // a weaker surrogate stays at 1 — this is what keeps coconut from being upgraded
+  assert.equal(S.computeScores(ev({ rctLevel: "markers" })).experimental, 1);
+});
+
+test("evidence basis is classified from the computed scores", () => {
+  const strongObs = { consistency: 2, precision: 2, directness: 2, doseResponse: 2 };
+  const weakObs = { consistency: 0, precision: 0, directness: 0, doseResponse: 0 };
+  assert.equal(S.classifyBasis(Object.assign({ experimental: 2, quality: 1 }, strongObs)), "convergent");
+  assert.equal(S.classifyBasis(Object.assign({ experimental: 1, quality: 1 }, strongObs)), "observation-led");
+  assert.equal(S.classifyBasis(Object.assign({ experimental: 2, quality: 1 }, weakObs)), "mechanism-led");
+  assert.equal(S.classifyBasis(Object.assign({ experimental: 1, quality: 1 }, weakObs)), "limited");
+});
+
+test("GUARDRAIL: a hard-to-no-observation poison can still be certain via a pathway", () => {
+  // The user's case: demonstrable mechanistic poison, little/no cohort data.
+  const poison = ev({
+    pooledRR: 1.5, participants: 500, heterogeneity: "unknown",
+    outcomeType: "surrogate", doseResponse: "none", rctLevel: "pathway",
+    funding: "independent", pubBias: "untested", confoundingRisk: "low",
+  });
+  assert.equal(S.assess(poison).basis, "mechanism-led");
+});
+
+test("GUARDRAIL: mechanism does not override good observational outcome data", () => {
+  // The "carbs spike sugar → carbs bad" trap: a food with strong observational
+  // BENEFIT and an adverse biomarker stays observation-led and benefits stand —
+  // the direction comes from the observed association, never from the biomarker.
+  const carbHeavyButHealthy = ev({
+    pooledRR: 0.82, participants: 700000, heterogeneity: "low",
+    outcomeType: "hard", doseResponse: "graded", rctLevel: "markers",
+    funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate",
+  });
+  const a = S.assess(carbHeavyButHealthy);
+  assert.equal(a.basis, "observation-led");
+  assert.ok(a.scores.effectSize >= 1); // the protective signal is intact
+});
