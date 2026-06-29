@@ -54,8 +54,10 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
 - [ ] **D1** — add cancer outcomes where WCRF/CUP grades are strong; state the
       CVD/mortality bias as a limitation.
 - [ ] **D2** — record per-food per-category exception status (checked-clear vs n/a).
-- [ ] **D3** — render "no counter-arguments assessed yet" placeholder; finish the
-      steelman backlog (second research pass — see §1).
+- [~] **D3** — placeholder DONE (v0.17): foods with no steelman now show an honest
+      "no counter-argument assessed yet — known gap" note (8 foods: fiber, olive-oil,
+      coffee, avocado, trans-fat, poultry, green-tea, tomatoes). Finishing the
+      steelman backlog (second research pass) still pending — see §1.
 - [~] **F2/F3** — cross-field data-coherence tests added (pooledRR-direction match,
       outcomes non-empty, dose-curve schema/shape; v0.16). jsdom UI tests (F2) still
       pending — the Playwright smoke covers the live path for now.

@@ -328,7 +328,14 @@
     const list = typeof counterArgumentsFor === "function"
       ? counterArgumentsFor(food.id)
       : (typeof COUNTER_ARGUMENTS !== "undefined" ? COUNTER_ARGUMENTS[food.id] || [] : []);
-    if (!list.length) return "";
+    if (!list.length) {
+      // Show the gap rather than hide it (highlight-inadequacies policy).
+      return (
+        "<h4 class='block-h'>Steelmanning attempts</h4>" +
+        "<p class='exc-none'>No popular counter-argument assessed yet for this food. " +
+        "If there's a credible challenge to this verdict, it belongs here — this is a known gap.</p>"
+      );
+    }
     // For a category claim, ground it in THIS food's own verdict (we don't score
     // categories — we compare the claim to each member food's score).
     const verdictLine =
