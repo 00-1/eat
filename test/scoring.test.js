@@ -157,6 +157,22 @@ test("evidence basis is classified from the computed scores", () => {
   assert.equal(S.classifyBasis(Object.assign({ experimental: 1, quality: 1 }, weakObs)), "limited");
 });
 
+test("standout: qualifying needs top tier on both axes; marginal is one notch short", () => {
+  // qualifying
+  assert.equal(S.standout("positive", "high", "large"), "gold");
+  assert.equal(S.standout("negative", "high", "large"), "bin");
+  // marginal — one tier short on exactly one axis (rank sum 5)
+  assert.equal(S.standout("positive", "moderate", "large"), "marginal-gold"); // coffee, fish
+  assert.equal(S.standout("positive", "high", "moderate"), "marginal-gold");
+  assert.equal(S.standout("negative", "high", "moderate"), "marginal-bin");   // trans fat
+  assert.equal(S.standout("negative", "moderate", "large"), "marginal-bin");  // ultra-processed
+  // two notches short, or neutral, or null inputs -> nothing
+  assert.equal(S.standout("positive", "low", "large"), null);
+  assert.equal(S.standout("positive", "moderate", "moderate"), null);
+  assert.equal(S.standout("neutral", "high", "large"), null);
+  assert.equal(S.standout("positive", "high", "bogus"), null);
+});
+
 test("GUARDRAIL: a hard-to-no-observation poison can still be certain via a pathway", () => {
   // The user's case: demonstrable mechanistic poison, little/no cohort data.
   const poison = ev({

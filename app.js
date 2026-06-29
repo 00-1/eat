@@ -301,29 +301,53 @@
   }
 
   // ---- Highlights: the sure, high-impact bets in each direction ----
+  // Why a marginal food is short of qualifying (for the chip tooltip/label).
+  function shortfall(food) {
+    const bits = [];
+    if (food.certainty !== "high") bits.push(CERTAINTY_LABEL[food.certainty].toLowerCase());
+    const mag = magnitudeOf(food);
+    if (mag !== "large") bits.push((Scoring.MAGNITUDE_LABEL[mag] || mag).toLowerCase());
+    return bits.join(", ");
+  }
+
   function renderHighlights() {
     const el = document.getElementById("highlights");
-    if (!el) return;
-    const qualifies = function (f, dir) {
-      return f.effect === dir && f.certainty === "high" && magnitudeOf(f) === "large";
-    };
-    const gold = FOODS.filter((f) => qualifies(f, "positive"));
-    const bin = FOODS.filter((f) => qualifies(f, "negative"));
+    if (!el || typeof Scoring === "undefined") return;
+    const tagOf = (f) => Scoring.standout(f.effect, f.certainty, magnitudeOf(f));
+    const pick = (tag) => FOODS.filter((f) => tagOf(f) === tag);
+    const gold = pick("gold"), bin = pick("bin");
+    const marginalGold = pick("marginal-gold"), marginalBin = pick("marginal-bin");
 
-    const chipList = function (foods) {
-      return foods.map((f) => "<button class='hl-chip' data-food='" + escapeHtml(f.id) + "'>" + escapeHtml(f.name) + "</button>").join("");
-    };
+    const chips = (foods) =>
+      foods.map((f) => "<button class='hl-chip' data-food='" + escapeHtml(f.id) + "'>" + escapeHtml(f.name) + "</button>").join("");
+    const cuspChips = (foods) =>
+      foods
+        .map(
+          (f) =>
+            "<button class='hl-chip hl-cusp' data-food='" + escapeHtml(f.id) + "'>" +
+              escapeHtml(f.name) +
+              " <span class='hl-short'>(" + escapeHtml(shortfall(f)) + ")</span>" +
+            "</button>"
+        )
+        .join("");
+    const cusp = (foods) =>
+      foods.length
+        ? "<p class='hl-cusp-h'>On the cusp <span class='hl-cusp-note'>— one notch from qualifying</span></p>" +
+          "<div class='hl-chips'>" + cuspChips(foods) + "</div>"
+        : "";
 
     el.innerHTML =
       "<div class='hl-card hl-gold'>" +
         "<h2>★ Gold standard</h2>" +
         "<p class='hl-sub'>High certainty, large positive effect — the surest things to add.</p>" +
-        "<div class='hl-chips'>" + (gold.length ? chipList(gold) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+        "<div class='hl-chips'>" + (gold.length ? chips(gold) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+        cusp(marginalGold) +
       "</div>" +
       "<div class='hl-card hl-bin'>" +
         "<h2>✕ Bin fodder</h2>" +
         "<p class='hl-sub'>High certainty, large negative effect — the surest things to drop.</p>" +
-        "<div class='hl-chips'>" + (bin.length ? chipList(bin) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+        "<div class='hl-chips'>" + (bin.length ? chips(bin) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+        cusp(marginalBin) +
       "</div>";
 
     // Clicking a highlight chip jumps to that card and opens it.

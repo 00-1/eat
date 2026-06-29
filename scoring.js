@@ -183,6 +183,23 @@
     limited: "Neither cohort nor causal evidence is strong — held cautiously.",
   };
 
+  // Standout classification, used for the Gold standard / Bin fodder shortlists
+  // and the "on the cusp" marginal tiers. Qualifying = top tier on BOTH axes
+  // (certainty high + magnitude large). Marginal = exactly one tier short on a
+  // single axis (the two tier-ranks sum to 5), so you can see what would join if
+  // a threshold eased a little.
+  var CERTAINTY_ORDER = { high: 3, moderate: 2, low: 1, "very-low": 0 };
+  function standout(effect, certainty, magnitude) {
+    var c = CERTAINTY_ORDER[certainty];
+    var m = MAGNITUDE_ORDER[magnitude];
+    if (c == null || m == null) return null;
+    if (effect !== "positive" && effect !== "negative") return null;
+    var top = effect === "positive" ? "gold" : "bin";
+    if (c === 3 && m === 3) return top;
+    if (c + m === 5) return "marginal-" + top; // one notch short on one axis
+    return null;
+  }
+
   var MAGNITUDE_LABEL = {
     large: "Large effect",
     moderate: "Moderate effect",
@@ -198,6 +215,8 @@
     tierFromTotal: tierFromTotal,
     classifyBasis: classifyBasis,
     classifyMagnitude: classifyMagnitude,
+    standout: standout,
+    CERTAINTY_ORDER: CERTAINTY_ORDER,
     assess: assess,
     BASIS_LABEL: BASIS_LABEL,
     BASIS_NOTE: BASIS_NOTE,

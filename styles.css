@@ -252,6 +252,11 @@ a { color: var(--accent); }
 }
 .hl-chip:hover { border-color: var(--accent); }
 .hl-empty { font-size: 0.86rem; color: var(--ink-soft); }
+.hl-cusp-h { margin: 14px 0 8px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); }
+.hl-cusp-note { font-weight: 400; text-transform: none; letter-spacing: 0; }
+.hl-chip.hl-cusp { background: transparent; border-style: dashed; color: var(--ink-soft); font-weight: 600; }
+.hl-chip.hl-cusp:hover { color: var(--ink); border-color: var(--accent); }
+.hl-short { font-weight: 400; opacity: 0.85; }
 
 .block-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
 

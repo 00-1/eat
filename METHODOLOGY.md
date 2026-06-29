@@ -176,7 +176,11 @@ broadest outcome). A true null moves nothing → minimal.
 - **✕ Bin fodder** — `effect: negative`, `certainty: high`, `magnitude: large`.
   The surest, highest-impact things to drop (currently processed meat, sugary drinks).
 
-Both lists are *computed*, so they update automatically as facts/rules change.
+Each list also shows an **"on the cusp"** tier: foods one notch short on a single
+axis (certainty-rank + magnitude-rank = 5), so you can see what would join if a
+threshold eased — e.g. trans fat sits just below Bin fodder on magnitude, and
+coffee/fish just below Gold standard on certainty. Both lists are *computed*, so
+they update automatically as facts/rules change.
 
 ## 5. The direction label (Burden-of-Proof logic)
 
