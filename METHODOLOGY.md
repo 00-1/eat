@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.2 — living document.** This file is the canonical description of how
+**Version 0.3 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -60,10 +60,37 @@ tiers:
 | **Low** | 4–5.99 | Suggestive but sparse, inconsistent, or short follow-up. |
 | **Very low** | 0–3.99 | Genuinely conflicting or too weak to take a side. |
 
-> **Honest note.** We apply these criteria as a **structured rubric of judgement**,
-> not by mechanically re-computing a published NutriGrade score for every food.
-> Where an official NutriGrade score or a GBD Burden-of-Proof star rating exists
-> for a food–outcome pair, we defer to it.
+### 4a. The reproducible scoring rubric
+
+To make certainty reproducible rather than a vibe, every food is scored **0–2 on
+eight dimensions** (max 16); the total sets the tier. Each food's scores and the
+conservative effect estimate are stored in `data.js` (`ASSESSMENTS`) and shown on
+its card.
+
+| Dimension | 2 (strong) | 1 (adequate) | 0 (concern) |
+|-----------|-----------|--------------|-------------|
+| Study quality / confounding control | large, well-adjusted, consistent across designs | typical good cohorts; residual confounding | high bias / heavy confounding |
+| Consistency (low heterogeneity) | results agree across studies | some inconsistency | studies conflict |
+| Precision | tight pooled interval | moderate | wide |
+| Directness | hard outcomes, relevant population | partial (surrogate markers) | indirect |
+| Effect size | strong (≈ RR ≤ 0.8 or ≥ 1.25) | modest | trivial / null |
+| Dose-response | clear gradient | some | none |
+| Freedom from publication / funding bias | tested / independent | possible / mixed | likely / industry-driven |
+| Experimental / mechanistic corroboration | direct RCT on the food–outcome | pattern-level RCT or mechanistic/marker RCTs | none |
+
+Total → tier (mirrors NutriGrade's 80 / 60 / 40% cut-points):
+
+| Tier | Total (of 16) |
+|------|---------------|
+| **High** | 13–16 (≥ 80%) |
+| **Moderate** | 10–12 (≥ 60%) |
+| **Low** | 7–9 (≥ 40%) |
+| **Very low** | 0–6 (< 40%) |
+
+> **Honest note.** This is our **adaptation** of NutriGrade applied as a rubric,
+> *not* a recomputation of an official published score. Where an official
+> NutriGrade score or a GBD Burden-of-Proof star rating exists for a food–outcome
+> pair, we defer to it.
 > _(Source: Schwingshackl et al., NutriGrade, Adv Nutr 2016.)_
 
 ## 5. The direction label (Burden-of-Proof logic)
@@ -147,7 +174,9 @@ This is the core commitment: **conclusions are provisional, dated, and revisable
 
 - Every verdict has a `lastReviewed` date and a `certainty` tier.
 - Every food card has a **“Challenge this conclusion”** button that opens a
-  structured GitHub issue.
+  prefilled email to the maintainer (configured by `CHALLENGE_CONTACT` in
+  `data.js`). Challenges are reviewed — with AI-assisted research — and the
+  verdict is updated if they hold up.
 - A challenge is acted on when it demonstrates at least one of:
   1. **Missed evidence** that shifts the pooled picture;
   2. **A methodological flaw** in how we weighed the evidence (e.g. ignored
@@ -191,5 +220,6 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.3 | 2026-06-28 | Made certainty **reproducible**: added the explicit 8-dimension, 0–2 scoring rubric (max 16) with documented tier cut-points, and a per-food `ASSESSMENTS` record (sub-scores + conservative effect estimate) surfaced on each card. Re-derived certainty from the scores (poultry and cheese moved Moderate → Low; verdict directions unchanged). Switched the challenge mechanism from GitHub issues to a prefilled email to the maintainer. |
 | 0.2 | 2026-06-28 | Adopted NutriGrade-aligned certainty tiers (High/Moderate/Low/Very low) and Burden-of-Proof direction logic (label only when the conservative interval excludes the null; neutral by default). Added the explicit combined decision rule, multi-outcome and grade-disagreement rules, the substitution/FFQ confidence-lowering caveat, and provenance attribution. Grounded in the verified research write-up. |
 | 0.1 | 2026-06-28 | Initial methodology: question framing, evidence hierarchy, WCRF-style tiers, bias handling, Bradford Hill, challenge/revision process. |

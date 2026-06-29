@@ -42,28 +42,64 @@
     return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(study.search || study.citation);
   }
 
-  // Build a prefilled GitHub issue URL so anyone can challenge a verdict.
+  const CONTACT = typeof CHALLENGE_CONTACT !== "undefined" ? CHALLENGE_CONTACT : "";
+
+  // Build a prefilled email so anyone can send a challenge to the maintainer,
+  // who reviews it and revises the verdict. Returns "" if no contact is set.
   function challengeUrl(food) {
-    const title = "Challenge: " + food.name + " (" + EFFECT_LABEL[food.effect] + ")";
+    if (!CONTACT) return "";
+    const subject = "Challenge: " + food.name + " (" + EFFECT_LABEL[food.effect] + ")";
     const body = [
-      "**Food:** " + food.name + " (`" + food.id + "`)",
-      "**Current verdict:** " + EFFECT_LABEL[food.effect] + " — certainty: " + CERTAINTY_LABEL[food.certainty],
-      "**Methodology version:** " + (typeof METHODOLOGY_VERSION !== "undefined" ? METHODOLOGY_VERSION : "?"),
+      "Food: " + food.name + " (" + food.id + ")",
+      "Current verdict: " + EFFECT_LABEL[food.effect] + " — " + CERTAINTY_LABEL[food.certainty],
+      "Methodology version: " + (typeof METHODOLOGY_VERSION !== "undefined" ? METHODOLOGY_VERSION : "?"),
       "",
-      "### What I think is wrong",
-      "(e.g. wrong direction, wrong certainty, missing caveat)",
+      "What I think is wrong (direction / certainty / a missing caveat):",
       "",
-      "### Evidence I'm relying on",
-      "(link studies — ideally meta-analyses or large cohorts; note study design and effect size)",
       "",
-      "### Which methodology point this touches",
-      "(e.g. substitution, confounding, reverse causation, certainty tier)",
+      "Evidence I'm relying on (ideally meta-analyses or large cohorts — note design and effect size):",
+      "",
+      "",
+      "Which part of the method this touches (substitution, confounding, reverse causation, a sub-score):",
+      "",
     ].join("\n");
     return (
-      "https://github.com/" + REPO_SLUG + "/issues/new" +
-      "?title=" + encodeURIComponent(title) +
-      "&labels=" + encodeURIComponent("challenge") +
+      "mailto:" + CONTACT +
+      "?subject=" + encodeURIComponent(subject) +
       "&body=" + encodeURIComponent(body)
+    );
+  }
+
+  // Certainty tier derived from the assessment total (single source of truth).
+  function tierFromTotal(total) {
+    const t = NUTRIGRADE_RUBRIC.thresholds;
+    return total >= t.high ? "high" : total >= t.moderate ? "moderate" : total >= t.low ? "low" : "very-low";
+  }
+
+  function assessmentHtml(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a) return "";
+    const dims = NUTRIGRADE_RUBRIC.dimensions;
+    const total = dims.reduce(function (s, d) { return s + (a.scores[d.key] || 0); }, 0);
+    const max = NUTRIGRADE_RUBRIC.max;
+    const rows = dims
+      .map(function (d) {
+        const v = a.scores[d.key] || 0;
+        const pips =
+          '<span class="pip ' + (v >= 1 ? "on" : "") + '"></span>' +
+          '<span class="pip ' + (v >= 2 ? "on" : "") + '"></span>';
+        return (
+          "<div class='score-row'>" +
+            "<span class='score-label'>" + escapeHtml(d.label) + "</span>" +
+            "<span class='score-pips' title='" + v + " / 2'>" + pips + "</span>" +
+          "</div>"
+        );
+      })
+      .join("");
+    return (
+      "<h4 class='block-h'>Evidence assessment <span class='rubric-note'>(NutriGrade-adapted, " + total + "/" + max + ")</span></h4>" +
+      "<p class='effect-line'><span class='effect-k'>Conservative estimate:</span> " + escapeHtml(a.effect) + "</p>" +
+      "<div class='scores'>" + rows + "</div>"
     );
   }
 
@@ -140,6 +176,16 @@
     return rows ? "<h4 class='block-h'>Key caveats</h4><div class='consids'>" + rows + "</div>" : "";
   }
 
+  function challengeHtml(food) {
+    const url = challengeUrl(food);
+    if (!url) {
+      return "<span class='challenge-note'>Disagree? Verdicts are reviewed and revised — see “The approach.”</span>";
+    }
+    return (
+      "<a class='challenge' href='" + escapeHtml(url) + "'>Challenge this conclusion ↗</a>"
+    );
+  }
+
   function revisionsHtml(food) {
     if (!food.revisions || !food.revisions.length) return "";
     const items = food.revisions
@@ -173,14 +219,13 @@
           "<div class='card-detail'>" +
             "<h4 class='block-h'>Why this verdict</h4>" +
             "<p class='rationale'>" + escapeHtml(food.rationale) + "</p>" +
+            assessmentHtml(food) +
             studiesHtml(food) +
             considerationsHtml(food) +
             revisionsHtml(food) +
             "<div class='card-foot'>" +
               "<span class='reviewed'>Last reviewed " + escapeHtml(food.lastReviewed || "—") + "</span>" +
-              "<a class='challenge' href='" + escapeHtml(challengeUrl(food)) + "' target='_blank' rel='noopener'>" +
-                "Challenge this conclusion ↗" +
-              "</a>" +
+              challengeHtml(food) +
             "</div>" +
           "</div>" +
         "</details>" +

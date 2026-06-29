@@ -237,6 +237,19 @@ a { color: var(--accent); }
 .revisions { margin: 0; padding-left: 18px; font-size: 0.86rem; color: var(--ink-soft); }
 .revisions time { font-weight: 600; color: var(--ink); }
 
+/* Evidence assessment (NutriGrade-adapted) */
+.rubric-note { font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--accent); }
+.effect-line { margin: 0 0 10px; font-size: 0.88rem; }
+.effect-k { font-weight: 600; }
+.scores { display: grid; gap: 6px; }
+.score-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 0.84rem; }
+.score-label { color: var(--ink-soft); }
+.score-pips { display: inline-flex; gap: 4px; flex: 0 0 auto; }
+.pip { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+.pip.on { background: var(--accent); }
+
+.challenge-note { font-size: 0.8rem; color: var(--ink-soft); }
+
 .card-foot {
   display: flex;
   flex-wrap: wrap;

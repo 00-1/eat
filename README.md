@@ -20,8 +20,12 @@ Each food has:
   prospective cohorts, cross-checked against trials), each linking to PubMed;
 - the **reasoning** for the verdict and the **key caveats** that matter for that
   food (what it replaces, confounding, dose-response, …);
+- a **reproducible assessment** — the food’s 0–2 score on each of eight evidence
+  dimensions (total /16 → tier) plus the conservative effect estimate behind the
+  direction;
 - a **revision log** when a verdict has changed;
-- a **“Challenge this conclusion”** button that opens a structured issue.
+- a **“Challenge this conclusion”** button that opens a prefilled email to the
+  maintainer.
 
 You can search, and filter by effect or food category. The **“The approach”** tab
 explains exactly how verdicts are decided.
@@ -36,8 +40,9 @@ of nutritional epidemiology (confounding, reverse causation, the substitution
 problem, measurement error), and **revise verdicts as evidence accrues**.
 
 Conclusions are provisional by design. To contest one, use the *Challenge this
-conclusion* button on any card (it opens a prefilled GitHub issue), or open an
-issue against the methodology itself.
+conclusion* button on any card — it opens a prefilled email to the maintainer
+(set by `CHALLENGE_CONTACT` in `data.js`), who reviews it with AI-assisted
+research and updates the verdict if it holds up.
 
 ## Important caveats
 
@@ -97,6 +102,19 @@ caveats, and the studies behind it:
   ],
   lastReviewed: "2026-06-28",
   revisions: []                   // append { date, change } when a verdict changes
+}
+```
+
+Each food also has an entry in the `ASSESSMENTS` map (keyed by `id`) holding its
+eight 0–2 sub-scores and the conservative effect estimate. The `certainty` field
+must match the tier implied by the score total — `NUTRIGRADE_RUBRIC.thresholds`
+defines the cut-points, and the validation in the smoke test checks this:
+
+```js
+"tree-nuts": {
+  scores: { quality: 1, consistency: 2, precision: 2, directness: 2,
+            effectSize: 1, doseResponse: 2, biasFreedom: 1, experimental: 1 }, // = 12 → moderate
+  effect: "Pooled RR ≈ 0.78 for all-cause mortality at ~28 g/day; interval excludes no-effect.",
 }
 ```
 

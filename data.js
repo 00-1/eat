@@ -34,10 +34,12 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.2";
+const METHODOLOGY_VERSION = "0.3";
 
-// Where "Challenge this conclusion" buttons send people. Update to the real repo.
-const REPO_SLUG = "00-1/eat";
+// Challenges are reviewed by the maintainer (who revises verdicts with AI-assisted
+// research). The "Challenge this conclusion" button opens a prefilled email here.
+// Set to "" to hide the button and show a plain note instead.
+const CHALLENGE_CONTACT = "josh.bradshaw@ciprecision.com";
 
 const FOODS = [
   // ============================ POSITIVE ============================
@@ -586,11 +588,11 @@ const FOODS = [
     name: "Poultry (chicken, turkey)",
     category: "Meat",
     effect: "neutral",
-    certainty: "moderate",
+    certainty: "low",
     outcomes: ["Cardiovascular disease"],
     summary: "Generally neutral for cardiovascular outcomes; often a 'better-than-red-meat' swap.",
     rationale:
-      "Cohorts cluster near no association for heart disease, and poultry usually appears as the favorable comparator in substitution analyses. Direction (neutral) is reasonably well supported — 'Moderate'.",
+      "Cohorts cluster near no association for heart disease, and poultry usually appears as the favorable comparator in substitution analyses. The neutral direction is consistent, but poultry is rarely studied as an exposure in its own right — so certainty is 'Low'.",
     considerations: {
       substitution: "Looks beneficial mainly because it replaces red/processed meat; cooking method (fried) can change this.",
     },
@@ -603,7 +605,9 @@ const FOODS = [
       },
     ],
     lastReviewed: "2026-06-28",
-    revisions: [],
+    revisions: [
+      { date: "2026-06-28", change: "Certainty refined from Moderate to Low under v0.3 explicit scoring (limited direct evidence; the neutral verdict is unchanged)." },
+    ],
   },
   {
     id: "milk",
@@ -634,11 +638,11 @@ const FOODS = [
     name: "Cheese",
     category: "Dairy",
     effect: "neutral",
-    certainty: "moderate",
+    certainty: "low",
     outcomes: ["Cardiovascular disease"],
     summary: "Despite saturated fat and salt, associations with heart disease are roughly neutral.",
     rationale:
-      "Meta-analyses show a flat or slightly favorable relationship, attributed to the fermented 'dairy matrix'. Neutral direction is fairly consistent — 'Moderate'.",
+      "Meta-analyses show a flat or slightly favorable relationship, attributed to the fermented 'dairy matrix'. The neutral direction is fairly consistent, but rests on a thin evidence base with no trials on hard outcomes — so certainty is 'Low'.",
     considerations: {
       confounding: "Cheese is embedded in varied dietary patterns; hard to isolate.",
       doseResponse: "Some analyses suggest a shallow U-shape (modest intake ≈ lowest risk).",
@@ -652,7 +656,9 @@ const FOODS = [
       },
     ],
     lastReviewed: "2026-06-28",
-    revisions: [],
+    revisions: [
+      { date: "2026-06-28", change: "Certainty refined from Moderate to Low under v0.3 explicit scoring (thin evidence base; the neutral verdict is unchanged)." },
+    ],
   },
   {
     id: "butter",
@@ -789,3 +795,142 @@ const FOODS = [
     revisions: [],
   },
 ];
+
+/*
+ * NutriGrade-ADAPTED scoring rubric (this project's reproducible application).
+ *
+ * Each food–evidence base is scored 0–2 on eight dimensions (max 16). The total
+ * maps to the certainty tier shown on the card:
+ *     total >= 13  -> high        (>=80% of max)
+ *     total >= 10  -> moderate    (>=60%)
+ *     total >=  7  -> low         (>=40%)
+ *     else         -> very-low    (<40%)
+ *
+ * Scoring per dimension: 2 = strong / well-met, 1 = adequate / partial,
+ * 0 = weak / concern. This is our transparent adaptation of NutriGrade — not a
+ * recomputation of an official published score. See METHODOLOGY.md.
+ */
+const NUTRIGRADE_RUBRIC = {
+  max: 16,
+  thresholds: { high: 13, moderate: 10, low: 7 }, // else very-low
+  dimensions: [
+    { key: "quality",      label: "Study quality / confounding control" },
+    { key: "consistency",  label: "Consistency (low heterogeneity)" },
+    { key: "precision",    label: "Precision of the pooled estimate" },
+    { key: "directness",   label: "Directness (hard outcomes, relevant people)" },
+    { key: "effectSize",   label: "Effect size" },
+    { key: "doseResponse", label: "Dose-response gradient" },
+    { key: "biasFreedom",  label: "Freedom from publication / funding bias" },
+    { key: "experimental", label: "Experimental / mechanistic corroboration" },
+  ],
+};
+
+// Per-food assessments. `scores` keys match NUTRIGRADE_RUBRIC.dimensions.
+// `effect` summarizes the conservative pooled estimate that drove the direction
+// (does its uncertainty interval exclude "no effect"?).
+const ASSESSMENTS = {
+  "tree-nuts": {
+    scores: { quality: 1, consistency: 2, precision: 2, directness: 2, effectSize: 1, doseResponse: 2, biasFreedom: 1, experimental: 1 },
+    effect: "Pooled RR ≈ 0.78 for all-cause mortality at ~28 g/day; interval excludes no-effect → lower risk.",
+  },
+  "legumes": {
+    scores: { quality: 1, consistency: 2, precision: 1, directness: 2, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 1 },
+    effect: "Pooled RR ≈ 0.86 for coronary heart disease at ~4 servings/week; interval excludes no-effect.",
+  },
+  "whole-grains": {
+    scores: { quality: 1, consistency: 2, precision: 2, directness: 2, effectSize: 1, doseResponse: 2, biasFreedom: 1, experimental: 2 },
+    effect: "≈17% lower all-cause mortality at 90 g/day (RR ≈ 0.83); clear dose-response, interval excludes no-effect.",
+  },
+  "fiber": {
+    scores: { quality: 1, consistency: 2, precision: 2, directness: 2, effectSize: 1, doseResponse: 2, biasFreedom: 1, experimental: 2 },
+    effect: "≈15–30% lower all-cause/CVD mortality at 25–29 g/day; interval excludes no-effect; RCTs confirm risk-factor effects.",
+  },
+  "leafy-greens": {
+    scores: { quality: 1, consistency: 2, precision: 1, directness: 2, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 1 },
+    effect: "Part of the fruit-and-veg dose-response; lower CVD/mortality up to ~800 g/day F&V; interval excludes no-effect.",
+  },
+  "whole-fruit": {
+    scores: { quality: 1, consistency: 2, precision: 1, directness: 2, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 1 },
+    effect: "≈5–6% lower mortality per serving/day; whole fruit lowers type 2 diabetes while juice raises it.",
+  },
+  "fatty-fish": {
+    scores: { quality: 1, consistency: 2, precision: 1, directness: 2, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 1 },
+    effect: "≈36% lower coronary death at 1–2 servings/week; interval excludes no-effect; benefit plateaus.",
+  },
+  "olive-oil": {
+    scores: { quality: 1, consistency: 1, precision: 1, directness: 2, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 2 },
+    effect: "≈19% lower CVD mortality at >7 g/day (RR ≈ 0.81); supported by the PREDIMED trial arm.",
+  },
+  "yogurt": {
+    scores: { quality: 1, consistency: 1, precision: 1, directness: 1, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 0 },
+    effect: "≈18% lower type 2 diabetes at 1 serving/day; single-outcome, no hard-outcome trials.",
+  },
+  "coffee": {
+    scores: { quality: 1, consistency: 2, precision: 2, directness: 2, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 0 },
+    effect: "≈17% lower all-cause mortality at 3–4 cups/day; consistent across many meta-analyses; no RCT on hard outcomes.",
+  },
+  "avocado": {
+    scores: { quality: 1, consistency: 1, precision: 1, directness: 1, effectSize: 1, doseResponse: 0, biasFreedom: 1, experimental: 1 },
+    effect: "≈16–21% lower CVD at ≥2 servings/week; small evidence base, wide interval.",
+  },
+  "processed-meat": {
+    scores: { quality: 1, consistency: 2, precision: 2, directness: 2, effectSize: 2, doseResponse: 2, biasFreedom: 1, experimental: 1 },
+    effect: "+18% colorectal cancer and +42% CHD per 50 g/day; interval excludes no-effect; IARC Group 1 carcinogen.",
+  },
+  "sugary-drinks": {
+    scores: { quality: 1, consistency: 2, precision: 2, directness: 2, effectSize: 1, doseResponse: 2, biasFreedom: 1, experimental: 2 },
+    effect: "+26% type 2 diabetes at 1–2 servings/day; interval excludes no-effect; RCT support on weight/metabolic markers.",
+  },
+  "trans-fat": {
+    scores: { quality: 1, consistency: 2, precision: 2, directness: 2, effectSize: 2, doseResponse: 1, biasFreedom: 1, experimental: 2 },
+    effect: "+23% CHD per 2% of energy; interval excludes no-effect; controlled-feeding RCTs corroborate the mechanism.",
+  },
+  "ultra-processed": {
+    scores: { quality: 1, consistency: 2, precision: 1, directness: 2, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 2 },
+    effect: "Higher mortality/CVD at highest intake; an inpatient RCT showed ~500 kcal/day overeating; category is heterogeneous.",
+  },
+  "refined-grains": {
+    scores: { quality: 1, consistency: 1, precision: 1, directness: 1, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 0 },
+    effect: "Higher mortality/major CVD at highest intake (PURE); mostly relative to whole grains; region-dependent.",
+  },
+  "eggs": {
+    scores: { quality: 1, consistency: 1, precision: 2, directness: 2, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 1 },
+    effect: "Pooled RR ≈ 1.0 for CVD in the general population; interval spans no-effect → neutral; subgroups disagree.",
+  },
+  "red-meat": {
+    scores: { quality: 1, consistency: 0, precision: 1, directness: 1, effectSize: 1, doseResponse: 0, biasFreedom: 1, experimental: 0 },
+    effect: "Small, inconsistent excess risk; a GRADE review judged certainty low; interval near/over no-effect → contested.",
+  },
+  "poultry": {
+    scores: { quality: 1, consistency: 2, precision: 1, directness: 2, effectSize: 1, doseResponse: 0, biasFreedom: 1, experimental: 0 },
+    effect: "≈ no association with CVD; interval spans no-effect → neutral; looks favorable mainly as a substitute.",
+  },
+  "milk": {
+    scores: { quality: 1, consistency: 2, precision: 2, directness: 2, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 0 },
+    effect: "≈ neutral for mortality/CVD (PURE); whole-fat not worse than low-fat; interval spans no-effect.",
+  },
+  "cheese": {
+    scores: { quality: 1, consistency: 2, precision: 1, directness: 1, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 0 },
+    effect: "Flat-to-slightly-protective (~RR 0.96 at ~40 g/day); interval near no-effect → neutral.",
+  },
+  "butter": {
+    scores: { quality: 1, consistency: 1, precision: 1, directness: 1, effectSize: 1, doseResponse: 0, biasFreedom: 1, experimental: 1 },
+    effect: "Small, mostly non-significant association with mortality; interval spans no-effect; highly substitution-dependent.",
+  },
+  "potatoes": {
+    scores: { quality: 1, consistency: 1, precision: 1, directness: 1, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 0 },
+    effect: "Non-fried ≈ neutral; fried associated with higher risk; interval spans no-effect for plain potatoes.",
+  },
+  "alcohol": {
+    scores: { quality: 0, consistency: 1, precision: 1, directness: 2, effectSize: 1, doseResponse: 1, biasFreedom: 1, experimental: 0 },
+    effect: "No significant mortality protection after bias adjustment; cancer risk rises from low intake → net neutral, trending harmful.",
+  },
+  "artificial-sweeteners": {
+    scores: { quality: 0, consistency: 0, precision: 1, directness: 1, effectSize: 1, doseResponse: 0, biasFreedom: 1, experimental: 1 },
+    effect: "Conflicting: some cohorts show higher CVD (likely reverse causation); substitution trials show benefit → net uncertain.",
+  },
+  "coconut-oil": {
+    scores: { quality: 1, consistency: 1, precision: 1, directness: 1, effectSize: 1, doseResponse: 0, biasFreedom: 1, experimental: 1 },
+    effect: "Raises LDL vs unsaturated oils (RCTs); no direct outcome data → neutral pending.",
+  },
+};
