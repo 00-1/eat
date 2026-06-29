@@ -147,7 +147,10 @@ stance: **holds** (our verdict survives — and why the argument fails under our
 approach), **partial** (partly right / matches our stated uncertainty), or
 **valid** (a genuine limitation we concede). The aim is to pressure-test the model
 against positions people actually hold — not strawmen — so attributions must name
-real sources.
+real sources. Model-level critiques (epidemiology ≠ causation, healthy-user bias,
+FFQ unreliability, industry funding) are answered in the Approach tab's
+**"Criticisms of this approach,"** with sources in
+`research/counter-arguments-research.md`.
 
 ## Exceptions ("who should be careful")
 

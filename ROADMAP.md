@@ -20,17 +20,21 @@ make a shaky input look authoritative, so this is the top priority.
 - [ ] **Exception prevalence** (`exceptions.js`): replace estimate-with-basis
       figures with sourced numbers (allergy %, lactose malabsorption, celiac,
       IBS, G6PD, PKU, etc.).
-- [ ] **Counter-argument attributions** (`counter-arguments.js`): confirm each
-      proponent attribution against a real source; expand coverage to the foods
-      not yet covered (eggs/cholesterol, dairy/raw-milk/A1-A2, coffee, nuts,
-      leafy greens/oxalates, artificial sweeteners both directions, …).
-      *(deep-research pass running; integrate when it lands.)*
-- [ ] Pull the model-level critiques of nutritional epidemiology (Ioannidis,
-      healthy-user bias, FFQ unreliability) into a **"Criticisms of this approach"**
-      block in the Approach tab. *(from the same research pass.)*
+- [~] **Counter-argument attributions** (`counter-arguments.js`): verified and
+      source-strengthened from the deep-research pass for fruit, red meat (+ the
+      industry-funding nuance), butter/milk/cheese (food-matrix), coconut oil,
+      alcohol, sugary drinks, and artificial sweeteners (microbiome). **Still to
+      cover** (research returned no verified claims — unresearched, not refuted):
+      grains/gluten/lectins, legumes anti-nutrients, nuts (omega-6/oxalates),
+      leafy-green oxalates, fish/mercury depth, olive-oil adulteration,
+      eggs/cholesterol/TMAO, processed-meat nitrite defenses, raw-milk/A1-A2,
+      coffee (cortisol/acrylamide), the NOVA/UPF critique depth, potatoes/yogurt/avocado.
+- [x] Model-level critiques (Ioannidis, healthy-user/selection bias, FFQ
+      unreliability, industry funding) added as **"Criticisms of this approach"**
+      in the Approach tab, answered with symmetric skepticism. *(v0.9)*
 
-A dedicated deep-research pass is the intended mechanism (one is running for the
-counter-arguments + model-level critiques as of v0.7).
+The first deep-research pass (v0.9) is integrated; a second, targeted pass is
+needed for the unresearched foods above.
 
 ## 2. A reproducible pipeline to expand the food list  ⟶ *queued*
 
