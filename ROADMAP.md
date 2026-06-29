@@ -94,9 +94,29 @@ make a shaky input look authoritative, so this is the top priority.
 The first deep-research pass (v0.9) is integrated; a second, targeted pass is
 needed for the unresearched foods above.
 
-## 2. A reproducible pipeline to expand the food list  ⟶ *queued*
+## 2. Scale food coverage toward hundreds  ⟶ *next major thrust*
 
-The list is 26 foods; the framework should scale to hundreds. Needed:
+The list is 26 foods; the aim is hundreds. It's practical, but the bottleneck is
+rigorous per-food evidence (≈ one research run yields 6–12 well-grounded foods),
+so this is a sustained pipeline, not a one-shot. Plan:
+
+- [ ] **Taxonomy-first.** Most of the long tail should INHERIT a food-group verdict
+      (the category/shared-claim machinery already exists) rather than be an
+      independent entry. Add specific foods only where they genuinely diverge from
+      their group. Define the food-group taxonomy.
+- [ ] **Batch research pipeline.** Repeatable deep-research runs of ~10 foods →
+      structured `evidence`/`studies`/`exceptions` drafts → checked against
+      `ADDING-FOODS.md` before commit. (Resume-on-stall; the runs have been flaky.)
+- [ ] **Accept (and surface) the long tail is uncertain.** Most less-studied foods
+      will be Low/Very-low certainty or Neutral — honest, not a failure. The
+      data-status banner already frames this.
+- [x] **Integrate the foods the completed research already grounds:** green tea,
+      white rice, soy, cruciferous veg, tomatoes (biomarker-weak), cocoa (COSMOS
+      RCT → neutral). Done in v0.12 (26 → 32 foods). NOT grounded by research yet
+      (do not invent): berries-specific, garlic/allium, shellfish, fried food,
+      salty snacks, sweets — need a targeted research pass.
+
+Original sub-tasks:
 
 - [ ] A written, repeatable **"add a food"** procedure: the exact evidence facts
       to gather, where to source them, how to write the rationale/studies/

@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.11 — living document.** This file is the canonical description of how
+**Version 0.12 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -332,6 +332,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.12 | 2026-06-29 | Added 6 research-grounded foods (26 → 32): green tea (+), white rice (− for diabetes), soy (+), cruciferous veg (+), tomatoes (neutral — biomarker-weak), dark chocolate/cocoa (neutral — COSMOS RCT). Scored under the current rules; category steelman claims auto-attach via tags. Foods the research couldn't ground (berries-specific, garlic, shellfish, fried food, salty snacks, sweets) deliberately not added. All facts carry the "estimated, not source-verified" provenance flag. |
 | 0.11 | 2026-06-29 | Fixed a structural conflation (audit follow-up): **neutral verdicts are now scored on the six evidence-quality dimensions (/12)**, not penalised by effect-size/dose-response (which a null can't have) — so a well-established neutral can reach High, while thin/contested ones stay Very-low. Rescored neutrals: butter Low→Moderate; red meat, potatoes, artificial sweeteners Very-low→Low (verdicts unchanged; coconut oil correctly stays Very-low). |
 | 0.10 | 2026-06-29 | Honest default (audit C1): unknown/unreported `heterogeneity` now scores **0** for consistency (was 1) — absence of evidence isn't scored as adequate. No tier changes (avocado/coconut-oil stay put). Also adopted the "highlight inadequacies" policy: an honest data-status banner + per-food source-verification chip, and softened over-claiming language. |
 | 0.9 | 2026-06-29 | Relaxed the directional-verdict rule: a positive/negative label needs only the conservative interval to exclude the null; the **certainty tier carries the confidence** (so "Positive · Low" stands), with a Very-low → Neutral(leaning) fallback — more transparent than collapsing low-certainty reads to "neutral." Added a test enforcing it. Also: ran an independent gap audit (`AUDIT.md`); fixed a live highlights-chip crash, made magnitude `minimal` when the interval crosses the null, and reconciled version numbers (with a test). Added the "Criticisms of this approach" section and integrated the counter-arguments research. |

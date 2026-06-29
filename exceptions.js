@@ -374,6 +374,87 @@ const EXCEPTIONS = {
       severity: "caution",
     },
   ],
+  "green-tea": [
+    {
+      type: "life-stage",
+      group: "Pregnant people (caffeine)",
+      prevalence: { estimate: "guidance applies during pregnancy", source: "ACOG" },
+      severity: "caution",
+      mitigation: "Keep total caffeine <200 mg/day; tea has less than coffee.",
+    },
+    {
+      type: "condition",
+      group: "People prone to iron deficiency (tea tannins reduce non-heme iron absorption)",
+      prevalence: { estimate: "iron deficiency affects ~10–30% of menstruating women", source: "haematology epidemiology" },
+      severity: "mitigate",
+      mitigation: "Drink tea between meals rather than with iron-rich meals.",
+    },
+  ],
+  "white-rice": [
+    {
+      type: "condition",
+      group: "People with diabetes or prediabetes (high glycemic load)",
+      prevalence: { estimate: "diabetes ~10% of adults; far higher with prediabetes", source: "diabetes epidemiology" },
+      severity: "caution",
+      mitigation: "Prefer whole grains; pair with protein/fat/fibre and keep portions modest.",
+    },
+    {
+      type: "contaminant",
+      group: "Infants/young children and high-rice diets (inorganic arsenic accumulates in rice)",
+      prevalence: { estimate: "FDA/EFSA flag rice as a notable dietary arsenic source", source: "FDA/EFSA" },
+      severity: "caution",
+      mitigation: "Vary grains; rinse rice and cook in excess water for young children.",
+    },
+  ],
+  "soy": [
+    {
+      type: "allergy",
+      group: "People with soy allergy",
+      prevalence: { estimate: "~0.3–0.4% of adults (a Big-9 allergen)", source: "food-allergy reviews" },
+      severity: "avoid",
+    },
+    {
+      type: "condition",
+      group: "People with hypothyroidism + iodine deficiency (isoflavones at very high intake)",
+      prevalence: { estimate: "relevant mainly with co-existing iodine deficiency", source: "endocrinology reviews" },
+      severity: "mitigate",
+      mitigation: "Ensure adequate iodine; separate soy from thyroid medication timing.",
+    },
+  ],
+  "cruciferous": [
+    {
+      type: "condition",
+      group: "People with hypothyroidism + iodine deficiency (raw-cruciferous goitrogens)",
+      prevalence: { estimate: "relevant mainly raw and with iodine deficiency", source: "endocrinology reviews" },
+      severity: "mitigate",
+      mitigation: "Cooking deactivates most goitrogens; ensure adequate iodine.",
+    },
+    {
+      type: "intolerance",
+      group: "People with IBS (raffinose/FODMAPs cause gas/bloating)",
+      prevalence: { estimate: "IBS ~10% of adults", source: "Monash FODMAP" },
+      severity: "mitigate",
+      mitigation: "Cook well and increase portions gradually.",
+    },
+  ],
+  "tomatoes": [
+    {
+      type: "condition",
+      group: "People with acid reflux / GERD (acidic)",
+      prevalence: { estimate: "GERD ~15–20% of adults; only some are tomato-triggered", source: "GI epidemiology" },
+      severity: "mitigate",
+      mitigation: "Reduce portion or avoid if it triggers symptoms.",
+    },
+  ],
+  "cocoa": [
+    {
+      type: "condition",
+      group: "People sensitive to caffeine/theobromine, and sugar load in sweetened chocolate",
+      prevalence: { estimate: "dark chocolate has modest caffeine/theobromine; sugar varies by product", source: "food composition data" },
+      severity: "mitigate",
+      mitigation: "Choose higher-cocoa, lower-sugar products; mind portion.",
+    },
+  ],
 };
 
 if (typeof module !== "undefined" && module.exports) {

@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.11";
+const METHODOLOGY_VERSION = "0.12";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -805,6 +805,163 @@ const FOODS = [
     lastReviewed: "2026-06-28",
     revisions: [],
   },
+
+  // ===================== ADDED v0.12 (research-grounded) =====================
+  {
+    id: "green-tea",
+    name: "Tea (green or black)",
+    category: "Beverages",
+    effect: "positive",
+    certainty: "moderate",
+    outcomes: ["Cardiovascular disease", "Stroke"],
+    summary: "A few cups a day track with modestly lower cardiovascular and stroke risk.",
+    rationale:
+      "Large dose-response cohort meta-analyses show a consistent, modest inverse association that plateaus around 2–3 cups/day. No trial on hard outcomes exists and short-term trials show no biomarker change, so causal certainty is capped — but the cohort signal is broad and graded.",
+    considerations: {
+      confounding: "Tea drinkers tend to have healthier lifestyles; residual confounding likely inflates the effect.",
+      substitution: "Benefit is clearest when tea replaces sugary drinks.",
+    },
+    studies: [
+      {
+        citation: "Chung M, et al. Advances in Nutrition. 2020.",
+        type: "Dose-response meta-analysis of ~39 cohorts",
+        finding: "Each cup/day associated with ~4% lower CVD mortality and stroke; benefit plateaus ~3 cups/day.",
+        search: "Chung tea consumption cardiovascular mortality dose-response Advances in Nutrition 2020",
+      },
+    ],
+    lastReviewed: "2026-06-29",
+    revisions: [],
+  },
+  {
+    id: "white-rice",
+    name: "White rice",
+    category: "Grains",
+    effect: "negative",
+    certainty: "moderate",
+    outcomes: ["Type 2 diabetes"],
+    summary: "Higher intake raises type 2 diabetes risk — but is roughly neutral for heart disease and mortality.",
+    rationale:
+      "A large dose-response meta-analysis links higher white-rice intake to type 2 diabetes (moderate certainty) with a clear gradient, much stronger in high-intake Asian populations; associations with CVD, cancer and mortality are null. The harm is mostly relative — replacing it with whole grains lowers risk.",
+    considerations: {
+      substitution: "Swapping white rice for whole grains lowers modeled diabetes risk; the effect is about glycemic load.",
+      confounding: "Tied to socioeconomic status and overall diet; isolating rice overstates it.",
+      doseResponse: "~6% higher diabetes risk per extra 150 g/day; far larger in rice-staple populations.",
+    },
+    studies: [
+      {
+        citation: "Eshaghian N, et al. Critical Reviews in Food Science and Nutrition. 2022.",
+        type: "Dose-response meta-analysis (28 cohorts, ~1.5 million)",
+        finding: "Highest vs lowest white-rice intake associated with ~18% higher type 2 diabetes risk; null for CVD/cancer.",
+        search: "white rice type 2 diabetes dose-response meta-analysis Critical Reviews Food Science 2022",
+      },
+      {
+        citation: "Hu EA, et al. BMJ. 2012.",
+        type: "Meta-analysis of cohorts",
+        finding: "White-rice–diabetes association much stronger in Asian (RR ~1.55) than Western (~1.12) populations.",
+        search: "Hu white rice type 2 diabetes BMJ 2012",
+      },
+    ],
+    lastReviewed: "2026-06-29",
+    revisions: [],
+  },
+  {
+    id: "soy",
+    name: "Soy foods (tofu, soy milk, edamame)",
+    category: "Legumes",
+    effect: "positive",
+    certainty: "moderate",
+    outcomes: ["Cancer mortality"],
+    summary: "Regular soy foods track with modestly lower cancer mortality.",
+    rationale:
+      "Dose-response cohort meta-analyses show higher soy/isoflavone intake associated with lower cancer (and all-cause) mortality, supported by isoflavone trials on intermediate markers. Mostly Asian-population data (confounding) and no hard-outcome trials, so moderate certainty.",
+    considerations: {
+      substitution: "Benefit partly reflects soy replacing red/processed meat.",
+      confounding: "Intake concentrated in Asian populations with broader dietary differences.",
+    },
+    studies: [
+      {
+        citation: "Nachvak SM, et al. Journal of the Academy of Nutrition and Dietetics. 2019.",
+        type: "Dose-response meta-analysis (23 cohorts, ~331,000)",
+        finding: "Higher soy intake associated with ~12% lower cancer mortality; ~10% lower all-cause mortality for isoflavones.",
+        search: "Nachvak soy isoflavone mortality dose-response meta-analysis 2019",
+      },
+    ],
+    lastReviewed: "2026-06-29",
+    revisions: [],
+  },
+  {
+    id: "cruciferous",
+    name: "Cruciferous vegetables (broccoli, cabbage)",
+    category: "Vegetables",
+    effect: "positive",
+    certainty: "moderate",
+    outcomes: ["Cardiovascular disease", "Cancer"],
+    summary: "Part of the broadly-protective vegetable signal, with some cruciferous-specific cancer evidence.",
+    rationale:
+      "Rests largely on the strong fruit-and-vegetable dose-response (each 200 g/day → lower CVD and mortality), plus cruciferous-specific cancer associations. Cruciferous-only hard-outcome data are thinner than the produce umbrella, so moderate not high.",
+    considerations: {
+      confounding: "Vegetable intake strongly marks an overall healthy lifestyle.",
+      substitution: "Benefit clearest when displacing refined/processed foods.",
+    },
+    studies: [
+      {
+        citation: "Aune D, et al. International Journal of Epidemiology. 2017.",
+        type: "Dose-response meta-analysis (~2 million)",
+        finding: "Higher fruit & vegetable intake (incl. cruciferous) linked to lower CVD and all-cause mortality; benefit to ~800 g/day.",
+        search: "Aune fruit vegetable intake cardiovascular cancer mortality 2017",
+      },
+    ],
+    lastReviewed: "2026-06-29",
+    revisions: [],
+  },
+  {
+    id: "tomatoes",
+    name: "Tomatoes",
+    category: "Vegetables",
+    effect: "neutral",
+    certainty: "low",
+    outcomes: ["Cancer"],
+    summary: "A modest cancer signal exists, but it's driven by blood lycopene, not clearly by eating tomatoes.",
+    rationale:
+      "The protective association is largely tied to the lycopene BIOMARKER (blood level), which tracks an overall healthy diet, rather than to dietary tomato intake — so we don't assert a food-level benefit. Neutral, leaning positive, at low certainty; tomatoes remain part of the broadly-beneficial vegetable group.",
+    considerations: {
+      confounding: "Blood lycopene is confounded with overall healthy eating; not the same as tomato intake.",
+    },
+    studies: [
+      {
+        citation: "Lycopene & cancer (blood-biomarker meta-analyses).",
+        type: "Meta-analyses of cohorts (biomarker-based)",
+        finding: "Higher blood lycopene associated with ~5% lower overall cancer and ~11% lower prostate cancer; dietary-intake signal weaker.",
+        search: "blood lycopene cancer prostate meta-analysis cohort",
+      },
+    ],
+    lastReviewed: "2026-06-29",
+    revisions: [],
+  },
+  {
+    id: "cocoa",
+    name: "Dark chocolate / cocoa",
+    category: "Sweets",
+    effect: "neutral",
+    certainty: "low",
+    outcomes: ["Cardiovascular disease"],
+    summary: "The one big trial found no significant effect on cardiovascular events — neutral, not a superfood.",
+    rationale:
+      "COSMOS, the only large RCT on hard outcomes, found cocoa-flavanol supplements did not significantly reduce total cardiovascular events (a secondary CVD-death signal aside). A single, industry-co-funded trial of moderate size gives only low certainty — and chocolate the food carries sugar and fat the flavanol extract doesn't.",
+    considerations: {
+      substitution: "Dark chocolate the food ≠ the flavanol extract trialled; added sugar/fat matter.",
+    },
+    studies: [
+      {
+        citation: "Sesso HD, et al. (COSMOS). American Journal of Clinical Nutrition. 2022.",
+        type: "Randomized controlled trial (~21,400)",
+        finding: "Cocoa flavanols did not significantly cut total cardiovascular events (HR 0.90, 95% CI 0.78–1.02).",
+        search: "Sesso COSMOS cocoa flavanol cardiovascular AJCN 2022",
+      },
+    ],
+    lastReviewed: "2026-06-29",
+    revisions: [],
+  },
 ];
 
 /*
@@ -946,6 +1103,31 @@ const ASSESSMENTS = {
   "coconut-oil": {
     evidence: { pooledRR: 1, ciExcludesNull: false, participants: 1000, heterogeneity: "unknown", outcomeType: "surrogate", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "regular use vs none (LDL surrogate)" },
     effectEstimate: "Raises LDL vs unsaturated oils (RCTs); essentially no direct outcome data → neutral pending.",
+  },
+
+  "green-tea": {
+    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 1960000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "3–4 cups/day vs none" },
+    effectEstimate: "≈4% lower CVD mortality and stroke per cup/day; ~0.88 at a realistic 3 cups/day; plateaus, no hard-outcome trial.",
+  },
+  "white-rice": {
+    evidence: { pooledRR: 1.18, ciExcludesNull: true, participants: 1527198, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (≈ +150 g/day steps)" },
+    effectEstimate: "+18% type 2 diabetes (highest vs lowest); null for CVD/cancer/mortality; far larger in rice-staple populations.",
+  },
+  "soy": {
+    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 331000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "high vs low intake (~25–40 mg isoflavones/day)" },
+    effectEstimate: "≈12% lower cancer mortality (and ~10% lower all-cause for isoflavones) at higher intake; dose-responsive.",
+  },
+  "cruciferous": {
+    evidence: { pooledRR: 0.90, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "higher vs lower intake (within the F&V dose-response)" },
+    effectEstimate: "≈10% lower mortality/CVD as part of the fruit-and-veg dose-response; cruciferous-specific cancer signal too.",
+  },
+  "tomatoes": {
+    evidence: { pooledRR: 0.95, ciExcludesNull: false, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "high vs low blood lycopene (tomato-derived, biomarker)" },
+    effectEstimate: "Modest cancer signal, but driven by the blood-lycopene biomarker (confounded with healthy diet), not clearly by tomato intake → neutral.",
+  },
+  "cocoa": {
+    evidence: { pooledRR: 0.90, ciExcludesNull: false, participants: 21442, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "outcomes", funding: "mixed", pubBias: "untested", confoundingRisk: "low", intakeBasis: "500 mg cocoa flavanols/day vs placebo (RCT)" },
+    effectEstimate: "COSMOS RCT: no significant cut in total CVD events (HR 0.90, 0.78–1.02) → a trial-grade roughly-null; industry co-funded.",
   },
 };
 

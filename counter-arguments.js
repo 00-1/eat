@@ -41,6 +41,10 @@ const FOOD_TAGS = {
   "butter": ["saturated-fat"],
   "potatoes": ["high-carb"],
   "coconut-oil": ["saturated-fat"],
+  "white-rice": ["high-carb"],
+  "soy": ["plant-antinutrient"],
+  "cruciferous": ["plant-antinutrient"],
+  "cocoa": ["saturated-fat"],
 };
 
 // Category-level claims, each scoped to one or more tags.
