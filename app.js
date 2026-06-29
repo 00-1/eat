@@ -10,6 +10,7 @@
   const emptyEl = document.getElementById("empty");
   const searchEl = document.getElementById("search");
   const categoryEl = document.getElementById("category");
+  const sortEl = document.getElementById("sort");
   const chips = Array.from(document.querySelectorAll(".chip"));
   const tabs = Array.from(document.querySelectorAll(".tab"));
   const views = {
@@ -17,7 +18,7 @@
     approach: document.getElementById("view-approach"),
   };
 
-  const state = { query: "", effect: "all", category: "all" };
+  const state = { query: "", effect: "all", category: "all", sort: "default" };
 
   // ---- Constants ----
   const EFFECT_LABEL = { positive: "Positive", negative: "Negative", neutral: "Neutral / mixed" };
@@ -124,7 +125,22 @@
     return true;
   }
 
+  function magRank(food) {
+    if (typeof Scoring === "undefined") return 0;
+    const mag = magnitudeOf(food);
+    return (Scoring.MAGNITUDE_ORDER && Scoring.MAGNITUDE_ORDER[mag]) || 0;
+  }
+
   function sortFoods(a, b) {
+    if (state.sort === "alpha") return a.name.localeCompare(b.name);
+    if (state.sort === "impact") {
+      const m = magRank(b) - magRank(a);
+      if (m !== 0) return m;
+      const conf = (CERTAINTY_RANK[b.certainty] || 0) - (CERTAINTY_RANK[a.certainty] || 0);
+      if (conf !== 0) return conf;
+      return a.name.localeCompare(b.name);
+    }
+    // default: verdict (positive→neutral→negative) then certainty then name
     if (EFFECT_ORDER[a.effect] !== EFFECT_ORDER[b.effect]) {
       return EFFECT_ORDER[a.effect] - EFFECT_ORDER[b.effect];
     }
@@ -390,6 +406,10 @@
   });
   categoryEl.addEventListener("change", function () {
     state.category = categoryEl.value;
+    render();
+  });
+  sortEl.addEventListener("change", function () {
+    state.sort = sortEl.value;
     render();
   });
   chips.forEach(function (chip) {
