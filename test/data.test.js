@@ -85,6 +85,25 @@ test("no orphan assessments (every assessment maps to a food)", () => {
   }
 });
 
+test("PROVENANCE: a source-verified food must cite its score-driving figures", () => {
+  // The grounding pass flips `verified: true` only once the numeric facts that
+  // drive the score (pooledRR, participants) are pinned to a real citation with a
+  // PMID/DOI. This enforces that contract: you cannot mark a food verified without
+  // sources. (Vacuously true until the first food is grounded.)
+  for (const f of FOODS) {
+    const a = ASSESSMENTS[f.id];
+    if (!a.verified) continue;
+    assert.ok(a.sources && typeof a.sources === "object", `${f.id}: verified but no sources`);
+    for (const key of ["pooledRR", "participants"]) {
+      const s = a.sources[key];
+      assert.ok(s, `${f.id}: verified but sources.${key} missing`);
+      assert.ok(s.figure && String(s.figure).length, `${f.id}: sources.${key} missing figure`);
+      assert.ok(s.cite && String(s.cite).length, `${f.id}: sources.${key} missing cite`);
+      assert.ok(/PMID:\s*\d+|10\.\d{4,}\//i.test(s.id || ""), `${f.id}: sources.${key}.id must be a PMID or DOI (got "${s.id}")`);
+    }
+  }
+});
+
 test("CENTRAL INVARIANT: stored certainty equals the computed tier for every food", () => {
   for (const f of FOODS) {
     const computed = S.assess(ASSESSMENTS[f.id].evidence);

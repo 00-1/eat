@@ -999,6 +999,18 @@ const NUTRIGRADE_RUBRIC = {
 // individually inspectable judgements about the evidence base. `pooledRR` is the
 // risk at REALISTIC habitual intake (see `intakeBasis`), not per arbitrary small
 // unit. Correct any fact and the score (and tier) recompute.
+//
+// PROVENANCE (grounding pass): once a food's score-driving figures are checked
+// against the actual papers, set `verified: true` and add a `sources` map. Each
+// entry pins a fact to a citable figure, enforced by a test:
+//   sources: {
+//     pooledRR:     { figure: "RR 0.78 (0.72–0.84), per 28 g/day, all-cause mortality",
+//                     cite: "Aune 2016 BMC Medicine", id: "PMID:27916000" },
+//     participants: { figure: "~819,000 across 20 cohorts", cite: "Aune 2016 BMC Medicine", id: "PMID:27916000" },
+//   }
+// `id` must be a PMID ("PMID:NNNN") or a DOI ("10.xxxx/..."). Until verified, the
+// app shows a "facts estimated" provenance chip and the data-status banner counts
+// it as unverified.
 const ASSESSMENTS = {
   "tree-nuts": {
     evidence: { pooledRR: 0.78, ciExcludesNull: true, participants: 819000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pattern", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~28 g/day (a daily handful) vs none" },
