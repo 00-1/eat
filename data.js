@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.13";
+const METHODOLOGY_VERSION = "0.14";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1017,6 +1017,12 @@ const ASSESSMENTS = {
   "tree-nuts": {
     evidence: { pooledRR: 0.78, ciExcludesNull: true, participants: 819000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pattern", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~28 g/day (a daily handful) vs none" },
     effectEstimate: "Pooled RR ≈ 0.78 for all-cause mortality at ~28 g/day; interval excludes no-effect → lower risk.",
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "g/day", shape: "plateau-benefit", normalRange: [0, 30],
+      points: [ { x: 0, rr: 1.0 }, { x: 15, rr: 0.86 }, { x: 28, rr: 0.78, lo: 0.72, hi: 0.84 }, { x: 45, rr: 0.80 } ],
+      note: "Most of the benefit is reached by ~15–28 g/day; eating more does little extra.",
+      source: { cite: "Aune 2016 BMC Medicine", id: "PMID:27916000" }, verified: false,
+    },
   },
   "legumes": {
     evidence: { pooledRR: 0.86, ciExcludesNull: true, participants: 250000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~4 servings/week vs rarely" },
@@ -1025,6 +1031,12 @@ const ASSESSMENTS = {
   "whole-grains": {
     evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 700000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~90 g/day vs low intake" },
     effectEstimate: "≈17% lower all-cause mortality at 90 g/day (RR ≈ 0.83); clear dose-response, interval excludes no-effect.",
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "g/day", shape: "plateau-benefit", normalRange: [0, 90],
+      points: [ { x: 0, rr: 1.0 }, { x: 30, rr: 0.93 }, { x: 90, rr: 0.83, lo: 0.79, hi: 0.88 }, { x: 120, rr: 0.82 } ],
+      note: "Risk falls roughly linearly up to ~90 g/day (about 3 servings), then plateaus.",
+      source: { cite: "Aune 2016 BMJ", id: "PMID:27301975" }, verified: false,
+    },
   },
   "fiber": {
     evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 500000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~25–29 g/day vs low intake" },
@@ -1061,10 +1073,22 @@ const ASSESSMENTS = {
   "processed-meat": {
     evidence: { pooledRR: 1.18, ciExcludesNull: true, participants: 800000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "mechanism", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~50 g/day (about one serving) vs none" },
     effectEstimate: "+18% colorectal cancer (and ~+42% CHD) per 50 g/day; interval excludes no-effect; IARC Group 1 carcinogen.",
+    doseCurve: {
+      outcome: "Colorectal cancer", unit: "g/day", shape: "monotonic-harm", normalRange: [0, 50],
+      points: [ { x: 0, rr: 1.0 }, { x: 25, rr: 1.09 }, { x: 50, rr: 1.18, lo: 1.10, hi: 1.27 }, { x: 100, rr: 1.36 } ],
+      note: "Risk rises ~18% per 50 g/day with no clear safe threshold for cancer.",
+      source: { cite: "Bouvard 2015 (IARC), Lancet Oncology", id: "10.1016/S1470-2045(15)00444-1" }, verified: false,
+    },
   },
   "sugary-drinks": {
     evidence: { pooledRR: 1.26, ciExcludesNull: true, participants: 310000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "1–2 servings/day vs none" },
     effectEstimate: "+26% type 2 diabetes at 1–2 servings/day; interval excludes no-effect; RCT support on weight/metabolic markers.",
+    doseCurve: {
+      outcome: "Type 2 diabetes", unit: "servings/day", shape: "monotonic-harm", normalRange: [0, 2],
+      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 1.13 }, { x: 2, rr: 1.26, lo: 1.13, hi: 1.40 }, { x: 3, rr: 1.42 } ],
+      note: "Risk climbs per serving/day with no apparent threshold — liquid sugar, low satiety.",
+      source: { cite: "Malik 2010 Diabetes Care", id: "PMID:20693348" }, verified: false,
+    },
   },
   "trans-fat": {
     evidence: { pooledRR: 1.35, ciExcludesNull: true, participants: 150000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway", funding: "independent", pubBias: "untested", confoundingRisk: "low", intakeBasis: "regular intake of trans-fat-rich foods (~3–4% of energy) vs avoidance" },
@@ -1109,6 +1133,12 @@ const ASSESSMENTS = {
   "alcohol": {
     evidence: { pooledRR: 1, ciExcludesNull: false, participants: 4800000, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "high", intakeBasis: "moderate intake vs none (bias-adjusted)" },
     effectEstimate: "No significant mortality protection after bias adjustment; cancer risk rises from low intake → net neutral, trending harmful.",
+    doseCurve: {
+      outcome: "Cancer (breast, colorectal, liver, oral)", unit: "drinks/day", shape: "monotonic-harm", normalRange: [0, 2],
+      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 1.05 }, { x: 2, rr: 1.13 }, { x: 4, rr: 1.32 } ],
+      note: "This is the CANCER curve — risk rises from the very first drink (alcohol is an IARC Group 1 carcinogen). The all-cause-mortality curve is the contested 'J'; the headline chip reflects mortality, this shows why 'neutral' understates the cancer story.",
+      source: { cite: "GBD 2018 Alcohol, Lancet; Zhao 2023 JAMA Netw Open", id: "10.1016/S0140-6736(18)31310-2" }, verified: false,
+    },
   },
   "artificial-sweeteners": {
     evidence: { pooledRR: 1.09, ciExcludesNull: false, participants: 100000, heterogeneity: "high", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "high vs no intake" },

@@ -267,6 +267,25 @@ test("PRESETS expose the explore rules and default is a no-op", () => {
   assert.deepEqual(S.assess(someEv, null, S.PRESETS["default"].settings), S.assess(someEv));
 });
 
+test("classifyDoseShape derives the shape from the curve points", () => {
+  const c = S.classifyDoseShape;
+  // monotonic harm — rises throughout
+  assert.equal(c([{ x: 0, rr: 1.0 }, { x: 1, rr: 1.13 }, { x: 2, rr: 1.26 }, { x: 3, rr: 1.42 }]), "monotonic-harm");
+  // monotonic benefit — falls throughout
+  assert.equal(c([{ x: 0, rr: 1.0 }, { x: 1, rr: 0.9 }, { x: 2, rr: 0.8 }, { x: 3, rr: 0.72 }]), "monotonic-benefit");
+  // plateau benefit — falls then flattens
+  assert.equal(c([{ x: 0, rr: 1.0 }, { x: 15, rr: 0.86 }, { x: 28, rr: 0.78 }, { x: 45, rr: 0.8 }]), "plateau-benefit");
+  // plateau harm — rises then flattens
+  assert.equal(c([{ x: 0, rr: 1.0 }, { x: 1, rr: 1.2 }, { x: 2, rr: 1.35 }, { x: 3, rr: 1.36 }]), "plateau-harm");
+  // J/U — down then up (a real reversal)
+  assert.equal(c([{ x: 0, rr: 1.0 }, { x: 1, rr: 0.85 }, { x: 2, rr: 0.9 }, { x: 4, rr: 1.2 }]), "j-u-curve");
+  // flat — barely moves
+  assert.equal(c([{ x: 0, rr: 1.0 }, { x: 1, rr: 1.01 }, { x: 2, rr: 0.99 }]), "flat");
+  // too few points to judge
+  assert.equal(c([{ x: 0, rr: 1.0 }, { x: 1, rr: 0.8 }]), null);
+  assert.equal(c("nonsense"), null);
+});
+
 test("GUARDRAIL: mechanism does not override good observational outcome data", () => {
   // The "carbs spike sugar → carbs bad" trap: a food with strong observational
   // BENEFIT and an adverse biomarker stays observation-led and benefits stand —

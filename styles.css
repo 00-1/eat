@@ -318,6 +318,49 @@ a { color: var(--accent); }
 
 .block-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
 
+/* Dose-response curve */
+.dose {
+  margin: 14px 0 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.dr-shape-line { margin: 2px 0 10px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.dr-shape {
+  font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+  border: 1px solid transparent; white-space: nowrap;
+}
+.dr-shape-note { font-size: 0.84rem; color: var(--ink-soft); }
+.dr-benefit  { background: var(--pos-bg); color: var(--pos); border-color: #c7e8d4; }
+.dr-harm     { background: var(--neg-bg); color: var(--neg); border-color: #f3cfce; }
+.dr-mixed    { background: #fdf1dd; color: #8a5a12; border-color: #f0dcb4; }
+.dr-neutral  { background: #eef0ee; color: #5a655e; border-color: #dfe3df; }
+.dr-svg { display: block; width: 100%; max-width: 360px; height: auto; margin: 4px 0 6px; }
+.dr-base { stroke: var(--ink-soft); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.6; }
+.dr-normal { fill: var(--ink); opacity: 0.05; }
+.dr-line { fill: none; stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+.dr-line.dr-benefit { stroke: var(--pos); }
+.dr-line.dr-harm { stroke: var(--neg); }
+.dr-line.dr-mixed { stroke: #c8881f; }
+.dr-line.dr-neutral { stroke: var(--ink-soft); }
+.dr-ci { stroke: var(--ink-soft); stroke-width: 1.2; opacity: 0.55; }
+.dr-pt { fill: var(--ink-soft); }
+.dr-pt-benefit { fill: var(--pos); }
+.dr-pt-harm { fill: var(--neg); }
+.dr-axis { fill: var(--ink-soft); font-size: 10px; }
+.dr-note { margin: 6px 0 0; font-size: 0.83rem; color: var(--ink-soft); }
+.dr-src { margin: 8px 0 0; font-size: 0.78rem; color: var(--ink-soft); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dr-src-out { font-weight: 600; color: var(--ink); }
+.dr-chip {
+  font-size: 0.72rem; font-weight: 600; padding: 3px 9px; border-radius: 999px;
+  border: 1px solid transparent; white-space: nowrap;
+}
+.dr-chip.dr-benefit { background: var(--pos-bg); color: var(--pos); border-color: #c7e8d4; }
+.dr-chip.dr-harm { background: var(--neg-bg); color: var(--neg); border-color: #f3cfce; }
+.dr-chip.dr-mixed { background: #fdf1dd; color: #8a5a12; border-color: #f0dcb4; }
+.dr-chip.dr-neutral { background: #eef0ee; color: #5a655e; border-color: #dfe3df; }
+
 /* Evidence-basis chip */
 .basis {
   font-size: 0.72rem;

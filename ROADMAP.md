@@ -74,6 +74,25 @@ together.
       "Trials & mechanism only" isolates causal backing. Covered by unit + data
       tests and a browser smoke check.
 
+## Dose-response curves  ⟶ *display layer done (v0.14); data + per-outcome to extend*
+
+A single RR is one point on a curve; the shape is the rest of the story. Done:
+- [x] `doseCurve` data (points + unit + normalRange + source) on assessments;
+      zero-dependency inline-SVG renderer + collapsed-row shape chip; placed
+      prominently (right under the verdict rationale).
+- [x] Shape label **derived** from the points by `Scoring.classifyDoseShape()`
+      (monotonic-harm "dose makes the poison" / plateau-benefit "diminishing
+      returns" / j-u-curve / flat / …), unit-tested + a data test that the recorded
+      shape matches the derived one. Display-only — `pooledRR` and tiers unchanged.
+- [x] Seeded 5 sourced curves (nuts, whole grains, processed meat, sugary drinks,
+      alcohol-cancer), flagged `verified: false`.
+- [ ] **Populate more curves during the grounding pass** — grab dose-response
+      points whenever verifying a figure (cheap once the paper is open).
+- [ ] **Per-outcome curves**: alcohol's cancer curve (monotonic harm) and mortality
+      curve (contested J) are different shapes — needs the per-outcome model so each
+      gets its own line instead of one curve + a caveat note.
+- [ ] Mark a curve `verified: true` once its points are source-checked.
+
 ## Multi-conclusion model (self-verdict + food-group verdicts; components as context)  ⟶ *queued (next major design)*
 
 From the food-by-food walkthrough (tomatoes/cocoa). A single verdict per row is

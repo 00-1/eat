@@ -75,6 +75,81 @@
     return "<span class='mag mag-" + mag + "' title='How much it moves the needle'>" + escapeHtml(Scoring.MAGNITUDE_LABEL[mag]) + "</span>";
   }
 
+  // ---- Dose-response curve (a single RR is one point on this line) ----
+  // Small zero-dependency inline SVG. Green where the curve sits below the
+  // no-effect line (benefit), red where above (harm); the normal-intake range is
+  // shaded so you can see where typical consumers actually sit on the curve.
+  function buildDoseSvg(curve) {
+    const pts = (curve.points || [])
+      .filter((p) => p && typeof p.x === "number" && typeof p.rr === "number" && p.rr > 0)
+      .slice()
+      .sort((a, b) => a.x - b.x);
+    if (pts.length < 2) return "";
+    const W = 320, H = 150, padL = 38, padR = 14, padT = 14, padB = 30;
+    const xs = pts.map((p) => p.x);
+    const rrs = [1.0];
+    pts.forEach((p) => { rrs.push(p.rr); if (typeof p.lo === "number") rrs.push(p.lo); if (typeof p.hi === "number") rrs.push(p.hi); });
+    const xMin = Math.min(...xs), xMax = Math.max(...xs);
+    let yMin = Math.min(...rrs), yMax = Math.max(...rrs);
+    const yPad = (yMax - yMin) * 0.12 || 0.05; yMin -= yPad; yMax += yPad;
+    const X = (x) => padL + (xMax > xMin ? (x - xMin) / (xMax - xMin) : 0) * (W - padL - padR);
+    const Y = (r) => padT + (yMax > yMin ? (yMax - r) / (yMax - yMin) : 0.5) * (H - padT - padB);
+    const dir = (Scoring.DOSE_SHAPE[curve.shape] || {}).dir || "neutral";
+    const parts = [];
+    if (Array.isArray(curve.normalRange)) {
+      const nx0 = X(Math.max(curve.normalRange[0], xMin));
+      const nx1 = X(Math.min(curve.normalRange[1], xMax));
+      parts.push("<rect class='dr-normal' x='" + nx0.toFixed(1) + "' y='" + padT + "' width='" + Math.max(0, nx1 - nx0).toFixed(1) + "' height='" + (H - padT - padB) + "'/>");
+    }
+    const y1 = Y(1.0);
+    parts.push("<line class='dr-base' x1='" + padL + "' y1='" + y1.toFixed(1) + "' x2='" + (W - padR) + "' y2='" + y1.toFixed(1) + "'/>");
+    parts.push("<text class='dr-axis' x='" + (padL - 5) + "' y='" + (y1 + 3).toFixed(1) + "' text-anchor='end'>1.0</text>");
+    const d = pts.map((p, i) => (i ? "L" : "M") + X(p.x).toFixed(1) + " " + Y(p.rr).toFixed(1)).join(" ");
+    parts.push("<path class='dr-line dr-" + dir + "' d='" + d + "'/>");
+    pts.forEach((p) => {
+      if (typeof p.lo === "number" && typeof p.hi === "number") {
+        parts.push("<line class='dr-ci' x1='" + X(p.x).toFixed(1) + "' y1='" + Y(p.lo).toFixed(1) + "' x2='" + X(p.x).toFixed(1) + "' y2='" + Y(p.hi).toFixed(1) + "'/>");
+      }
+      const cls = p.rr > 1.001 ? "dr-pt dr-pt-harm" : p.rr < 0.999 ? "dr-pt dr-pt-benefit" : "dr-pt";
+      parts.push("<circle class='" + cls + "' cx='" + X(p.x).toFixed(1) + "' cy='" + Y(p.rr).toFixed(1) + "' r='3.2'/>");
+    });
+    parts.push("<text class='dr-axis' x='" + padL + "' y='" + (H - 9) + "' text-anchor='start'>" + escapeHtml(String(xMin)) + "</text>");
+    parts.push("<text class='dr-axis' x='" + (W - padR) + "' y='" + (H - 9) + "' text-anchor='end'>" + escapeHtml(String(xMax) + " " + (curve.unit || "")) + "</text>");
+    parts.push("<text class='dr-axis dr-axis-y' x='" + (padL - 5) + "' y='" + (padT + 6) + "' text-anchor='end'>RR</text>");
+    return "<svg class='dr-svg' viewBox='0 0 " + W + " " + H + "' role='img' aria-label='Dose-response curve for " + escapeHtml(curve.outcome || "") + "'>" + parts.join("") + "</svg>";
+  }
+
+  function doseResponseHtml(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.doseCurve || typeof Scoring === "undefined" || !Scoring.DOSE_SHAPE) return "";
+    const c = a.doseCurve;
+    const svg = buildDoseSvg(c);
+    if (!svg) return "";
+    const meta = Scoring.DOSE_SHAPE[c.shape] || {};
+    const prov = c.verified
+      ? "<span class='prov prov-yes' title='Curve checked against the source'>✓ source-verified</span>"
+      : "<span class='prov prov-no' title='Representative published figures, not yet individually source-checked'>estimated</span>";
+    return (
+      "<div class='dose'>" +
+        "<h4 class='block-h'>Dose-response <span class='block-sub'>— a single number is one point on this curve</span></h4>" +
+        "<p class='dr-shape-line'><span class='dr-shape dr-" + (meta.dir || "neutral") + "'>" + escapeHtml(meta.label || c.shape) + "</span> " +
+          "<span class='dr-shape-note'>" + escapeHtml(meta.note || "") + "</span></p>" +
+        svg +
+        (c.note ? "<p class='dr-note'>" + escapeHtml(c.note) + "</p>" : "") +
+        "<p class='dr-src'><span class='dr-src-out'>" + escapeHtml(c.outcome || "") + "</span>" +
+          (c.source ? " · " + escapeHtml(c.source.cite) : "") + " " + prov + "</p>" +
+      "</div>"
+    );
+  }
+
+  // Compact shape chip for the collapsed card meta row (only when a curve exists).
+  function doseChip(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.doseCurve || typeof Scoring === "undefined" || !Scoring.DOSE_SHAPE) return "";
+    const meta = Scoring.DOSE_SHAPE[a.doseCurve.shape] || {};
+    return "<span class='dr-chip dr-" + (meta.dir || "neutral") + "' title='Dose-response: " + escapeHtml(meta.note || "") + "'>↗ " + escapeHtml(meta.label || a.doseCurve.shape) + "</span>";
+  }
+
   // Scores are COMPUTED from recorded evidence facts by the shared engine —
   // never read from the data file. (scoring.js exposes window.Scoring.)
   function assessmentHtml(food) {
@@ -309,6 +384,7 @@
             "<div class='card-meta'>" +
               (function () { var t = certaintyOf(food); return "<span class='tier " + t + "'>" + CERTAINTY_LABEL[t] + "</span>"; })() +
               magnitudeChip(food) +
+              doseChip(food) +
               basisChip(food) +
               verifiedChip(food) +
               "<span class='outcomes'>" + escapeHtml((food.outcomes || []).join(" · ")) + "</span>" +
@@ -318,6 +394,7 @@
           "<div class='card-detail'>" +
             "<h4 class='block-h'>Why this verdict</h4>" +
             "<p class='rationale'>" + escapeHtml(food.rationale) + "</p>" +
+            doseResponseHtml(food) +
             assessmentHtml(food) +
             studiesHtml(food) +
             considerationsHtml(food) +

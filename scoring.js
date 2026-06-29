@@ -276,6 +276,55 @@
     minimal: "Minimal effect",
   };
 
+  // Dose-response SHAPE vocabulary — plain-language labels for how risk changes
+  // across the range of normal intake. A single RR is one point on this curve; the
+  // shape is the rest of the story (the dose makes the poison; diminishing returns;
+  // a sweet spot; a true null). `dir` drives the colour of the rendered curve.
+  var DOSE_SHAPE = {
+    "monotonic-harm": { label: "Dose makes the poison", dir: "harm",
+      note: "Risk rises across the whole range — no safe threshold; more is worse." },
+    "monotonic-benefit": { label: "More is better (so far)", dir: "benefit",
+      note: "Risk keeps falling across the studied range — no plateau seen yet." },
+    "plateau-benefit": { label: "Diminishing returns", dir: "benefit",
+      note: "Benefit rises then flattens — past the plateau, extra intake adds little." },
+    "plateau-harm": { label: "Plateau (harm)", dir: "harm",
+      note: "Harm rises then flattens at higher intake." },
+    "j-u-curve": { label: "J / U-shaped", dir: "mixed",
+      note: "A sweet spot — lowest risk at moderate intake, higher at the extremes." },
+    "flat": { label: "No dose-response", dir: "neutral",
+      note: "Risk barely moves across the range — consistent with a true null." },
+  };
+
+  // Classify the curve's shape from its recorded points — DERIVED, not hand-set, so
+  // a curve can't be mislabelled. Returns a DOSE_SHAPE key, or null when there
+  // aren't enough points to judge (need >=3 spanning a range). Uses |ln(RR)| with a
+  // dead-zone so trivial wiggles read as flat rather than as a direction change.
+  function classifyDoseShape(points) {
+    if (!Array.isArray(points)) return null;
+    var pts = points
+      .filter(function (p) { return p && typeof p.x === "number" && typeof p.rr === "number" && p.rr > 0; })
+      .slice()
+      .sort(function (a, b) { return a.x - b.x; });
+    if (pts.length < 3) return null;
+    var DEAD = 0.04; // ~4% change in RR before a segment counts as moving
+    var dirs = [];
+    for (var i = 1; i < pts.length; i++) {
+      var d = Math.log(pts[i].rr) - Math.log(pts[i - 1].rr);
+      dirs.push(Math.abs(d) < DEAD ? 0 : d < 0 ? -1 : 1);
+    }
+    var anyDown = dirs.indexOf(-1) !== -1;
+    var anyUp = dirs.indexOf(1) !== -1;
+    if (!anyDown && !anyUp) return "flat";
+    var nz = dirs.filter(function (d) { return d !== 0; });
+    var changes = 0;
+    for (var j = 1; j < nz.length; j++) if (nz[j] !== nz[j - 1]) changes++;
+    if (changes >= 1) return "j-u-curve"; // a genuine reversal of direction
+    var last = dirs[dirs.length - 1];
+    if (anyDown && !anyUp) return last === 0 ? "plateau-benefit" : "monotonic-benefit";
+    if (anyUp && !anyDown) return last === 0 ? "plateau-harm" : "monotonic-harm";
+    return null;
+  }
+
   var api = {
     MAX: MAX,
     THRESHOLDS: THRESHOLDS,
@@ -294,6 +343,8 @@
     BASIS_NOTE: BASIS_NOTE,
     MAGNITUDE_ORDER: MAGNITUDE_ORDER,
     MAGNITUDE_LABEL: MAGNITUDE_LABEL,
+    DOSE_SHAPE: DOSE_SHAPE,
+    classifyDoseShape: classifyDoseShape,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

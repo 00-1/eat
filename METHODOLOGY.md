@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.13 — living document.** This file is the canonical description of how
+**Version 0.14 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -357,6 +357,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.14 | 2026-06-29 | Added **dose-response curves** as a prominent per-food feature. A single RR is one point on a curve; where a published dose-response exists we now record its points (`ASSESSMENTS[id].doseCurve`) and render a small zero-dependency SVG plus a plain-language **shape label** — *Dose makes the poison* (monotonic harm), *Diminishing returns* (plateau benefit), *J/U-shaped*, *No dose-response*, etc. The shape is **derived from the points** by `Scoring.classifyDoseShape()` (reproducible, tested), not hand-assigned. Seeded five sourced curves (nuts, whole grains, processed meat, sugary drinks, alcohol-cancer), flagged estimated pending the grounding pass. Display-only — the scored `pooledRR` and all tiers are unchanged. Renaming context: "Yogurt & fermented dairy" → "Yogurt" (cheese, also fermented dairy, is a separate item — the old name double-counted it). |
 | 0.13 | 2026-06-29 | **Conclusions are now derived live from the data, not stored.** The certainty tier on every card/highlight/sort is recomputed from the recorded `evidence` facts at render time via `Scoring.assess()` (`data.js`'s `certainty` is kept only as a tested regression snapshot). Added an **Explore** panel: pick an alternate evidence rule (e.g. *Observational only* — ignore trial/mechanism corroboration; *Trials & mechanism only*) and see a **diff** of exactly which verdicts shift, leaving the published verdicts unchanged. This makes concrete that everything is reproducibly generated from one dataset — e.g. observational-only weakens trans fat from High. Rules live in `Scoring.PRESETS`; covered by tests. |
 | 0.12 | 2026-06-29 | Added 6 research-grounded foods (26 → 32): green tea (+), white rice (− for diabetes), soy (+), cruciferous veg (+), tomatoes (neutral — biomarker-weak), dark chocolate/cocoa (neutral — COSMOS RCT). Scored under the current rules; category steelman claims auto-attach via tags. Foods the research couldn't ground (berries-specific, garlic, shellfish, fried food, salty snacks, sweets) deliberately not added. All facts carry the "estimated, not source-verified" provenance flag. |
 | 0.11 | 2026-06-29 | Fixed a structural conflation (audit follow-up): **neutral verdicts are now scored on the six evidence-quality dimensions (/12)**, not penalised by effect-size/dose-response (which a null can't have) — so a well-established neutral can reach High, while thin/contested ones stay Very-low. Rescored neutrals: butter Low→Moderate; red meat, potatoes, artificial sweeteners Very-low→Low (verdicts unchanged; coconut oil correctly stays Very-low). |

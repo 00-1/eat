@@ -85,6 +85,30 @@ test("no orphan assessments (every assessment maps to a food)", () => {
   }
 });
 
+test("dose-response curves are well-formed and their shape label is derived, not invented", () => {
+  for (const f of FOODS) {
+    const c = ASSESSMENTS[f.id].doseCurve;
+    if (!c) continue;
+    assert.ok(Array.isArray(c.points) && c.points.length >= 2, `${f.id}: doseCurve needs >=2 points`);
+    for (const p of c.points) {
+      assert.ok(typeof p.x === "number", `${f.id}: curve point missing numeric x`);
+      assert.ok(typeof p.rr === "number" && p.rr > 0, `${f.id}: curve point bad rr`);
+    }
+    assert.ok(S.DOSE_SHAPE[c.shape], `${f.id}: unknown dose shape "${c.shape}"`);
+    assert.ok(c.outcome && c.outcome.length, `${f.id}: curve missing outcome`);
+    assert.ok(c.source && c.source.cite, `${f.id}: curve missing source`);
+    // The recorded shape must match what the engine derives from the points
+    // (reproducibility) wherever there are enough points to judge.
+    const derived = S.classifyDoseShape(c.points);
+    if (derived) {
+      assert.equal(c.shape, derived, `${f.id}: recorded shape "${c.shape}" != derived "${derived}"`);
+    }
+    if (c.verified) {
+      assert.ok(/PMID:\s*\d+|10\.\d{4,}\//i.test(c.source.id || ""), `${f.id}: verified curve needs PMID/DOI`);
+    }
+  }
+});
+
 test("PROVENANCE: a source-verified food must cite its score-driving figures", () => {
   // The grounding pass flips `verified: true` only once the numeric facts that
   // drive the score (pooledRR, participants) are pinned to a real citation with a
