@@ -34,8 +34,9 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
 - [x] **G2** (dup) — done (line 46).
 
 **Provenance (the central concern) — make data as inspectable as the method:**
-- [ ] **A1/A3** — add a `source` (PMID/DOI/figure) per score-driving fact incl.
-      ordinal calls; test that score-driving facts are sourced.
+- [~] **A1/A3** — framework DONE: per-food `verified` flag + `sources` map (figure +
+      PMID/DOI per score-driving fact), enforced by a test; surfaced via the chip and
+      banner. 9/31 foods sourced so far — the rest fill in as grounding proceeds.
 - [x] **A2/E1** — provenance is now surfaced: a persistent honest "Data status"
       banner ("N of 26 source-verified … treat verdicts as provisional") + a
       per-food `verified` flag rendered as a "facts estimated / ✓ source-verified"
@@ -43,9 +44,9 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
 - [x] **G2** — softened "objective/pure/we didn't type these" language to
       "deterministic given the recorded judgements" across scoring.js/METHODOLOGY/
       ADDING-FOODS/the Approach tab.
-- [ ] **B5/B6/G3** — record RRs that match a real reported figure for the stated
-      outcome (flag extrapolations like trans-fat 1.35); replace placeholder
-      citations; store PMIDs/DOIs.
+- [~] **B5/B6/G3** — done for the 9 verified foods (RRs matched to real reported
+      figures, PMIDs/DOIs stored, extrapolations corrected — e.g. trans-fat 1.35→1.42).
+      Remaining foods fill in as grounding proceeds.
 
 **Coverage:**
 - [~] **D1** — limitation note DONE (v0.24): outcome-selection bias stated in
@@ -295,10 +296,10 @@ so this is a sustained pipeline, not a one-shot. Plan:
 
 Original sub-tasks:
 
-- [ ] A written, repeatable **"add a food"** procedure: the exact evidence facts
-      to gather, where to source them, how to write the rationale/studies/
-      exceptions/steelmanning — so anyone (or a research agent) can add a food and
-      get a consistent result. (Partly in README "Adding or editing foods".)
+- [x] A written, repeatable **"add a food"** procedure — `ADDING-FOODS.md`, updated
+      (v0.24) to the full current schema: evidence facts, directionality floor,
+      provenance (`verified`/`sources`), `doseCurve`, `components`, group membership,
+      and the test contract.
 - [ ] Consider a batch research workflow that, given a food name, returns the
       structured `evidence` + `exceptions` + draft studies for human review.
 - [ ] Decide list scope/priorities (most-eaten foods first? most-asked-about?).

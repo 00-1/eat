@@ -37,9 +37,30 @@ Record these atomic facts (see `scoring.js` for the exact field meanings):
 | `funding` | independent / mixed / industry / unknown. |
 | `pubBias` | tested-clean / suspected / untested (did the review test for it?). |
 | `confoundingRisk` | low / moderate / high — observational defaults to moderate; high for heavy-confounding cases (alcohol, reverse causation); low only with trial/mechanistic corroboration. |
+| `directionallyConsistent` | *(optional, only consulted when `heterogeneity: high`)* true if cohorts disagree on magnitude but agree on **direction** — earns partial consistency credit instead of 0. |
 
 Also write `effectEstimate`: a one-line plain-language summary of the conservative
 direction (stating the intake).
+
+**Directionality floor.** A verdict is `positive`/`negative` only if `ciExcludesNull`
+is true **and** the effect clears a trivially-small floor (|ln RR| > 0.03). A
+significant-but-tiny association (e.g. butter, RR 1.0134) stays neutral by rule —
+record the honest `ciExcludesNull: true` and the engine keeps it neutral.
+
+## Step 1b — Provenance (`verified` + `sources`)
+
+Until a fact is checked against the actual paper, leave the food **unverified** (the
+app shows a "facts estimated" chip and the data-status banner counts it). Once the
+score-driving figures are confirmed, set `verified: true` and add a `sources` map
+pinning each to a citable figure with a **PMID or DOI** (a test enforces this):
+
+```js
+verified: true,
+sources: {
+  pooledRR:     { figure: "RR 0.78 (0.72–0.84) per 28 g/day", cite: "Aune 2016 BMC Medicine", id: "PMID:27916000" },
+  participants: { figure: "819,448 across 15 cohorts",        cite: "Aune 2016 BMC Medicine", id: "PMID:27916000" },
+}
+```
 
 ## Step 2 — Let the engine compute the verdict's metadata
 
@@ -59,6 +80,26 @@ guardrail (mechanism corroborates, never overrides observation), and set
 - `studies` — the real citations behind the verdict (first author, year, journal;
   faithful one-line finding; a PubMed `search` string).
 - `lastReviewed`, and a `revisions` entry whenever a later change moves a verdict.
+
+**Optional richer fields:**
+- `doseCurve` — where a published dose-response exists, record its points
+  `[{x, rr, lo?, hi?}]` + `unit`, `normalRange`, `outcome`, `shape`, `source`. The
+  `shape` is *derived* from the points by `Scoring.classifyDoseShape()` (a test
+  asserts your recorded shape matches), so the curve can't be mislabelled. Renders
+  as a small SVG + plain-language label ("Dose makes the poison", "Diminishing
+  returns", "Safe up to a point", …).
+- `components` — constituent "worries" (saturated fat, sugar) the food's **outcome
+  adjudicates**: `[{name, worry, resolution}]`. A component is context, it **never
+  sets the verdict** (direction of inference is whole-food → verdict, never
+  component → food).
+
+## Step 3b — Food-group membership (`groups.js`)
+
+If the food belongs to an evidence-bearing **group of whole foods** (vegetables,
+fermented dairy, …), add it to `FOOD_GROUPS[id]`. The group is itself a scored
+entity (its own `evidence` → engine → verdict) and renders as an "as part of a food
+group" conclusion + a collapsed-row chip. Groups are classes of *edible whole
+foods* — **never** nutrient/component abstractions (no "fibre" group).
 
 ## Step 4 — Run the fixed exception checklist (`exceptions.js`)
 
@@ -83,9 +124,11 @@ npm test          # data integrity + the central invariant (stored == computed)
 ```
 
 The tests check: required fields and enums, unique id, ≥1 study, an assessment
-with `intakeBasis`, an exceptions entry, computed tier == stored `certainty`, and
-that directional verdicts have `ciExcludesNull: true`. Open `index.html` and
-confirm the card renders.
+with `intakeBasis`, an exceptions entry, computed tier == stored `certainty`,
+directionality consistent with the verdict (`Scoring.isDirectional`), pooledRR sign
+matches the effect, verified foods carry sourced figures (PMID/DOI), dose-curve
+shape matches the classifier, and group invariants. Open `index.html` and confirm
+the card renders.
 
 ## Automation (the scalable layer)
 
@@ -97,8 +140,9 @@ this is a planned next step (see `ROADMAP.md`).
 ## Worked example
 
 `tree-nuts`: evidence `pooledRR 0.78` at `~28 g/day vs none`, `participants
-819000`, `heterogeneity low`, `outcomeType hard`, `doseResponse graded`, `rctLevel
-pattern` (PREDIMED), `pubBias tested-clean`, `confoundingRisk moderate` → engine
-computes 14/16 → **high certainty**, **large** magnitude, **observation-led** →
-**Gold standard**. We didn't hand-set any of those four conclusions — they're
-computed from the recorded facts (which themselves still need source-verifying).
+819448`, `heterogeneity moderate` (I²=66%), `outcomeType hard`, `doseResponse
+graded`, `rctLevel pattern` (PREDIMED), `pubBias tested-clean`, `confoundingRisk
+moderate` → engine computes 13/16 → **high certainty**, **large** magnitude,
+**observation-led** → **Gold standard**. Source-verified against Aune 2016 BMC
+Medicine (`verified: true`). We didn't hand-set any of those four conclusions —
+they're computed from the recorded facts.
