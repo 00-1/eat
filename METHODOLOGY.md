@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.5 — living document.** This file is the canonical description of how
+**Version 0.6 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -153,6 +153,31 @@ Two worked cases:
 Contrast trans fat, where the surrogate link **is** validated (LDL↑ *and* HDL↓,
 with a robust LDL→CVD link) and cohorts agree — so mechanism legitimately lifts it.
 
+### 4c. Impact magnitude — how much it moves the needle
+
+Direction and certainty don't say how *big* the effect is. A verdict can be
+high-certainty but small (whole fruit: fairly sure, modest per-serving effect) or
+high-certainty and large (sugary drinks). So we also derive a **magnitude** tier —
+**large / moderate / small / minimal** — from the recorded relative effect
+(`pooledRR`), bumped one tier when the food acts on **all-cause mortality** (the
+broadest outcome). A true null moves nothing → minimal.
+
+> **Limitation.** This is a *relative-effect* proxy, not absolute population
+> burden. It under-rates harms whose per-unit relative risk is modest even though
+> their real-world impact is large — trans fat is the clearest example (per-2%-energy
+> RR ≈ 1.23 → moderate magnitude), which is why it doesn't make the "bin fodder"
+> list despite being a settled harm. Capturing absolute burden would need
+> GBD-style attributable fractions — a candidate future input.
+
+**Standout shortlists** combine certainty and magnitude:
+
+- **★ Gold standard** — `effect: positive`, `certainty: high`, `magnitude: large`.
+  The surest, highest-impact things to add (currently nuts, whole grains, fibre).
+- **✕ Bin fodder** — `effect: negative`, `certainty: high`, `magnitude: large`.
+  The surest, highest-impact things to drop (currently processed meat, sugary drinks).
+
+Both lists are *computed*, so they update automatically as facts/rules change.
+
 ## 5. The direction label (Burden-of-Proof logic)
 
 Direction comes from the **sign of the conservatively-estimated association**, the
@@ -279,6 +304,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.6 | 2026-06-29 | Added a computed **impact-magnitude** axis (large/moderate/small/minimal) separate from certainty, derived from the relative effect with an all-cause-mortality bump; surfaced as a chip and used to compute the **Gold standard** and **Bin fodder** shortlists. Documented its relative-vs-absolute limitation. Renamed per-food counter-arguments to **Steelmanning attempts**. |
 | 0.5 | 2026-06-29 | Added a **validated causal pathway** tier to experimental evidence (scores 2), so mechanism-and-trial-led harms aren't undersold — trans fat → High (basis: convergent). Added a derived **evidence-basis** label (convergent / observation-led / mechanism-led / limited) surfaced on each card, and codified the **guardrail** that mechanism corroborates but never overrides observed outcomes (with tests). |
 | 0.4 | 2026-06-29 | Made scoring **deterministic and reproducible**: scores are now COMPUTED from recorded objective evidence facts by a pure engine (`scoring.js`), not hand-assigned. Added unit tests for every scoring rule and a data test asserting computed tier == stored certainty. Recomputation shifted eight certainty tiers (verdict directions unchanged): tree-nuts → High; legumes, whole-fruit, olive-oil, milk → Low; trans-fat → Moderate; potatoes, coconut-oil → Very low. |
 | 0.3 | 2026-06-28 | Made certainty **reproducible**: added the explicit 8-dimension, 0–2 scoring rubric (max 16) with documented tier cut-points, and a per-food `ASSESSMENTS` record (sub-scores + conservative effect estimate) surfaced on each card. Re-derived certainty from the scores (poultry and cheese moved Moderate → Low; verdict directions unchanged). Challenges are handled by the maintainer directly (no public submission form). |

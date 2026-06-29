@@ -134,8 +134,31 @@
       : "very-low";
   }
 
-  // Convenience: evidence -> { scores, total, tier, basis }.
-  function assess(ev) {
+  // Impact magnitude — HOW MUCH the food moves the needle (separate from how
+  // SURE we are). Derived from the recorded relative effect (pooledRR), with a
+  // one-tier bump when the food acts on all-cause mortality (the broadest, most
+  // consequential outcome). This is a relative-effect proxy; it does not capture
+  // absolute population burden (which would need GBD-style attributable
+  // fractions) — a documented limitation.
+  //   |ln(RR)| >= 0.22 -> large   (RR <= ~0.80 or >= ~1.25)
+  //            >= 0.10 -> moderate (RR <= ~0.90 or >= ~1.11)
+  //            >  0.03 -> small
+  //   else             -> minimal (a true null moves nothing)
+  var MAGNITUDE_ORDER = { minimal: 0, small: 1, moderate: 2, large: 3 };
+  function classifyMagnitude(ev, outcomes) {
+    var rr = ev && ev.pooledRR;
+    if (typeof rr !== "number" || rr <= 0) return "minimal";
+    var m = Math.abs(Math.log(rr));
+    var tier = m >= 0.22 ? 3 : m >= 0.1 ? 2 : m > 0.03 ? 1 : 0;
+    var broad =
+      Array.isArray(outcomes) &&
+      outcomes.some(function (o) { return /all-cause mortality/i.test(o); });
+    if (broad && tier > 0 && tier < 3) tier += 1;
+    return ["minimal", "small", "moderate", "large"][tier];
+  }
+
+  // Convenience: evidence -> { scores, total, tier, basis, magnitude? }.
+  function assess(ev, outcomes) {
     var scores = computeScores(ev);
     var total = totalScore(scores);
     return {
@@ -143,6 +166,7 @@
       total: total,
       tier: tierFromTotal(total),
       basis: classifyBasis(scores),
+      magnitude: classifyMagnitude(ev, outcomes),
     };
   }
 
@@ -159,6 +183,13 @@
     limited: "Neither cohort nor causal evidence is strong — held cautiously.",
   };
 
+  var MAGNITUDE_LABEL = {
+    large: "Large effect",
+    moderate: "Moderate effect",
+    small: "Small effect",
+    minimal: "Minimal effect",
+  };
+
   var api = {
     MAX: MAX,
     THRESHOLDS: THRESHOLDS,
@@ -166,9 +197,12 @@
     totalScore: totalScore,
     tierFromTotal: tierFromTotal,
     classifyBasis: classifyBasis,
+    classifyMagnitude: classifyMagnitude,
     assess: assess,
     BASIS_LABEL: BASIS_LABEL,
     BASIS_NOTE: BASIS_NOTE,
+    MAGNITUDE_ORDER: MAGNITUDE_ORDER,
+    MAGNITUDE_LABEL: MAGNITUDE_LABEL,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

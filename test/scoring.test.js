@@ -167,6 +167,19 @@ test("GUARDRAIL: a hard-to-no-observation poison can still be certain via a path
   assert.equal(S.assess(poison).basis, "mechanism-led");
 });
 
+test("magnitude reflects relative effect size, with an all-cause-mortality bump", () => {
+  // direction-agnostic: protective and harmful of equal |ln RR| score the same
+  assert.equal(S.classifyMagnitude({ pooledRR: 0.64 }, []), "large");
+  assert.equal(S.classifyMagnitude({ pooledRR: 1.30 }, []), "large");
+  assert.equal(S.classifyMagnitude({ pooledRR: 0.85 }, []), "moderate");
+  assert.equal(S.classifyMagnitude({ pooledRR: 0.97 }, []), "small");
+  assert.equal(S.classifyMagnitude({ pooledRR: 1.0 }, []), "minimal");
+  // acting on all-cause mortality bumps a non-null effect up one tier (capped)
+  assert.equal(S.classifyMagnitude({ pooledRR: 0.86 }, ["Heart disease"]), "moderate");
+  assert.equal(S.classifyMagnitude({ pooledRR: 0.86 }, ["All-cause mortality"]), "large");
+  assert.equal(S.classifyMagnitude({ pooledRR: 1.0 }, ["All-cause mortality"]), "minimal"); // null isn't bumped
+});
+
 test("GUARDRAIL: mechanism does not override good observational outcome data", () => {
   // The "carbs spike sugar → carbs bad" trap: a food with strong observational
   // BENEFIT and an adverse biomarker stays observation-led and benefits stand —

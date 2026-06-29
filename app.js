@@ -54,6 +54,18 @@
     );
   }
 
+  // How much the food moves the needle (direction-agnostic magnitude).
+  function magnitudeOf(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.evidence || typeof Scoring === "undefined") return null;
+    return Scoring.classifyMagnitude(a.evidence, food.outcomes);
+  }
+  function magnitudeChip(food) {
+    const mag = magnitudeOf(food);
+    if (!mag) return "";
+    return "<span class='mag mag-" + mag + "' title='How much it moves the needle'>" + escapeHtml(Scoring.MAGNITUDE_LABEL[mag]) + "</span>";
+  }
+
   // Scores are COMPUTED from recorded evidence facts by the shared engine —
   // never read from the data file. (scoring.js exposes window.Scoring.)
   function assessmentHtml(food) {
@@ -219,7 +231,7 @@
       })
       .join("");
     return (
-      "<h4 class='block-h'>Popular counter-arguments</h4>" +
+      "<h4 class='block-h'>Steelmanning attempts <span class='block-sub'>— popular counter-arguments, put in their strongest form</span></h4>" +
       "<ul class='counters'>" + items + "</ul>"
     );
   }
@@ -237,7 +249,7 @@
   function cardHtml(food) {
     const eff = food.effect;
     return (
-      "<li class='card " + eff + "'>" +
+      "<li class='card " + eff + "' data-food-card='" + escapeHtml(food.id) + "'>" +
         "<details>" +
           "<summary>" +
             "<div class='card-top'>" +
@@ -250,6 +262,7 @@
             "<p class='summary'>" + escapeHtml(food.summary) + "</p>" +
             "<div class='card-meta'>" +
               "<span class='tier " + food.certainty + "'>" + CERTAINTY_LABEL[food.certainty] + "</span>" +
+              magnitudeChip(food) +
               basisChip(food) +
               "<span class='outcomes'>" + escapeHtml((food.outcomes || []).join(" · ")) + "</span>" +
               "<span class='expand-hint'>Evidence ▾</span>" +
@@ -285,6 +298,51 @@
       filtered.length === total
         ? "Showing all " + total + " foods"
         : "Showing " + filtered.length + " of " + total + " foods";
+  }
+
+  // ---- Highlights: the sure, high-impact bets in each direction ----
+  function renderHighlights() {
+    const el = document.getElementById("highlights");
+    if (!el) return;
+    const qualifies = function (f, dir) {
+      return f.effect === dir && f.certainty === "high" && magnitudeOf(f) === "large";
+    };
+    const gold = FOODS.filter((f) => qualifies(f, "positive"));
+    const bin = FOODS.filter((f) => qualifies(f, "negative"));
+
+    const chipList = function (foods) {
+      return foods.map((f) => "<button class='hl-chip' data-food='" + escapeHtml(f.id) + "'>" + escapeHtml(f.name) + "</button>").join("");
+    };
+
+    el.innerHTML =
+      "<div class='hl-card hl-gold'>" +
+        "<h2>★ Gold standard</h2>" +
+        "<p class='hl-sub'>High certainty, large positive effect — the surest things to add.</p>" +
+        "<div class='hl-chips'>" + (gold.length ? chipList(gold) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+      "</div>" +
+      "<div class='hl-card hl-bin'>" +
+        "<h2>✕ Bin fodder</h2>" +
+        "<p class='hl-sub'>High certainty, large negative effect — the surest things to drop.</p>" +
+        "<div class='hl-chips'>" + (bin.length ? chipList(bin) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+      "</div>";
+
+    // Clicking a highlight chip jumps to that card and opens it.
+    el.querySelectorAll(".hl-chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        const id = chip.dataset.food;
+        // clear filters so the target is visible
+        state.query = ""; state.effect = "all"; state.category = "all";
+        searchEl.value = ""; categoryEl.value = "all";
+        chips.forEach((c) => c.classList.toggle("is-active", c.dataset.effect === "all"));
+        render();
+        const card = listEl.querySelector("[data-food-card='" + id + "']");
+        if (card) {
+          const details = card.querySelector("details");
+          if (details) details.open = true;
+          card.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      });
+    });
   }
 
   // ---- View switching ----
@@ -333,5 +391,6 @@
   document.getElementById("method-ver").textContent =
     "v" + (typeof METHODOLOGY_VERSION !== "undefined" ? METHODOLOGY_VERSION : "?");
   populateCategories();
+  renderHighlights();
   render();
 })();

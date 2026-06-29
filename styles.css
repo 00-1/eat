@@ -204,6 +204,57 @@ a { color: var(--accent); }
 .tier.low       { background: #fdf3e2; color: #9a6b08; border-color: #f3e2bf; }
 .tier.very-low  { background: #eef0ee; color: #5a655e; border-color: #dfe3df; }
 
+/* Magnitude chip (how much it moves the needle) */
+.mag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.mag-large    { border-color: var(--ink); color: var(--ink); font-weight: 700; }
+.mag-moderate { color: var(--ink); }
+.mag-small    { opacity: 0.85; }
+.mag-minimal  { opacity: 0.7; }
+
+/* Highlights: gold standard / bin fodder */
+.highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 4px 0 22px;
+}
+.hl-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  background: var(--surface);
+  border-top: 4px solid var(--line);
+}
+.hl-gold { border-top-color: var(--pos); background: linear-gradient(180deg, var(--pos-bg) 0%, var(--surface) 60%); }
+.hl-bin  { border-top-color: var(--neg); background: linear-gradient(180deg, var(--neg-bg) 0%, var(--surface) 60%); }
+.hl-card h2 { margin: 0 0 4px; font-size: 1.05rem; }
+.hl-sub { margin: 0 0 12px; font-size: 0.84rem; color: var(--ink-soft); }
+.hl-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.hl-chip {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 7px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.hl-chip:hover { border-color: var(--accent); }
+.hl-empty { font-size: 0.86rem; color: var(--ink-soft); }
+
+.block-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
+
 /* Evidence-basis chip */
 .basis {
   font-size: 0.72rem;

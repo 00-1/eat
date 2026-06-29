@@ -129,14 +129,25 @@ in the filter automatically. When you change a verdict, add a `revisions` entry;
 when you change the *method* (the rules in `scoring.js`), bump
 `METHODOLOGY_VERSION` in `data.js` and update `METHODOLOGY.md`.
 
-## Counter-arguments
+## Impact magnitude & standout lists
+
+Direction and certainty don't say how *big* an effect is, so each food also gets a
+computed **magnitude** (large / moderate / small / minimal) from its recorded
+relative effect, with a bump for acting on all-cause mortality. Two computed
+shortlists fall out of it: **★ Gold standard** (positive · high certainty · large)
+and **✕ Bin fodder** (negative · high certainty · large), shown at the top of the
+Foods view. (Magnitude is a *relative*-effect proxy, not absolute burden — see
+`METHODOLOGY.md`.)
+
+## Steelmanning attempts
 
 Each card surfaces **popular, real, attributed** counter-arguments to its verdict
-(`counter-arguments.js`), each weighed honestly with a stance: **holds** (our
-verdict survives — and why the argument fails under our approach), **partial**
-(partly right / matches our stated uncertainty), or **valid** (a genuine
-limitation we concede). The aim is to pressure-test the model against positions
-people actually hold — not strawmen — so attributions must name real sources.
+(`counter-arguments.js`), put in their strongest form and weighed honestly with a
+stance: **holds** (our verdict survives — and why the argument fails under our
+approach), **partial** (partly right / matches our stated uncertainty), or
+**valid** (a genuine limitation we concede). The aim is to pressure-test the model
+against positions people actually hold — not strawmen — so attributions must name
+real sources.
 
 ## Exceptions ("who should be careful")
 
