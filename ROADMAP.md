@@ -118,6 +118,37 @@ group(s) it belongs to**, all computed by the same engine.
       own live-derived tier) + a component-context block; explore/shortlists/tests
       updated. Engine untouched.
 
+## Walkthrough-surfaced calibration items  ⟶ *queued*
+
+Three issues the food-by-food review exposed where the engine is behaving but the
+*calibration* is questionable. None is a bug; all are "highlight inadequacies."
+
+- [ ] **(a) Red-meat vs white-rice diabetes inconsistency.** White rice is
+      Negative/Moderate for type-2 diabetes (RR 1.18, CI excludes null) while
+      unprocessed red meat lands Neutral (RR 1.10, CI crosses null) — yet red
+      meat's T2D association (heme iron, repeated cohorts) is at least as
+      consistent. The whole flip rides one `ciExcludesNull` call. Actions: (1) let
+      the grounding pass pin red meat's T2D figure to a real meta-analysis; (2) this
+      is the first concrete case for **per-outcome** verdicts — red meat may be
+      "neutral overall, negative-for-diabetes." Fold into the multi-conclusion work
+      (per-outcome, not just per-group). Audit that foods sharing an outcome get
+      `ciExcludesNull` set by a consistent rule, not case-by-case.
+- [ ] **(b) All-cause-mortality magnitude bump over-fires.** The one-tier bump for
+      acting on all-cause mortality pushes moderate-RR foods (coffee RR 0.83,
+      |ln|≈0.19 → moderate) up to "large," the same tier as trans fat. Recalibrate:
+      e.g. only bump when the all-cause effect itself excludes null and is already
+      ≥ small, or make the bump a half-step, or gate it on absolute burden once
+      §3 lands. Several foods currently inherit "large" this way — list them and
+      decide per case.
+- [ ] **(c) Neutral-/12 vs directional-/16 cross-scale optics.** Butter reads
+      Moderate-certainty *neutral* (8/12) while olive oil reads Low-certainty
+      *positive* (8/16) — i.e. we look more sure butter does nothing than that olive
+      oil helps. Partly real (butter's null rests on a far larger meta-analysis),
+      partly an artifact of the two denominators. Action: check whether the /12 and
+      /16 tier cut-points are fairly comparable across a matched evidence base, and
+      either adjust or add an explicit note in METHODOLOGY that the two scales
+      aren't directly comparable.
+
 ## 1. Verify and tighten the inputs  ⟶ *in progress*
 
 The scoring engine is sound, but several recorded facts are well-established
