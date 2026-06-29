@@ -140,6 +140,21 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       "neutral overall, negative-for-diabetes." Fold into the multi-conclusion work
       (per-outcome, not just per-group). Audit that foods sharing an outcome get
       `ciExcludesNull` set by a consistent rule, not case-by-case.
+- [ ] **(a2) Alcohol may be under-called as neutral.** "Neutral" rests on
+      bias-adjusted all-cause mortality at *moderate* intake; but alcohol is an
+      IARC Group 1 carcinogen with cancer risk rising from low intake. On the cancer
+      outcome it's clearly negative. Another per-outcome case (neutral-on-mortality,
+      negative-on-cancer); for a tool about *adding* a food from zero, the headline
+      arguably should lean negative. Revisit once cancer outcomes land (D1) and the
+      per-outcome model exists.
+- [ ] **(a3) Surface WHO 2023 non-sugar-sweetener guidance** in the artificial-
+      sweeteners steelmanning — the conditional recommendation against NSS for weight
+      control is a notable authoritative lean we don't currently show. Evaluate it
+      honestly (it's conditional/low-certainty; reverse-causation critique applies).
+- [ ] **(a4) Olive oil PREDIMED `rctLevel` call.** Currently `pattern` (1 pt) →
+      Low certainty. The EVOO arm arguably tests the oil closer to `outcomes` (2 pts)
+      → would lift to Moderate. Settle during the grounding pass (note PREDIMED's
+      2018 retraction/republication).
 - [ ] **(b) All-cause-mortality magnitude bump over-fires.** The one-tier bump for
       acting on all-cause mortality pushes moderate-RR foods (coffee RR 0.83,
       |ln|≈0.19 → moderate) up to "large," the same tier as trans fat. Recalibrate:
