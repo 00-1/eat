@@ -95,7 +95,7 @@ each one is challengeable on its own, and correcting it recomputes the score.
 | Consistency (low heterogeneity) | results agree across studies | some inconsistency | studies conflict |
 | Precision | tight pooled interval | moderate | wide |
 | Directness | hard outcomes, relevant population | partial (surrogate markers) | indirect |
-| Effect size | strong (≈ RR ≤ 0.8 or ≥ 1.25) | modest | trivial / null |
+| Effect size | strong (≈ RR ≤ 0.8 or ≥ 1.25) | modest | trivial / null | — *RR taken at realistic habitual intake (see below), not per arbitrary small unit* |
 | Dose-response | clear gradient | some | none |
 | Freedom from publication / funding bias | tested / independent | possible / mixed | likely / industry-driven |
 | Experimental / mechanistic corroboration | RCT on hard outcomes, **or a validated causal pathway** (a robust surrogate→outcome link with an unambiguous, un-offset food effect) | pattern-level RCT, or a weaker/offset surrogate, or mechanism only | none |
@@ -162,19 +162,25 @@ high-certainty and large (sugary drinks). So we also derive a **magnitude** tier
 (`pooledRR`), bumped one tier when the food acts on **all-cause mortality** (the
 broadest outcome). A true null moves nothing → minimal.
 
-> **Limitation.** This is a *relative-effect* proxy, not absolute population
-> burden. It under-rates harms whose per-unit relative risk is modest even though
-> their real-world impact is large — trans fat is the clearest example (per-2%-energy
-> RR ≈ 1.23 → moderate magnitude), which is why it doesn't make the "bin fodder"
-> list despite being a settled harm. Capturing absolute burden would need
-> GBD-style attributable fractions — a candidate future input.
+> **Intake convention.** The `pooledRR` behind both effect size and magnitude is
+> the relative risk at a **realistic habitual high-vs-low intake** — what the food
+> does in the amounts people actually eat — not per arbitrary small unit. A
+> per-tiny-unit figure (e.g. trans fat "per 2% of energy") understates calorie-dense
+> foods eaten in quantity and would make junk look benign; this convention is why
+> trans fat lands at *large* magnitude (and in Bin fodder) rather than moderate.
+>
+> **Limitation.** Even on the realistic-intake basis, this is still a
+> *relative-effect* proxy, not absolute population burden. Capturing absolute
+> burden (which weights how common/severe the outcome is, not just the relative
+> risk) would need GBD-style attributable fractions — a candidate future input.
 
 **Standout shortlists** combine certainty and magnitude:
 
 - **★ Gold standard** — `effect: positive`, `certainty: high`, `magnitude: large`.
   The surest, highest-impact things to add (currently nuts, whole grains, fibre).
 - **✕ Bin fodder** — `effect: negative`, `certainty: high`, `magnitude: large`.
-  The surest, highest-impact things to drop (currently processed meat, sugary drinks).
+  The surest, highest-impact things to drop (currently processed meat, sugary
+  drinks, trans fat).
 
 Each list also shows an **"on the cusp"** tier: foods one notch short on a single
 axis (certainty-rank + magnitude-rank = 5), so you can see what would join if a
@@ -308,6 +314,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.7 | 2026-06-29 | Standardised the **effect-size / magnitude intake basis**: `pooledRR` is now the relative risk at realistic habitual high-vs-low intake (what people actually eat), not per arbitrary small unit — so calorie-dense foods eaten in quantity aren't understated. Re-based trans fat off "per 2% energy" → Large magnitude, moving it into Bin fodder. |
 | 0.6 | 2026-06-29 | Added a computed **impact-magnitude** axis (large/moderate/small/minimal) separate from certainty, derived from the relative effect with an all-cause-mortality bump; surfaced as a chip and used to compute the **Gold standard** and **Bin fodder** shortlists. Documented its relative-vs-absolute limitation. Renamed per-food counter-arguments to **Steelmanning attempts**. |
 | 0.5 | 2026-06-29 | Added a **validated causal pathway** tier to experimental evidence (scores 2), so mechanism-and-trial-led harms aren't undersold — trans fat → High (basis: convergent). Added a derived **evidence-basis** label (convergent / observation-led / mechanism-led / limited) surfaced on each card, and codified the **guardrail** that mechanism corroborates but never overrides observed outcomes (with tests). |
 | 0.4 | 2026-06-29 | Made scoring **deterministic and reproducible**: scores are now COMPUTED from recorded objective evidence facts by a pure engine (`scoring.js`), not hand-assigned. Added unit tests for every scoring rule and a data test asserting computed tier == stored certainty. Recomputation shifted eight certainty tiers (verdict directions unchanged): tree-nuts → High; legumes, whole-fruit, olive-oil, milk → Low; trans-fat → Moderate; potatoes, coconut-oil → Very low. |

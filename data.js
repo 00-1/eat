@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.6";
+const METHODOLOGY_VERSION = "0.7";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -447,7 +447,7 @@ const FOODS = [
     outcomes: ["Cardiovascular disease"],
     summary: "Industrial trans fat raises heart disease risk more than any other fat per calorie.",
     rationale:
-      "Strong, coherent evidence: cohorts show a consistent dose-response, and controlled feeding trials prove the causal pathway (raising LDL while lowering HDL, an effect tightly linked to heart disease) — strong enough that the WHO called for global elimination. The high certainty leans on that validated causal pathway as much as on the cohorts, whose per-unit effect is modest. Refers to industrial (partially hydrogenated) trans fat, not the natural ruminant trans fats in dairy/meat; now rare but still in some products.",
+      "Strong, coherent evidence: cohorts show a consistent dose-response, and controlled feeding trials prove the causal pathway (raising LDL while lowering HDL, an effect tightly linked to heart disease) — strong enough that the WHO called for global elimination. At the intakes where trans fat is actually eaten the effect is large, which is why it now sits in the high-confidence, large-effect group. Refers to industrial (partially hydrogenated) trans fat, not the natural ruminant trans fats in dairy/meat; now rare but still in some products.",
     considerations: {
       doseResponse: "Even 2% of energy from trans fat measurably raises CHD risk.",
     },
@@ -462,6 +462,7 @@ const FOODS = [
     lastReviewed: "2026-06-29",
     revisions: [
       { date: "2026-06-29", change: "Moderate → High under v0.5: scoring now credits a validated causal pathway (feeding-trial-proven LDL/HDL mechanism), and the cohort dose-response was recorded. Verdict (negative) unchanged." },
+      { date: "2026-06-29", change: "v0.7: effect size re-based to realistic habitual intake (was 'per 2% energy', which understated it) → magnitude now Large, so trans fat joins the Bin fodder shortlist. Verdict unchanged." },
     ],
   },
   {
@@ -884,8 +885,8 @@ const ASSESSMENTS = {
     effectEstimate: "+26% type 2 diabetes at 1–2 servings/day; interval excludes no-effect; RCT support on weight/metabolic markers.",
   },
   "trans-fat": {
-    evidence: { pooledRR: 1.23, ciExcludesNull: true, participants: 150000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway", funding: "independent", pubBias: "untested", confoundingRisk: "low" },
-    effectEstimate: "+23% CHD per 2% of energy, with a dose-response gradient; feeding RCTs prove the LDL/HDL pathway → validated causal route.",
+    evidence: { pooledRR: 1.35, ciExcludesNull: true, participants: 150000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway", funding: "independent", pubBias: "untested", confoundingRisk: "low" },
+    effectEstimate: "At realistic intake (regularly eating trans-fat-rich foods vs avoiding them) CHD risk rises ~35%+; the ~23%-per-2%-energy figure scales up at the amounts people actually consume. Feeding RCTs prove the LDL/HDL pathway.",
   },
   "ultra-processed": {
     evidence: { pooledRR: 1.25, ciExcludesNull: true, participants: 300000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate" },

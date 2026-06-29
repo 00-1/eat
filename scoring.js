@@ -14,7 +14,14 @@
  *
  * `evidence` fields:
  *   pooledRR        number   representative pooled relative risk / hazard ratio
- *                            for the primary outcome (≈1.0 for a true null)
+ *                            for the primary outcome (≈1.0 for a true null).
+ *                            CONVENTION: this is the RR at a REALISTIC habitual
+ *                            high-vs-low intake contrast — what the food does in
+ *                            the amounts people actually eat — NOT per arbitrary
+ *                            small unit (e.g. not "per 2% of energy"). Per-tiny-
+ *                            unit figures understate calorie-dense foods eaten in
+ *                            quantity. (Mirrors the Burden-of-Proof "data-dense
+ *                            15th–85th percentile" exposure range.)
  *   ciExcludesNull  boolean  does the 95% interval exclude no-effect?
  *   participants    number   approx. total participants in the main evidence base
  *   heterogeneity   "low" | "moderate" | "high" | "unknown"
