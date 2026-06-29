@@ -43,7 +43,9 @@
   var THRESHOLDS = { high: 13, moderate: 10, low: 7 }; // else very-low
 
   // Effect-size bands by |ln(RR)|: ±0.223 ≈ RR 0.80/1.25; ±0.105 ≈ RR 0.90/1.11.
-  function scoreEffectSize(rr) {
+  // (Only counts toward the tier for DIRECTIONAL verdicts — see assess().)
+  function scoreEffectSize(ev) {
+    var rr = ev && ev.pooledRR;
     if (typeof rr !== "number" || rr <= 0) return 0;
     var m = Math.abs(Math.log(rr));
     if (m >= 0.223) return 2;
@@ -69,7 +71,9 @@
     return o === "hard" ? 2 : o === "surrogate" ? 1 : 0;
   }
 
-  function scoreDoseResponse(d) {
+  // Dose-response gradient (only counts toward the tier for DIRECTIONAL verdicts).
+  function scoreDoseResponse(ev) {
+    var d = ev && ev.doseResponse;
     return d === "graded" ? 2 : d === "some" ? 1 : 0;
   }
 
@@ -105,8 +109,8 @@
       consistency: scoreConsistency(ev.heterogeneity),
       precision: scorePrecision(ev.participants),
       directness: scoreDirectness(ev.outcomeType),
-      effectSize: scoreEffectSize(ev.pooledRR),
-      doseResponse: scoreDoseResponse(ev.doseResponse),
+      effectSize: scoreEffectSize(ev),
+      doseResponse: scoreDoseResponse(ev),
       biasFreedom: scoreBiasFreedom(ev.funding, ev.pubBias),
       experimental: scoreExperimental(ev.rctLevel),
     };
@@ -116,6 +120,28 @@
     var t = 0;
     for (var k in scores) if (Object.prototype.hasOwnProperty.call(scores, k)) t += scores[k] || 0;
     return t;
+  }
+
+  // Which sub-scores count toward the certainty tier.
+  // Directional verdicts use all eight. NEUTRAL verdicts (interval crosses null)
+  // use only the six evidence-QUALITY dimensions — effect size and dose-response
+  // measure the strength of an effect, which a null doesn't have, so counting them
+  // would structurally cap a well-established neutral below High. This decouples
+  // certainty (how sure) from magnitude (how big), consistent with the rest of the
+  // model. (A null isn't *rewarded* for being null — it just isn't penalised; a
+  // confident neutral still needs strong quality/consistency/precision.)
+  var DIRECTIONAL_DIMS = ["quality", "consistency", "precision", "directness", "effectSize", "doseResponse", "biasFreedom", "experimental"];
+  var NEUTRAL_DIMS = ["quality", "consistency", "precision", "directness", "biasFreedom", "experimental"];
+
+  function sumDims(scores, dims) {
+    var t = 0;
+    for (var i = 0; i < dims.length; i++) t += scores[dims[i]] || 0;
+    return t;
+  }
+
+  function tierFromRatio(total, max) {
+    var r = max > 0 ? total / max : 0;
+    return r >= 0.8 ? "high" : r >= 0.6 ? "moderate" : r >= 0.4 ? "low" : "very-low";
   }
 
   // Evidence basis: WHICH kind of evidence carries the verdict. Derived from the
@@ -137,14 +163,9 @@
     return "limited";
   }
 
+  // Kept for the directional /16 scale (back-compat; equivalent to tierFromRatio(total, 16)).
   function tierFromTotal(total) {
-    return total >= THRESHOLDS.high
-      ? "high"
-      : total >= THRESHOLDS.moderate
-      ? "moderate"
-      : total >= THRESHOLDS.low
-      ? "low"
-      : "very-low";
+    return tierFromRatio(total, MAX);
   }
 
   // Impact magnitude — HOW MUCH the food moves the needle (separate from how
@@ -171,16 +192,22 @@
     return ["minimal", "small", "moderate", "large"][tier];
   }
 
-  // Convenience: evidence -> { scores, total, tier, basis, magnitude? }.
+  // Convenience: evidence -> { scores, total, max, tier, basis, magnitude, neutralScored }.
+  // Tier is computed over the dimensions that apply to the verdict's kind.
   function assess(ev, outcomes) {
     var scores = computeScores(ev);
-    var total = totalScore(scores);
+    var neutral = ev && ev.ciExcludesNull === false;
+    var dims = neutral ? NEUTRAL_DIMS : DIRECTIONAL_DIMS;
+    var total = sumDims(scores, dims);
+    var max = dims.length * 2;
     return {
       scores: scores,
       total: total,
-      tier: tierFromTotal(total),
+      max: max,
+      tier: tierFromRatio(total, max),
       basis: classifyBasis(scores),
       magnitude: classifyMagnitude(ev, outcomes),
+      neutralScored: neutral,
     };
   }
 
@@ -231,6 +258,8 @@
     classifyMagnitude: classifyMagnitude,
     standout: standout,
     CERTAINTY_ORDER: CERTAINTY_ORDER,
+    DIRECTIONAL_DIMS: DIRECTIONAL_DIMS,
+    NEUTRAL_DIMS: NEUTRAL_DIMS,
     assess: assess,
     BASIS_LABEL: BASIS_LABEL,
     BASIS_NOTE: BASIS_NOTE,

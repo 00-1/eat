@@ -117,7 +117,7 @@ test("tier thresholds (13 / 10 / 7) including boundaries", () => {
 
 test("a perfect evidence base scores the maximum and is High", () => {
   const perfect = ev({
-    pooledRR: 0.5, participants: 1000000, heterogeneity: "low",
+    pooledRR: 0.5, ciExcludesNull: true, participants: 1000000, heterogeneity: "low",
     outcomeType: "hard", doseResponse: "graded", rctLevel: "outcomes",
     funding: "independent", pubBias: "tested-clean", confoundingRisk: "low",
   });
@@ -125,6 +125,26 @@ test("a perfect evidence base scores the maximum and is High", () => {
   assert.equal(a.total, S.MAX);
   assert.equal(a.total, 16);
   assert.equal(a.tier, "high");
+});
+
+test("a neutral verdict is scored on the 6 quality dims (/12) and CAN reach High", () => {
+  // The point of v0.11: a well-established null isn't capped by lacking an effect.
+  const strongNull = ev({
+    pooledRR: 1.0, ciExcludesNull: false, participants: 1000000, heterogeneity: "low",
+    outcomeType: "hard", doseResponse: "none", rctLevel: "outcomes",
+    funding: "independent", pubBias: "tested-clean", confoundingRisk: "low",
+  });
+  const a = S.assess(strongNull);
+  assert.equal(a.neutralScored, true);
+  assert.equal(a.max, 12); // effect-size & dose-response don't count for a null
+  assert.equal(a.tier, "high"); // a confident neutral is now expressible
+  // a weak/contested null (high confounding + heterogeneity) stays very-low
+  const weakNull = ev({
+    pooledRR: 1.1, ciExcludesNull: false, participants: 100000, heterogeneity: "high",
+    outcomeType: "hard", doseResponse: "none", rctLevel: "none",
+    funding: "independent", pubBias: "untested", confoundingRisk: "high",
+  });
+  assert.equal(S.assess(weakNull).tier, "very-low");
 });
 
 test("scoring is deterministic and does not mutate its input", () => {

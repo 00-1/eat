@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.10";
+const METHODOLOGY_VERSION = "0.11";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -560,11 +560,11 @@ const FOODS = [
     name: "Unprocessed red meat (beef, pork)",
     category: "Meat",
     effect: "neutral",
-    certainty: "very-low",
+    certainty: "low",
     outcomes: ["All-cause mortality", "Type 2 diabetes"],
     summary: "Associations are weak, contested, and of low certainty — distinct from processed meat.",
     rationale:
-      "Some cohorts show modestly higher risk, but a major systematic review judged the certainty low and the absolute effects small; experts genuinely disagree. We label this NEUTRAL/contested at 'Very low' certainty rather than asserting harm.",
+      "Some cohorts show modestly higher risk, but a major systematic review judged the certainty low and the absolute effects small; experts genuinely disagree. We label this NEUTRAL/contested — the evidence base is large but conflicting, so 'Low' certainty rather than asserting harm.",
     considerations: {
       substitution: "Risk estimates depend heavily on the comparison food (poultry/fish/legumes lower modeled risk).",
       confounding: "Red-meat intake clusters with smoking, low veg intake, etc.",
@@ -583,8 +583,10 @@ const FOODS = [
         search: "red meat consumption all-cause cardiovascular mortality meta-analysis cohort",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Very-low → Low under v0.11: neutral verdicts are now scored on the quality of the null evidence (not penalised for lacking an effect size). Red meat is data-rich but contested, which reads as Low, not Very-low. Verdict unchanged." },
+    ],
   },
   {
     id: "poultry",
@@ -668,11 +670,11 @@ const FOODS = [
     name: "Butter",
     category: "Fats & oils",
     effect: "neutral",
-    certainty: "low",
+    certainty: "moderate",
     outcomes: ["All-cause mortality", "Cardiovascular disease"],
     summary: "Only weakly associated with mortality and not clearly with heart disease.",
     rationale:
-      "A meta-analysis found small, mostly non-significant associations. The verdict is highly substitution-dependent (worse than olive oil, better than trans fat), so we label neutral at 'Low'.",
+      "A large meta-analysis found small, mostly non-significant associations — a fairly well-established near-null, so 'Moderate' certainty that butter is roughly neutral. The verdict is highly substitution-dependent (worse than olive oil, better than trans fat).",
     considerations: {
       substitution: "Replacing butter with olive/seed oils lowers modeled CVD risk; replacing trans fat with butter lowers it.",
     },
@@ -684,19 +686,21 @@ const FOODS = [
         search: "Pimpin butter mortality cardiovascular diabetes meta-analysis PLoS ONE 2016",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Low → Moderate under v0.11: neutral verdicts are now scored on the strength of the null evidence; butter's near-null is well-established (large meta-analysis), so Moderate. Verdict unchanged." },
+    ],
   },
   {
     id: "potatoes",
     name: "White potatoes (boiled/baked)",
     category: "Vegetables",
     effect: "neutral",
-    certainty: "very-low",
+    certainty: "low",
     outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
     summary: "Non-fried potatoes look roughly neutral; fries are a separate, worse story.",
     rationale:
-      "Associations for boiled/baked potatoes are weak and inconsistent, while French fries show clearer harm — so we keep plain potatoes neutral and call out preparation. The high heterogeneity and near-null effect leave certainty very low.",
+      "Associations for boiled/baked potatoes are weak and inconsistent, while French fries show clearer harm — so we keep plain potatoes neutral and call out preparation. High heterogeneity (preparation matters) keeps certainty to 'Low'.",
     considerations: {
       substitution: "High glycemic load means swaps to whole grains/legumes look better in models.",
       doseResponse: "Risk signals appear mainly at high intakes and for fried forms.",
@@ -709,8 +713,10 @@ const FOODS = [
         search: "potato consumption fried type 2 diabetes mortality cohort",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Very-low → Low under v0.11 neutral-scoring (data exists but is heterogeneous by preparation). Verdict unchanged." },
+    ],
   },
   {
     id: "alcohol",
@@ -753,11 +759,11 @@ const FOODS = [
     name: "Artificial sweeteners",
     category: "Other",
     effect: "neutral",
-    certainty: "very-low",
+    certainty: "low",
     outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
     summary: "Genuinely mixed evidence; net long-term effect is uncertain.",
     rationale:
-      "Some cohorts link them to cardiometabolic risk (likely partly reverse causation — at-risk people switch to them), while substitution trials replacing sugary drinks show short-term benefit. We label NEUTRAL at 'Very low' certainty and flag this as unsettled.",
+      "Some cohorts link them to cardiometabolic risk (likely partly reverse causation — at-risk people switch to them), while substitution trials replacing sugary drinks show short-term benefit. Large but conflicting evidence → NEUTRAL at 'Low' certainty; flagged as unsettled.",
     considerations: {
       confounding: "Strong reverse causation: people already at risk choose diet products.",
       substitution: "Compared with sugary drinks they look better; compared with water, possibly not.",
@@ -770,8 +776,10 @@ const FOODS = [
         search: "Debras artificial sweeteners cardiovascular NutriNet-Sante PLoS Medicine 2022",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Very-low → Low under v0.11 neutral-scoring (a large cohort exists, though conflicting). Verdict (neutral/unsettled) unchanged." },
+    ],
   },
   {
     id: "coconut-oil",

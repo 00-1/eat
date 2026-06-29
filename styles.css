@@ -344,6 +344,9 @@ a { color: var(--accent); }
 .score-pips { display: inline-flex; gap: 4px; flex: 0 0 auto; }
 .pip { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
 .pip.on { background: var(--accent); }
+.score-row-na .score-label { opacity: 0.55; }
+.score-na { font-size: 0.74rem; color: var(--ink-soft); opacity: 0.7; font-style: italic; }
+.rubric-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
 
 .challenge-note { font-size: 0.8rem; color: var(--ink-soft); }
 

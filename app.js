@@ -72,26 +72,32 @@
   function assessmentHtml(food) {
     const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
     if (!a || !a.evidence || typeof Scoring === "undefined") return "";
-    const scores = Scoring.computeScores(a.evidence);
-    const total = Scoring.totalScore(scores);
-    const basis = Scoring.classifyBasis(scores);
-    const max = Scoring.MAX;
+    const A = Scoring.assess(a.evidence, food.outcomes);
+    const scores = A.scores;
+    const basis = A.basis;
+    const counting = A.neutralScored ? Scoring.NEUTRAL_DIMS : Scoring.DIRECTIONAL_DIMS;
     const rows = NUTRIGRADE_RUBRIC.dimensions
       .map(function (d) {
         const v = scores[d.key] || 0;
-        const pips =
-          '<span class="pip ' + (v >= 1 ? "on" : "") + '"></span>' +
-          '<span class="pip ' + (v >= 2 ? "on" : "") + '"></span>';
+        const counts = counting.indexOf(d.key) !== -1;
+        const cell = counts
+          ? "<span class='score-pips' title='" + v + " / 2'>" +
+              '<span class="pip ' + (v >= 1 ? "on" : "") + '"></span>' +
+              '<span class="pip ' + (v >= 2 ? "on" : "") + '"></span>' +
+            "</span>"
+          : "<span class='score-na' title='not scored for a neutral verdict'>n/a</span>";
         return (
-          "<div class='score-row'>" +
-            "<span class='score-label'>" + escapeHtml(d.label) + "</span>" +
-            "<span class='score-pips' title='" + v + " / 2'>" + pips + "</span>" +
+          "<div class='score-row" + (counts ? "" : " score-row-na") + "'>" +
+            "<span class='score-label'>" + escapeHtml(d.label) + "</span>" + cell +
           "</div>"
         );
       })
       .join("");
+    const neutralNote = A.neutralScored
+      ? " <span class='rubric-sub'>— neutral verdict, scored on evidence quality</span>"
+      : "";
     return (
-      "<h4 class='block-h'>Evidence assessment <span class='rubric-note'>(computed, " + total + "/" + max + " → " + CERTAINTY_LABEL[Scoring.tierFromTotal(total)] + ")</span></h4>" +
+      "<h4 class='block-h'>Evidence assessment <span class='rubric-note'>(computed, " + A.total + "/" + A.max + " → " + CERTAINTY_LABEL[A.tier] + ")</span>" + neutralNote + "</h4>" +
       "<p class='basis-line'><span class='basis basis-" + basis + "'>" + escapeHtml(Scoring.BASIS_LABEL[basis]) + "</span> " +
         "<span class='basis-note'>" + escapeHtml(Scoring.BASIS_NOTE[basis]) + "</span></p>" +
       "<p class='effect-line'><span class='effect-k'>Conservative estimate:</span> " + escapeHtml(a.effectEstimate) + "</p>" +

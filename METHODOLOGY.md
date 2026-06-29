@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.10 — living document.** This file is the canonical description of how
+**Version 0.11 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -119,6 +119,19 @@ precision uses ≥ 500k participants → 2 and ≥ 100k → 1).
 > NutriGrade score or a GBD Burden-of-Proof star rating exists for a food–outcome
 > pair, we defer to it.
 > _(Source: Schwingshackl et al., NutriGrade, Adv Nutr 2016.)_
+
+**Neutral verdicts are scored differently — on the strength of the null.** Effect
+size and dose-response measure the *strength of an effect*, which a null doesn't
+have; counting them would structurally cap even a perfectly-studied neutral below
+High. So a **neutral** verdict (interval crosses the null) is scored over the
+**six evidence-quality dimensions** — study quality, consistency, precision,
+directness, freedom-from-bias, experimental corroboration — out of **12** (same
+80/60/40% cut-points). This decouples *certainty* (how sure) from *magnitude* (how
+big), matching the rest of the model: a large, consistent, precise null can now be
+**High certainty neutral**, while a thin or contested one (coconut oil, with no
+outcome data) stays Very-low. A null isn't *rewarded* for being null — it just
+isn't penalised for it. The card shows the neutral dimensions as `n/a` and the
+total out of 12.
 
 ### 4b. Evidence basis — which evidence carries the verdict
 
@@ -319,6 +332,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.11 | 2026-06-29 | Fixed a structural conflation (audit follow-up): **neutral verdicts are now scored on the six evidence-quality dimensions (/12)**, not penalised by effect-size/dose-response (which a null can't have) — so a well-established neutral can reach High, while thin/contested ones stay Very-low. Rescored neutrals: butter Low→Moderate; red meat, potatoes, artificial sweeteners Very-low→Low (verdicts unchanged; coconut oil correctly stays Very-low). |
 | 0.10 | 2026-06-29 | Honest default (audit C1): unknown/unreported `heterogeneity` now scores **0** for consistency (was 1) — absence of evidence isn't scored as adequate. No tier changes (avocado/coconut-oil stay put). Also adopted the "highlight inadequacies" policy: an honest data-status banner + per-food source-verification chip, and softened over-claiming language. |
 | 0.9 | 2026-06-29 | Relaxed the directional-verdict rule: a positive/negative label needs only the conservative interval to exclude the null; the **certainty tier carries the confidence** (so "Positive · Low" stands), with a Very-low → Neutral(leaning) fallback — more transparent than collapsing low-certainty reads to "neutral." Added a test enforcing it. Also: ran an independent gap audit (`AUDIT.md`); fixed a live highlights-chip crash, made magnitude `minimal` when the interval crosses the null, and reconciled version numbers (with a test). Added the "Criticisms of this approach" section and integrated the counter-arguments research. |
 | 0.8 | 2026-06-29 | Input-verification sweep of the effect-size basis: recorded an `intakeBasis` for every food (the realistic high-vs-low intake its `pooledRR` refers to), enforced by a test. Re-based whole fruit from per-serving to 2–3 servings/day (RR ≈ 0.90) → Low → Moderate certainty, now on the cusp of Gold standard. |
