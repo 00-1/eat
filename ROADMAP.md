@@ -108,6 +108,13 @@ group(s) it belongs to**, all computed by the same engine.
 - [ ] Re-ground items that were riding a group's evidence: walk **cruciferous** and
       **leafy greens** self-verdicts back to their honest (thinner) food-specific
       level, with strength now living in the Vegetables / Cruciferous group rows.
+- [ ] **Fermented dairy** as a group: yogurt + cheese (+ kefir, quark…) are all
+      fermented dairy but currently scattered as separate items with different
+      outcomes/verdicts. The old "Yogurt & fermented dairy" name double-counted
+      cheese (fixed by renaming to "Yogurt", v0.13). Model "fermented dairy" as a
+      group both belong to, with its own group-level evidence if it exists. Likewise
+      audit the broader **Dairy** category for the same scatter (milk/cheese/butter/
+      yogurt each carry a slice).
 - [ ] **Tomatoes**: self neutral/low + Vegetables (positive) group conclusion.
 - [ ] **Cocoa/dark chocolate**: keep neutral (adjudicated by COSMOS + cohorts);
       render sugar/sat-fat as component context that does NOT set the verdict, noting

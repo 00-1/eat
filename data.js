@@ -298,7 +298,7 @@ const FOODS = [
   },
   {
     id: "yogurt",
-    name: "Yogurt & fermented dairy",
+    name: "Yogurt",
     category: "Dairy",
     effect: "positive",
     certainty: "low",
@@ -318,8 +318,10 @@ const FOODS = [
         search: "Chen yogurt dairy type 2 diabetes BMC Medicine 2014",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-06-29",
+    revisions: [
+      { date: "2026-06-29", change: "Renamed 'Yogurt & fermented dairy' → 'Yogurt': the entry's evidence is yogurt-specific (diabetes), and cheese — also a fermented dairy — is a separate item with a different verdict, so the old name double-counted it. 'Fermented dairy' is being modelled as a food group instead. Verdict unchanged." },
+    ],
   },
   {
     id: "coffee",
