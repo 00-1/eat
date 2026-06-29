@@ -42,34 +42,6 @@
     return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(study.search || study.citation);
   }
 
-  const CONTACT = typeof CHALLENGE_CONTACT !== "undefined" ? CHALLENGE_CONTACT : "";
-
-  // Build a prefilled email so anyone can send a challenge to the maintainer,
-  // who reviews it and revises the verdict. Returns "" if no contact is set.
-  function challengeUrl(food) {
-    if (!CONTACT) return "";
-    const subject = "Challenge: " + food.name + " (" + EFFECT_LABEL[food.effect] + ")";
-    const body = [
-      "Food: " + food.name + " (" + food.id + ")",
-      "Current verdict: " + EFFECT_LABEL[food.effect] + " — " + CERTAINTY_LABEL[food.certainty],
-      "Methodology version: " + (typeof METHODOLOGY_VERSION !== "undefined" ? METHODOLOGY_VERSION : "?"),
-      "",
-      "What I think is wrong (direction / certainty / a missing caveat):",
-      "",
-      "",
-      "Evidence I'm relying on (ideally meta-analyses or large cohorts — note design and effect size):",
-      "",
-      "",
-      "Which part of the method this touches (substitution, confounding, reverse causation, a sub-score):",
-      "",
-    ].join("\n");
-    return (
-      "mailto:" + CONTACT +
-      "?subject=" + encodeURIComponent(subject) +
-      "&body=" + encodeURIComponent(body)
-    );
-  }
-
   // Certainty tier derived from the assessment total (single source of truth).
   function tierFromTotal(total) {
     const t = NUTRIGRADE_RUBRIC.thresholds;
@@ -176,14 +148,8 @@
     return rows ? "<h4 class='block-h'>Key caveats</h4><div class='consids'>" + rows + "</div>" : "";
   }
 
-  function challengeHtml(food) {
-    const url = challengeUrl(food);
-    if (!url) {
-      return "<span class='challenge-note'>Disagree? Verdicts are reviewed and revised — see “The approach.”</span>";
-    }
-    return (
-      "<a class='challenge' href='" + escapeHtml(url) + "'>Challenge this conclusion ↗</a>"
-    );
+  function challengeHtml() {
+    return "<span class='challenge-note'>Disagree? Verdicts are reviewed and revised — see “The approach.”</span>";
   }
 
   function revisionsHtml(food) {

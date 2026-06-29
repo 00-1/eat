@@ -36,10 +36,8 @@
 
 const METHODOLOGY_VERSION = "0.3";
 
-// Challenges are reviewed by the maintainer (who revises verdicts with AI-assisted
-// research). The "Challenge this conclusion" button opens a prefilled email here.
-// Set to "" to hide the button and show a plain note instead.
-const CHALLENGE_CONTACT = "josh.bradshaw@ciprecision.com";
+// Challenges are handled by the maintainer directly (verdicts are revised through
+// review with AI-assisted research) — there is no public submission form.
 
 const FOODS = [
   // ============================ POSITIVE ============================

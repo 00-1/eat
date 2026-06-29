@@ -23,9 +23,7 @@ Each food has:
 - a **reproducible assessment** — the food’s 0–2 score on each of eight evidence
   dimensions (total /16 → tier) plus the conservative effect estimate behind the
   direction;
-- a **revision log** when a verdict has changed;
-- a **“Challenge this conclusion”** button that opens a prefilled email to the
-  maintainer.
+- a **revision log** when a verdict has changed.
 
 You can search, and filter by effect or food category. The **“The approach”** tab
 explains exactly how verdicts are decided.
@@ -39,10 +37,9 @@ study designs, grade our confidence explicitly, account for the standard biases
 of nutritional epidemiology (confounding, reverse causation, the substitution
 problem, measurement error), and **revise verdicts as evidence accrues**.
 
-Conclusions are provisional by design. To contest one, use the *Challenge this
-conclusion* button on any card — it opens a prefilled email to the maintainer
-(set by `CHALLENGE_CONTACT` in `data.js`), who reviews it with AI-assisted
-research and updates the verdict if it holds up.
+Conclusions are provisional by design. Challenges are handled by the maintainer
+directly — each is reviewed with AI-assisted research and the verdict is updated
+if it holds up. (There is no public submission form.)
 
 ## Important caveats
 
