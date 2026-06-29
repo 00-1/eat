@@ -1,0 +1,10 @@
+{
+  "name": "diet-effects",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Whether foods generally help, hurt, or do nothing when added to a diet — with a transparent, reproducible scoring method.",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test"
+  }
+}

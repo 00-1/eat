@@ -20,9 +20,9 @@ Each food has:
   prospective cohorts, cross-checked against trials), each linking to PubMed;
 - the **reasoning** for the verdict and the **key caveats** that matter for that
   food (what it replaces, confounding, dose-response, …);
-- a **reproducible assessment** — the food’s 0–2 score on each of eight evidence
-  dimensions (total /16 → tier) plus the conservative effect estimate behind the
-  direction;
+- a **reproducible assessment** — eight 0–2 sub-scores (total /16 → tier)
+  **computed** by a fixed engine from recorded evidence facts, plus the
+  conservative effect estimate behind the direction;
 - a **revision log** when a verdict has changed.
 
 You can search, and filter by effect or food category. The **“The approach”** tab
@@ -67,8 +67,10 @@ python3 -m http.server 8000   # then visit http://localhost:8000
 |--------------------------------|-----------------------------------------------------------|
 | `index.html`                   | Page structure: Foods view + "The approach" view          |
 | `styles.css`                   | Styling                                                   |
-| `app.js`                       | Filtering, sorting, expandable evidence, challenge links  |
-| `data.js`                      | The curated food dataset with studies (edit here)         |
+| `app.js`                       | Filtering, sorting, expandable evidence (UI only)         |
+| `scoring.js`                   | Deterministic scoring engine (facts → scores → tier)      |
+| `data.js`                      | Food dataset: verdicts, studies, and recorded evidence    |
+| `test/`                        | Unit + data-integrity tests (`npm test`)                  |
 | `METHODOLOGY.md`               | Canonical, versioned description of how verdicts are made |
 | `research/`                    | Source research behind the methodology                    |
 
@@ -103,18 +105,38 @@ caveats, and the studies behind it:
 ```
 
 Each food also has an entry in the `ASSESSMENTS` map (keyed by `id`) holding its
-eight 0–2 sub-scores and the conservative effect estimate. The `certainty` field
-must match the tier implied by the score total — `NUTRIGRADE_RUBRIC.thresholds`
-defines the cut-points, and the validation in the smoke test checks this:
+**recorded evidence facts** and the conservative effect estimate. The eight
+sub-scores are **not** stored — they are computed from these facts by
+`scoring.js`. The `certainty` field must equal the tier the engine computes; the
+test suite enforces this.
 
 ```js
 "tree-nuts": {
-  scores: { quality: 1, consistency: 2, precision: 2, directness: 2,
-            effectSize: 1, doseResponse: 2, biasFreedom: 1, experimental: 1 }, // = 12 → moderate
-  effect: "Pooled RR ≈ 0.78 for all-cause mortality at ~28 g/day; interval excludes no-effect.",
+  evidence: {
+    pooledRR: 0.78, ciExcludesNull: true, participants: 819000,
+    heterogeneity: "low", outcomeType: "hard", doseResponse: "graded",
+    rctLevel: "pattern", funding: "independent", pubBias: "tested-clean",
+    confoundingRisk: "moderate",
+  }, // engine -> 14/16 -> "high"
+  effectEstimate: "Pooled RR ≈ 0.78 for all-cause mortality at ~28 g/day; interval excludes no-effect.",
 }
 ```
 
-New categories appear in the filter automatically. When you change a verdict, add
-a `revisions` entry; when you change the *method*, bump `METHODOLOGY_VERSION` in
-`data.js` and update `METHODOLOGY.md`.
+To change a verdict you change the **facts**, not the score. New categories appear
+in the filter automatically. When you change a verdict, add a `revisions` entry;
+when you change the *method* (the rules in `scoring.js`), bump
+`METHODOLOGY_VERSION` in `data.js` and update `METHODOLOGY.md`.
+
+## Tests
+
+The scoring process is the core of the project, so it is unit-tested. Run:
+
+```bash
+npm test          # node --test
+```
+
+- `test/scoring.test.js` — every scoring rule and threshold in the engine
+  (effect-size bands, precision steps, tier cut-points, determinism, …).
+- `test/data.test.js` — data integrity, and the **central invariant**: each
+  food's stored `certainty` equals the tier the engine computes from its recorded
+  evidence facts. Edit a fact or a verdict and fall out of sync, and this fails.

@@ -42,21 +42,17 @@
     return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(study.search || study.citation);
   }
 
-  // Certainty tier derived from the assessment total (single source of truth).
-  function tierFromTotal(total) {
-    const t = NUTRIGRADE_RUBRIC.thresholds;
-    return total >= t.high ? "high" : total >= t.moderate ? "moderate" : total >= t.low ? "low" : "very-low";
-  }
-
+  // Scores are COMPUTED from recorded evidence facts by the shared engine —
+  // never read from the data file. (scoring.js exposes window.Scoring.)
   function assessmentHtml(food) {
     const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
-    if (!a) return "";
-    const dims = NUTRIGRADE_RUBRIC.dimensions;
-    const total = dims.reduce(function (s, d) { return s + (a.scores[d.key] || 0); }, 0);
-    const max = NUTRIGRADE_RUBRIC.max;
-    const rows = dims
+    if (!a || !a.evidence || typeof Scoring === "undefined") return "";
+    const scores = Scoring.computeScores(a.evidence);
+    const total = Scoring.totalScore(scores);
+    const max = Scoring.MAX;
+    const rows = NUTRIGRADE_RUBRIC.dimensions
       .map(function (d) {
-        const v = a.scores[d.key] || 0;
+        const v = scores[d.key] || 0;
         const pips =
           '<span class="pip ' + (v >= 1 ? "on" : "") + '"></span>' +
           '<span class="pip ' + (v >= 2 ? "on" : "") + '"></span>';
@@ -69,8 +65,8 @@
       })
       .join("");
     return (
-      "<h4 class='block-h'>Evidence assessment <span class='rubric-note'>(NutriGrade-adapted, " + total + "/" + max + ")</span></h4>" +
-      "<p class='effect-line'><span class='effect-k'>Conservative estimate:</span> " + escapeHtml(a.effect) + "</p>" +
+      "<h4 class='block-h'>Evidence assessment <span class='rubric-note'>(computed, " + total + "/" + max + " → " + CERTAINTY_LABEL[Scoring.tierFromTotal(total)] + ")</span></h4>" +
+      "<p class='effect-line'><span class='effect-k'>Conservative estimate:</span> " + escapeHtml(a.effectEstimate) + "</p>" +
       "<div class='scores'>" + rows + "</div>"
     );
   }
