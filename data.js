@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.15";
+const METHODOLOGY_VERSION = "0.16";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1040,7 +1040,7 @@ const ASSESSMENTS = {
     effectEstimate: "Pooled RR ≈ 0.86 for coronary heart disease at ~4 servings/week; interval excludes no-effect.",
   },
   "whole-grains": {
-    evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 700000, heterogeneity: "high", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~90 g/day vs low intake" },
+    evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 700000, heterogeneity: "high", directionallyConsistent: true, outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~90 g/day vs low intake" },
     effectEstimate: "≈17% lower all-cause mortality at 90 g/day (RR ≈ 0.83, 95% CI 0.77–0.90); clear dose-response, interval excludes no-effect. High between-study heterogeneity (I²=83%) — cohorts agree on direction, not magnitude.",
     verified: true,
     sources: {

@@ -71,6 +71,18 @@ test("consistency maps heterogeneity (unknown/unreported scores 0)", () => {
   assert.equal(S.computeScores(ev({ heterogeneity: "garbage" })).consistency, 0);
 });
 
+test("consistency: high I² with directional agreement earns partial credit", () => {
+  // genuine directional disagreement (or unmarked) still scores 0
+  assert.equal(S.computeScores(ev({ heterogeneity: "high" })).consistency, 0);
+  assert.equal(S.computeScores(ev({ heterogeneity: "high", directionallyConsistent: false })).consistency, 0);
+  // high I² but all cohorts point the same way -> 1 (not penalised like real conflict)
+  assert.equal(S.computeScores(ev({ heterogeneity: "high", directionallyConsistent: true })).consistency, 1);
+  // the flag only matters at high I² — it can't inflate moderate/low/unknown
+  assert.equal(S.computeScores(ev({ heterogeneity: "moderate", directionallyConsistent: true })).consistency, 1);
+  assert.equal(S.computeScores(ev({ heterogeneity: "low", directionallyConsistent: true })).consistency, 2);
+  assert.equal(S.computeScores(ev({ heterogeneity: "unknown", directionallyConsistent: true })).consistency, 0);
+});
+
 test("directness maps outcome type", () => {
   assert.equal(S.computeScores(ev({ outcomeType: "hard" })).directness, 2);
   assert.equal(S.computeScores(ev({ outcomeType: "surrogate" })).directness, 1);

@@ -27,6 +27,10 @@
  *   ciExcludesNull  boolean  does the 95% interval exclude no-effect?
  *   participants    number   approx. total participants in the main evidence base
  *   heterogeneity   "low" | "moderate" | "high" | "unknown"
+ *   directionallyConsistent  boolean (optional) — only consulted when
+ *                            heterogeneity is "high": true if the cohorts disagree
+ *                            on magnitude but agree on the DIRECTION of effect, which
+ *                            earns partial consistency credit instead of 0.
  *   outcomeType     "hard" | "surrogate" | "indirect"
  *   doseResponse    "graded" | "some" | "none"
  *   rctLevel        "outcomes" | "pattern" | "markers" | "mechanism" | "none"
@@ -61,10 +65,18 @@
     return 0;
   }
 
-  function scoreConsistency(h) {
-    // unknown / unreported / unrecognised -> 0 (absence of evidence is not
-    // scored as adequate consistency).
-    return h === "low" ? 2 : h === "moderate" ? 1 : 0;
+  // Consistency from heterogeneity. High statistical heterogeneity (I²) normally
+  // scores 0 — BUT if the cohorts disagree only on the MAGNITUDE while all pointing
+  // the same direction (`directionallyConsistent`), that is not the same failure as
+  // genuine directional disagreement, so it earns partial credit (1). This keeps a
+  // robust-but-heterogeneous finding (e.g. whole grains, I²=83% yet uniformly
+  // protective) from being marked down like a truly conflicting one.
+  // unknown / unreported / unrecognised -> 0 (absence of evidence isn't consistency).
+  function scoreConsistency(h, directionallyConsistent) {
+    if (h === "low") return 2;
+    if (h === "moderate") return 1;
+    if (h === "high") return directionallyConsistent ? 1 : 0;
+    return 0;
   }
 
   function scoreDirectness(o) {
@@ -106,7 +118,7 @@
     ev = ev || {};
     return {
       quality: scoreQuality(ev.confoundingRisk),
-      consistency: scoreConsistency(ev.heterogeneity),
+      consistency: scoreConsistency(ev.heterogeneity, ev.directionallyConsistent),
       precision: scorePrecision(ev.participants),
       directness: scoreDirectness(ev.outcomeType),
       effectSize: scoreEffectSize(ev),

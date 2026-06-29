@@ -176,6 +176,14 @@ const COUNTER_ARGUMENTS = {
       assessment:
         "A real, named scientific finding — not a strawman — and part of why we rate sweeteners neutral/very-low rather than benign. But the human evidence is thin: n=7, the causal fecal-transfer result was mouse-level, and a 2021 study failed to replicate glucose intolerance in healthy humans. It supports 'uncertain,' not 'harmful' — which is exactly our stance.",
     },
+    {
+      claim: "Even the WHO advises against artificial sweeteners — they don't help weight control and may raise long-term disease risk.",
+      proponents: "World Health Organization, 2023 guideline on non-sugar sweeteners (NSS).",
+      evidenceCited: "A commissioned 2022 systematic review found no long-term benefit for body fat and observational associations between higher NSS intake and type 2 diabetes, cardiovascular disease, and all-cause mortality.",
+      stance: "partial",
+      assessment:
+        "An authoritative lean we take seriously rather than wave away — but the WHO itself issued it as a CONDITIONAL recommendation on LOW-certainty evidence, and the disease associations are observational and badly confounded by reverse causation (people already at cardiometabolic risk switch to diet products). Against sugar specifically, substitution trials still favour sweeteners short-term. So it reinforces 'net uncertain' — our neutral/low verdict — not a finding of harm.",
+    },
   ],
 };
 

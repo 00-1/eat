@@ -175,10 +175,10 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       negative-on-cancer); for a tool about *adding* a food from zero, the headline
       arguably should lean negative. Revisit once cancer outcomes land (D1) and the
       per-outcome model exists.
-- [ ] **(a3) Surface WHO 2023 non-sugar-sweetener guidance** in the artificial-
-      sweeteners steelmanning — the conditional recommendation against NSS for weight
-      control is a notable authoritative lean we don't currently show. Evaluate it
-      honestly (it's conditional/low-certainty; reverse-causation critique applies).
+- [x] **(a3) Surface WHO 2023 non-sugar-sweetener guidance** in the artificial-
+      sweeteners steelmanning. DONE (v0.16): added as an attributed counter-argument,
+      evaluated honestly (conditional, low-certainty, reverse-causation-prone →
+      reinforces neutral, not harm).
 - [ ] **(a4) Olive oil PREDIMED `rctLevel` call.** Currently `pattern` (1 pt) →
       Low certainty. The EVOO arm arguably tests the oil closer to `outcomes` (2 pts)
       → would lift to Moderate. Settle during the grounding pass (note PREDIMED's
@@ -223,13 +223,11 @@ make a shaky input look authoritative, so this is the top priority.
 - [ ] **Audit all `heterogeneity` inputs.** Whole grains was recorded `low` but the
       verified I² is 83% (`high`). Other foods' heterogeneity may be similarly
       optimistic — re-check each against its source during grounding.
-- [ ] **(c2) Consistency rubric: I² vs directional agreement.** The whole-grains
-      downgrade exposed that our consistency dimension penalises high statistical
-      heterogeneity (I²) even when every cohort points the same direction. Consider
-      scoring consistency on *directional* agreement (or giving partial credit when
-      I² is high but the sign is unanimous), so a robust-but-heterogeneous protective
-      finding isn't treated like genuine disagreement. (Whole grains may return to
-      High if this lands.) Relates to calibration item (c).
+- [x] **(c2) Consistency rubric: I² vs directional agreement.** DONE (v0.16): high
+      I² now earns partial credit (1, not 0) when cohorts agree on direction
+      (`directionallyConsistent`). Whole grains gained the credit (11→12) but stays
+      Moderate — to reach High it would also need stronger experimental/precision
+      support, which is the honest result. No tier flips.
 - [ ] **White-rice threshold curve.** Its association is non-linear (≈neutral to
       ~300 g/day, then rising) — needs a `threshold-harm` shape in the dose-curve
       vocabulary before it can be charted honestly (current shapes would mislabel it
