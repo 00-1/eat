@@ -22,9 +22,10 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
       inflating borderline RRs; correct the trans-fat narrative in README/METHODOLOGY.
 - [ ] **C1** — score `heterogeneity: unknown → 0` (conservative); make unknown
       enum values throw in tests.
-- [ ] **C3** — resolve the directional-at-Low contradiction: either downgrade
-      legumes/olive-oil/yogurt/avocado/refined-grains to "neutral (leaning…)" or
-      revise the §5 rule; add a test enforcing whichever we choose.
+- [x] **C3** — resolved by **relaxing** the rule (v0.9): directional labels need
+      only a null-excluding interval; the certainty chip carries confidence;
+      Very-low falls back to neutral. No verdicts changed (none were directional at
+      very-low). Test added enforcing it.
 - [ ] **B3** — set `doseResponse: none` for null associations (eggs, milk, cheese)
       or justify the gradient.
 - [ ] **G2** — soften "objective/pure/we didn't type these" language to

@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.8 — living document.** This file is the canonical description of how
+**Version 0.9 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -218,10 +218,14 @@ No published source prescribes the *final* combined rule; this is **ours**, stat
 so it can be challenged:
 
 1. **Default = Neutral.**
-2. Assign **Positive/Negative** only if the conservative pooled estimate excludes
-   the null in a consistent direction **and** certainty is at least **Moderate**.
-3. A null-excluding effect with only **Low/Very-low** certainty → still **Neutral
-   (leaning …)**, noted in the rationale, not a hard directional verdict.
+2. Assign **Positive/Negative** when the conservative pooled estimate excludes the
+   null in a consistent direction. We do **not** require a minimum certainty for the
+   direction — the **certainty tier carries how much to trust it**, so "Positive ·
+   Low certainty" stands as an honest, information-preserving verdict rather than
+   being laundered into "neutral."
+3. **Exception — Very-low certainty falls back to Neutral (leaning …).** Asserting a
+   direction on near-nothing overclaims, so at Very-low we state the lean in the
+   rationale instead of a hard directional label.
 4. **Multi-outcome foods:** the overall "add-to-diet" verdict follows the net
    direction across the priority outcomes (all-cause mortality weighted first); the
    reported certainty is the **lowest** tier among the outcomes that drive the
@@ -314,6 +318,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.9 | 2026-06-29 | Relaxed the directional-verdict rule: a positive/negative label needs only the conservative interval to exclude the null; the **certainty tier carries the confidence** (so "Positive · Low" stands), with a Very-low → Neutral(leaning) fallback — more transparent than collapsing low-certainty reads to "neutral." Added a test enforcing it. Also: ran an independent gap audit (`AUDIT.md`); fixed a live highlights-chip crash, made magnitude `minimal` when the interval crosses the null, and reconciled version numbers (with a test). Added the "Criticisms of this approach" section and integrated the counter-arguments research. |
 | 0.8 | 2026-06-29 | Input-verification sweep of the effect-size basis: recorded an `intakeBasis` for every food (the realistic high-vs-low intake its `pooledRR` refers to), enforced by a test. Re-based whole fruit from per-serving to 2–3 servings/day (RR ≈ 0.90) → Low → Moderate certainty, now on the cusp of Gold standard. |
 | 0.7 | 2026-06-29 | Standardised the **effect-size / magnitude intake basis**: `pooledRR` is now the relative risk at realistic habitual high-vs-low intake (what people actually eat), not per arbitrary small unit — so calorie-dense foods eaten in quantity aren't understated. Re-based trans fat off "per 2% energy" → Large magnitude, moving it into Bin fodder. |
 | 0.6 | 2026-06-29 | Added a computed **impact-magnitude** axis (large/moderate/small/minimal) separate from certainty, derived from the relative effect with an all-cause-mortality bump; surfaced as a chip and used to compute the **Gold standard** and **Bin fodder** shortlists. Documented its relative-vs-absolute limitation. Renamed per-food counter-arguments to **Steelmanning attempts**. |

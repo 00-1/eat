@@ -112,6 +112,16 @@ test("a neutral food never advertises a non-minimal magnitude", () => {
   }
 });
 
+test("directional verdicts obey the relaxed rule (>= Low; very-low falls back to neutral)", () => {
+  // v0.9: a positive/negative label needs the interval to exclude the null and
+  // certainty at least Low; Very-low must be neutral (leaning).
+  for (const f of FOODS) {
+    if (f.effect !== "neutral") {
+      assert.notEqual(f.certainty, "very-low", `${f.id}: directional at very-low (must fall back to neutral)`);
+    }
+  }
+});
+
 test("ciExcludesNull is consistent with a directional verdict", () => {
   // A positive/negative verdict should rest on an interval that excludes no-effect;
   // a neutral verdict should not claim one.
