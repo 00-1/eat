@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.23 — living document.** This file is the canonical description of how
+**Version 0.24 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -344,6 +344,14 @@ We try to state what *would* change our mind, so verdicts are falsifiable.
   check us.
 - Verdicts are **population averages**; individuals can differ substantially.
 - We grade certainty as a rubric, not by recomputing every published score.
+- **Outcome-selection bias (D1).** Most verdicts lean on **all-cause mortality,
+  cardiovascular disease, and type-2 diabetes** — the outcomes with the richest
+  cohort data. **Cancer outcomes are under-represented**, which can *under-call*
+  carcinogens whose main harm is cancer (e.g. alcohol, an IARC Group 1 carcinogen,
+  looks near-neutral on the mortality curve). We add cancer outcomes where the
+  WCRF/CUP or IARC grade is strong (processed meat → colorectal cancer; soy →
+  cancer mortality) and flag the bias where it bites. The forthcoming per-outcome
+  model will let a food read "neutral on mortality, negative on cancer" directly.
 - **This is not medical or dietary advice.**
 
 ---
@@ -368,6 +376,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.24 | 2026-06-29 | Collapsed-row **group chip** (a food's group verdict shows at a glance — tomatoes reads "⊕ Vegetables: Positive" without expanding). Added the **outcome-selection bias** limitation (D1): verdicts lean on mortality/CVD/T2D, cancer is under-represented (can under-call carcinogens like alcohol); cancer outcomes added where the grade is strong. |
 | 0.23 | 2026-06-29 | **Component-context layer** (multi-conclusion model). Foods can carry a "What's in it" block: each constituent worry (saturated fat, sugar) is shown with how the food's *own outcomes* adjudicate it — a component **never sets the verdict**. Cocoa: its saturated fat is largely stearic acid (≈LDL-neutral); sugar caveat noted but outcomes are neutral. The **matrix-not-molecule** contrast is now an explicit feature: the *same* sugar reads Positive in whole fruit and Negative in soda, because the outcomes — not the molecule — decide. |
 | 0.22 | 2026-06-29 | **Grounding batch 3.** Verified the last two batch-1 holdouts. **Coffee**: RR 0.83 (0.79–0.88) all-cause mortality at 3–4 cups/day (Poole 2017 BMJ umbrella, corrected; corroborated Crippa 2014, Kim 2019) — added a U-shaped "sweet spot" dose curve. **Processed meat / colorectal cancer**: RR 1.18 (1.10–1.28) per 50 g/day (Chan 2011 PLoS ONE; IARC 2015; WCRF/CUP 2017) — its dose curve is now the first **source-verified** curve. **9 of 31 foods source-verified.** |
 | 0.21 | 2026-06-29 | Rule cleanups. **(b2) Directionality floor:** a verdict is directional only if its CI excludes null AND the effect clears a trivially-small floor (\|ln RR\| > 0.03) — `Scoring.isDirectional()`. Butter (RR 1.0134, CI excludes null but ~1% effect) now records `ciExcludesNull: true` honestly and stays neutral *by rule*, not by a hand-set flag. **E2:** severity label "Manageable" → "Minor". **B3 resolved:** dose-response gradient for null associations is moot — neutral verdicts are scored on the six quality dims, which exclude dose-response, so it can't affect a neutral's certainty. |

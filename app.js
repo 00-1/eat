@@ -176,6 +176,21 @@
     );
   }
 
+  // Compact group chip(s) for the collapsed meta row, so a food's group verdict is
+  // visible at a glance (e.g. tomatoes shows "Vegetables: Positive" without opening).
+  function groupChips(food) {
+    if (typeof groupsFor !== "function" || typeof Scoring === "undefined") return "";
+    return groupsFor(food.id)
+      .map(function (g) {
+        const tier = Scoring.assess(g.evidence, g.outcomes).tier;
+        const shortName = String(g.name).split(" (")[0];
+        return "<span class='group-chip group-chip-" + g.effect + "' title='As part of " +
+          escapeHtml(g.name) + " — " + EFFECT_LABEL[g.effect] + ", " + CERTAINTY_LABEL[tier] + "'>⊕ " +
+          escapeHtml(shortName) + ": " + EFFECT_LABEL[g.effect] + "</span>";
+      })
+      .join("");
+  }
+
   // Compact shape chip for the collapsed card meta row (only when a curve exists).
   function doseChip(food) {
     const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
@@ -448,6 +463,7 @@
               (function () { var t = certaintyOf(food); return "<span class='tier " + t + "'>" + CERTAINTY_LABEL[t] + "</span>"; })() +
               magnitudeChip(food) +
               doseChip(food) +
+              groupChips(food) +
               basisChip(food) +
               verifiedChip(food) +
               "<span class='outcomes'>" + escapeHtml((food.outcomes || []).join(" · ")) + "</span>" +

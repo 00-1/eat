@@ -318,6 +318,15 @@ a { color: var(--accent); }
 
 .block-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
 
+/* Collapsed-row group chip */
+.group-chip {
+  font-size: 0.72rem; font-weight: 600; padding: 3px 9px; border-radius: 999px;
+  border: 1px solid var(--line); white-space: nowrap; background: var(--surface);
+}
+.group-chip-positive { color: var(--pos); border-color: #c7e8d4; }
+.group-chip-negative { color: var(--neg); border-color: #f3cfce; }
+.group-chip-neutral  { color: var(--ink-soft); }
+
 /* Component context ("what's in it") */
 .components { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .component {

@@ -48,8 +48,11 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
       citations; store PMIDs/DOIs.
 
 **Coverage:**
-- [ ] **D1** — add cancer outcomes where WCRF/CUP grades are strong; state the
-      CVD/mortality bias as a limitation.
+- [~] **D1** — limitation note DONE (v0.24): outcome-selection bias stated in
+      METHODOLOGY (mortality/CVD/T2D-heavy; cancer under-represented → under-calls
+      carcinogens like alcohol). Cancer outcomes present where grade is strong
+      (processed meat→colorectal, soy→cancer mortality). Broader cancer-outcome
+      coverage waits on the per-outcome model + grounding.
 - [ ] **D2** — record per-food per-category exception status (checked-clear vs n/a).
 - [~] **D3** — placeholder DONE (v0.17): foods with no steelman now show an honest
       "no counter-argument assessed yet — known gap" note (8 foods: fiber, olive-oil,
@@ -133,8 +136,8 @@ group(s) it belongs to**, all computed by the same engine.
       level (needs per-food evidence work — their current self RR is borrowed from
       the F&V umbrella). Now lower-stakes since the group conclusion carries the
       strength.
-- [ ] Optionally surface a compact group chip on the collapsed card (so the group
-      verdict is visible at a glance, not only when expanded).
+- [x] Compact group chip on the collapsed card (v0.24) — tomatoes shows
+      "⊕ Vegetables: Positive" at a glance.
 - [ ] **Processing classes as groups, not items.** Ultra-processed foods and
       refined grains are *classes*, not things you eat directly (same problem as
       fibre) — but they have real outcome evidence (Hall RCT for UPF), so they
