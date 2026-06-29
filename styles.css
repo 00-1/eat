@@ -298,6 +298,39 @@ a { color: var(--accent); }
 .counter-assess { margin: 6px 0 0; font-size: 0.86rem; }
 .counter-k { font-weight: 600; }
 
+/* Exceptions — "who should be careful" */
+.exc-none { margin: 0; font-size: 0.86rem; color: var(--ink-soft); }
+.excs { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.exc {
+  padding: 11px 13px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--line);
+  border-radius: 10px;
+}
+.exc-avoid    { border-left-color: var(--neg); }
+.exc-caution  { border-left-color: var(--neu); }
+.exc-mitigate { border-left-color: var(--pos); }
+.exc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.exc-group { font-weight: 600; font-size: 0.9rem; }
+.sev {
+  flex: 0 0 auto;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.sev-avoid    { background: var(--neg-bg); color: var(--neg); }
+.sev-caution  { background: var(--neu-bg); color: var(--neu); }
+.sev-mitigate { background: var(--pos-bg); color: var(--pos); }
+.exc-meta { margin: 6px 0 0; font-size: 0.8rem; color: var(--ink-soft); }
+.exc-type { font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; font-size: 0.72rem; }
+.exc-src { opacity: 0.8; }
+.exc-mit { margin: 6px 0 0; font-size: 0.86rem; }
+
 .card-foot {
   display: flex;
   flex-wrap: wrap;

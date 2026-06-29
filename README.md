@@ -71,6 +71,7 @@ python3 -m http.server 8000   # then visit http://localhost:8000
 | `scoring.js`                   | Deterministic scoring engine (facts → scores → tier)      |
 | `data.js`                      | Food dataset: verdicts, studies, and recorded evidence    |
 | `counter-arguments.js`         | Real, attributed counter-arguments + our assessment       |
+| `exceptions.js`                | Subgroup exceptions (allergy/intolerance/condition…)      |
 | `test/`                        | Unit + data-integrity tests (`npm test`)                  |
 | `METHODOLOGY.md`               | Canonical, versioned description of how verdicts are made |
 | `research/`                    | Source research behind the methodology                    |
@@ -136,6 +137,18 @@ verdict survives — and why the argument fails under our approach), **partial**
 (partly right / matches our stated uncertainty), or **valid** (a genuine
 limitation we concede). The aim is to pressure-test the model against positions
 people actually hold — not strawmen — so attributions must name real sources.
+
+## Exceptions ("who should be careful")
+
+A verdict is a population average; it can be wrong for *you*. So every food is run
+through a **fixed checklist** (`exceptions.js`) — allergy, intolerance/malabsorption,
+autoimmune, condition-specific, medication, life-stage, contaminant — applied
+equally to all foods (a food with nothing flagged records an empty list, i.e.
+"assessed, none"). Each exception names the affected group, the **scale**
+(prevalence with its source), a **severity** (avoid / caution / manageable), and a
+**mitigation** where one exists (e.g. soak and ramp up legumes; lactase for dairy;
+choose low-mercury fish). Prevalence figures are established estimates with their
+basis recorded, to be verified/refined.
 
 ## Tests
 

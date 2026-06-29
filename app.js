@@ -163,6 +163,41 @@
     return "<span class='challenge-note'>Disagree? Verdicts are reviewed and revised — see “The approach.”</span>";
   }
 
+  const SEVERITY_LABEL = { avoid: "Avoid", caution: "Caution", mitigate: "Manageable" };
+
+  function exceptionsHtml(food) {
+    if (typeof EXCEPTIONS === "undefined") return "";
+    const list = EXCEPTIONS[food.id];
+    if (!list) return "";
+    if (!list.length) {
+      return (
+        "<h4 class='block-h'>Who should be careful</h4>" +
+        "<p class='exc-none'>No notable subgroup exceptions identified.</p>"
+      );
+    }
+    const items = list
+      .map(function (e) {
+        const typeLabel = (typeof EXCEPTION_TYPE_LABEL !== "undefined" && EXCEPTION_TYPE_LABEL[e.type]) || e.type;
+        const prev = e.prevalence || {};
+        return (
+          "<li class='exc exc-" + e.severity + "'>" +
+            "<div class='exc-head'>" +
+              "<span class='exc-group'>" + escapeHtml(e.group) + "</span>" +
+              "<span class='sev sev-" + e.severity + "'>" + SEVERITY_LABEL[e.severity] + "</span>" +
+            "</div>" +
+            "<p class='exc-meta'><span class='exc-type'>" + escapeHtml(typeLabel) + "</span>" +
+              (prev.estimate ? " · <span class='exc-prev'>" + escapeHtml(prev.estimate) +
+                (prev.source ? " <span class='exc-src'>(" + escapeHtml(prev.source) + ")</span>" : "") +
+              "</span>" : "") +
+            "</p>" +
+            (e.mitigation ? "<p class='exc-mit'><span class='counter-k'>Mitigation:</span> " + escapeHtml(e.mitigation) + "</p>" : "") +
+          "</li>"
+        );
+      })
+      .join("");
+    return "<h4 class='block-h'>Who should be careful</h4><ul class='excs'>" + items + "</ul>";
+  }
+
   const STANCE_LABEL = { holds: "Our verdict holds", partial: "Partly valid", valid: "Valid limitation" };
 
   function counterArgsHtml(food) {
@@ -226,6 +261,7 @@
             assessmentHtml(food) +
             studiesHtml(food) +
             considerationsHtml(food) +
+            exceptionsHtml(food) +
             counterArgsHtml(food) +
             revisionsHtml(food) +
             "<div class='card-foot'>" +
