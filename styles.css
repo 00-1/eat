@@ -131,6 +131,20 @@ a { color: var(--accent); }
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 16px;
   align-items: start;
+  grid-auto-flow: row dense; /* let unexpanded cards backfill gaps */
+}
+/* An expanded card uses the full row width instead of leaving empty columns
+   beside it; the remaining cards reflow (dense) to fill the freed space. */
+.card:has(details[open]) {
+  grid-column: 1 / -1;
+}
+/* Keep the expanded prose readable when the card goes full-width on wide screens,
+   while charts/curves still get the room. */
+.card:has(details[open]) .card-detail > .rationale,
+.card:has(details[open]) .card-detail > p,
+.card:has(details[open]) .card-detail > .consids,
+.card:has(details[open]) .card-detail > ul {
+  max-width: 70ch;
 }
 .card {
   background: var(--surface);
