@@ -192,12 +192,27 @@
     return "<svg class='dr-svg' viewBox='0 0 " + W + " " + H + "' role='img' aria-label='Dose-response curve for " + escapeHtml(curve.outcome || "") + "'>" + parts.join("") + "</svg>";
   }
 
+  // Honest placeholder shown when a food has no recorded dose-response curve — the
+  // gap is surfaced, not hidden (a curve might exist but be un-fetched, or genuinely
+  // not have been published). A dedicated dose-response research pass is queued.
+  function doseResponsePlaceholder() {
+    return (
+      "<div class='dose dose-empty'>" +
+        "<h4 class='block-h'>Dose-response <span class='block-sub'>— how risk changes across the range of intake</span></h4>" +
+        "<p class='dr-none'>No dose-response curve recorded yet. Not every food–outcome pair has a published " +
+        "dose-response, and we haven't run a dedicated pass to fetch the ones that do — so this is a known gap, " +
+        "<strong>not</strong> a finding of “no relationship.”</p>" +
+      "</div>"
+    );
+  }
+
   function doseResponseHtml(food) {
     const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
-    if (!a || !a.doseCurve || typeof Scoring === "undefined" || !Scoring.DOSE_SHAPE) return "";
+    if (!a || typeof Scoring === "undefined" || !Scoring.DOSE_SHAPE) return "";
+    if (!a.doseCurve) return doseResponsePlaceholder();
     const c = a.doseCurve;
     const svg = buildDoseSvg(c);
-    if (!svg) return "";
+    if (!svg) return doseResponsePlaceholder();
     const meta = Scoring.DOSE_SHAPE[c.shape] || {};
     const prov = c.verified
       ? "<span class='prov prov-yes' title='Curve checked against the source'>✓ source-verified</span>"

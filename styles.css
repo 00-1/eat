@@ -398,6 +398,8 @@ a { color: var(--accent); }
 .dr-pt-harm { fill: var(--neg); }
 .dr-axis { fill: var(--ink-soft); font-size: 10px; }
 .dr-note { margin: 6px 0 0; font-size: 0.83rem; color: var(--ink-soft); }
+.dose-empty { border-style: dashed; }
+.dr-none { margin: 2px 0 0; font-size: 0.85rem; color: var(--ink-soft); }
 .dr-src { margin: 8px 0 0; font-size: 0.78rem; color: var(--ink-soft); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .dr-src-out { font-weight: 600; color: var(--ink); }
 .dr-chip {

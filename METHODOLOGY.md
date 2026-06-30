@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.29 — living document.** This file is the canonical description of how
+**Version 0.30 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -376,6 +376,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.30 | 2026-06-29 | Every food now shows a **dose-response section**: foods without a recorded curve display an honest placeholder ("no curve recorded yet — a known gap, not a finding of 'no relationship'") rather than silently omitting it (only ~6 foods have curves so far). Queued a dedicated dose-response research pass to fetch the missing curves and mark genuinely-unavailable vs not-yet-fetched. |
 | 0.29 | 2026-06-29 | **Explore now re-derives the whole VERDICT per lens, not just certainty.** Each preset maps to a lens (`Scoring.verdictUnderLens`): *Observational only* keeps observation as the direction source (certainty drops); *Trials & mechanism only* **ignores cohorts** and lets `experimentalDirection` (what trials + mechanism point to) set the direction — "none" → *Insufficient*. The result is the project's thesis made visible: under trials/mechanism-only, **28 of 32 verdicts shift and 18 flip direction** — the sat-fat foods cohorts exonerate (cheese, butter, coconut, milk, eggs) get re-condemned by the LDL/cholesterol mechanism, the high-GI foods turn negative, fatty fish goes neutral (supplement RCTs are null), and the cohort-only winners (coffee, tea, leafy greens, fruit) become *Insufficient*. Added `experimentalDirection` per food + tests. |
 | 0.28 | 2026-06-29 | **Per-outcome verdicts populated** (closes a/a2). **Red meat** now reads neutral on mortality but **negative on type-2 diabetes** (Li 2024 Lancet IPD, HR 1.10 per 100 g/day; Shi 2023 higher) — resolving the red-meat-vs-white-rice inconsistency. **Alcohol** reads neutral on mortality but **negative on cancer** (Collaborative Group 2002, breast-cancer RR 1.071 per 10 g/day, no safe threshold), with the monotonic-harm dose curve now living on that per-outcome verdict. Cruciferous/leafy-green-specific figures could not be verified this round, so their self-verdict walk-back stays deferred. |
 | 0.27 | 2026-06-29 | **Per-outcome verdict framework** (scaffold). A food can carry optional `outcomeVerdicts` — additional outcome-specific verdicts (each its own evidence + optional dose curve), scored live by the same engine and rendered as a "By individual outcome" block, additive to the headline verdict. This is the machinery for "red meat ≈ neutral on mortality but negative on diabetes" and "alcohol neutral on mortality, negative on cancer". Tested and ready; the figures are in a running grounding batch, so no food carries one yet. |
