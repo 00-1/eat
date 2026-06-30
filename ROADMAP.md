@@ -78,6 +78,25 @@ together.
       winners go Insufficient, fatty fish goes neutral (null supplement RCTs). The
       diff shows full before→after verdict chips. Tested.
 
+### Mechanistic-lens follow-ups  ⟶ *queued*
+
+- [ ] **Review whether we have enough mechanistic data to populate the lens — and run
+      a mechanistic research pass.** The "Trials & mechanism only" lens is driven by a
+      single hand-judged `experimentalDirection` enum per food — currently the
+      **least-grounded data in the project**: no per-food trial/mechanism facts, no
+      sources, and ~13 foods are `none` → *Insufficient*. Before the lens can be
+      trusted: **(a)** record the actual trial / marker / validated-pathway / mechanism
+      evidence + sources per food (parallel to the observational `evidence`);
+      **(b)** *derive* `experimentalDirection` from that rather than asserting it;
+      **(c)** re-examine the `none` foods — several likely have real trials we omitted
+      (leafy-green nitrate→BP RCTs, soy/isoflavone LDL markers, avocado lipid feeding
+      studies, green-tea flavanol BP). Queue a dedicated **mechanistic research pass**.
+      Until then the lens is *illustrative, not verified* (now flagged in the UI).
+- [ ] **Per-food "Under a different lens" section on the card.** Add a detail-view
+      block to each food showing its verdict under **Default / Observational only /
+      Trials & mechanism only** (via `verdictUnderLens`), so the per-food shift is
+      visible without opening the global Explore panel.
+
 ## Live-derived conclusions + Explore diff  ⟶ *done (v0.13)*
 
 - [x] Conclusions are no longer stored: the certainty tier on every card, sort, and
