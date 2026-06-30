@@ -50,7 +50,7 @@
     },
     "fermented-dairy": {
       id: "fermented-dairy",
-      name: "Fermented dairy (yogurt, cheese, kefir)",
+      name: "Fermented dairy (yogurt, cheese, kefir, etc.)",
       kind: "food-group",
       effect: "neutral",
       certainty: "low", // regression snapshot; computed live

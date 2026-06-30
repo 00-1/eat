@@ -43,7 +43,7 @@ const FOODS = [
   // ============================ POSITIVE ============================
   {
     id: "tree-nuts",
-    name: "Tree nuts (almonds, walnuts)",
+    name: "Tree nuts (almonds, walnuts, etc.)",
     category: "Nuts & seeds",
     effect: "positive",
     certainty: "high",
@@ -83,7 +83,7 @@ const FOODS = [
   },
   {
     id: "legumes",
-    name: "Legumes (beans, lentils, chickpeas)",
+    name: "Legumes (beans, lentils, chickpeas, etc.)",
     category: "Legumes",
     effect: "positive",
     certainty: "low",
@@ -114,7 +114,7 @@ const FOODS = [
   },
   {
     id: "whole-grains",
-    name: "Whole grains (oats, barley, whole wheat)",
+    name: "Whole grains (oats, barley, whole wheat, etc.)",
     category: "Grains",
     effect: "positive",
     certainty: "moderate",
@@ -177,7 +177,7 @@ const FOODS = [
   },
   {
     id: "whole-fruit",
-    name: "Whole fruit (apples, citrus, berries)",
+    name: "Whole fruit (apples, citrus, berries, etc.)",
     category: "Fruit",
     effect: "positive",
     certainty: "moderate",
@@ -217,7 +217,7 @@ const FOODS = [
   },
   {
     id: "fatty-fish",
-    name: "Fatty fish (salmon, sardines, mackerel)",
+    name: "Fatty fish (salmon, sardines, mackerel, etc.)",
     category: "Seafood",
     effect: "positive",
     certainty: "moderate",
@@ -375,7 +375,7 @@ const FOODS = [
   // ============================ NEGATIVE ============================
   {
     id: "processed-meat",
-    name: "Processed meats (bacon, sausage, deli)",
+    name: "Processed meats (bacon, sausage, deli, etc.)",
     category: "Meat",
     effect: "negative",
     certainty: "high",
@@ -408,7 +408,7 @@ const FOODS = [
   },
   {
     id: "sugary-drinks",
-    name: "Sugar-sweetened beverages (soda)",
+    name: "Sugar-sweetened beverages (soda, etc.)",
     category: "Beverages",
     effect: "negative",
     certainty: "high",
@@ -505,7 +505,7 @@ const FOODS = [
   },
   {
     id: "refined-grains",
-    name: "Refined grains (white bread, pastries)",
+    name: "Refined grains (white bread, pastries, etc.)",
     category: "Grains",
     effect: "negative",
     certainty: "low",
@@ -562,7 +562,7 @@ const FOODS = [
   },
   {
     id: "red-meat",
-    name: "Unprocessed red meat (beef, pork)",
+    name: "Unprocessed red meat (beef, pork, etc.)",
     category: "Meat",
     effect: "neutral",
     certainty: "low",
@@ -601,7 +601,7 @@ const FOODS = [
   },
   {
     id: "poultry",
-    name: "Poultry (chicken, turkey)",
+    name: "Poultry (chicken, turkey, etc.)",
     category: "Meat",
     effect: "neutral",
     certainty: "low",
@@ -925,7 +925,7 @@ const FOODS = [
   },
   {
     id: "soy",
-    name: "Soy foods (tofu, soy milk, edamame)",
+    name: "Soy foods (tofu, soy milk, edamame, etc.)",
     category: "Legumes",
     effect: "positive",
     certainty: "moderate",
@@ -950,7 +950,7 @@ const FOODS = [
   },
   {
     id: "cruciferous",
-    name: "Cruciferous vegetables (broccoli, cabbage)",
+    name: "Cruciferous vegetables (broccoli, cabbage, etc.)",
     category: "Vegetables",
     effect: "positive",
     certainty: "moderate",
