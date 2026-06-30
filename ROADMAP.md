@@ -267,6 +267,43 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       read as "how solid for *this kind* of verdict," not a cross-verdict ranking. A
       deeper recalibration of the cut-points remains optional/open.
 
+## Shortlists & coverage strategy (queue planning, 2026-06-30)  ⟶ *queued; spend approved*
+
+- [ ] **Big combined research pass (spend approved by maintainer).** Run it as a
+      sustained push, not metered: (1) **mechanistic** evidence + sources per food →
+      derive `experimentalDirection`; (2) **dose-response** curves for the 26 missing
+      foods; (3) remaining **observational** grounding (~19 foods). This is the critical
+      path that unlocks the mechanism lens, the per-food wrestling section, the dose
+      curves, and most "provisional" flags at once.
+- [ ] **Crown a single champion per direction (reproducible).** Distinct from the
+      Gold-standard / Bin-fodder shortlists and the cusp: mark the #1 positive and #1
+      negative so e.g. nuts stays distinguished even if Gold grows. Rule (computed, not
+      hand-picked): among the qualifying (gold/bin) foods, the champion is the one with
+      the **largest effect magnitude** `|ln(pooledRR)|`, tie-broken by certainty then
+      precision. Today that's **nuts** (RR 0.78) and **trans fat** (RR 1.42). Surfaced
+      with a distinct "★ top pick" marker.
+- [ ] **Gold standard is artificially light — fix the veg artifact.** Only nuts
+      qualifies, and *no vegetable reaches even the cusp* purely because leafy-greens/
+      cruciferous were recorded with CVD/cancer outcomes but **not all-cause mortality**,
+      so they miss the all-cause magnitude bump that puts fruit on the cusp (same RR
+      0.90). Vegetables do lower all-cause mortality (the F&V umbrella). Fix via the
+      **(b) magnitude redesign** (magnitude = max across a food's outcomes) and/or
+      recording the all-cause outcome for the veg during grounding — expected to put
+      cruciferous/leafy on the cusp (and maybe into Gold if certainty lifts). This is an
+      artifact, not a real "veg < fruit."
+- [ ] **Target the next food tranche at top/bottom CONTENDERS.** Expand coverage toward
+      likely **Gold-standard / Bin-fodder (and champion) candidates** — the strongest
+      plausible positives and worst plausible negatives we don't yet list — rather than
+      arbitrary breadth, so the shortlists are genuinely "best/worst," not "best/worst
+      of what we happened to add." (Candidates to scout: extra-virgin foods, oily-fish
+      variants, sugar-sweetened/UPF subtypes, sugary cereals, deep-fried foods, etc.)
+- [ ] **Don't add thin foods as full items — keep a "nothing notable yet" list.** Where
+      a food has too little research to say anything, DON'T create an empty verdict-
+      bearing entry (redundant, dilutes the list). Instead maintain a lightweight
+      **holding list** ("known foods we can't yet assess — no notable evidence /
+      not researched") shown separately. A food graduates to a full item only when there's
+      a real verdict to give. (Refines the taxonomy-first scaling plan in §2.)
+
 ## 1. Verify and tighten the inputs  ⟶ *in progress*
 
 The scoring engine is sound, but several recorded facts are well-established
