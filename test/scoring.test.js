@@ -265,18 +265,51 @@ test("assess settings.only judges on a subset (numerator AND denominator)", () =
   assert.equal(only.tier, "high");
 });
 
-test("PRESETS expose the explore rules and default is a no-op", () => {
-  assert.ok(S.PRESETS["default"]);
-  assert.equal(S.PRESETS["default"].settings, null);
-  assert.deepEqual(S.PRESETS["observational"].settings, { zero: ["experimental"] });
-  assert.deepEqual(S.PRESETS["mechanism"].settings, { only: ["experimental"] });
-  // default settings (null) leaves assess identical to no settings at all
+test("verdictUnderLens re-derives DIRECTION, not just certainty, per evidence lens", () => {
+  // Observation-led negative (e.g. trans fat): cohorts + validated pathway.
+  const transfat = ev({
+    pooledRR: 1.42, ciExcludesNull: true, participants: 150000, heterogeneity: "low",
+    outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway", funding: "independent",
+    pubBias: "untested", confoundingRisk: "low", experimentalDirection: "negative",
+  });
+  assert.equal(S.verdictUnderLens(transfat, [], "default").effect, "negative");
+  assert.equal(S.verdictUnderLens(transfat, [], "observational").effect, "negative"); // cohorts still say so
+  assert.equal(S.verdictUnderLens(transfat, [], "experimental").effect, "negative"); // pathway agrees
+
+  // A sat-fat food exonerated by observation but condemned by LDL mechanism (cheese-like).
+  const cheeseLike = ev({
+    pooledRR: 0.9, ciExcludesNull: true, participants: 200000, heterogeneity: "moderate",
+    outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent",
+    pubBias: "untested", confoundingRisk: "moderate", experimentalDirection: "negative",
+  });
+  assert.equal(S.verdictUnderLens(cheeseLike, [], "default").effect, "positive");
+  assert.equal(S.verdictUnderLens(cheeseLike, [], "experimental").effect, "negative"); // flips (at low certainty)!
+
+  // A cohort-only positive with no trial/mechanism (coffee-like) → insufficient under trials-only.
+  const coffeeLike = ev({
+    pooledRR: 0.83, ciExcludesNull: true, participants: 520000, heterogeneity: "moderate",
+    outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent",
+    pubBias: "tested-clean", confoundingRisk: "moderate", experimentalDirection: "none",
+  });
+  assert.equal(S.verdictUnderLens(coffeeLike, [], "default").effect, "positive");
+  assert.equal(S.verdictUnderLens(coffeeLike, [], "experimental").effect, "insufficient");
+  assert.equal(S.verdictUnderLens(coffeeLike, [], "experimental").tier, null);
+});
+
+test("PRESETS expose the explore lenses and default is a no-op", () => {
+  assert.equal(S.PRESETS["default"].lens, "default");
+  assert.equal(S.PRESETS["observational"].lens, "observational");
+  assert.equal(S.PRESETS["mechanism"].lens, "experimental");
+  // the default lens reproduces the canonical verdict
   const someEv = ev({
     pooledRR: 0.78, ciExcludesNull: true, participants: 500000, heterogeneity: "low",
     outcomeType: "hard", doseResponse: "graded", rctLevel: "outcomes",
     funding: "independent", pubBias: "tested-clean", confoundingRisk: "low",
+    experimentalDirection: "positive",
   });
-  assert.deepEqual(S.assess(someEv, null, S.PRESETS["default"].settings), S.assess(someEv));
+  const d = S.verdictUnderLens(someEv, [], "default");
+  assert.equal(d.effect, "positive");
+  assert.equal(d.tier, S.assess(someEv).tier);
 });
 
 test("isDirectional: needs CI excluding null AND effect above the trivially-small floor", () => {

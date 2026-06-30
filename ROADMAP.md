@@ -69,6 +69,15 @@ Ordered: live bug → consistency/honesty → grounding → coverage. IDs map to
 The grounding items (A1/A2/A3, B5, D1) overlap with §1 below and should be done
 together.
 
+## Explore lens re-derives the VERDICT (not just certainty)  ⟶ *done (v0.29)*
+
+- [x] Each preset maps to an evidence **lens** (`Scoring.verdictUnderLens`) that
+      re-derives **direction + certainty**. "Trials & mechanism only" ignores cohorts
+      and lets `experimentalDirection` set the verdict ("none" → Insufficient). 28/32
+      shift, 18 flip direction — sat-fat foods get re-condemned by LDL, cohort-only
+      winners go Insufficient, fatty fish goes neutral (null supplement RCTs). The
+      diff shows full before→after verdict chips. Tested.
+
 ## Live-derived conclusions + Explore diff  ⟶ *done (v0.13)*
 
 - [x] Conclusions are no longer stored: the certainty tier on every card, sort, and

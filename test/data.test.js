@@ -109,6 +109,14 @@ test("dose-response curves are well-formed and their shape label is derived, not
   }
 });
 
+test("every food records a valid experimentalDirection (for the trials/mechanism lens)", () => {
+  const ok = ["positive", "negative", "neutral", "none"];
+  for (const f of FOODS) {
+    const d = ASSESSMENTS[f.id].evidence.experimentalDirection;
+    assert.ok(ok.includes(d), `${f.id}: bad experimentalDirection ${d}`);
+  }
+});
+
 test("per-outcome verdicts (where present) are well-formed and directionally coherent", () => {
   for (const f of FOODS) {
     const ovs = ASSESSMENTS[f.id].outcomeVerdicts;
@@ -196,25 +204,32 @@ test("explore: the observational-only preset weakens trans fat (worked example)"
   // its validated causal pathway, so judging on cohort data alone drops it.
   const tf = ASSESSMENTS["trans-fat"];
   assert.ok(tf, "expected a trans-fat assessment to exist");
-  const canonical = S.assess(tf.evidence);
-  const obsOnly = S.assess(tf.evidence, null, S.PRESETS["observational"].settings);
+  const canonical = S.verdictUnderLens(tf.evidence, tf.outcomes || [], "default");
+  const obsOnly = S.verdictUnderLens(tf.evidence, tf.outcomes || [], "observational");
   assert.equal(canonical.tier, "high");
+  assert.equal(canonical.effect, "negative");
+  assert.equal(obsOnly.effect, "negative"); // cohorts still say negative
   assert.ok(
     S.CERTAINTY_ORDER[obsOnly.tier] < S.CERTAINTY_ORDER[canonical.tier],
     `expected observational-only to weaken trans fat from ${canonical.tier}, got ${obsOnly.tier}`
   );
 });
 
-test("explore: a preset never invents certainty (each food's diff is down or unchanged for observational-only)", () => {
-  // Removing experimental credit can only lower or hold the tier, never raise it.
+test("explore: the observational lens never raises certainty or flips direction", () => {
+  // Removing experimental credit can only lower or hold the tier, never raise it,
+  // and observation is our direction source so direction can't flip under it.
   for (const f of FOODS) {
     const e = ASSESSMENTS[f.id].evidence;
-    const before = S.assess(e).tier;
-    const after = S.assess(e, null, S.PRESETS["observational"].settings).tier;
+    const before = S.verdictUnderLens(e, f.outcomes, "default");
+    const after = S.verdictUnderLens(e, f.outcomes, "observational");
     assert.ok(
-      S.CERTAINTY_ORDER[after] <= S.CERTAINTY_ORDER[before],
-      `${f.id}: observational-only raised certainty ${before} -> ${after}`
+      S.CERTAINTY_ORDER[after.tier] <= S.CERTAINTY_ORDER[before.tier],
+      `${f.id}: observational lens raised certainty ${before.tier} -> ${after.tier}`
     );
+    // direction stable unless a very-low fallback flips a directional verdict to neutral
+    if (before.effect !== after.effect) {
+      assert.equal(after.effect, "neutral", `${f.id}: observational lens changed direction to ${after.effect}`);
+    }
   }
 });
 

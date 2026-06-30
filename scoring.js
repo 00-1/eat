@@ -251,20 +251,49 @@
     };
   }
 
-  // Named criteria presets for the explore/diff view.
+  // Named criteria presets for the explore/diff view. Each maps to a `lens` that
+  // re-derives the whole VERDICT (direction + certainty), not just the tier.
   var PRESETS = {
-    "default": { label: "Default (all evidence)", settings: null },
+    "default": { label: "Default (all evidence)", lens: "default" },
     "observational": {
       label: "Observational only",
-      note: "Ignore trial & mechanistic corroboration — judge on cohort data alone.",
-      settings: { zero: ["experimental"] },
+      note: "Ignore trial & mechanistic corroboration — judge on cohort outcome data alone. (This is our normal preference, minus the corroboration bonus.)",
+      lens: "observational",
     },
     "mechanism": {
       label: "Trials & mechanism only",
-      note: "Judge ONLY on experimental / validated-pathway evidence.",
-      settings: { only: ["experimental"] },
+      note: "Throw out the cohort/observational data entirely and judge ONLY on trials + mechanism — the view of people who dismiss observational nutrition. Watch the foods cohorts exonerate get re-condemned, and the cohort-only winners become unprovable.",
+      lens: "experimental",
     },
   };
+
+  // Re-derive the VERDICT (effect + certainty tier) under a single evidence lens.
+  //   "default"      — observation sets direction; trials/mechanism corroborate (canonical).
+  //   "observational"— observation sets direction; strip the experimental dimension
+  //                    from certainty (what cohorts alone support).
+  //   "experimental" — IGNORE observation: direction comes from what trials+mechanism
+  //                    point to (`ev.experimentalDirection`); certainty from the
+  //                    experimental dimension only. "none" → insufficient (no basis).
+  // A directional verdict that collapses to very-low falls back to neutral (a
+  // direction on near-nothing overclaims) — so a strict lens can deflate a verdict.
+  function verdictUnderLens(ev, outcomes, lens) {
+    if (!ev) return { effect: "insufficient", tier: null };
+    if (lens === "experimental") {
+      var dir = ev.experimentalDirection || "none";
+      if (dir === "none") return { effect: "insufficient", tier: null };
+      // No very-low→neutral fallback here: under a mechanism-only lens the whole
+      // point is that mechanism SETS the direction (often at very-low certainty).
+      // "Negative · very-low" is the honest rendering of "LDL says bad, weakly."
+      var ae = assess(ev, outcomes, { only: ["experimental"] });
+      return { effect: dir, tier: ae.tier };
+    }
+    // default / observational: observation sets direction
+    var neutral = !isDirectional(ev);
+    var eff2 = neutral ? "neutral" : ev.pooledRR < 1 ? "positive" : "negative";
+    var a2 = assess(ev, outcomes, lens === "observational" ? { zero: ["experimental"] } : null);
+    if (eff2 !== "neutral" && CERTAINTY_ORDER[a2.tier] === 0) eff2 = "neutral";
+    return { effect: eff2, tier: a2.tier };
+  }
 
   var BASIS_LABEL = {
     convergent: "Convergent",
@@ -373,6 +402,7 @@
     NEUTRAL_DIMS: NEUTRAL_DIMS,
     assess: assess,
     isDirectional: isDirectional,
+    verdictUnderLens: verdictUnderLens,
     PRESETS: PRESETS,
     BASIS_LABEL: BASIS_LABEL,
     BASIS_NOTE: BASIS_NOTE,

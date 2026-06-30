@@ -306,8 +306,16 @@ a { color: var(--accent); }
   padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px;
   border-left: 4px solid var(--line); background: var(--surface);
 }
-.diff-row.diff-down { border-left-color: var(--neg); }
-.diff-row.diff-up   { border-left-color: var(--pos); }
+.diff-row.diff-flip { border-left-color: #c8881f; }
+.diff-row.diff-tier { border-left-color: var(--line); }
+.vchip {
+  font-size: 0.74rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+  border: 1px solid transparent;
+}
+.vchip-positive { background: var(--pos-bg); color: var(--pos); border-color: #c7e8d4; }
+.vchip-negative { background: var(--neg-bg); color: var(--neg); border-color: #f3cfce; }
+.vchip-neutral  { background: #fdf6e3; color: #8a6d3b; border-color: #efe2c0; }
+.vchip-insufficient { background: #eef0ee; color: #5a655e; border-color: #dfe3df; }
 .diff-jump {
   border: none; background: none; padding: 0; cursor: pointer;
   font-size: 0.92rem; font-weight: 600; color: var(--ink); text-align: left;

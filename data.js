@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.28";
+const METHODOLOGY_VERSION = "0.29";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1338,6 +1338,35 @@ const ASSESSMENTS = {
     effectEstimate: "COSMOS RCT: no significant cut in total CVD events (HR 0.90, 0.78–1.02) → a trial-grade roughly-null; industry co-funded.",
   },
 };
+
+// What TRIALS + MECHANISM alone point to (direction), per food — the input for the
+// "Trials & mechanism only" explore lens, which IGNORES observational data. This is
+// deliberately the view of someone who dismisses cohort evidence: it lets LDL- and
+// glycemic-mechanism (and trial-marker) reasoning set the verdict. "none" = no
+// meaningful trial/mechanism basis → that lens reports "insufficient". Recorded as a
+// judgement (with the food's rationale/considerations as justification); merged into
+// each `evidence` below so the engine reads it as a normal fact.
+//   positive : trial/pattern or favorable validated markers (PREDIMED, fibre→LDL/glycemic)
+//   negative : LDL/sat-fat, high-glycemic, or carcinogen/processing mechanism, or harmful markers
+//   neutral  : the strongest trial is null (cocoa COSMOS; omega-3 supplement RCTs; sweetener substitution)
+//   none     : no trial and no clear mechanism either way → insufficient under this lens
+const EXPERIMENTAL_DIRECTION = {
+  "tree-nuts": "positive", "legumes": "positive", "whole-grains": "positive",
+  "leafy-greens": "none", "whole-fruit": "none", "fatty-fish": "neutral",
+  "olive-oil": "positive", "yogurt": "none", "coffee": "none", "avocado": "none",
+  "processed-meat": "negative", "sugary-drinks": "negative", "trans-fat": "negative",
+  "ultra-processed": "negative", "refined-grains": "negative", "eggs": "negative",
+  "red-meat": "negative", "poultry": "none", "milk": "negative", "cheese": "negative",
+  "butter": "negative", "potatoes": "negative", "french-fries": "negative",
+  "alcohol": "negative", "artificial-sweeteners": "neutral", "coconut-oil": "negative",
+  "green-tea": "none", "white-rice": "negative", "soy": "positive", "cruciferous": "none",
+  "tomatoes": "none", "cocoa": "neutral",
+};
+for (const _id in EXPERIMENTAL_DIRECTION) {
+  if (ASSESSMENTS[_id] && ASSESSMENTS[_id].evidence) {
+    ASSESSMENTS[_id].evidence.experimentalDirection = EXPERIMENTAL_DIRECTION[_id];
+  }
+}
 
 
 // Allow Node (tests) to import this data while the browser loads it as a script.

@@ -644,59 +644,69 @@
     const preset = presets[state.preset] || presets["default"];
     noteEl.textContent = preset && preset.note ? preset.note : "";
 
-    if (!preset || !preset.settings) {
+    if (!preset || preset.lens === "default") {
       diffEl.innerHTML =
-        "<p class='explore-empty'>Pick an alternate rule above to see which verdicts would shift " +
+        "<p class='explore-empty'>Pick an alternate lens above to see how the verdicts would change " +
         "if we judged the same data differently. The published verdicts don’t change.</p>";
       return;
     }
 
-    // Compare each food's canonical tier to its tier under the alternate rule.
+    // Helper: render a verdict (effect + tier) as a compact chip.
+    const VE = { positive: "Positive", negative: "Negative", neutral: "Neutral", insufficient: "Insufficient" };
+    const verdictChip = function (v) {
+      if (!v || v.effect === "insufficient" || !v.tier) {
+        return "<span class='vchip vchip-insufficient' title='No trial/mechanism basis to judge'>Insufficient</span>";
+      }
+      return "<span class='vchip vchip-" + v.effect + "'>" + VE[v.effect] + "</span>" +
+why_tier(v.tier);
+    };
+    function why_tier(t) { return "<span class='tier " + t + "'>" + CERTAINTY_LABEL[t].replace(" certainty", "") + "</span>"; }
+
+    // Compare each food's canonical verdict to its verdict under the chosen lens —
+    // DIRECTION and certainty, both re-derived live.
     const rows = FOODS.map(function (food) {
       const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
       if (!a || !a.evidence) return null;
-      const before = certaintyOf(food);
-      const after = certaintyOf(food, preset.settings);
-      if (before === after) return null;
-      const dir = (CERTAINTY_RANK[after] || 0) - (CERTAINTY_RANK[before] || 0);
-      return { food: food, before: before, after: after, dir: dir };
+      const before = Scoring.verdictUnderLens(a.evidence, food.outcomes, "default");
+      const after = Scoring.verdictUnderLens(a.evidence, food.outcomes, preset.lens);
+      const dirChanged = before.effect !== after.effect;
+      const tierChanged = before.tier !== after.tier;
+      if (!dirChanged && !tierChanged) return null;
+      return { food: food, before: before, after: after, dirChanged: dirChanged };
     }).filter(Boolean);
 
+    // Direction changes first (most consequential), then certainty-only shifts.
     rows.sort(function (x, y) {
-      if (x.dir !== y.dir) return x.dir - y.dir; // biggest drops first
+      if (x.dirChanged !== y.dirChanged) return x.dirChanged ? -1 : 1;
       return x.food.name.localeCompare(y.food.name);
     });
 
     if (!rows.length) {
       diffEl.innerHTML =
-        "<p class='explore-empty'>No verdicts shift under this rule — the certainty tiers are " +
-        "robust to it across all " + FOODS.length + " foods.</p>";
+        "<p class='explore-empty'>No verdicts shift under this lens across all " + FOODS.length + " foods.</p>";
       return;
     }
 
     const items = rows
       .map(function (r) {
-        const cls = r.dir < 0 ? "diff-down" : "diff-up";
-        const arrow = r.dir < 0 ? "↓" : "↑";
         return (
-          "<li class='diff-row " + cls + "' data-food='" + escapeHtml(r.food.id) + "'>" +
+          "<li class='diff-row " + (r.dirChanged ? "diff-flip" : "diff-tier") + "' data-food='" + escapeHtml(r.food.id) + "'>" +
             "<button class='diff-jump' data-food='" + escapeHtml(r.food.id) + "'>" + escapeHtml(r.food.name) + "</button>" +
             "<span class='diff-change'>" +
-              "<span class='tier " + r.before + "'>" + CERTAINTY_LABEL[r.before] + "</span>" +
-              "<span class='diff-arrow'>" + arrow + "</span>" +
-              "<span class='tier " + r.after + "'>" + CERTAINTY_LABEL[r.after] + "</span>" +
+              verdictChip(r.before) +
+              "<span class='diff-arrow'>→</span>" +
+              verdictChip(r.after) +
             "</span>" +
           "</li>"
         );
       })
       .join("");
 
-    const drops = rows.filter(function (r) { return r.dir < 0; }).length;
-    const ups = rows.length - drops;
+    const flips = rows.filter(function (r) { return r.dirChanged; }).length;
     const summary =
       "<p class='diff-summary'>" + rows.length + " of " + FOODS.length + " verdicts shift" +
-      (drops ? " · " + drops + " weaker" : "") + (ups ? " · " + ups + " stronger" : "") +
-      " <span class='diff-summary-note'>(certainty only; published verdicts unchanged)</span></p>";
+      (flips ? " · <strong>" + flips + " change direction</strong>" : "") +
+      " <span class='diff-summary-note'>(the published verdicts on the cards don’t change — this is a what-if)</span></p>";
 
     diffEl.innerHTML = summary + "<ul class='diff-list'>" + items + "</ul>";
 
