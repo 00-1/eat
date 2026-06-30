@@ -92,10 +92,26 @@ together.
       (leafy-green nitrate→BP RCTs, soy/isoflavone LDL markers, avocado lipid feeding
       studies, green-tea flavanol BP). Queue a dedicated **mechanistic research pass**.
       Until then the lens is *illustrative, not verified* (now flagged in the UI).
-- [ ] **Per-food "Under a different lens" section on the card.** Add a detail-view
-      block to each food showing its verdict under **Default / Observational only /
-      Trials & mechanism only** (via `verdictUnderLens`), so the per-food shift is
-      visible without opening the global Explore panel.
+- [ ] **Per-food "Under a different lens" section — and wrestle with the
+      contradictions.** Add a detail-view block showing the food's verdict under
+      **Default / Observational only / Trials & mechanism only** (via
+      `verdictUnderLens`), flagged **AGREE** or **CONTRADICT**. Where they contradict
+      (cheese +obs/−mech, butter & coconut & eggs neutral-obs/−mech, fruit
+      +obs/insufficient-mech, fatty fish +obs/neutral-mech…), don't just display it —
+      **argue it out for that specific food**: does our blanket "prefer observation"
+      stance actually hold *here*, given the weight of the mechanistic evidence? The
+      honest outcomes differ per food:
+        - *observation rightly wins* — mechanism is a surrogate the outcomes overrule
+          (cheese: LDL up, but cohorts show lower CVD → the matrix wins);
+        - *be more humble* — mechanism is strong but observation is thin/absent, so we
+          should hold low/neutral, not "fine" (coconut oil — we already do);
+        - *genuine tension* — the mechanistic case is strong enough that our
+          confidence should drop a notch, and we say so.
+      This operationalizes the central "mechanism corroborates, never overrides"
+      guardrail **per food and challengeably**, instead of as a blanket assertion.
+      **Depends on the mechanistic research pass above** — we can't honestly weigh
+      mechanistic evidence we haven't yet collected and sourced. Record a short
+      per-food reconciliation note (the wrestle), shown in this section.
 
 ## Live-derived conclusions + Explore diff  ⟶ *done (v0.13)*
 
