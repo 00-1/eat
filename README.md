@@ -1,9 +1,14 @@
 # Diet Effects
 
+**Live site: https://00-1.github.io/eat/**
+
 A small web app that lists whether common foods generally have a **positive**,
 **negative**, or **neutral** effect when *added* to a typical diet — based on
 free-living observational data (what tends to actually happen when people add a
 food to how they already eat).
+
+It's a **zero-build static site** (plain HTML/CSS/vanilla JS) served from the repo
+root via GitHub Pages — no framework, bundler, or backend.
 
 The point of the project is **transparency and revisability**: every verdict is
 tied to the actual studies behind it, carries an explicit certainty rating, and

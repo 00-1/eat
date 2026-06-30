@@ -321,10 +321,12 @@ unverified inputs, coverage gaps, contested verdicts, method limitations — is
 surfaced in the app/docs by default rather than left implicit. Transparency about
 what we *don't* know is a feature, not an embarrassment.
 
-## Publishing  ⟶ *backlog*
+## Publishing  ⟶ *live*
 
-- [ ] Deploy as a GitHub Pages site (static, no build step — should be trivial).
-      Not yet published; no viewer yet.
+- [x] Deployed via **GitHub Pages** (Settings → Pages → Deploy from `main` / root).
+      Zero build step; live at **https://00-1.github.io/eat/**. Added `.nojekyll` so
+      files are served as-is, and confirmed all asset paths are relative (works under
+      the `/eat/` project subpath). README links the live site.
 
 ## 3. Absolute impact (beyond relative effect)  ⟶ *idea*
 
