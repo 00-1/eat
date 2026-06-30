@@ -291,21 +291,24 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       recording the all-cause outcome for the veg during grounding — expected to put
       cruciferous/leafy on the cusp (and maybe into Gold if certainty lifts). This is an
       artifact, not a real "veg < fruit."
-- [ ] **Top spots must be ACTIONABLE — gate shortlists on within-category homogeneity.**
-      A Gold-standard / Bin-fodder / champion / cusp entry should mean "do (or avoid)
-      THIS and you reliably get the effect." So a category whose benefit is
-      *concentrated in a subset* must NOT hold a top spot under the umbrella name —
-      crowning "whole fruit" is misleading because you could eat sugary/tropical fruit
-      (weak/null) and miss it; the spot belongs to the subset that earns it (**berries**).
-      Implement: record a per-item granularity/homogeneity tag (e.g.
-      `categoryHomogeneity: specific | uniform | concentrated | unknown`); shortlist
-      eligibility (in `standout()`) requires **specific OR uniform** — `concentrated`
-      umbrellas are excluded, with a note pointing to the member that qualifies. Effect
-      today: **whole fruit drops off the cusp** (concentrated → berries), while
-      **non-starchy veg stay eligible** (uniform) — this is the *real* reason veg feels
-      healthier than fruit (uniformity, not magnitude), and it pairs with the (b)
-      magnitude redesign (veg in, fruit out). Tree nuts = uniform → keeps its spot.
-      Buildable now (small); higher honesty payoff than it looks.
+- [ ] **Top spots, with nuance — a "not all" caveat applied EVENLY.** A Gold-standard /
+      Bin-fodder / cusp entry should signal how *actionable* it is. Rather than excluding
+      heterogeneous categories, **keep them in the lists but badge them "not all"** —
+      fruit stays (it's broadly good) but flagged "strongest for berries/apples; sugary/
+      tropical weaker"; UPF stays but flagged "varies — some far worse." Two firm rules:
+        - **Apply it evenly, reproducibly.** Record a per-item `categoryUniformity`
+          (`specific` | `uniform` | `mixed`) for **every** entry against one fixed
+          question — "does the verdict apply roughly uniformly across the foods this
+          entry names, or is it concentrated/heterogeneous?" — *not* hand-picked for the
+          ones we discussed. The "not all" badge is then derived uniformly from `mixed`.
+          (First-pass calls: tree nuts/processed meat/sugary drinks/non-starchy veg/
+          legumes = uniform; whole fruit = mixed→berries; ultra-processed = mixed; the
+          single-food items = specific. These classifications themselves want review.)
+        - **The single CHAMPION (★ top pick) still requires `specific` or `uniform`** —
+          you can't crown a "not all" entry as THE thing to do.
+      Net: fruit/UPF appear with a caveat, veg stay clean (uniform), nuts crowned, and
+      the honest "go for berries specifically" message survives. Pairs with the (b)
+      magnitude redesign. Buildable now (small).
 - [ ] **Target the next food tranche at top/bottom CONTENDERS.** Expand coverage toward
       likely **Gold-standard / Bin-fodder (and champion) candidates** — the strongest
       plausible positives and worst plausible negatives we don't yet list — rather than
