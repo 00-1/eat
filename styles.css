@@ -154,6 +154,24 @@ a { color: var(--accent); }
   overflow: hidden;
 }
 
+/* Verdict / severity accent: a SOLID, SQUARE (non-curved) bar, inset from the
+   rounded corners so it reads as a deliberate marker rather than a border that
+   curves around the corner. Colour comes from --accent-c, set by the verdict /
+   severity modifier classes below. */
+.card, .group-item, .outcome-item, .counter, .exc { position: relative; }
+.card::before, .group-item::before, .outcome-item::before, .counter::before, .exc::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 4px;
+  background: var(--accent-c, var(--line));
+}
+.card.positive, .group-positive, .outcome-positive, .counter-holds, .exc-mitigate { --accent-c: var(--pos); }
+.card.neutral,  .group-neutral,  .outcome-neutral,  .counter-partial, .exc-caution { --accent-c: var(--neu); }
+.card.negative, .group-negative, .outcome-negative, .counter-valid,  .exc-avoid    { --accent-c: var(--neg); }
+
 .card details { width: 100%; }
 .card summary {
   list-style: none;
@@ -380,8 +398,17 @@ a { color: var(--accent); }
 }
 .dr-shape-line { margin: 2px 0 10px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .dr-shape {
+  display: inline-block;
   font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px;
   border: 1px solid transparent; white-space: nowrap;
+}
+/* Dose-shape rows in the method doc are pill + description; don't force the pill
+   into the tier-list's fixed 120px first column (it overflows). Flow them inline. */
+.tier-list li:has(.dr-shape) {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
 }
 .dr-shape-note { font-size: 0.84rem; color: var(--ink-soft); }
 .dr-benefit  { background: var(--pos-bg); color: var(--pos); border-color: #c7e8d4; }

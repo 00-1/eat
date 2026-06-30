@@ -91,7 +91,7 @@
         const magChip = mag && mag !== "minimal"
           ? "<span class='mag mag-" + mag + "'>" + escapeHtml(Scoring.MAGNITUDE_LABEL[mag]) + "</span>" : "";
         return (
-          "<li class='group-item'>" +
+          "<li class='group-item group-" + g.effect + "'>" +
             "<div class='group-head'>" +
               "<span class='group-name'>" + escapeHtml(g.name) + "</span>" +
               "<span class='badge " + g.effect + "'>" + EFFECT_LABEL[g.effect] + "</span>" +
@@ -128,7 +128,7 @@
           : "<span class='prov prov-no' title='Figures are best-estimates, not yet source-checked'>facts estimated</span>";
         const curve = ov.doseCurve ? buildDoseSvg(ov.doseCurve) : "";
         return (
-          "<li class='outcome-item'>" +
+          "<li class='outcome-item outcome-" + ov.effect + "'>" +
             "<div class='group-head'>" +
               "<span class='group-name'>" + escapeHtml(ov.outcome) + "</span>" +
               "<span class='badge " + ov.effect + "'>" + EFFECT_LABEL[ov.effect] + "</span>" +

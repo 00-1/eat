@@ -341,9 +341,11 @@ Three issues the food-by-food review exposed where the engine is behaving but th
 
 ## UI direction  ⟶ *queued*
 
-- [x] **Eradicate the colored rounded left/top "stripe" borders** (AI smell) — removed
-      from cards, highlights, group/outcome/diff/counter/exception blocks, and the
-      data-status banner; verdict/severity colour now lives only in the inline chips.
+- [x] **Re-form the verdict/severity colour indicator** (was a rounded left/top border
+      stripe = AI smell). Kept the colour cue but changed the *form*: a **solid, square
+      (non-curved) accent bar**, inset from the rounded corners so it can't follow the
+      curve, on cards + group/outcome/counter/exception blocks (colour = verdict/
+      severity). Highlights keep their gradient; diff rows rely on the verdict chips.
       (v0.30.x)
 - [x] **Expanded card spans the full row** (no empty columns beside it). (v0.30.x)
 - [ ] **Pin up to 3 expanded cards to the top for side-by-side comparison.** Let a
