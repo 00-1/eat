@@ -297,6 +297,23 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       arbitrary breadth, so the shortlists are genuinely "best/worst," not "best/worst
       of what we happened to add." (Candidates to scout: extra-virgin foods, oily-fish
       variants, sugar-sweetened/UPF subtypes, sugary cereals, deep-fried foods, etc.)
+- [ ] **Category-as-item granularity (the "does this apply to bananas vs raspberries?"
+      gap).** Many shortlist entries are really *categories* (tree nuts, whole fruit,
+      whole grains, processed meat) because data is better at the class level — fine,
+      but two problems: **(a) naming is ambiguous.** "Tree nuts (almonds, walnuts)"
+      reads as if scoped to two nuts; the evidence actually pools tree-nut types broadly
+      (Aune) and applies to the class. Fix the convention: the bracket lists *examples*,
+      and record an explicit **scope** ("applies to the class; evidence pooled across
+      types") so it doesn't read as a narrow claim. **(b) it hides within-category
+      variation.** Surface known heterogeneity on the card where it exists — e.g. for
+      whole fruit, *berries/apples/grapes show the strongest signal (Muraki 2013) while
+      sugary/tropical fruits are weaker or less-studied, and juice is separate and
+      worse.* Then, per taxonomy-first (§2), **split out a specific member as its own
+      item only where it genuinely diverges**: **berries** is the prime candidate (a
+      likely Gold/champion contender — fold into the targeted top/bottom tranche above);
+      individual tree nuts do **not** need splitting (homogeneous outcome data). This is
+      the granularity spine — nutrient → food group → category-item → specific food — and
+      we refine downward only where evidence supports a real difference.
 - [ ] **Don't add thin foods as full items — keep a "nothing notable yet" list.** Where
       a food has too little research to say anything, DON'T create an empty verdict-
       bearing entry (redundant, dilutes the list). Instead maintain a lightweight
