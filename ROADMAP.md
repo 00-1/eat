@@ -291,6 +291,21 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       recording the all-cause outcome for the veg during grounding — expected to put
       cruciferous/leafy on the cusp (and maybe into Gold if certainty lifts). This is an
       artifact, not a real "veg < fruit."
+- [ ] **Top spots must be ACTIONABLE — gate shortlists on within-category homogeneity.**
+      A Gold-standard / Bin-fodder / champion / cusp entry should mean "do (or avoid)
+      THIS and you reliably get the effect." So a category whose benefit is
+      *concentrated in a subset* must NOT hold a top spot under the umbrella name —
+      crowning "whole fruit" is misleading because you could eat sugary/tropical fruit
+      (weak/null) and miss it; the spot belongs to the subset that earns it (**berries**).
+      Implement: record a per-item granularity/homogeneity tag (e.g.
+      `categoryHomogeneity: specific | uniform | concentrated | unknown`); shortlist
+      eligibility (in `standout()`) requires **specific OR uniform** — `concentrated`
+      umbrellas are excluded, with a note pointing to the member that qualifies. Effect
+      today: **whole fruit drops off the cusp** (concentrated → berries), while
+      **non-starchy veg stay eligible** (uniform) — this is the *real* reason veg feels
+      healthier than fruit (uniformity, not magnitude), and it pairs with the (b)
+      magnitude redesign (veg in, fruit out). Tree nuts = uniform → keeps its spot.
+      Buildable now (small); higher honesty payoff than it looks.
 - [ ] **Target the next food tranche at top/bottom CONTENDERS.** Expand coverage toward
       likely **Gold-standard / Bin-fodder (and champion) candidates** — the strongest
       plausible positives and worst plausible negatives we don't yet list — rather than
