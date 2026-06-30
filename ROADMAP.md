@@ -339,6 +339,25 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       not researched") shown separately. A food graduates to a full item only when there's
       a real verdict to give. (Refines the taxonomy-first scaling plan in §2.)
 
+## UI direction  ⟶ *queued*
+
+- [x] **Eradicate the colored rounded left/top "stripe" borders** (AI smell) — removed
+      from cards, highlights, group/outcome/diff/counter/exception blocks, and the
+      data-status banner; verdict/severity colour now lives only in the inline chips.
+      (v0.30.x)
+- [x] **Expanded card spans the full row** (no empty columns beside it). (v0.30.x)
+- [ ] **Pin up to 3 expanded cards to the top for side-by-side comparison.** Let a
+      user open up to three foods and have them pin to the top as a comparison strip so
+      you can read them against each other (4th expand bumps the oldest, or is blocked).
+      Note the tension with "expanded = full-row width" (good for one card, but a
+      three-way compare wants them side by side) — resolve as part of the UI research
+      pass below, since it's a layout-direction decision.
+- [ ] **UI research pass.** Generate and evaluate directions for the overall UI — the
+      shortlist/champion presentation, the food grid + expand/compare interaction, the
+      dose-curve and lens visualisations, density vs. readability, mobile. Produce a few
+      concrete design directions (not just tweaks) to choose from before investing in a
+      bigger redesign. The current look is functional but ad-hoc; this sets a direction.
+
 ## 1. Verify and tighten the inputs  ⟶ *in progress*
 
 The scoring engine is sound, but several recorded facts are well-established
