@@ -6,6 +6,8 @@
 
   // ---- Elements ----
   const listEl = document.getElementById("list");
+  const pinnedEl = document.getElementById("pinned");
+  const pinnedWrapEl = document.getElementById("pinned-wrap");
   const countEl = document.getElementById("count");
   const emptyEl = document.getElementById("empty");
   const searchEl = document.getElementById("search");
@@ -18,7 +20,7 @@
     approach: document.getElementById("view-approach"),
   };
 
-  const state = { query: "", effect: "all", category: "all", sort: "default", preset: "default" };
+  const state = { query: "", effect: "all", category: "all", sort: "default", preset: "default", pinned: [] };
 
   // ---- Constants ----
   const EFFECT_LABEL = { positive: "Positive", negative: "Negative", neutral: "Neutral / mixed" };
@@ -620,12 +622,12 @@
     return "<h4 class='block-h'>Revision log</h4><ul class='revisions'>" + items + "</ul>";
   }
 
-  function cardHtml(food) {
+  function cardHtml(food, isPinned) {
     const eff = food.effect;
     const aEv = (typeof ASSESSMENTS !== "undefined" && ASSESSMENTS[food.id]) ? ASSESSMENTS[food.id].evidence : null;
     return (
-      "<li class='card " + eff + "' data-food-card='" + escapeHtml(food.id) + "'>" +
-        "<details>" +
+      "<li class='card " + eff + (isPinned ? " card-pinned" : "") + "' data-food-card='" + escapeHtml(food.id) + "'>" +
+        "<details" + (isPinned ? " open" : "") + ">" +
           "<summary>" +
             "<div class='card-top'>" +
               "<div>" +
@@ -650,7 +652,7 @@
               ((food.outcomes || []).length
                 ? "<span class='outcomes' title='The outcome(s) this verdict is about'>for " + escapeHtml(food.outcomes.join(" · ")) + "</span>"
                 : "") +
-              "<span class='expand-hint'>Evidence ▾</span>" +
+              "<span class='expand-hint'>" + (isPinned ? "Unpin ▴" : "Pin & compare ▾") + "</span>" +
             "</div>" +
           "</summary>" +
           "<div class='card-detail'>" +
@@ -684,9 +686,36 @@
   }
 
   // ---- Render ----
+  // ---- Pinning: expanding a food pins it to a comparison strip at the top ----
+  // Solves the "expand makes the card jump" problem (the masonry columns reflow) and
+  // enables side-by-side comparison. Up to MAX_PINNED; pinning a 4th bumps the oldest.
+  const MAX_PINNED = 3;
+  function isPinned(id) { return state.pinned.indexOf(id) !== -1; }
+  function togglePin(id) {
+    const i = state.pinned.indexOf(id);
+    if (i !== -1) { state.pinned.splice(i, 1); render(); return; } // unpin (collapse)
+    if (state.pinned.length >= MAX_PINNED) state.pinned.shift(); // bump the oldest
+    state.pinned.push(id);
+    render();
+    scrollToPinned(id);
+  }
+  function scrollToPinned(id) {
+    const el = pinnedEl && pinnedEl.querySelector("[data-food-card='" + id + "']");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   function render() {
+    // keep only still-existing pins
+    state.pinned = state.pinned.filter(function (id) { return FOODS.some(function (f) { return f.id === id; }); });
+    const pinned = state.pinned
+      .map(function (id) { return FOODS.find(function (f) { return f.id === id; }); })
+      .filter(Boolean);
+    if (pinnedEl) pinnedEl.innerHTML = pinned.map(function (f) { return cardHtml(f, true); }).join("");
+    if (pinnedWrapEl) pinnedWrapEl.hidden = pinned.length === 0;
+
     const filtered = FOODS.filter(matches).sort(sortFoods);
-    listEl.innerHTML = filtered.map(cardHtml).join("");
+    const grid = filtered.filter(function (f) { return !isPinned(f.id); });
+    listEl.innerHTML = grid.map(function (f) { return cardHtml(f, false); }).join("");
     emptyEl.hidden = filtered.length !== 0;
 
     const total = FOODS.length;
@@ -943,14 +972,27 @@
     state.query = ""; state.effect = "all"; state.category = "all";
     searchEl.value = ""; categoryEl.value = "all";
     chips.forEach((c) => c.classList.toggle("is-active", c.dataset.effect === "all"));
-    render();
-    const card = listEl.querySelector("[data-food-card='" + id + "']");
-    if (card) {
-      const details = card.querySelector("details");
-      if (details) details.open = true;
-      card.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (!isPinned(id)) {
+      if (state.pinned.length >= MAX_PINNED) state.pinned.shift();
+      state.pinned.push(id);
     }
+    render();
+    scrollToPinned(id);
   }
+
+  // Clicking a card's summary pins it (or unpins if already pinned) instead of the
+  // native in-place <details> toggle — so expanding always moves it to the top strip.
+  [listEl, pinnedEl].forEach(function (container) {
+    if (!container) return;
+    container.addEventListener("click", function (e) {
+      const summary = e.target.closest ? e.target.closest("summary") : null;
+      if (!summary || !container.contains(summary)) return;
+      const card = summary.closest("[data-food-card]");
+      if (!card) return;
+      e.preventDefault(); // we control open state via state.pinned + render()
+      togglePin(card.getAttribute("data-food-card"));
+    });
+  });
 
   function populateExplore() {
     const sel = document.getElementById("explore");

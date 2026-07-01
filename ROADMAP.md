@@ -381,12 +381,12 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       (CSS multi-column) and pack to fill gaps, so an expanded card grows *vertically
       only* and the shorter cards fill the space around it — no empty columns, no
       full-width stretch. (Reverted the earlier full-row-span approach.)
-- [ ] **Pin up to 3 expanded cards to the top for side-by-side comparison.** Let a
-      user open up to three foods and have them pin to the top as a comparison strip so
-      you can read them against each other (4th expand bumps the oldest, or is blocked).
-      Note the tension with "expanded = full-row width" (good for one card, but a
-      three-way compare wants them side by side) — resolve as part of the UI research
-      pass below, since it's a layout-direction decision.
+- [x] **Pin up to 3 expanded cards to the top for side-by-side comparison. DONE.**
+      Expanding a food now PINS it to a comparison strip at the top (up to 3, side by
+      side) and scrolls to it — which also fixes the old "expand makes the card jump"
+      problem (masonry columns reflowing). Clicking a pinned card unpins it (returns to
+      the grid, collapsed); a 4th pin replaces the oldest (FIFO). Resolves the
+      "expanded = full-row vs three-way compare" tension: the strip is a responsive grid.
 - [~] **Explore "What if we judged on…" diff — first-pass declutter (v0.33.x).** Was
       visually noisy: up to four competing coloured pills per row (before/after × effect/
       certainty), and it had lost the accent-bar colour cue. Now: rows carry the square

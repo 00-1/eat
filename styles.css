@@ -146,6 +146,17 @@ a { color: var(--accent); }
   margin-bottom: 16px;             /* vertical gap (column-gap handles horizontal) */
 }
 
+/* Pinned comparison strip — expanded cards sit side-by-side at the top. */
+.pinned-wrap { margin: 4px 0 24px; }
+.pinned-head { margin: 0 0 10px; font-size: 0.9rem; font-weight: 700; color: var(--ink); }
+.pinned-sub { font-weight: 400; color: var(--ink-soft); }
+.pinned-strip {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px; align-items: start;
+}
+.card-pinned { border-color: var(--accent); box-shadow: 0 0 0 2px var(--pos-bg), var(--shadow); }
+
 /* Verdict / severity accent: a SOLID, SQUARE (non-curved) bar, inset from the
    rounded corners so it reads as a deliberate marker rather than a border that
    curves around the corner. Colour comes from --accent-c, set by the verdict /
