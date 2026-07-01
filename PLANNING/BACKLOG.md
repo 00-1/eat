@@ -3,14 +3,26 @@
 Living board for the planning/review agent. Product code lives on `main`; this
 branch (`claude/planning`) is a workspace and never merges to `main`.
 
-Current product state: **v0.61**, 38 foods, 35/38 source-verified, 76 tests green.
+Current product state: **v0.62**, 38 foods, 35/38 source-verified, 76 tests green.
 
-## In flight
-- **Verification-upgrade pass** (worker agent, own environment with API access):
-  re-verify recorded figures against full text via NCBI E-utilities / Europe PMC,
-  flip remaining `verified:false` foods (coconut-oil, white-bread,
-  artificial-sweeteners) and dose curves where a real anchor exists, else keep the
-  honest gap. Prompt: this session's chat / to be mirrored in `queue/`.
+## Process
+Two-agent autonomous loop coordinated through git — see `PROTOCOL.md`. Planner (this
+branch) reviews + merges to main; worker grinds on its own branch. Change-requests
+flow via `reviews/OPEN.md`; worker progress via `PROGRESS.md` on its branch.
+
+## Sequence for the big pass
+1. ✅ Merge verification pass (v0.62) to main — DONE (reviewed, 76 green).
+2. **Phase 0 (planner, next):** signal-tiering field + long-tail "eat to taste" UI on
+   main; generate the ~300–500-item taxonomy into `PLAN.md`. Must land before kickoff.
+3. Finalize the worker kickoff prompt (points at PLAN.md + PROTOCOL.md).
+4. User kicks off worker; planner starts the review watcher (scheduled wake-ups).
+5. Loop runs to done (PLAN.md exhausted + OPEN.md empty).
+
+## Done
+- **Verification-upgrade pass (v0.62)** — worker re-checked every snippet-sourced
+  figure against full text. Catches: red-meat T2D PMID 39174153→39174161, poultry
+  Shi→Papp, tomatoes re-attributed (Luo 2021, 0.98→0.91). 3 gaps confirmed genuine.
+  Merged to main after review.
 
 ## Active streams (priority order)
 
