@@ -1148,10 +1148,16 @@
       const dose = e.dose
         ? "<span class='hl-row-dose" + (e.dose.none ? " is-none" : "") + "'>" + escapeHtml(e.dose.text) + "</span>"
         : "<span class='hl-row-dose is-muted'>—</span>";
+      // Pills (not-all, population impact) go on their OWN line under the name so they
+      // never push the amount onto a new line; the name+amount top line stays clean.
+      const tags = notall + burdenChip(f);
       return (
         "<button class='hl-row' data-food='" + escapeHtml(f.id) + "'>" +
-          "<span class='hl-row-name'>" + marker + escapeHtml(f.name) + notall + forO + burdenChip(f) + "</span>" +
-          dose +
+          "<span class='hl-row-top'>" +
+            "<span class='hl-row-name'>" + marker + escapeHtml(f.name) + forO + "</span>" +
+            dose +
+          "</span>" +
+          (tags ? "<span class='hl-row-tags'>" + tags + "</span>" : "") +
         "</button>"
       );
     };
