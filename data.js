@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.47";
+const METHODOLOGY_VERSION = "0.48";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1130,6 +1130,50 @@ const FOODS = [
       { date: "2026-07-01", change: "Source-verified (grounding pass): COSMOS primary CVD outcome HR 0.90 (0.78–1.02), P=0.11 — NS (Sesso 2022 AJCN, 21,442 randomized). Confirms the trial-grade neutral; NIH-funded but Mars supplied the product. Verdict/certainty unchanged." },
     ],
   },
+  {
+    id: "wholemeal-bread",
+    name: "Wholemeal / wholegrain bread",
+    category: "Grains",
+    effect: "positive",
+    certainty: "moderate",
+    outcomes: ["Type 2 diabetes", "Colorectal cancer"],
+    summary: "The wholegrain form of the staple — linked to clearly lower type-2-diabetes risk, unlike white bread.",
+    rationale:
+      "In three large US cohorts (~195,000), dark/wholegrain bread was associated with ~21% lower type-2-diabetes risk at ≥1 serving/day vs <1/month (Hu 2020, HR 0.79, 0.75–0.83), and wholegrain bread tracks lower colorectal cancer and cancer mortality (Bao 2024). It carries the whole-grain benefit in bread form, and the direct food-level contrast with white bread is the cleanest 'wholemeal vs white' evidence we have. Moderate certainty: observational with healthy-user confounding, and it still carries a bread-typical sodium load.",
+    considerations: {
+      substitution: "Most of the gain is swapping FROM white bread; wholemeal vs no bread at all is a smaller question.",
+      sodium: "Still a leading sodium source (~150 mg/slice) — wholemeal isn't automatically low-salt; check labels.",
+      confounding: "Wholemeal eaters tend to have healthier overall diets; residual confounding likely.",
+    },
+    studies: [
+      { citation: "Hu Y, et al. BMJ. 2020.", type: "Prospective cohorts (~195,000; NHS, NHS II, HPFS)", finding: "Dark/wholegrain bread ≥1 serving/day vs <1/month: ~21% lower type-2-diabetes risk (HR 0.79, 0.75–0.83); white bread carried higher risk.", search: "Hu wholegrain foods individual type 2 diabetes BMJ 2020 m2206" },
+      { citation: "Bao/Wang, et al. Current Developments in Nutrition. 2024.", type: "Meta-analysis (24 publications, ~1.89M)", finding: "Wholegrain/nonwhite bread associated with lower colorectal cancer and total cancer mortality; total bread neutral for site-specific cancer.", search: "bread intake cancer mortality meta-analysis Current Developments Nutrition 2024" },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [],
+  },
+  {
+    id: "white-bread",
+    name: "White bread",
+    category: "Grains",
+    effect: "neutral",
+    certainty: "low",
+    outcomes: ["Type 2 diabetes"],
+    summary: "No real benefit, patterns with refined grains, and the single biggest source of dietary salt.",
+    rationale:
+      "Bread-specific hard-outcome evidence for white bread is weak: it shows no protection for CVD/mortality (Aune 2016) and higher type-2-diabetes risk than wholegrain bread (Hu 2020), plus a weight-gain signal (SUN cohort, overweight/obesity OR 1.40). We record it NEUTRAL (no proven independent harm) but LEANING BAD — it's a high-glycemic refined grain, and because nearly everyone eats it, the #1 source of dietary sodium. The clearest move is swapping toward wholemeal.",
+    considerations: {
+      substitution: "The clearest move is swapping white → wholemeal bread, not necessarily cutting bread entirely.",
+      sodium: "Bread is the #1 population source of dietary sodium (~7% of US intake, ~17% of UK salt); ~130–230 mg per slice.",
+      glycemic: "High glycemic load; patterns with our (negative) refined-grains verdict.",
+    },
+    studies: [
+      { citation: "Hu Y, et al. BMJ. 2020.", type: "Prospective cohorts (~195,000)", finding: "White bread associated with higher type-2-diabetes risk than dark/wholegrain bread.", search: "Hu white bread type 2 diabetes BMJ 2020 m2206" },
+      { citation: "CDC Vital Signs. MMWR. 2012.", type: "Population intake analysis", finding: "Bread & rolls are the #1 single food source of sodium in the US diet (~7.4% of intake).", search: "CDC vital signs sodium bread rolls top source 2012" },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [],
+  },
 ];
 
 /*
@@ -1180,6 +1224,27 @@ const NUTRIGRADE_RUBRIC = {
 // app shows a "facts estimated" provenance chip and the data-status banner counts
 // it as unverified.
 const ASSESSMENTS = {
+  "wholemeal-bread": {
+    evidence: { pooledRR: 0.79, ciExcludesNull: true, participants: 195000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "≥1 serving/day (~2–3 slices) vs <1/month" },
+    effectEstimate: "Type-2 diabetes HR 0.79 (0.75–0.83) for dark/wholegrain bread ≥1 serving/day vs <1/month (Hu 2020, 3 US cohorts); lower colorectal cancer and cancer mortality (Bao 2024). The wholegrain benefit in bread form; contrasts directly with white bread.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Dark bread & T2D HR 0.79 (0.75–0.83), ≥1 serving/day vs <1/month", cite: "Hu 2020 BMJ", id: "PMID:32641435" },
+      participants: { figure: "~195,000 across NHS, NHS II, HPFS", cite: "Hu 2020 BMJ", id: "PMID:32641435" },
+    },
+    doseCurve: {
+      outcome: "Type 2 diabetes", unit: "slices/day", shape: "plateau-benefit", normalRange: [0, 3],
+      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 0.90 }, { x: 2, rr: 0.82 }, { x: 3, rr: 0.79, lo: 0.75, hi: 0.83 } ],
+      note: "Lower type-2-diabetes risk with more wholegrain bread, flattening by ~2–3 slices/day; ~1 serving ≈ 1–2 slices. Points approximated from the reported category contrast (Hu 2020).",
+      source: { cite: "Hu 2020 BMJ", id: "PMID:32641435" }, verified: false,
+    },
+  },
+  "white-bread": {
+    evidence: { pooledRR: 1.05, ciExcludesNull: false, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "~2–3 slices/day (~66–80 g/day), typical habitual intake" },
+    effectEstimate: "No protection for CVD/all-cause mortality (Aune 2016) and higher type-2-diabetes risk than wholegrain bread (Hu 2020); a weight-gain signal (SUN, overweight/obesity OR 1.40). Recorded neutral (no proven independent hard-outcome harm) but leaning bad — refined, high-glycemic, and the leading dietary sodium source.",
+    verified: false,
+    sources: {},
+  },
   "berries": {
     evidence: { pooledRR: 0.82, ciExcludesNull: true, participants: 194019, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "unknown", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (~17 g/day increments)" },
     effectEstimate: "Type-2-diabetes RR 0.82 (95% CI 0.76–0.89) high vs low (Guo 2016, ~194k); blueberry-specific HR ~0.74 per 3 servings/week (Muraki 2013). Anthocyanin RCTs improve vascular markers (Curtis 2019). Strongest for blueberries.",
@@ -1635,6 +1700,8 @@ const ASSESSMENTS = {
 //   neutral  : the strongest trial is null, or trial vs mechanism genuinely conflict
 //   none     : no trial and no clear mechanism either way (none remain after grounding)
 const MECHANISM = {
+  "wholemeal-bread": { direction: "positive", trial: "Wholegrain-vs-refined swap trials and β-glucan meta-analyses (Ho 2016) lower LDL and blunt postprandial glucose vs white bread.", mechanism: "Intact bran/germ → viscous fibre slows glucose absorption and feeds short-chain-fatty-acid-producing microbiota; lower glycemic load than white bread.", source: { cite: "Ho 2016 Br J Nutr (β-glucan LDL)", id: "PMID:27724985" }, confidence: "medium" },
+  "white-bread": { direction: "negative", trial: "Controlled-feeding/crossover trials show refined-starch bread gives a higher postprandial glucose/insulin response than wholegrain; added salt raises BP (DASH-Sodium).", mechanism: "Milled endosperm → rapidly digested starch → high glycemic load; lacks the bran/germ fibre of wholemeal; salt load adds a BP pathway.", source: { cite: "Aune 2016 BMJ (refined grains not protective); Sacks 2001 NEJM (DASH-Sodium)", id: "PMID:27301975" }, confidence: "medium" },
   "tree-nuts": { direction: "positive", trial: "PREDIMED (Med diet + mixed nuts) cut major CVD events; 61-trial lipid meta-analysis (Del Gobbo 2015) shows nuts lower LDL/ApoB/TG.", mechanism: "Unsaturated fat, fibre, phytosterols → lower LDL.", source: { cite: "Del Gobbo 2015 Am J Clin Nutr; Estruch 2018 NEJM (PREDIMED)", id: "PMID:26561616" }, confidence: "high" },
   "legumes": { direction: "positive", trial: "Meta-analysis of 26 RCTs (Ha 2014): dietary pulses ~130 g/day lowered LDL-C by −0.17 mmol/L vs control.", mechanism: "Viscous fibre reduces bile-acid reabsorption → hepatic LDL-receptor upregulation; improved glycemic response.", source: { cite: "Ha 2014 CMAJ", id: "10.1503/cmaj.131727" }, confidence: "high" },
   "whole-grains": { direction: "positive", trial: "Meta-analysis of 58 RCTs (Ho 2016): oat β-glucan ~3.5 g/day lowered LDL-C −0.19 mmol/L and ApoB.", mechanism: "Viscous soluble fibre (β-glucan) → reduced cholesterol/bile-acid reabsorption; blunts postprandial glucose.", source: { cite: "Ho 2016 Br J Nutr", id: "PMID:27724985" }, confidence: "high" },
@@ -1751,7 +1818,7 @@ const RESEARCHED_ON = {
   "cocoa": "2026-07-01", "poultry": "2026-07-01", "green-tea": "2026-07-01",
   "coconut-oil": "2026-07-01", "artificial-sweeteners": "2026-07-01",
   "tomatoes": "2026-07-01", "cruciferous": "2026-07-01", "leafy-greens": "2026-07-01",
-  "berries": "2026-07-01",
+  "berries": "2026-07-01", "wholemeal-bread": "2026-07-01", "white-bread": "2026-07-01",
 };
 for (const _f of FOODS) { if (RESEARCHED_ON[_f.id]) _f.researchedOn = RESEARCHED_ON[_f.id]; }
 

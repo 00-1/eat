@@ -36,6 +36,8 @@ const FOOD_TAGS = {
   "tree-nuts": ["plant-antinutrient"],
   "legumes": ["high-carb", "plant-antinutrient"],
   "whole-grains": ["high-carb", "gluten-grain", "plant-antinutrient"],
+  "wholemeal-bread": ["high-carb", "gluten-grain", "plant-antinutrient"],
+  "white-bread": ["high-carb", "gluten-grain"],
   "leafy-greens": ["plant-antinutrient"],
   "whole-fruit": ["fruit", "high-carb"],
   "yogurt": ["saturated-fat"],

@@ -36,6 +36,50 @@ const EXCEPTION_TYPE_LABEL = {
 };
 
 const EXCEPTIONS = {
+  "wholemeal-bread": [
+    {
+      type: "autoimmune",
+      group: "People with celiac disease (wheat gluten)",
+      prevalence: { estimate: "~0.7% biopsy-confirmed, ~1.4% seroprevalence", source: "Singh 2018 meta-analysis (PMID 29551598)" },
+      severity: "avoid",
+      mitigation: "Choose certified gluten-free wholegrain breads (buckwheat, brown-rice, teff).",
+    },
+    {
+      type: "allergy",
+      group: "People with wheat allergy",
+      prevalence: { estimate: "~0.4% of the population", source: "food-allergy reviews" },
+      severity: "avoid",
+    },
+    {
+      type: "intolerance",
+      group: "People with IBS (wheat/rye fructans, a FODMAP)",
+      prevalence: { estimate: "IBS ~10% of adults", source: "Monash FODMAP" },
+      severity: "mitigate",
+      mitigation: "Sourdough and spelt are lower-FODMAP; reduce portion or switch grain.",
+    },
+  ],
+  "white-bread": [
+    {
+      type: "autoimmune",
+      group: "People with celiac disease (wheat gluten)",
+      prevalence: { estimate: "~0.7% biopsy-confirmed, ~1.4% seroprevalence", source: "Singh 2018 meta-analysis (PMID 29551598)" },
+      severity: "avoid",
+      mitigation: "Choose certified gluten-free breads.",
+    },
+    {
+      type: "allergy",
+      group: "People with wheat allergy",
+      prevalence: { estimate: "~0.4% of the population", source: "food-allergy reviews" },
+      severity: "avoid",
+    },
+    {
+      type: "condition",
+      group: "People with hypertension (bread is a leading sodium source)",
+      prevalence: { estimate: "hypertension affects ~30%+ of adults", source: "CVD epidemiology" },
+      severity: "caution",
+      mitigation: "Choose lower-sodium loaves; bread contributes ~7% of US / ~17% of UK dietary salt.",
+    },
+  ],
   "tree-nuts": [
     {
       type: "allergy",
