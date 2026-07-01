@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.49";
+const METHODOLOGY_VERSION = "0.50";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -554,7 +554,7 @@ const FOODS = [
     lastReviewed: "2026-06-29",
     revisions: [
       { date: "2026-06-29", change: "Moderate → High under v0.5: scoring now credits a validated causal pathway (feeding-trial-proven LDL/HDL mechanism), and the cohort dose-response was recorded. Verdict (negative) unchanged." },
-      { date: "2026-06-29", change: "v0.7: effect size re-based to realistic habitual intake (was 'per 2% energy', which understated it) → magnitude now Large, so trans fat joins the Bin fodder shortlist. Verdict unchanged." },
+      { date: "2026-06-29", change: "v0.7: effect size re-based to realistic habitual intake (was 'per 2% energy', which understated it) → magnitude now Large, so trans fat joins the biggest-harms shortlist. Verdict unchanged." },
       { date: "2026-06-29", change: "Source-verified (grounding pass): industrial trans fat CHD RR 1.42 (1.05–1.92) highest vs lowest (de Souza 2015 BMJ); per-2%-energy 1.23 (1.11–1.37) (Mozaffarian 2006). pooledRR 1.35 → 1.42. Ruminant trans fat confirmed null. Certainty stays High; verdict unchanged." },
     ],
   },
@@ -1195,7 +1195,7 @@ const FOODS = [
     outcomes: ["Type 2 diabetes"],
     summary: "No real benefit, patterns with refined grains, and the single biggest source of dietary salt.",
     rationale:
-      "Bread-specific hard-outcome evidence for white bread is weak: it shows no protection for CVD/mortality (Aune 2016) and higher type-2-diabetes risk than wholegrain bread (Hu 2020), plus a weight-gain signal (SUN cohort, overweight/obesity OR 1.40). We record it NEUTRAL (no proven independent harm) but LEANING BAD — it's a high-glycemic refined grain, and because nearly everyone eats it, the #1 source of dietary sodium. The clearest move is swapping toward wholemeal.",
+      "Bread-specific hard-outcome evidence for white bread is weak: it shows no protection for CVD/mortality (Aune 2016) and higher type-2-diabetes risk than wholegrain bread (Hu 2020), plus a weight-gain signal (SUN cohort, overweight/obesity OR 1.40). We record it NEUTRAL (no proven independent harm) but leaning bad — it's a high-glycemic refined grain, and because nearly everyone eats it, the #1 source of dietary sodium. The clearest move is swapping toward wholemeal.",
     considerations: {
       substitution: "The clearest move is swapping white → wholemeal bread, not necessarily cutting bread entirely.",
       sodium: "Bread is the #1 population source of dietary sodium (~7% of US intake, ~17% of UK salt); ~130–230 mg per slice.",

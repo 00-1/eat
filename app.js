@@ -364,6 +364,18 @@
     const y1 = Y(1.0);
     parts.push("<line class='dr-base' x1='" + padL + "' y1='" + y1.toFixed(1) + "' x2='" + (W - padR) + "' y2='" + y1.toFixed(1) + "'/>");
     parts.push("<text class='dr-axis' x='" + (padL - 5) + "' y='" + (y1 + 3).toFixed(1) + "' text-anchor='end'>1.0</text>");
+    // Label the y-scale endpoints so the curve's height is readable, not just its shape —
+    // using the CENTRAL point estimates the line traces (not the CI whiskers), with faint
+    // gridlines at those values.
+    const centralRRs = [1.0].concat(pts.map((p) => p.rr));
+    const dataMin = Math.min.apply(null, centralRRs), dataMax = Math.max.apply(null, centralRRs);
+    const yTick = (rr) => {
+      const yy = Y(rr);
+      parts.push("<line class='dr-grid' x1='" + padL + "' y1='" + yy.toFixed(1) + "' x2='" + (W - padR) + "' y2='" + yy.toFixed(1) + "'/>");
+      parts.push("<text class='dr-axis' x='" + (padL - 5) + "' y='" + (yy + 3).toFixed(1) + "' text-anchor='end'>" + rr.toFixed(2) + "</text>");
+    };
+    if (dataMax > 1.02) yTick(dataMax);
+    if (dataMin < 0.98) yTick(dataMin);
     const d = pts.map((p, i) => (i ? "L" : "M") + X(p.x).toFixed(1) + " " + Y(p.rr).toFixed(1)).join(" ");
     parts.push("<path class='dr-line dr-" + dir + "' d='" + d + "'/>");
     pts.forEach((p) => {
@@ -1105,8 +1117,8 @@
     };
     const champMarker = (dir) =>
       dir === "reduce"
-        ? "<span class='hl-champ-mark' title='Worst offender — largest effect among the surest'>⚠ worst</span> "
-        : "<span class='hl-champ-mark' title='Top pick — largest effect among the surest'>★ top pick</span> ";
+        ? "<span class='hl-champ-mark' title='Largest harmful effect among the surest'>⚠ biggest harm</span> "
+        : "<span class='hl-champ-mark' title='Largest beneficial effect among the surest'>★ top pick</span> ";
 
     // Build entries.
     //   ADD / REDUCE  = foods whose HEADLINE verdict is positive / negative (tiered).
