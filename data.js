@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.61";
+const METHODOLOGY_VERSION = "0.62";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -191,6 +191,7 @@ const FOODS = [
     revisions: [
       { date: "2026-07-01", change: "Added 'All-cause mortality' to the recorded outcomes (v0.31) — it was already part of the cited evidence base (Aune 2017 F&V dose-response lowers CVD AND all-cause mortality; the study finding already stated it), so this aligns the outcomes list with the evidence and lets the all-cause magnitude bump apply, putting leafy greens on the cusp of Gold standard. The RR is still borrowed from the F&V umbrella; a cruciferous/leafy-SPECIFIC re-grounding remains queued. Verdict/certainty unchanged." },
       { date: "2026-07-01", change: "Audit: source-verified (verified:true). Re-anchored to a leafy-SPECIFIC figure — CVD RR 0.84 (0.75–0.94) across 8 cohorts (Pollock 2016) plus subtype-specific inverse associations in the ~2M umbrella (Aune 2017) and T2D 0.86 (Carter 2010); cognition downgraded to a single cohort (Morris 2018). Verdict/certainty unchanged." },
+      { date: "2026-07-01", change: "Full-text verification pass: Pollock 2016 (PMID:27540481) confirmed — 8 studies included, green leafy vegetables → CVD RR 0.842 (0.753–0.941), P=0.002, corresponding to a 15.8% reduced incidence; matches the recorded 0.84 (0.75–0.94) exactly. Aggregate participant count not reported in the abstract (recorded as \"8 prospective cohorts\", not as a specific N). No changes." },
     ],
   },
   {
@@ -559,6 +560,7 @@ const FOODS = [
       { date: "2026-06-29", change: "v0.7: effect size re-based to realistic habitual intake (was 'per 2% energy', which understated it) → magnitude now Large, so trans fat joins the biggest-harms shortlist. Verdict unchanged." },
       { date: "2026-06-29", change: "Source-verified (grounding pass): industrial trans fat CHD RR 1.42 (1.05–1.92) highest vs lowest (de Souza 2015 BMJ); per-2%-energy 1.23 (1.11–1.37) (Mozaffarian 2006). pooledRR 1.35 → 1.42. Ruminant trans fat confirmed null. Certainty stays High; verdict unchanged." },
       { date: "2026-07-01", change: "Audit correction: the 1.42 headline was mis-attributed — de Souza 2015's actual trans-fat figures are all-cause mortality RR 1.34 (1.16–1.56), CHD-mortality 1.28 (1.09–1.50) and total CHD 1.21 (1.10–1.33). Re-anchored pooledRR 1.42 → 1.34 (all-cause mortality) and added 'All-cause mortality' to outcomes. Still the largest-effect harm (biggest-harm champion); verdict/High certainty unchanged." },
+      { date: "2026-07-01", change: "Full-text verification pass: de Souza 2015 (PMID:26268692) exactly matches — TOTAL trans-fat all-cause mortality RR 1.34 (1.16–1.56), CHD-mortality 1.28 (1.09–1.50), total CHD 1.21 (1.10–1.33); INDUSTRIAL vs RUMINANT split: industrial CHD-mortality 1.18 (1.04–1.33), CHD 1.42 (1.05–1.92); ruminant CHD-mortality 1.01 (0.71–1.43), CHD 0.93 (0.73–1.18) NS; ruminant palmitoleic acid inversely associated with T2D 0.58 (0.46–0.74). Participants ranged 12,942–230,135 across outcomes. Since ruminant is null, attributing the total-trans-fat signal to industrial trans fat (as the paper does) is defensible. No number changes." },
     ],
   },
   {
@@ -704,10 +706,11 @@ const FOODS = [
         search: "red meat consumption all-cause cardiovascular mortality meta-analysis cohort",
       },
     ],
-    lastReviewed: "2026-06-29",
+    lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-06-29", change: "Very-low → Low under v0.11: neutral verdicts are now scored on the quality of the null evidence (not penalised for lacking an effect size). Red meat is data-rich but contested, which reads as Low, not Very-low. Verdict unchanged." },
       { date: "2026-07-01", change: "Source-verified headline (grounding pass): all-cause mortality RR 1.10 (0.98–1.22), NS (Wang 2016); low-certainty/contested (Zeraatkar 2019 NutriRECS, >4M). Added a CONTESTED flag (mortality signal small, population-dependent, expert dispute). Verdict/certainty unchanged; the T2D per-outcome verdict stands." },
+      { date: "2026-07-01", change: "Full-text verification pass: fixed the T2D per-outcome citation from PMID:39174153 (a same-issue editorial by Aune) to PMID:39174161 (the actual Li 2024 IPD federated meta, Lancet Diab Endo); updated N 1,970,000 → 1,966,444 (paper's exact figure), confirmed HR 1.10 (1.06–1.15) per 100 g/day and I²=61%; 107,271 incident T2D cases across 31 cohorts. Shi 2023 EHJ (PMID:37264855) corroborated for CVD 1.11 (1.05–1.16) per 100 g/day. Verdict unchanged." },
     ],
   },
   {
@@ -725,16 +728,17 @@ const FOODS = [
     },
     studies: [
       {
-        citation: "Substitution analyses across US cohorts (e.g., NHS/HPFS).",
-        type: "Prospective cohorts with isocaloric substitution modeling",
-        finding: "Swapping poultry for red/processed meat lowers modeled mortality; poultry itself ≈ neutral.",
-        search: "poultry red meat substitution mortality cardiovascular cohort",
+        citation: "Papp RE, et al. Critical Reviews in Food Science & Nutrition. 2023.",
+        type: "Dose-response meta-analysis of 24 prospective cohorts (Schwingshackl group)",
+        finding: "Highest vs lowest poultry: no CVD/CHD/stroke association; all-cause mortality RR 0.96 (0.93–0.98, I²=5%); GRADE certainty very low–low; substituting poultry for red/processed meat lowers modelled ACM/CVD.",
+        search: "Papp poultry cardiovascular all-cause mortality dose-response meta-analysis Crit Rev Food Sci Nutr 2023",
       },
     ],
     lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-06-28", change: "Certainty refined from Moderate to Low under v0.3 explicit scoring (limited direct evidence; the neutral verdict is unchanged)." },
       { date: "2026-07-01", change: "Audit: source-verified (verified:true). Pinned to Shi 2023 (24-cohort dose-response) — no CVD association; all-cause mortality RR 0.96 (0.93–0.98), trivial. Noted a weak T2D signal (HR 1.08 per 100 g/day, Li 2024). Neutral verdict/Low certainty unchanged." },
+      { date: "2026-07-01", change: "Full-text verification pass: corrected author attribution — the DOI 10.1080/10408398.2021.1975092 belongs to Papp/Schwingshackl 2023 (PMID:34542332), not \"Shi 2023\" (a different Shi 2023 EHJ paper covers red-meat/CVD/T2D). Recorded Li 2024 poultry HR 1.08 (1.02–1.14) per 100 g/day, I²=68% (weaker under alternative modelling) as the T2D corroborating figure. Verdict unchanged." },
     ],
   },
   {
@@ -847,10 +851,11 @@ const FOODS = [
         url: "https://www.bmj.com/content/390/bmj-2025-082121",
       },
     ],
-    lastReviewed: "2026-06-29",
+    lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-06-29", change: "Very-low → Low under v0.11 neutral-scoring (data exists but is heterogeneous by preparation). Verdict unchanged." },
       { date: "2026-06-29", change: "Source-verified + scoped to non-fried (v0.26): Mousavi 2025 BMJ confirms baked/boiled/mashed potatoes are null for T2D (HR 1.01, 0.98–1.05); fried potatoes split into a separate 'French fries' item. pooledRR 1.05 → 1.01. Verdict (neutral) unchanged." },
+      { date: "2026-07-01", change: "Full-text verification pass: Mousavi 2025 BMJ (PMID:40769531) exactly matches — 205,107 participants across NHS/NHSII/HPFS, 5,175,501 person-years, 22,299 incident T2D cases. Baked/boiled/mashed HR 1.01 (0.98–1.05), NS; TOTAL potato +3 servings/week HR 1.05 (1.02–1.08), sig — a small but positive TOTAL-potato slope that the current record doesn't surface (the null is the boiled subset only)." },
     ],
   },
   {
@@ -883,9 +888,10 @@ const FOODS = [
         url: "https://www.bmj.com/content/390/bmj-2025-082121",
       },
     ],
-    lastReviewed: "2026-06-29",
+    lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-06-29", change: "New item (v0.26), split from potatoes and source-verified on Mousavi 2025 BMJ — French fries are negative for T2D (HR 1.20) where plain potatoes are null." },
+      { date: "2026-07-01", change: "Full-text verification pass: Mousavi 2025 BMJ (PMID:40769531) exactly matches — HR 1.20 (1.12–1.28) per +3 servings/week for French fries in 205,107 adults (5.2M person-years, 22,299 T2D cases across NHS/NHSII/HPFS). Substitution: replacing 3 servings/week of fries with whole grains lowers modelled T2D risk." },
     ],
   },
   {
@@ -954,16 +960,23 @@ const FOODS = [
     },
     studies: [
       {
-        citation: "Debras C, et al. (NutriNet-Santé). PLoS Medicine. 2022.",
-        type: "Large prospective cohort (~103,000)",
-        finding: "Higher artificial-sweetener intake associated with modestly higher cardiovascular risk (association, not proof).",
-        search: "Debras artificial sweeteners cardiovascular NutriNet-Sante PLoS Medicine 2022",
+        citation: "Debras C, et al. BMJ. 2022.",
+        type: "NutriNet-Santé prospective cohort (103,388; 1,502 CVD events)",
+        finding: "Total artificial-sweetener intake associated with CVD HR 1.09 (1.01–1.18); cerebrovascular 1.18 (1.06–1.31); aspartame and cerebrovascular events 1.17 (1.03–1.33).",
+        search: "Debras artificial sweeteners cardiovascular NutriNet-Sante BMJ 2022",
+      },
+      {
+        citation: "Queiroz I, et al. Curr Probl Cardiol. 2025.",
+        type: "Meta-analysis of 12 prospective cohorts (1,224,560)",
+        finding: "≥1 daily ASB dose: all-cause mortality HR 1.14 (1.03–1.26); CV mortality 1.29 (1.10–1.53); stroke 1.15 (1.01–1.32) — the authors note the residual reverse-causation concern.",
+        search: "Queiroz artificially sweetened beverages cardiovascular events meta-analysis Curr Probl Cardiol 2025",
       },
     ],
-    lastReviewed: "2026-06-29",
+    lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-06-29", change: "Very-low → Low under v0.11 neutral-scoring (a large cohort exists, though conflicting). Verdict (neutral/unsettled) unchanged." },
       { date: "2026-07-01", change: "Grounding pass: confirmed the cohort signal (Debras 2022 BMJ NutriNet-Santé, total sweeteners CVD HR 1.09, 1.01–1.18, ~103k) but that substitution RCTs / Mendelian randomization show no causal harm → added a CONTESTED flag (cohort-vs-trial disagreement). Left verified:false — we record the net-uncertain neutral, not the Debras harm figure. Verdict unchanged." },
+      { date: "2026-07-01", change: "Full-text verification pass: pinned Debras 2022 to BMJ (PMID:36638072), not PLoS Medicine (that Debras 2022 paper is a separate cancer analysis, PMID:35324894); added the newer Queiroz 2025 12-cohort meta (PMID:39557594, 1.22M) showing HR 1.14 all-cause mortality / 1.29 CV mortality / 1.15 stroke — a stronger meta-level harm signal than Debras alone. Kept verified:false because the class is genuinely heterogeneous (erythritol/xylitol prothrombotic vs stevia/saccharin broadly benign) and the pooled cohort signal remains reverse-causation-prone; the class-average verdict stays uncertain. Verdict unchanged." },
     ],
   },
   {
@@ -982,13 +995,15 @@ const FOODS = [
     studies: [
       {
         citation: "Neelakantan N, et al. Circulation. 2020.",
-        type: "Meta-analysis of randomized trials",
-        finding: "Coconut oil raised LDL cholesterol significantly vs non-tropical vegetable oils.",
+        type: "Meta-analysis of 16 clinical trials",
+        finding: "Coconut oil vs non-tropical vegetable oils raised LDL-C by 10.47 mg/dL (95% CI 3.01–17.94, I²=84%) and HDL-C by 4.00 mg/dL; no effect on glycemia/adiposity.",
         search: "Neelakantan coconut oil LDL cholesterol meta-analysis Circulation 2020",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "Full-text verification pass: Neelakantan 2020 (PMID:31928080) confirmed as the only meta-analysis, on LDL surrogate (+10.5 mg/dL, 16 RCTs, I²=84%). Kept verified:false — no coconut-oil-specific hard-outcome (CVD/mortality) pooled RR exists in PubMed/Europe PMC through 2026; the LDL signal reads through the general saturated-fat pathway. Verdict/certainty unchanged." },
+    ],
   },
 
   // ===================== ADDED v0.12 (research-grounded) =====================
@@ -1106,6 +1121,7 @@ const FOODS = [
     revisions: [
       { date: "2026-07-01", change: "Added 'All-cause mortality' to the recorded outcomes (v0.31) — already part of the cited F&V dose-response evidence (Aune 2017), so this aligns the outcomes list with the evidence and applies the all-cause magnitude bump, putting cruciferous on the cusp of Gold standard. The RR remains borrowed from the produce umbrella; a cruciferous-specific re-grounding is still queued. Verdict/certainty unchanged." },
       { date: "2026-07-01", change: "Audit: source-verified (verified:true). Pinned to cruciferous-SPECIFIC mortality/CVD (Zhang 2011 Shanghai cohorts) + subtype-specific inverse association in the ~2M umbrella (Aune 2017); cancer leg (colorectal RR 0.82, gastric 0.81; Wu 2013) flagged as case-control-weighted and therefore weaker. Verdict/certainty unchanged." },
+      { date: "2026-07-01", change: "Full-text verification pass: Zhang 2011 (PMID:21593509) confirmed against PMC full text — Shanghai Women's + Men's Health Studies, N=134,796, 5,393 deaths (3,442 women / 1,951 men). Quintile HRs for cruciferous vs total mortality: 1.00 (ref), 0.91 (0.84–0.98), 0.88 (0.77–1.00), 0.85 (0.76–0.96), 0.78 (0.71–0.85), P<0.0001 for trend — CVD-mortality even steeper (Q5 HR 0.69, 0.56–0.85). Quintile intake midpoints g/day (women / men): Q1 28/34, Q2 57/66, Q3 83/94, Q4 114/133, Q5 166/208. doseCurve HRs match the paper's quintile HRs exactly; the recorded x=40/80/130/180 g/day are approximate quintile-midpoint averages (Q1-midpoint dropped, curve anchored at x=0 by extrapolation to no-intake) — kept doseCurve verified:false because those x-values are approximations." },
     ],
   },
   {
@@ -1123,15 +1139,28 @@ const FOODS = [
     },
     studies: [
       {
-        citation: "Lycopene & cancer (blood-biomarker meta-analyses).",
-        type: "Meta-analyses of cohorts (biomarker-based)",
-        finding: "Higher blood lycopene associated with ~5% lower overall cancer and ~11% lower prostate cancer; dietary-intake signal weaker.",
-        search: "blood lycopene cancer prostate meta-analysis cohort",
+        citation: "Luo J, et al. Frontiers in Nutrition. 2021.",
+        type: "Meta-analysis of 10 prospective cohort studies (15,402 prostate cancer cases)",
+        finding: "Tomato products vs prostate cancer: pooled RR 0.91 (0.79–1.03), NS. All subgroups (raw, cooked, sauce, juice) NS; dose-response per 20 g/day 0.99 (0.97–1.01).",
+        search: "Luo tomato consumption prostate cancer meta-analysis Frontiers in Nutrition 2021",
+      },
+      {
+        citation: "Balali A, et al. Frontiers in Nutrition. 2025.",
+        type: "Dose-response meta-analysis (119 studies, 108,574 cancer cases, 10,375 cancer deaths)",
+        finding: "Dietary lycopene → prostate cancer RR 0.99 (0.97–1.00, borderline); blood lycopene → cancer mortality RR 0.76 (0.60–0.98) — the biomarker carries the signal, not intake.",
+        search: "Balali tomato lycopene cancer dose-response meta-analysis Frontiers Nutrition 2025",
+      },
+      {
+        citation: "Rowles JL, et al. Prostate Cancer Prostatic Dis. 2018.",
+        type: "Meta-analysis of 30 mixed-design studies (24,222 cases, 260,461 participants)",
+        finding: "Total tomato consumption vs prostate cancer RR 0.81 (0.71–0.92); raw tomatoes NS (0.96, 0.84–1.09) — protective signal concentrated in cooked/sauce categories and mixed with case-control bias.",
+        search: "Rowles tomato prostate cancer processed raw dose-response Prostate Cancer Prostatic Dis 2018",
       },
     ],
     lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-07-01", change: "Audit: source-verified (verified:true). Confirmed the 'biomarker-driven, not intake' read — tomato INTAKE is ~null in prospective cohorts (prostate-cancer RR 0.96, 0.84–1.10, NS; dietary lycopene RR 0.99), while the protective signal sits in serum lycopene (0.74) and case-control designs. pooledRR 0.95 → 0.98 (removes a spurious faint lean). Neutral verdict unchanged (Front Nutr 2021/2025)." },
+      { date: "2026-07-01", change: "Full-text verification pass: pooledRR 0.98 → 0.91 to match the actual Luo 2021 (PMID:34017849) cohort-only pooled figure of 0.91 (0.79–1.03), NS across 10 prospective cohorts; the previously-recorded 0.96 (0.84–1.10) was in fact Rowles 2018's raw-tomato subgroup (PMID:29317772), mis-attributed as \"cohort-only\". Added Rowles 2018 (total 0.81 across 30 mixed-design studies, 260,461 participants) as the mixed-design corroborator. Balali 2025 (PMID:40013157) dietary-lycopene RR 0.99 (0.97–1.00) verified. Neutral verdict/Low certainty unchanged." },
     ],
   },
   {
@@ -1192,7 +1221,9 @@ const FOODS = [
       { citation: "Bao/Wang, et al. Current Developments in Nutrition. 2024.", type: "Meta-analysis (24 publications, ~1.89M)", finding: "Wholegrain/nonwhite bread associated with lower colorectal cancer and total cancer mortality; total bread neutral for site-specific cancer.", search: "bread intake cancer mortality meta-analysis Current Developments Nutrition 2024" },
     ],
     lastReviewed: "2026-07-01",
-    revisions: [],
+    revisions: [
+      { date: "2026-07-01", change: "Full-text verification pass: Hu 2020 BMJ (PMID:32641435) exactly matches — 158,259 women + 36,525 men = 194,784 in NHS/NHSII/HPFS (matches recorded 195,000); 18,629 T2D cases across 4.6M person-years; dark bread ≥1 serving/day HR 0.79 (0.75–0.83) confirmed. Spline showed a plateau at ~0.5 servings/day for dark bread — the recorded doseCurve reaches 0.79 by 3 slices/day but the paper's plateau is earlier, so the curve slightly underestimates benefit at 1 slice/day. Kept doseCurve verified:false (anchor point 3 slices/day → 0.79 exact; intermediates are shape-approximations)." },
+    ],
   },
   {
     id: "white-bread",
@@ -1210,11 +1241,14 @@ const FOODS = [
       glycemic: "High glycemic load; patterns with our (negative) refined-grains verdict.",
     },
     studies: [
-      { citation: "Hu Y, et al. BMJ. 2020.", type: "Prospective cohorts (~195,000)", finding: "White bread associated with higher type-2-diabetes risk than dark/wholegrain bread.", search: "Hu white bread type 2 diabetes BMJ 2020 m2206" },
+      { citation: "Hu Y, et al. BMJ. 2020.", type: "Prospective cohorts (~195,000)", finding: "Dark bread ≥1 serving/day vs <1/month: HR 0.79 (0.75–0.83) for type-2 diabetes; white bread carried no protective signal in the same cohorts.", search: "Hu white bread type 2 diabetes BMJ 2020 m2206" },
+      { citation: "de la Fuente-Arrillaga C, et al. BMC Public Health. 2014.", type: "SUN cohort (~9,267)", finding: "White bread ≥2 portions/day vs ≤1/week: OR 1.40 (1.08–1.81) for incident overweight/obesity; wholegrain bread showed no such association.", search: "de la Fuente-Arrillaga white bread overweight obesity SUN Mediterranean cohort BMC Public Health 2014" },
       { citation: "CDC Vital Signs. MMWR. 2012.", type: "Population intake analysis", finding: "Bread & rolls are the #1 single food source of sodium in the US diet (~7.4% of intake).", search: "CDC vital signs sodium bread rolls top source 2012" },
     ],
     lastReviewed: "2026-07-01",
-    revisions: [],
+    revisions: [
+      { date: "2026-07-01", change: "Full-text verification pass: Hu 2020 (PMID:32641435) confirmed for dark-bread HR 0.79 (0.75–0.83) in ~195k (N=158,259 women + 36,525 men); anchored the SUN OR 1.40 for overweight/obesity to de la Fuente-Arrillaga 2014 (PMID:25335643). Kept verified:false — no white-bread-specific hard-outcome (mortality/CVD/T2D) pooled RR exists; refined-grain nulls (Aune 2016 BMJ) are the wider class, not white bread as its own exposure. Neutral (leaning) verdict unchanged." },
+    ],
   },
   {
     id: "fried-foods",
@@ -1256,6 +1290,7 @@ const FOODS = [
     lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-07-01", change: "New item (grounding pass): fried food (as a preparation method) is negative for cardiovascular disease — RR 1.28 highest-vs-lowest, source-verified on Qin 2021 Heart (17 cohorts, ~562k) with Sun 2019 BMJ for mortality. Sits alongside the food-specific French-fries item." },
+      { date: "2026-07-01", change: "Full-text verification pass: Qin 2021 abstract (PMID:33468573) re-confirmed for the headline figures — major CV events RR 1.28 (1.15–1.43), n=17, I²=82% (prospective subset 1.24, 1.12–1.38); CHD 1.22 (1.07–1.40), n=11, I²=77.9%; linear dose-response for CVD/CHD/HF; POOLED all-cause mortality RR 1.03 (0.96–1.12), NS in Qin. The 1.08 mortality signal recorded in the effectEstimate is Sun 2019 single cohort, not Qin's pooled figure — a nuance worth flagging. No number changes to recorded evidence." },
     ],
   },
   {
@@ -1292,6 +1327,7 @@ const FOODS = [
     revisions: [
       { date: "2026-07-01", change: "New item (grounding pass): shellfish is neutral — the dietary-cholesterol worry didn't translate to hard outcomes (Namazi 2019 T2D RR ~0.95 NS; ARIC CHD ~0.98 NS). Low certainty." },
       { date: "2026-07-01", change: "Source-verified (verified:true). CHD figure pinned to Matheson 2009 (ARIC, PMID:19631050): 13,355 adults, 1,382 CHD events, high-vs-low HR 0.98 (0.82–1.18), NS — anchors both the RR and participant count. T2D corroborated by Namazi 2019 (Health Promot Perspect, PMID:31508336, RR 0.95, 0.83–1.10, NS; the 'higher in women' line is a subgroup, not the pooled estimate). Headline moved to the ARIC CHD estimate (0.98) — the faint favourable lean drops away, so it now reads as genuinely neutral. Verdict/certainty unchanged." },
+      { date: "2026-07-01", change: "Full-text verification pass: re-confirmed ARIC figures (HR 0.98, 0.82–1.18; N=13,355; 1,382 CHD events) exactly against Matheson 2009 abstract; re-confirmed Namazi 2019 'seafood other than fish' RR 0.95 (0.83–1.10), I²=71.2%, P=0.002 across 5 studies — the higher I² is a subtype-specific concern, but doesn't push the pooled estimate off null. No number changes." },
     ],
   },
   {
@@ -1332,6 +1368,7 @@ const FOODS = [
     lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-07-01", change: "New item (grounding pass): 100% fruit juice is neutral for type-2 diabetes (Xi 2014 RR 1.03 NS, source-verified) — the diabetes harm is from sugar-sweetened fruit drinks (1.28), not 100% juice; still inferior to whole fruit (Muraki 2013). Splits off the whole-fruit contrast honestly." },
+      { date: "2026-07-01", change: "Full-text verification pass: Xi 2014 (PMID:24682091) confirmed — 4 cohorts, 137,663 participants, 4,906 T2D cases for the 100% juice stratum (RR 1.03, 0.91–1.18, NS); sugar-sweetened fruit drinks separately: 191,686 / 12,375 / RR 1.28 (1.04–1.59). N and figures match exactly." },
     ],
   },
 ];
@@ -1713,26 +1750,26 @@ const ASSESSMENTS = {
     outcomeVerdicts: [
       {
         outcome: "Type 2 diabetes", effect: "negative",
-        evidence: { pooledRR: 1.10, ciExcludesNull: true, participants: 1970000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "per 100 g/day" },
-        rationale: "Unlike the contested mortality signal, the diabetes association is consistent: HR 1.10 (1.06–1.15) per 100 g/day in the largest IPD meta-analysis (1.97M; Shi 2023 puts it higher at 1.27). Modest and confounding-prone, so Low certainty — but directional. This is why red meat reads neutral overall yet negative for diabetes (mirroring white rice).",
+        evidence: { pooledRR: 1.10, ciExcludesNull: true, participants: 1966444, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "per 100 g/day" },
+        rationale: "Unlike the contested mortality signal, the diabetes association is consistent: HR 1.10 (1.06–1.15) per 100 g/day, I²=61%, in the largest IPD meta-analysis (Li 2024, 1,966,444 adults with 107,271 T2D cases across 31 cohorts; Shi 2023 EHJ 37264855 corroborates positive T2D). Modest and confounding-prone, so Low certainty — but directional. This is why red meat reads neutral overall yet negative for diabetes (mirroring white rice).",
         doseCurve: {
           outcome: "Type 2 diabetes", unit: "g/day", shape: "monotonic-harm", normalRange: [0, 100],
           points: [ { x: 0, rr: 1.0 }, { x: 50, rr: 1.05 }, { x: 100, rr: 1.10, lo: 1.06, hi: 1.15 }, { x: 150, rr: 1.15 }, { x: 200, rr: 1.21 } ],
-          note: "≈10% higher T2D risk per 100 g/day (Li 2024 IPD). Intermediate points from the per-100 g slope.",
-          source: { cite: "Li 2024 Lancet Diabetes Endocrinol", id: "PMID:39174153" }, verified: false,
+          note: "≈10% higher T2D risk per 100 g/day (Li 2024 IPD federated meta of 31 cohorts). The 100 g/day HR (1.10) is the paper's exact figure; other points are log-linear extrapolation from the per-100 g slope.",
+          source: { cite: "Li 2024 Lancet Diabetes Endocrinol", id: "PMID:39174161" }, verified: false,
         },
-        source: { cite: "Li 2024 Lancet Diabetes Endocrinol (IPD, 1.97M); Shi 2023 EHJ", id: "PMID:39174153" },
+        source: { cite: "Li 2024 Lancet Diabetes Endocrinol (IPD, 1.97M); Shi 2023 EHJ", id: "PMID:39174161" },
         verified: true,
       },
     ],
   },
   "poultry": {
     evidence: { pooledRR: 0.99, ciExcludesNull: false, participants: 300000, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake (per 100 g/day)" },
-    effectEstimate: "No association with cardiovascular disease across 24 cohorts (Shi 2023); all-cause mortality RR 0.96 (0.93–0.98), trivial. Interval spans no-effect → neutral; looks favorable mainly as a substitute for red/processed meat. (A weak T2D signal exists — HR 1.08 per 100 g/day, Li 2024.)",
+    effectEstimate: "No association with cardiovascular disease across 24 cohorts (Papp 2023, Schwingshackl et al.); all-cause mortality RR 0.96 (0.93–0.98, I²=5%), trivial. Interval spans no-effect → neutral; looks favorable mainly as a substitute for red/processed meat. (A weak T2D signal exists — HR 1.08 per 100 g/day, I²=68%, Li 2024 IPD.)",
     verified: true,
     sources: {
-      pooledRR: { figure: "Poultry → CVD: no association (per 100 g/day, 24 cohorts); all-cause mortality RR 0.96 (0.93–0.98)", cite: "Shi 2023 Crit Rev Food Sci Nutr", id: "DOI:10.1080/10408398.2021.1975092" },
-      participants: { figure: "24 prospective cohorts (Shi 2023 dose-response meta-analysis)", cite: "Shi 2023 Crit Rev Food Sci Nutr", id: "DOI:10.1080/10408398.2021.1975092" },
+      pooledRR: { figure: "Poultry → CVD/CHD/stroke: no association per 100 g/day (24 cohorts); all-cause mortality RR 0.96 (0.93–0.98), I²=5%", cite: "Papp 2023 Crit Rev Food Sci Nutr (Schwingshackl group)", id: "PMID:34542332" },
+      participants: { figure: "24 prospective cohort studies (Papp 2023 dose-response meta-analysis; certainty rated very low–low by GRADE)", cite: "Papp 2023 Crit Rev Food Sci Nutr", id: "PMID:34542332" },
     },
   },
   "milk": {
@@ -1892,12 +1929,12 @@ const ASSESSMENTS = {
     },
   },
   "tomatoes": {
-    evidence: { pooledRR: 0.98, ciExcludesNull: false, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "high vs low tomato/lycopene intake" },
-    effectEstimate: "Tomato INTAKE is ~null in prospective cohorts: prostate-cancer RR 0.96 (0.84–1.10, NS) in cohort-only analyses and dietary lycopene RR 0.99 (0.97–1.00). The protective signal is carried by blood lycopene (serum ~0.74 vs dietary ~0.89) and case-control designs — i.e. biomarker/lifestyle-confounded, not clearly tomato intake → neutral.",
+    evidence: { pooledRR: 0.91, ciExcludesNull: false, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "high vs low tomato intake (cohort-only, 10 studies)" },
+    effectEstimate: "Tomato INTAKE is ~null in cohort-only meta-analyses: prostate-cancer RR 0.91 (0.79–1.03, NS, 10 prospective cohorts; Luo 2021 Front Nutr) and dietary lycopene RR 0.99 (0.97–1.00, Balali 2025 dose-response meta). The stronger protective signal is carried by blood lycopene (0.76 for cancer mortality) and mixed designs including case-control (Rowles 2018 total 0.81), i.e. biomarker/lifestyle-confounded, not clearly tomato intake → neutral.",
     verified: true,
     sources: {
-      pooledRR: { figure: "Tomato intake → prostate cancer RR 0.96 (0.84–1.10), NS (cohort-only); dietary lycopene RR 0.99 (0.97–1.00); serum lycopene 0.74 vs dietary 0.89 (confounded)", cite: "Rowles/Front Nutr 2021 (cohort-stratified); Balali 2025 Front Nutr", id: "PMID:40013157" },
-      participants: { figure: "prospective-cohort subsets (Front Nutr 2021, PMID 34017849; dose-response cohorts, Balali 2025)", cite: "Front Nutr 2021; Balali 2025 Front Nutr", id: "PMID:34017849" },
+      pooledRR: { figure: "Tomato intake → prostate cancer RR 0.91 (0.79–1.03), NS (10 prospective cohorts, 15,402 cases); dietary lycopene → prostate cancer RR 0.99 (0.97–1.00, Balali 2025); mixed-design corroboration Rowles 2018 total 0.81 (0.71–0.92)", cite: "Luo 2021 Front Nutr", id: "PMID:34017849" },
+      participants: { figure: "10 prospective cohort studies, 15,402 prostate cancer cases (Luo 2021); 119 studies including 108,574 cancer cases in the dose-response meta (Balali 2025 Front Nutr, PMID:40013157)", cite: "Luo 2021 Front Nutr", id: "PMID:34017849" },
     },
   },
   "cocoa": {
