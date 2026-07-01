@@ -37,7 +37,7 @@ a { color: var(--accent); }
 .site-header {
   background: linear-gradient(160deg, #2e8b57 0%, #1f6b43 100%);
   color: #fff;
-  padding: 44px 0 0;
+  padding: 8px 0 0;
 }
 .site-header h1 {
   margin: 0 0 12px;
@@ -380,6 +380,29 @@ a { color: var(--accent); }
   font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
   color: var(--info); background: var(--info-bg); border-radius: 999px; padding: 1px 6px; white-space: nowrap;
 }
+
+/* Tiered summary rows (v0.42) — each direction is a summary of everything the
+   evidence supports, in sections, with the optimal/safe quantity per food. */
+.hl-sec { margin-top: 12px; }
+.hl-sec:first-of-type { margin-top: 6px; }
+.hl-sec-h { margin: 0 0 6px; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink); }
+.hl-sec-note { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
+.hl-rows { display: flex; flex-direction: column; gap: 4px; }
+.hl-row {
+  display: flex; align-items: baseline; gap: 8px 10px; flex-wrap: wrap;
+  width: 100%; text-align: left; cursor: pointer;
+  border: 1px solid transparent; border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  padding: 6px 10px; font: inherit;
+}
+.hl-row:hover { border-color: var(--accent); background: var(--surface); }
+.hl-row-name { font-size: 0.9rem; font-weight: 600; color: var(--ink); flex: 1 1 auto; }
+.hl-row-for { font-weight: 400; color: var(--ink-soft); font-size: 0.84rem; }
+.hl-row-dose { font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); white-space: nowrap; }
+.hl-row-dose.is-none { color: var(--neg); }
+.hl-row-dose.is-muted { opacity: 0.5; font-weight: 400; }
+.hl-row-meta { font-size: 0.72rem; color: var(--ink-soft); white-space: nowrap; opacity: 0.85; }
+@media (max-width: 720px) { .hl-row { gap: 2px 8px; } }
 
 /* Explore: what-if criteria diff */
 .explore {

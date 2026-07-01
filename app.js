@@ -988,85 +988,137 @@
     return { tag: tag, conditional: conditional, at: at };
   }
 
+  // Optimal amount to ADD, read off the dose curve: the near-optimal band (the range
+  // where the effect is at its best tier). Null with no curve.
+  function addQuantity(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.doseCurve || typeof Scoring === "undefined") return null;
+    const b = Scoring.optimalBand(a.doseCurve, "positive");
+    if (!b || !(b.bestRR < 1)) return null;
+    const u = a.doseCurve.unit ? " " + a.doseCurve.unit : "";
+    return { text: b.single ? "~" + b.loX + u : "~" + b.loX + "–" + b.hiX + u };
+  }
+  // Highest "safe" dose for a food to REDUCE, from a (harm-shaped) dose curve.
+  //   monotonic-harm → { none: true } ("no safe level" — risk from the first serving)
+  //   threshold-harm → "safe up to ~X" (the last point before harm begins)
+  //   else → "harm from ~X" if a threshold is recorded, else null
+  function safeQuantity(curve) {
+    if (!curve || typeof Scoring === "undefined") return null;
+    const u = curve.unit ? " " + curve.unit : "";
+    if (/monotonic-harm/.test(curve.shape || "")) return { text: "no safe level", none: true };
+    const r = Scoring.curveReadings(curve);
+    if (/threshold-harm/.test(curve.shape || "") && r && r.harmThreshold) {
+      return { text: "safe below ~" + r.harmThreshold.x + u };
+    }
+    if (r && r.harmThreshold) return { text: "harm from ~" + r.harmThreshold.x + u };
+    return null;
+  }
+  const shortOutcome = (o) => String(o || "").replace(/\s*\(.*$/, "").toLowerCase();
+
   function renderHighlights() {
     const el = document.getElementById("highlights");
     if (!el || typeof Scoring === "undefined") return;
     const cls = {};
     FOODS.forEach(function (f) { cls[f.id] = standoutOf(f); });
-    const pick = (tag) => FOODS.filter((f) => cls[f.id].tag === tag);
-    const gold = pick("gold"), bin = pick("bin");
-    const marginalGold = pick("marginal-gold"), marginalBin = pick("marginal-bin");
-    // The single ★/⚠ champion must be an UNCONDITIONAL pick — not one that only
-    // qualifies if you eat a lot — so conditional entries are excluded from it.
-    const uncond = (foods) => foods.filter((f) => !cls[f.id].conditional);
-    const goldChamp = championOf(uncond(gold)), binChamp = championOf(uncond(bin));
-    // "if you eat plenty" pill for a conditionally-promoted entry.
-    const condPill = (f) =>
-      cls[f.id].conditional && cls[f.id].at
-        ? " <span class='hl-cond' title='Reaches this tier only at a high intake — read off the dose-response curve'>if you eat plenty: " + escapeHtml(cls[f.id].at) + "</span>"
-        : "";
+    const negOutcomes = (f) => ((ASSESSMENTS[f.id] || {}).outcomeVerdicts || []).filter((o) => o.effect === "negative");
 
-    const champMarker = function (kind) {
-      return kind === "bin"
-        ? "<span class='hl-champ-mark' title='Worst offender — largest effect among the qualifying foods'>⚠ worst offender</span> "
-        : "<span class='hl-champ-mark' title='Top pick — largest effect among the qualifying foods'>★ top pick</span> ";
+    // Tier a headline-directional food: 1 = surest+largest (unconditional top tier),
+    // 2 = a notch short OR top-tier only at high intake, 3 = everything else the
+    // evidence still supports (any certainty/magnitude, directional).
+    const tierFor = (f, full) => {
+      const s = cls[f.id];
+      if (s.tag === full && !s.conditional) return 1;
+      if (s.tag) return 2;
+      return 3;
     };
-    const chipsHtml = (foods, champ, kind) => {
-      // Champion first, then the rest in their existing order.
-      const ordered = champ ? [champ].concat(foods.filter(function (f) { return f.id !== champ.id; })) : foods;
-      return ordered
-        .map(function (f) {
-          const isChamp = champ && f.id === champ.id;
-          const marker = isChamp ? champMarker(kind) : "";
-          const notall = isMixed(f)
-            ? " <span class='hl-notall' title='" + escapeHtml(f.uniformityNote || "Doesn't apply uniformly across the category") + "'>not all</span>"
-            : "";
-          return (
-            "<button class='hl-chip" + (isChamp ? " hl-champ" : "") + "' data-food='" + escapeHtml(f.id) + "'>" +
-              marker + escapeHtml(f.name) + notall + condPill(f) +
-            "</button>"
-          );
-        })
-        .join("");
-    };
-    const cuspChips = (foods) =>
-      foods
-        .map(function (f) {
-          const notall = isMixed(f)
-            ? " <span class='hl-notall' title='" + escapeHtml(f.uniformityNote || "Doesn't apply uniformly across the category") + "'>not all</span>"
-            : "";
-          return (
-            "<button class='hl-chip hl-cusp' data-food='" + escapeHtml(f.id) + "'>" +
-              escapeHtml(f.name) + notall + condPill(f) +
-              " <span class='hl-short'>(" + escapeHtml(shortfall(f)) + ")</span>" +
-            "</button>"
-          );
-        })
-        .join("");
-    const cusp = (foods) =>
-      foods.length
-        ? "<p class='hl-cusp-h'>On the cusp <span class='hl-cusp-note'>— one notch from qualifying</span></p>" +
-          "<div class='hl-chips'>" + cuspChips(foods) + "</div>"
+    const champMarker = (dir) =>
+      dir === "reduce"
+        ? "<span class='hl-champ-mark' title='Worst offender — largest effect among the surest'>⚠ worst</span> "
+        : "<span class='hl-champ-mark' title='Top pick — largest effect among the surest'>★ top pick</span> ";
+
+    // Build entries. ADD = positive-verdict foods. REDUCE = negative-verdict foods,
+    // PLUS neutral-headline foods that carry a negative per-outcome verdict (alcohol
+    // → cancer, red meat → diabetes), listed under their specific outcome.
+    const addEntries = FOODS.filter((f) => f.effect === "positive").map((f) => ({
+      f: f, dir: "add", tier: tierFor(f, "gold"), dose: addQuantity(f),
+    }));
+    const redEntries = FOODS.filter((f) => f.effect === "negative").map((f) => ({
+      f: f, dir: "reduce", tier: tierFor(f, "bin"), dose: safeQuantity((ASSESSMENTS[f.id] || {}).doseCurve),
+    }));
+    FOODS.filter((f) => f.effect === "neutral" && negOutcomes(f).length).forEach((f) => {
+      const ov = negOutcomes(f)[0];
+      redEntries.push({
+        f: f, dir: "reduce", tier: 3, dose: safeQuantity(ov.doseCurve),
+        forOutcome: shortOutcome(ov.outcome), neutralHeadline: true,
+      });
+    });
+
+    // Champions: the largest-effect UNCONDITIONAL pick among the tier-1 foods.
+    const goldChamp = championOf(addEntries.filter((e) => e.tier === 1).map((e) => e.f));
+    const binChamp = championOf(redEntries.filter((e) => e.tier === 1 && !e.neutralHeadline).map((e) => e.f));
+    addEntries.forEach((e) => { e.isChamp = goldChamp && e.f.id === goldChamp.id; });
+    redEntries.forEach((e) => { e.isChamp = binChamp && e.f.id === binChamp.id; });
+
+    const MO = Scoring.MAGNITUDE_ORDER, CO = { high: 3, moderate: 2, low: 1, "very-low": 0 };
+    const rowHtml = (e) => {
+      const f = e.f;
+      const marker = e.isChamp ? champMarker(e.dir) : "";
+      const notall = isMixed(f)
+        ? " <span class='hl-notall' title='" + escapeHtml(f.uniformityNote || "Doesn't apply uniformly across the category") + "'>not all</span>"
         : "";
+      const forO = e.forOutcome ? " <span class='hl-row-for'>for " + escapeHtml(e.forOutcome) + "</span>" : "";
+      const dose = e.dose
+        ? "<span class='hl-row-dose" + (e.dose.none ? " is-none" : "") + "'>" + (e.dir === "add" ? "best at " : "") + escapeHtml(e.dose.text) + "</span>"
+        : "<span class='hl-row-dose is-muted'>—</span>";
+      const meta = e.neutralHeadline
+        ? ""
+        : "<span class='hl-row-meta'>" + escapeHtml((CERTAINTY_LABEL[certaintyOf(f)] || "").toLowerCase()) + " · " + escapeHtml((Scoring.MAGNITUDE_LABEL[magnitudeOf(f)] || "").toLowerCase().replace(" effect", "")) + "</span>";
+      return (
+        "<button class='hl-row' data-food='" + escapeHtml(f.id) + "'>" +
+          "<span class='hl-row-name'>" + marker + escapeHtml(f.name) + notall + forO + "</span>" +
+          dose + meta +
+        "</button>"
+      );
+    };
+    const sortEntries = (arr) => arr.slice().sort((a, b) => {
+      if (a.isChamp !== b.isChamp) return a.isChamp ? -1 : 1;
+      const dm = (MO[magnitudeOf(b.f)] || 0) - (MO[magnitudeOf(a.f)] || 0);
+      if (dm) return dm;
+      const dc = (CO[certaintyOf(b.f)] || 0) - (CO[certaintyOf(a.f)] || 0);
+      if (dc) return dc;
+      return lnRR(b.f) - lnRR(a.f);
+    });
+    const sectionHtml = (entries, tier, title, note) => {
+      const rows = sortEntries(entries.filter((e) => e.tier === tier));
+      if (!rows.length) return "";
+      return (
+        "<div class='hl-sec'>" +
+          "<p class='hl-sec-h'>" + escapeHtml(title) + " <span class='hl-sec-note'>— " + escapeHtml(note) + "</span></p>" +
+          "<div class='hl-rows'>" + rows.map(rowHtml).join("") + "</div>" +
+        "</div>"
+      );
+    };
 
     el.innerHTML =
       "<div class='hl-card hl-gold'>" +
-        "<h2>★ Gold standard</h2>" +
-        "<p class='hl-sub'>High certainty, large positive effect — the surest things to add.</p>" +
-        "<div class='hl-chips'>" + (gold.length ? chipsHtml(gold, goldChamp, "gold") : "<span class='hl-empty'>none yet</span>") + "</div>" +
-        cusp(marginalGold) +
+        "<h2>Worth adding</h2>" +
+        "<p class='hl-sub'>What the evidence supports adding to your diet — with the amount that earns the benefit.</p>" +
+        sectionHtml(addEntries, 1, "Surest, biggest benefit", "high certainty and a large effect") +
+        sectionHtml(addEntries, 2, "Strong", "a notch short on one axis, or large only at a higher intake") +
+        sectionHtml(addEntries, 3, "Also supported", "smaller or less certain, but the evidence points to benefit") +
       "</div>" +
       "<div class='hl-card hl-bin'>" +
-        "<h2>⚠ Worst offenders</h2>" +
-        "<p class='hl-sub'>High certainty, large negative effect — the surest things to drop.</p>" +
-        "<div class='hl-chips'>" + (bin.length ? chipsHtml(bin, binChamp, "bin") : "<span class='hl-empty'>none yet</span>") + "</div>" +
-        cusp(marginalBin) +
+        "<h2>Worth cutting down</h2>" +
+        "<p class='hl-sub'>What the evidence supports reducing — with the highest safe amount, or where there's no safe level.</p>" +
+        sectionHtml(redEntries, 1, "Surest, biggest harm", "high certainty and a large effect") +
+        sectionHtml(redEntries, 2, "Strong reasons to cut down", "a notch short, or large only in quantity") +
+        sectionHtml(redEntries, 3, "Also worth reducing", "smaller, less certain, or harmful only for a specific outcome") +
       "</div>";
 
-    // Clicking a highlight chip jumps to that card and opens it.
-    el.querySelectorAll(".hl-chip").forEach(function (chip) {
-      chip.addEventListener("click", function () {
-        jumpToFood(chip.dataset.food);
+    // Clicking a row jumps to that card and opens it.
+    el.querySelectorAll(".hl-row").forEach(function (row) {
+      row.addEventListener("click", function () {
+        jumpToFood(row.dataset.food);
       });
     });
   }
