@@ -1092,13 +1092,10 @@
       const dose = e.dose
         ? "<span class='hl-row-dose" + (e.dose.none ? " is-none" : "") + "'>" + escapeHtml(e.dose.text) + "</span>"
         : "<span class='hl-row-dose is-muted'>—</span>";
-      const meta = e.neutralHeadline
-        ? ""
-        : "<span class='hl-row-meta'>" + escapeHtml((CERTAINTY_LABEL[certaintyOf(f)] || "").toLowerCase()) + " · " + escapeHtml((Scoring.MAGNITUDE_LABEL[magnitudeOf(f)] || "").toLowerCase().replace(" effect", "")) + "</span>";
       return (
         "<button class='hl-row' data-food='" + escapeHtml(f.id) + "'>" +
           "<span class='hl-row-name'>" + marker + escapeHtml(f.name) + notall + forO + "</span>" +
-          dose + meta +
+          dose +
         "</button>"
       );
     };
