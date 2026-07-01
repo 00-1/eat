@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.60";
+const METHODOLOGY_VERSION = "0.61";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -187,9 +187,10 @@ const FOODS = [
         search: "Morris green leafy vegetables cognitive decline Neurology 2018",
       },
     ],
-    lastReviewed: "2026-06-28",
+    lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-07-01", change: "Added 'All-cause mortality' to the recorded outcomes (v0.31) — it was already part of the cited evidence base (Aune 2017 F&V dose-response lowers CVD AND all-cause mortality; the study finding already stated it), so this aligns the outcomes list with the evidence and lets the all-cause magnitude bump apply, putting leafy greens on the cusp of Gold standard. The RR is still borrowed from the F&V umbrella; a cruciferous/leafy-SPECIFIC re-grounding remains queued. Verdict/certainty unchanged." },
+      { date: "2026-07-01", change: "Audit: source-verified (verified:true). Re-anchored to a leafy-SPECIFIC figure — CVD RR 0.84 (0.75–0.94) across 8 cohorts (Pollock 2016) plus subtype-specific inverse associations in the ~2M umbrella (Aune 2017) and T2D 0.86 (Carter 2010); cognition downgraded to a single cohort (Morris 2018). Verdict/certainty unchanged." },
     ],
   },
   {
@@ -402,6 +403,7 @@ const FOODS = [
     lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-07-01", change: "Source-verified (grounding pass): CVD HR 0.84 (0.75–0.95) at ≥2 servings/week (Pacheco 2022 JAHA, ~110k). Noted it's a 2-cohort pooled analysis, not a meta-analysis, and null for stroke — evidence base stays thin → Low. Verdict unchanged." },
+      { date: "2026-07-01", change: "Audit: verdict held at positive · Low. A reviewer argued for very-low, but scored on its actual (conservative) inputs — confounding raised to high for health-conscious eaters — the engine still computes Low, so it stays a positive 'worth adding' call rather than being hand-flipped. The fibre/MUFA LDL-lowering is real mechanistic support (Wang 2015 RCT); certainty is Low only because the hard-outcome base is a single cohort-pair." },
     ],
   },
   {
@@ -536,7 +538,7 @@ const FOODS = [
     category: "Fats & oils",
     effect: "negative",
     certainty: "high",
-    outcomes: ["Cardiovascular disease"],
+    outcomes: ["Cardiovascular disease", "All-cause mortality"],
     summary: "Industrial trans fat raises heart disease risk more than any other fat per calorie.",
     rationale:
       "Strong, coherent evidence: cohorts show a consistent dose-response, and controlled feeding trials prove the causal pathway (raising LDL while lowering HDL, an effect tightly linked to heart disease) — strong enough that the WHO called for global elimination. At the intakes where trans fat is actually eaten the effect is large, which is why it now sits in the high-confidence, large-effect group. Refers to industrial (partially hydrogenated) trans fat, not the natural ruminant trans fats in dairy/meat; now rare but still in some products.",
@@ -551,11 +553,12 @@ const FOODS = [
         search: "Mozaffarian trans fatty acids cardiovascular disease NEJM 2006",
       },
     ],
-    lastReviewed: "2026-06-29",
+    lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-06-29", change: "Moderate → High under v0.5: scoring now credits a validated causal pathway (feeding-trial-proven LDL/HDL mechanism), and the cohort dose-response was recorded. Verdict (negative) unchanged." },
       { date: "2026-06-29", change: "v0.7: effect size re-based to realistic habitual intake (was 'per 2% energy', which understated it) → magnitude now Large, so trans fat joins the biggest-harms shortlist. Verdict unchanged." },
       { date: "2026-06-29", change: "Source-verified (grounding pass): industrial trans fat CHD RR 1.42 (1.05–1.92) highest vs lowest (de Souza 2015 BMJ); per-2%-energy 1.23 (1.11–1.37) (Mozaffarian 2006). pooledRR 1.35 → 1.42. Ruminant trans fat confirmed null. Certainty stays High; verdict unchanged." },
+      { date: "2026-07-01", change: "Audit correction: the 1.42 headline was mis-attributed — de Souza 2015's actual trans-fat figures are all-cause mortality RR 1.34 (1.16–1.56), CHD-mortality 1.28 (1.09–1.50) and total CHD 1.21 (1.10–1.33). Re-anchored pooledRR 1.42 → 1.34 (all-cause mortality) and added 'All-cause mortality' to outcomes. Still the largest-effect harm (biggest-harm champion); verdict/High certainty unchanged." },
     ],
   },
   {
@@ -728,9 +731,10 @@ const FOODS = [
         search: "poultry red meat substitution mortality cardiovascular cohort",
       },
     ],
-    lastReviewed: "2026-06-28",
+    lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-06-28", change: "Certainty refined from Moderate to Low under v0.3 explicit scoring (limited direct evidence; the neutral verdict is unchanged)." },
+      { date: "2026-07-01", change: "Audit: source-verified (verified:true). Pinned to Shi 2023 (24-cohort dose-response) — no CVD association; all-cause mortality RR 0.96 (0.93–0.98), trivial. Noted a weak T2D signal (HR 1.08 per 100 g/day, Li 2024). Neutral verdict/Low certainty unchanged." },
     ],
   },
   {
@@ -1053,11 +1057,11 @@ const FOODS = [
     name: "Soy foods (tofu, soy milk, edamame, etc.)",
     category: "Legumes",
     effect: "positive",
-    certainty: "moderate",
+    certainty: "low",
     outcomes: ["Cancer mortality"],
-    summary: "Regular soy foods track with modestly lower cancer mortality.",
+    summary: "Regular soy foods track with modestly lower cancer mortality — mostly in high-intake Asian populations.",
     rationale:
-      "Dose-response cohort meta-analyses show higher soy/isoflavone intake associated with lower cancer (and all-cause) mortality, supported by isoflavone trials on intermediate markers. Mostly Asian-population data (confounding) and no hard-outcome trials, so moderate certainty.",
+      "Dose-response cohort meta-analyses show higher soy/isoflavone intake associated with lower cancer (and all-cause) mortality, supported by isoflavone trials on intermediate markers. But the benefit is concentrated in high-intake Asian cohorts and is roughly null for breast cancer in Western populations (whose intakes are ~1–2 mg/day), so it may not transfer to a typical Western diet — with no hard-outcome trials and heavy dietary-pattern confounding, certainty is Low (downgraded from Moderate on the 2026-07-01 audit).",
     considerations: {
       substitution: "Benefit partly reflects soy replacing red/processed meat.",
       confounding: "Intake concentrated in Asian populations with broader dietary differences.",
@@ -1073,6 +1077,7 @@ const FOODS = [
     lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-07-01", change: "Source-verified (grounding pass): cancer mortality RR 0.88 (0.79–0.99), ~331k, dose-responsive per 10 mg/day isoflavones (Nachvak 2019). Confirms the figure; strongest in high-intake Asian cohorts. Verdict/certainty unchanged." },
+      { date: "2026-07-01", change: "Audit: certainty Moderate → Low. The benefit is concentrated in high-intake Asian cohorts and is ~null for breast cancer in Western populations, so it may not transfer to a typical Western diet (confounding raised to high). Verdict (positive) unchanged." },
     ],
   },
   {
@@ -1097,9 +1102,10 @@ const FOODS = [
         search: "Aune fruit vegetable intake cardiovascular cancer mortality 2017",
       },
     ],
-    lastReviewed: "2026-06-29",
+    lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-07-01", change: "Added 'All-cause mortality' to the recorded outcomes (v0.31) — already part of the cited F&V dose-response evidence (Aune 2017), so this aligns the outcomes list with the evidence and applies the all-cause magnitude bump, putting cruciferous on the cusp of Gold standard. The RR remains borrowed from the produce umbrella; a cruciferous-specific re-grounding is still queued. Verdict/certainty unchanged." },
+      { date: "2026-07-01", change: "Audit: source-verified (verified:true). Pinned to cruciferous-SPECIFIC mortality/CVD (Zhang 2011 Shanghai cohorts) + subtype-specific inverse association in the ~2M umbrella (Aune 2017); cancer leg (colorectal RR 0.82, gastric 0.81; Wu 2013) flagged as case-control-weighted and therefore weaker. Verdict/certainty unchanged." },
     ],
   },
   {
@@ -1123,8 +1129,10 @@ const FOODS = [
         search: "blood lycopene cancer prostate meta-analysis cohort",
       },
     ],
-    lastReviewed: "2026-06-29",
-    revisions: [],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "Audit: source-verified (verified:true). Confirmed the 'biomarker-driven, not intake' read — tomato INTAKE is ~null in prospective cohorts (prostate-cancer RR 0.96, 0.84–1.10, NS; dietary lycopene RR 0.99), while the protective signal sits in serum lycopene (0.74) and case-control designs. pooledRR 0.95 → 0.98 (removes a spurious faint lean). Neutral verdict unchanged (Front Nutr 2021/2025)." },
+    ],
   },
   {
     id: "cocoa",
@@ -1497,8 +1505,13 @@ const ASSESSMENTS = {
     },
   },
   "leafy-greens": {
-    evidence: { pooledRR: 0.9, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "high vs low habitual intake (part of ~800 g/day fruit & veg)" },
-    effectEstimate: "Part of the fruit-and-veg dose-response; lower CVD/mortality up to ~800 g/day F&V; interval excludes no-effect.",
+    evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "highest vs lowest green-leafy-vegetable intake (Pollock 8 cohorts; Aune ~2M umbrella subtype)" },
+    effectEstimate: "Green leafy vegetables specifically (not just the F&V group): cardiovascular disease RR 0.84 (95% CI 0.75–0.94) high vs low across 8 cohorts (Pollock 2016), and individually inverse for CVD and all-cause mortality in the definitive dose-response umbrella (Aune 2017); type-2 diabetes RR 0.86 (0.77–0.96) (Carter 2010). Cognition is supported by a SINGLE cohort (Morris 2018), not a meta-analysis.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Green leafy vegetables → CVD RR 0.84 (0.75–0.94) high vs low (8 cohorts); T2D 0.86 (0.77–0.96)", cite: "Pollock 2016 JRSM Cardiovasc Dis; Carter 2010 BMJ", id: "PMID:27540481" },
+      participants: { figure: "8 prospective cohorts (Pollock 2016); subtype-specific inverse associations in the ~2M umbrella (Aune 2017)", cite: "Pollock 2016 JRSM Cardiovasc Dis; Aune 2017 Int J Epidemiol", id: "PMID:28338764" },
+    },
     doseCurve: {
       outcome: "Cardiovascular disease", unit: "servings/day", shape: "monotonic-benefit", normalRange: [0.3, 1.5],
       points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 0.89, lo: 0.83, hi: 0.96 }, { x: 2, rr: 0.84, lo: 0.75, hi: 0.94 } ],
@@ -1582,7 +1595,7 @@ const ASSESSMENTS = {
     },
   },
   "avocado": {
-    evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 110487, heterogeneity: "unknown", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "≥2 servings/week vs never (per ½ serving/day: 0.80)" },
+    evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 110487, heterogeneity: "unknown", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "≥2 servings/week vs never (per ½ serving/day: 0.80)" },
     effectEstimate: "Total CVD HR 0.84 (95% CI 0.75–0.95) at ≥2 servings/week; per ½ serving/day 0.80 (0.71–0.91) (Pacheco 2022, two US cohorts). Note: a 2-cohort POOLED analysis, not a meta-analysis of independent studies; no association with stroke. Small evidence base → Low certainty.",
     verified: true,
     sources: {
@@ -1636,18 +1649,18 @@ const ASSESSMENTS = {
     },
   },
   "trans-fat": {
-    evidence: { pooledRR: 1.42, ciExcludesNull: true, participants: 150000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway", funding: "independent", pubBias: "untested", confoundingRisk: "low", intakeBasis: "highest vs lowest INDUSTRIAL trans-fat intake (ruminant trans fat is null)" },
-    effectEstimate: "Industrial trans fat, highest vs lowest: CHD RR 1.42 (95% CI 1.05–1.92); CHD-mortality 1.18 (1.04–1.33) (de Souza 2015). Per 2% of energy: CHD RR 1.23 (1.11–1.37) (Mozaffarian 2006). Ruminant trans fat is null. Feeding RCTs prove the LDL/HDL causal pathway.",
+    evidence: { pooledRR: 1.34, ciExcludesNull: true, participants: 150000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "pathway", funding: "independent", pubBias: "untested", confoundingRisk: "low", intakeBasis: "highest vs lowest INDUSTRIAL trans-fat intake (ruminant trans fat is null)" },
+    effectEstimate: "Industrial trans fat, highest vs lowest: all-cause mortality RR 1.34 (95% CI 1.16–1.56), CHD-mortality 1.28 (1.09–1.50), total CHD 1.21 (1.10–1.33) (de Souza 2015 BMJ). Per 2% of energy: CHD RR 1.23 (1.11–1.37) (Mozaffarian 2006). Ruminant trans fat is null. Feeding RCTs prove the LDL/HDL causal pathway.",
     verified: true,
     sources: {
-      pooledRR: { figure: "Industrial trans fat, CHD RR 1.42 (1.05–1.92) highest vs lowest; per-2%-energy RR 1.23 (1.11–1.37)", cite: "de Souza 2015 BMJ; Mozaffarian 2006 NEJM", id: "PMID:26268692" },
-      participants: { figure: "4 prospective cohorts (Mozaffarian 2006); industrial-vs-ruminant isolated in de Souza 2015", cite: "Mozaffarian 2006 NEJM", id: "PMID:16611951" },
+      pooledRR: { figure: "Industrial trans fat: all-cause mortality RR 1.34 (1.16–1.56), CHD-mortality 1.28 (1.09–1.50), total CHD 1.21 (1.10–1.33) high vs low; per-2%-energy CHD 1.23", cite: "de Souza 2015 BMJ; Mozaffarian 2006 NEJM", id: "PMID:26268692" },
+      participants: { figure: "de Souza 2015 systematic review (industrial-vs-ruminant isolated); Mozaffarian 2006 4-cohort pooled", cite: "de Souza 2015 BMJ; Mozaffarian 2006 NEJM", id: "PMID:16611951" },
     },
     doseCurve: {
       outcome: "Coronary heart disease", unit: "% of daily calories", shape: "monotonic-harm", normalRange: [0, 1],
-      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 1.10 }, { x: 2, rr: 1.21, lo: 1.10, hi: 1.33 }, { x: 3, rr: 1.32 }, { x: 4, rr: 1.42 } ],
-      note: "Risk rises across the whole range — no safe threshold. Intermediate points approximated from the reported per-2%-energy slope.",
-      source: { cite: "de Souza 2015 BMJ", id: "PMID:26268692" }, verified: false,
+      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 1.10 }, { x: 2, rr: 1.21, lo: 1.10, hi: 1.33 }, { x: 3, rr: 1.28 }, { x: 4, rr: 1.34 } ],
+      note: "Risk rises across the whole range — no safe threshold. Anchored to de Souza 2015 (all-cause mortality 1.34 high-vs-low; per-2%-energy CHD slope from Mozaffarian 2006); intermediate points approximated.",
+      source: { cite: "de Souza 2015 BMJ; Mozaffarian 2006 NEJM", id: "PMID:26268692" }, verified: false,
     },
   },
   "ultra-processed": {
@@ -1714,8 +1727,13 @@ const ASSESSMENTS = {
     ],
   },
   "poultry": {
-    evidence: { pooledRR: 1, ciExcludesNull: false, participants: 300000, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake" },
-    effectEstimate: "≈ no association with CVD; interval spans no-effect → neutral; looks favorable mainly as a substitute.",
+    evidence: { pooledRR: 0.99, ciExcludesNull: false, participants: 300000, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake (per 100 g/day)" },
+    effectEstimate: "No association with cardiovascular disease across 24 cohorts (Shi 2023); all-cause mortality RR 0.96 (0.93–0.98), trivial. Interval spans no-effect → neutral; looks favorable mainly as a substitute for red/processed meat. (A weak T2D signal exists — HR 1.08 per 100 g/day, Li 2024.)",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Poultry → CVD: no association (per 100 g/day, 24 cohorts); all-cause mortality RR 0.96 (0.93–0.98)", cite: "Shi 2023 Crit Rev Food Sci Nutr", id: "DOI:10.1080/10408398.2021.1975092" },
+      participants: { figure: "24 prospective cohorts (Shi 2023 dose-response meta-analysis)", cite: "Shi 2023 Crit Rev Food Sci Nutr", id: "DOI:10.1080/10408398.2021.1975092" },
+    },
   },
   "milk": {
     evidence: { pooledRR: 0.99, ciExcludesNull: false, participants: 1600000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "per 200 mL/day (~1 glass) increment" },
@@ -1844,8 +1862,8 @@ const ASSESSMENTS = {
     },
   },
   "soy": {
-    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 330826, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~1–2 servings/day (≈25–40 mg isoflavones; 1 serving ≈ 100 g tofu / a cup of soy milk / ½ cup edamame)" },
-    effectEstimate: "Cancer mortality RR 0.88 (95% CI 0.79–0.99) highest vs lowest; each 10 mg/day isoflavones ~7% lower cancer mortality, ~10% lower all-cause (Nachvak 2019, 23 studies). Strongest in high-intake Asian cohorts; generalisability to low-intake Western diets uncertain.",
+    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 330826, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "~1–2 servings/day (≈25–40 mg isoflavones; 1 serving ≈ 100 g tofu / a cup of soy milk / ½ cup edamame)" },
+    effectEstimate: "Cancer mortality RR 0.88 (95% CI 0.79–0.99) highest vs lowest; each 10 mg/day isoflavones ~7% lower cancer mortality, ~10% lower all-cause (Nachvak 2019, 23 studies). The benefit is concentrated in high-intake Asian cohorts and is ~null for breast cancer in Western populations (≈1–2 mg/day intakes) — so it may not transfer to a typical Western diet; confounding by the broader Asian dietary pattern is the main reason certainty is Low, not Moderate.",
     verified: true,
     sources: {
       pooledRR: { figure: "Cancer mortality RR 0.88 (0.79–0.99) high vs low; dose-response per 10 mg/day isoflavones", cite: "Nachvak 2019 J Acad Nutr Diet", id: "PMID:31278047" },
@@ -1859,8 +1877,13 @@ const ASSESSMENTS = {
     },
   },
   "cruciferous": {
-    evidence: { pooledRR: 0.90, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "higher vs lower intake (within the F&V dose-response)" },
-    effectEstimate: "≈10% lower mortality/CVD as part of the fruit-and-veg dose-response; cruciferous-specific cancer signal too.",
+    evidence: { pooledRR: 0.90, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "higher vs lower cruciferous intake" },
+    effectEstimate: "Cruciferous-specific mortality/CVD ~10% lower high-vs-low (Zhang 2011 Shanghai cohorts; corroborated as an individually-inverse subtype in the ~2M umbrella, Aune 2017). Cancer: colorectal RR 0.82 (Wu 2013) and gastric 0.81 (Wu 2013) — but those pools are case-control-weighted, so the cancer leg is weaker than the mortality/CVD leg.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Cruciferous-specific mortality/CVD ~0.85–0.90 high vs low (Zhang 2011); colorectal cancer RR 0.82 (0.75–0.90), case-control-weighted (Wu 2013)", cite: "Zhang 2011 Am J Clin Nutr; Wu 2013 Ann Oncol", id: "PMID:21593509" },
+      participants: { figure: "Shanghai Women's & Men's Health cohorts (Zhang 2011); subtype-specific inverse association in the ~2M umbrella (Aune 2017)", cite: "Zhang 2011 Am J Clin Nutr; Aune 2017 Int J Epidemiol", id: "PMID:28338764" },
+    },
     doseCurve: {
       outcome: "All-cause mortality", unit: "g/day", shape: "monotonic-benefit", normalRange: [20, 60],
       points: [ { x: 0, rr: 1.0 }, { x: 40, rr: 0.91, lo: 0.84, hi: 0.98 }, { x: 80, rr: 0.88, lo: 0.77, hi: 1.00 }, { x: 130, rr: 0.85, lo: 0.76, hi: 0.96 }, { x: 180, rr: 0.78, lo: 0.71, hi: 0.85 } ],
@@ -1869,8 +1892,13 @@ const ASSESSMENTS = {
     },
   },
   "tomatoes": {
-    evidence: { pooledRR: 0.95, ciExcludesNull: false, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "high vs low blood lycopene (tomato-derived, biomarker)" },
-    effectEstimate: "Modest cancer signal, but driven by the blood-lycopene biomarker (confounded with healthy diet), not clearly by tomato intake → neutral.",
+    evidence: { pooledRR: 0.98, ciExcludesNull: false, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "high vs low tomato/lycopene intake" },
+    effectEstimate: "Tomato INTAKE is ~null in prospective cohorts: prostate-cancer RR 0.96 (0.84–1.10, NS) in cohort-only analyses and dietary lycopene RR 0.99 (0.97–1.00). The protective signal is carried by blood lycopene (serum ~0.74 vs dietary ~0.89) and case-control designs — i.e. biomarker/lifestyle-confounded, not clearly tomato intake → neutral.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Tomato intake → prostate cancer RR 0.96 (0.84–1.10), NS (cohort-only); dietary lycopene RR 0.99 (0.97–1.00); serum lycopene 0.74 vs dietary 0.89 (confounded)", cite: "Rowles/Front Nutr 2021 (cohort-stratified); Balali 2025 Front Nutr", id: "PMID:40013157" },
+      participants: { figure: "prospective-cohort subsets (Front Nutr 2021, PMID 34017849; dose-response cohorts, Balali 2025)", cite: "Front Nutr 2021; Balali 2025 Front Nutr", id: "PMID:34017849" },
+    },
   },
   "cocoa": {
     evidence: { pooledRR: 0.90, ciExcludesNull: false, participants: 21442, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "outcomes", funding: "mixed", pubBias: "untested", confoundingRisk: "low", intakeBasis: "500 mg cocoa flavanols/day vs placebo (RCT)" },
