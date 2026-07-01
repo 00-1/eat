@@ -326,9 +326,12 @@ a { color: var(--accent); }
 
 /* "Not all" caveat — a heterogeneous category whose verdict isn't uniform. */
 .notall {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
   font-size: 0.72rem;
   font-weight: 600;
-  padding: 3px 9px;
+  padding: 4px 9px;
   border-radius: 999px;
   border: 1px dashed var(--neu);
   background: var(--neu-bg);
@@ -347,9 +350,12 @@ a { color: var(--accent); }
    class verdict isn't read as a peer of its own members. Understated structural
    label, not a warning. */
 .scope-chip {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
   font-size: 0.72rem;
   font-weight: 600;
-  padding: 3px 9px;
+  padding: 4px 9px;
   border-radius: 999px;
   border: 1px dashed var(--line);
   background: var(--surface);
@@ -479,7 +485,8 @@ a { color: var(--accent); }
 /* Absolute population burden — a DIFFERENT axis, so it uses an indigo accent
    distinct from the verdict/severity greens & reds (which mean direction). */
 .burden-chip {
-  font-size: 0.72rem; font-weight: 600; padding: 3px 9px; border-radius: 999px;
+  display: inline-flex; align-items: center; line-height: 1;
+  font-size: 0.72rem; font-weight: 600; padding: 4px 9px; border-radius: 999px;
   border: 1px solid #cfd1f0; background: #ecedfb; color: #43468f; white-space: nowrap;
 }
 .burden-chip.burden-very-high { border-color: #9aa0e0; background: #e2e4fb; }
