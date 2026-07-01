@@ -1150,7 +1150,7 @@
         : "<span class='hl-row-dose is-muted'>—</span>";
       return (
         "<button class='hl-row' data-food='" + escapeHtml(f.id) + "'>" +
-          "<span class='hl-row-name'>" + marker + escapeHtml(f.name) + notall + forO + "</span>" +
+          "<span class='hl-row-name'>" + marker + escapeHtml(f.name) + notall + forO + burdenChip(f) + "</span>" +
           dose +
         "</button>"
       );
