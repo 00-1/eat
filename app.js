@@ -993,6 +993,29 @@
     });
   });
 
+  // ---- Holding list: known foods we can't yet give a verdict for ----
+  // Named honestly rather than turned into empty cards (which would imply we'd
+  // assessed them). Part of "highlight inadequacies": show the gaps.
+  function renderHolding() {
+    const el = document.getElementById("holding");
+    if (!el || typeof HOLDING_LIST === "undefined" || !HOLDING_LIST.length) return;
+    const items = HOLDING_LIST.map(function (h) {
+      const tag = h.reason === "thin"
+        ? "<span class='hold-tag hold-thin' title='Some evidence exists, but it is thin or mixed'>thin evidence</span>"
+        : "<span class='hold-tag hold-unres' title='We simply have not run the research pass yet'>not researched</span>";
+      return (
+        "<li class='hold-item'>" +
+          "<span class='hold-name'>" + escapeHtml(h.name) + "</span>" + tag +
+          (h.note ? "<span class='hold-note'>" + escapeHtml(h.note) + "</span>" : "") +
+        "</li>"
+      );
+    }).join("");
+    el.innerHTML =
+      "<h2>Not yet assessed <span class='hold-sub'>— known foods we haven't given a verdict</span></h2>" +
+      "<p class='hold-intro'>These come up often, but we don't yet have a real, sourced verdict for them — either the hard-outcome evidence is thin, or we simply haven't run the research pass. They're listed so their absence isn't mistaken for an oversight; each graduates to a full card only once there's something honest to say.</p>" +
+      "<ul class='hold-list'>" + items + "</ul>";
+  }
+
   // ---- Build stamp: which commit is live ----
   // Zero-build static site, so there's no compile step to inject a SHA. We show the
   // methodology version immediately, and fetch the latest main commit from the GitHub
@@ -1020,6 +1043,7 @@
   document.getElementById("method-ver").textContent =
     "v" + (typeof METHODOLOGY_VERSION !== "undefined" ? METHODOLOGY_VERSION : "?");
   renderBuildStamp();
+  renderHolding();
   populateCategories();
   populateExplore();
   renderDataStatus();

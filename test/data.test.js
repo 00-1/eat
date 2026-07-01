@@ -9,7 +9,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const S = require("../scoring.js");
-const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE } = require("../data.js");
+const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE, HOLDING_LIST } = require("../data.js");
 
 const EFFECTS = ["positive", "negative", "neutral"];
 const CERTAINTIES = ["high", "moderate", "low", "very-low"];
@@ -274,6 +274,17 @@ test("neutral lean is coherent: only neutral foods lean, and it matches the esti
       if (lean === "negative") assert.ok(e.pooledRR > 1, `${f.id}: leans bad but RR<=1`);
       assert.ok(Math.abs(Math.log(e.pooledRR)) > 0.03, `${f.id}: lean on a within-floor estimate`);
     }
+  }
+});
+
+test("holding list is well-formed and doesn't duplicate a real food", () => {
+  assert.ok(Array.isArray(HOLDING_LIST) && HOLDING_LIST.length, "HOLDING_LIST must be a non-empty array");
+  const foodNames = new Set(FOODS.map((f) => f.name.toLowerCase()));
+  for (const h of HOLDING_LIST) {
+    assert.ok(h.name && h.name.length, "holding item missing name");
+    assert.ok(["thin", "unresearched"].includes(h.reason), `holding "${h.name}": bad reason ${h.reason}`);
+    assert.ok(h.note && h.note.length, `holding "${h.name}": missing note`);
+    assert.ok(!foodNames.has(h.name.toLowerCase()), `holding "${h.name}" duplicates a real food item`);
   }
 });
 

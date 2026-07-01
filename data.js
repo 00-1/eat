@@ -1428,7 +1428,27 @@ for (const _f of FOODS) {
 }
 
 
+// Holding list — foods people ask about that we DON'T yet have a real verdict for.
+// Rather than create empty, verdict-bearing cards (which would dilute the list and
+// imply we'd assessed them), we name them here honestly: "known, but nothing to say
+// yet." A food graduates to a full item only once there's a real, sourced verdict.
+// This is the counterpart to the "highlight inadequacies" policy — the gaps are
+// stated, not hidden. `reason`: "thin" = little/mixed hard-outcome evidence exists;
+// "unresearched" = we simply haven't run the evidence pass yet.
+const HOLDING_LIST = [
+  { name: "Garlic & other alliums", reason: "thin", note: "Popular claims rest mainly on blood-pressure/cholesterol markers; hard-outcome cohort evidence is thin." },
+  { name: "Onions", reason: "unresearched", note: "Part of the broad vegetable signal, but little food-specific hard-outcome data — not yet assessed on its own." },
+  { name: "Mushrooms", reason: "unresearched", note: "Some intriguing cohort signals; not yet researched to our standard." },
+  { name: "Shellfish (shrimp, mussels, etc.)", reason: "thin", note: "Sparse and mixed outcome evidence, separate from the fatty-fish signal." },
+  { name: "Seeds (chia, flax, pumpkin, etc.)", reason: "thin", note: "Favourable lipid/marker studies, but little hard-outcome cohort evidence yet." },
+  { name: "Honey", reason: "unresearched", note: "Often marketed as a 'natural' sugar; little outcome evidence either way — not yet researched." },
+  { name: "Herbs & spices", reason: "thin", note: "Mostly small biomarker studies; no notable hard-outcome evidence yet." },
+  { name: "Plant milks (oat, almond, soy drink, etc.)", reason: "unresearched", note: "Highly variable products; not yet assessed as a category." },
+  { name: "Dried fruit", reason: "unresearched", note: "Sits between whole fruit and concentrated sugar; not yet assessed separately." },
+  { name: "Fruit juice", reason: "thin", note: "Contrasts with whole fruit (worse for diabetes), but not yet given its own sourced verdict." },
+];
+
 // Allow Node (tests) to import this data while the browser loads it as a script.
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE };
+  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, HOLDING_LIST };
 }
