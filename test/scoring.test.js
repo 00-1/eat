@@ -398,3 +398,37 @@ test("GUARDRAIL: mechanism does not override good observational outcome data", (
   assert.equal(a.basis, "observation-led");
   assert.ok(a.scores.effectSize >= 1); // the protective signal is intact
 });
+
+test("dose-curve readings: nadir/peak/threshold and best-case magnitude", () => {
+  // A benefit curve that keeps improving to the studied edge.
+  const benefit = { unit: "g/day", points: [
+    { x: 0, rr: 1.0 }, { x: 100, rr: 0.9 }, { x: 200, rr: 0.82 }, { x: 400, rr: 0.75 },
+  ] };
+  const r = S.curveReadings(benefit);
+  assert.equal(r.nadir.rr, 0.75);
+  assert.equal(r.nadir.x, 400);
+  assert.ok(r.nadir.atStudiedEdge, "nadir at the top of the studied range");
+  assert.equal(r.harmThreshold, null, "a pure benefit curve never crosses into harm");
+  // best-case magnitude for a positive food reads the nadir (0.75 → large)
+  const pos = S.doseExtremeReading(benefit, "positive");
+  assert.equal(pos.magnitude, "large");
+  assert.equal(pos.atStudiedEdge, true);
+
+  // A harm curve: worst case reads the peak; threshold is the first harmful point.
+  const harm = { unit: "g/day", points: [
+    { x: 0, rr: 1.0 }, { x: 50, rr: 1.05 }, { x: 150, rr: 1.4 },
+  ] };
+  const neg = S.doseExtremeReading(harm, "negative");
+  assert.equal(neg.rr, 1.4);
+  assert.equal(neg.magnitude, "large");
+  const hr = S.curveReadings(harm);
+  assert.equal(hr.harmThreshold.x, 50, "first intake past the directionality floor");
+
+  // magnitudeOfRR has no all-cause bump — a raw 0.83 is 'moderate', not 'large'.
+  assert.equal(S.magnitudeOfRR(0.83), "moderate");
+  assert.equal(S.magnitudeOfRR(0.78), "large");
+  assert.equal(S.magnitudeOfRR(1.0), "minimal");
+  // no usable curve → null
+  assert.equal(S.doseExtremeReading(null, "positive"), null);
+  assert.equal(S.curveReadings({ points: [{ x: 0, rr: 1 }] }), null);
+});

@@ -423,9 +423,75 @@
     return sign < 0 ? "monotonic-benefit" : "monotonic-harm";
   }
 
+  // ---- Dose-curve readings (best case / worst case / threshold) ----
+  // The headline magnitude reads the pooled RR at a normal portion. The dose curve
+  // holds the rest of the story: how much a food could help at its *optimal* intake,
+  // or harm if you *really pile it on*, and the intake at which a harmful food first
+  // turns harmful. These readings are derived purely from the recorded curve points
+  // (reproducible + testable), so a food is only ever "conditionally" promoted by the
+  // same rule applied to every food — never hand-picked.
+
+  // Magnitude tier from a raw RR, WITHOUT the all-cause bump (the honest, dose-based
+  // reading). Mirrors classifyMagnitude's cut-points on |ln RR|.
+  function magnitudeOfRR(rr) {
+    if (typeof rr !== "number" || rr <= 0) return "minimal";
+    var m = Math.abs(Math.log(rr));
+    var tier = m >= 0.22 ? 3 : m >= 0.1 ? 2 : m > 0.03 ? 1 : 0;
+    return ["minimal", "small", "moderate", "large"][tier];
+  }
+
+  // Read named points off a dose curve. Returns null if there's no usable curve.
+  //   nadir  — the most beneficial point (lowest RR): "best case at optimal intake"
+  //   peak   — the most harmful point (highest RR): "worst case if you eat a lot"
+  //   atStudiedEdge — true if that extreme sits at the top of the studied range
+  //                   (curve still moving → tag "as far as studied", don't extrapolate)
+  function curveReadings(doseCurve) {
+    if (!doseCurve || !Array.isArray(doseCurve.points)) return null;
+    var pts = doseCurve.points.filter(function (p) {
+      return p && typeof p.x === "number" && typeof p.rr === "number" && p.rr > 0;
+    });
+    if (pts.length < 2) return null;
+    var sorted = pts.slice().sort(function (a, b) { return a.x - b.x; });
+    var nadir = sorted[0], peak = sorted[0];
+    for (var i = 1; i < sorted.length; i++) {
+      if (sorted[i].rr < nadir.rr) nadir = sorted[i];
+      if (sorted[i].rr > peak.rr) peak = sorted[i];
+    }
+    var maxX = sorted[sorted.length - 1].x;
+    // First intake at which the curve crosses into harm (|ln RR| past the floor, rr>1).
+    var threshold = null;
+    for (var j = 0; j < sorted.length; j++) {
+      if (sorted[j].rr > 1 && Math.abs(Math.log(sorted[j].rr)) > 0.03) { threshold = sorted[j]; break; }
+    }
+    return {
+      unit: doseCurve.unit || null,
+      nadir: { x: nadir.x, rr: nadir.rr, atStudiedEdge: nadir.x === maxX },
+      peak: { x: peak.x, rr: peak.rr, atStudiedEdge: peak.x === maxX },
+      harmThreshold: threshold ? { x: threshold.x, rr: threshold.rr } : null,
+    };
+  }
+
+  // Best-achievable (positive) / worst-case (negative) reading from the dose curve,
+  // as a magnitude tier plus the intake it occurs at. Returns null with no curve.
+  function doseExtremeReading(doseCurve, direction) {
+    var r = curveReadings(doseCurve);
+    if (!r) return null;
+    var pick = direction === "negative" ? r.peak : r.nadir;
+    return {
+      rr: pick.rr,
+      x: pick.x,
+      unit: r.unit,
+      atStudiedEdge: pick.atStudiedEdge,
+      magnitude: magnitudeOfRR(pick.rr),
+    };
+  }
+
   var api = {
     MAX: MAX,
     THRESHOLDS: THRESHOLDS,
+    magnitudeOfRR: magnitudeOfRR,
+    curveReadings: curveReadings,
+    doseExtremeReading: doseExtremeReading,
     computeScores: computeScores,
     totalScore: totalScore,
     tierFromTotal: tierFromTotal,
