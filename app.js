@@ -957,14 +957,54 @@
     })[0];
   }
 
+  // Best-achievable magnitude at a high (dose-curve) intake — the basis for a
+  // CONDITIONAL shortlist promotion ("gold if you eat plenty"). Null with no curve.
+  function optimalMagnitudeOf(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.doseCurve || typeof Scoring === "undefined") return null;
+    const d = Scoring.doseExtremeReading(a.doseCurve, food.effect);
+    return d ? d.magnitude : null;
+  }
+  const STAND_RANK = { gold: 3, bin: 3, "marginal-gold": 2, "marginal-bin": 2 };
+  // A food's shortlist standing. It qualifies at its NORMAL relative effect, or
+  // CONDITIONALLY at a high intake read off its dose curve — but conditional
+  // promotion requires the food to be source-verified (we don't crown foods whose
+  // headline facts aren't checked, e.g. green tea, cruciferous). Returns the intake
+  // (`at`) needed for a conditional promotion so the chip can say "if you eat plenty".
+  function standoutOf(food) {
+    const cert = certaintyOf(food);
+    const normal = Scoring.standout(food.effect, cert, magnitudeOf(food));
+    let tag = normal, conditional = false, at = null;
+    if (isVerified(food)) {
+      const om = optimalMagnitudeOf(food);
+      const optimal = om ? Scoring.standout(food.effect, cert, om) : null;
+      if ((STAND_RANK[optimal] || 0) > (STAND_RANK[normal] || 0)) {
+        tag = optimal;
+        conditional = true;
+        const asc = Scoring.ascensionDose(ASSESSMENTS[food.id].doseCurve, food.effect, om);
+        at = asc ? "~" + asc.x + (asc.unit ? " " + asc.unit : "") : null;
+      }
+    }
+    return { tag: tag, conditional: conditional, at: at };
+  }
+
   function renderHighlights() {
     const el = document.getElementById("highlights");
     if (!el || typeof Scoring === "undefined") return;
-    const tagOf = (f) => Scoring.standout(f.effect, certaintyOf(f), magnitudeOf(f));
-    const pick = (tag) => FOODS.filter((f) => tagOf(f) === tag);
+    const cls = {};
+    FOODS.forEach(function (f) { cls[f.id] = standoutOf(f); });
+    const pick = (tag) => FOODS.filter((f) => cls[f.id].tag === tag);
     const gold = pick("gold"), bin = pick("bin");
     const marginalGold = pick("marginal-gold"), marginalBin = pick("marginal-bin");
-    const goldChamp = championOf(gold), binChamp = championOf(bin);
+    // The single ★/⚠ champion must be an UNCONDITIONAL pick — not one that only
+    // qualifies if you eat a lot — so conditional entries are excluded from it.
+    const uncond = (foods) => foods.filter((f) => !cls[f.id].conditional);
+    const goldChamp = championOf(uncond(gold)), binChamp = championOf(uncond(bin));
+    // "if you eat plenty" pill for a conditionally-promoted entry.
+    const condPill = (f) =>
+      cls[f.id].conditional && cls[f.id].at
+        ? " <span class='hl-cond' title='Reaches this tier only at a high intake — read off the dose-response curve'>if you eat plenty: " + escapeHtml(cls[f.id].at) + "</span>"
+        : "";
 
     const champMarker = function (kind) {
       return kind === "bin"
@@ -983,7 +1023,7 @@
             : "";
           return (
             "<button class='hl-chip" + (isChamp ? " hl-champ" : "") + "' data-food='" + escapeHtml(f.id) + "'>" +
-              marker + escapeHtml(f.name) + notall +
+              marker + escapeHtml(f.name) + notall + condPill(f) +
             "</button>"
           );
         })
@@ -997,7 +1037,7 @@
             : "";
           return (
             "<button class='hl-chip hl-cusp' data-food='" + escapeHtml(f.id) + "'>" +
-              escapeHtml(f.name) + notall +
+              escapeHtml(f.name) + notall + condPill(f) +
               " <span class='hl-short'>(" + escapeHtml(shortfall(f)) + ")</span>" +
             "</button>"
           );

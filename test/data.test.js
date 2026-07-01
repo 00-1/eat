@@ -373,7 +373,13 @@ test("CHAMPION is reproducible and never a 'not all' entry", () => {
   assert.equal(bc.id, "trans-fat");
 });
 
-test("veg artifact fixed: at least one vegetable reaches Gold or its cusp", () => {
+test("bump retired: vegetables stay off the RELATIVE-effect shortlist (honest, BoP-consistent)", () => {
+  // With the all-cause bump retired (v0.41), magnitude is pure relative effect.
+  // Vegetables/fruit are MODERATE on relative effect even at high intake (~0.82-0.85),
+  // so they no longer reach Gold or its cusp — which matches rigorous practice
+  // (Burden of Proof rates veg->IHD only 2 stars). They win on ABSOLUTE population
+  // burden (a separate axis), not relative effect. This is a deliberate outcome, not
+  // a regression: the test locks in that the shortlist is not inflated by the bump.
   const certaintyOf = (f) => S.assess(ASSESSMENTS[f.id].evidence, f.outcomes).tier;
   const magOf = (f) => S.maxMagnitude([{ ev: ASSESSMENTS[f.id].evidence, outcomes: f.outcomes }]);
   const veg = FOODS.filter((f) => f.category === "Vegetables");
@@ -381,7 +387,10 @@ test("veg artifact fixed: at least one vegetable reaches Gold or its cusp", () =
     const s = S.standout(f.effect, certaintyOf(f), magOf(f));
     return s === "gold" || s === "marginal-gold";
   });
-  assert.ok(reaching.length >= 1, "expected >=1 vegetable at Gold/cusp (veg-cusp artifact)");
+  assert.equal(reaching.length, 0, "no vegetable should reach Gold/cusp on relative effect once the bump is retired");
+  // Sanity: the shortlist still crowns a genuine large-effect contender.
+  const nuts = FOODS.find((f) => f.id === "tree-nuts");
+  assert.equal(S.standout("positive", certaintyOf(nuts), magOf(nuts)), "gold");
 });
 
 test("directionality is consistent with the verdict (CI excludes null AND effect > floor)", () => {

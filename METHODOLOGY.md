@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.40 — living document.** This file is the canonical description of how
+**Version 0.41 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -183,9 +183,13 @@ with a robust LDL→CVD link) and cohorts agree — so mechanism legitimately li
 Direction and certainty don't say how *big* the effect is. A verdict can be
 high-certainty but small (whole fruit: fairly sure, modest per-serving effect) or
 high-certainty and large (sugary drinks). So we also derive a **magnitude** tier —
-**large / moderate / small / minimal** — from the recorded relative effect
-(`pooledRR`), bumped one tier when the food acts on **all-cause mortality** (the
-broadest outcome). A true null moves nothing → minimal.
+**large / moderate / small / minimal** — purely from the recorded relative effect
+(`pooledRR`). A true null moves nothing → minimal. *(v0.41: the former one-tier
+"all-cause mortality bump" has been **retired** — it was a home-grown importance
+proxy with no established analog that over-fired and alone inflated the shortlist.
+"How much a food matters" at population scale is now the separate absolute-burden
+axis; "how much it helps if you eat a realistic amount" is read off the dose curve —
+see below.)*
 
 A food's magnitude is taken as the **maximum across all of its outcomes**
 (`Scoring.maxMagnitude`) — its headline outcome *plus* any per-outcome verdicts —
@@ -202,10 +206,15 @@ outcome where they genuinely act.
 > foods eaten in quantity and would make junk look benign; this convention is why
 > trans fat lands at *large* magnitude (and in Bin fodder) rather than moderate.
 >
-> **Limitation.** Even on the realistic-intake basis, this is still a
-> *relative-effect* proxy, not absolute population burden. Capturing absolute
-> burden (which weights how common/severe the outcome is, not just the relative
-> risk) would need GBD-style attributable fractions — a candidate future input.
+> **Two things magnitude deliberately is NOT.** (1) It is a *relative-effect*
+> proxy, not **absolute population burden** — how much a food matters at population
+> scale (weighting how common/severe the outcome is) is a *separate* axis that would
+> need GBD-style attributable fractions (queued, ROADMAP §3b). (2) A single headline
+> RR is one point on a **dose-response curve**; how much a food helps *at a realistic
+> or optimal intake* is read off that curve (`Scoring.doseExtremeReading` /
+> `optimalBand`), not from the headline alone. These two — retiring the all-cause
+> bump (v0.41) and reading the curve at high intake — replace the old bump, which
+> conflated "matters a lot" with "big relative effect" and inflated the shortlist.
 
 **Standout shortlists** combine certainty and magnitude:
 
@@ -217,17 +226,30 @@ outcome where they genuinely act.
 
 Each list also shows an **"on the cusp"** tier: foods one notch short on a single
 axis (certainty-rank + magnitude-rank = 5), so you can see what would join if a
-threshold eased — e.g. whole grains, whole fruit, coffee, leafy greens and
-cruciferous all sit just below Gold standard. Both lists are *computed*, so they
-update automatically as facts/rules change.
+threshold eased. Both lists are *computed*, so they update automatically as
+facts/rules change.
+
+**Conditional promotion — "if you eat plenty."** A food that is only *moderate* at a
+normal serving but reaches a shortlist tier at a **high intake** (read off its
+dose-response curve, `Scoring.optimalMagnitudeOf`) is promoted **conditionally**, with
+a chip stating the intake it needs (e.g. whole grains at ~135 g/day, fatty fish at ~3
+servings/week). Conditional promotion requires the food to be **source-verified** — we
+don't crown foods whose headline facts aren't checked (this is why green tea and
+cruciferous, which reach large only at high intake on *unverified* headline data, are
+held back). This is the honest instantiation of "what happens when you *add* this
+food": vegetables, fruit and leafy greens stay *moderate* even at ~550–800 g/day and
+so do **not** make the shortlist on relative effect (consistent with Burden of Proof
+rating veg→heart-disease only 2 stars) — they win on *absolute burden*, a separate
+axis.
 
 **Champion — one per direction, shown first.** Within each direction we crown a single
 champion — the qualifying food with the **largest headline effect** `|ln(pooledRR)|`,
 tie-broken by certainty then precision — and list it first: **★ top pick** on the
 positive side, **⚠ worst offender** on the negative. Today that is **tree nuts**
-(RR 0.78) and **trans fat** (RR 1.42). Reproducible, not hand-picked — and restricted
-to `specific`/`uniform` entries, so a "not all" category can never be crowned as *the*
-thing to do or drop.
+(RR 0.78) and **trans fat** (RR 1.42). The champion must be an **unconditional** pick
+(never a "if you eat plenty" entry) and is restricted to `specific`/`uniform` entries,
+so a "not all" category can never be crowned as *the* thing to do or drop.
+Reproducible, not hand-picked.
 
 **"Not all" caveat, applied evenly.** Many entries are really *categories* (tree
 nuts, whole fruit, ultra-processed). Each item records a `categoryUniformity` —
@@ -414,13 +436,17 @@ We benchmarked this project against how the field grades diet evidence (full wri
   system ranks individual foods (USDA guidance and the HEI/DASH/Mediterranean indices score
   whole *patterns*). We accept the risk only because we grade on outcomes and caveat heavily,
   and we frame the shortlists as "largest, surest **relative** effect," not "healthiest."
-- **The all-cause-mortality magnitude bump is a rough proxy.** The principled measure of
-  "how much a food matters" is **absolute attributable burden** (GBD-style PAF), not a
-  relative-risk tier promotion — a known limitation (see §3 in the roadmap). This is also why
-  vegetables sit mid-shortlist: on *relative* effect they're modest (~10%), and Burden of
-  Proof likewise rates vegetables→heart-disease only 2 stars ("weak") despite a large mean
-  effect — veg dominate on *absolute burden*, a different axis. "Healthiest" and "biggest
-  sure effect" are genuinely different questions, and our shortlist answers the second.
+- **We separate "big relative effect" from "matters a lot" — the all-cause bump is gone.**
+  We *used* to promote foods acting on all-cause mortality up a magnitude tier; v0.41
+  **retired** that, because the principled measure of "how much a food matters" is
+  **absolute attributable burden** (GBD-style PAF), a separate axis — not a relative-risk
+  tier promotion. This is why vegetables/fruit are **not** on the shortlist: on *relative*
+  effect they're modest even at high intake (~0.82–0.85), and Burden of Proof likewise
+  rates vegetables→heart-disease only 2 stars ("weak") despite a large mean effect. Veg
+  dominate on *absolute burden*, a different axis we plan to add (ROADMAP §3b). "Healthiest"
+  and "biggest sure effect" are genuinely different questions; our shortlist answers the
+  second, honestly, and we read the **dose curve at realistic intake** (ROADMAP §3a) so a
+  food people pile on isn't judged by a single serving.
 
 ## Reference frameworks
 
@@ -442,6 +468,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.41 | 2026-07-01 | **Retired the all-cause bump; conditional "if you eat plenty" crowning.** Magnitude is now pure relative effect — the one-tier all-cause-mortality bump (a home-grown importance proxy that over-fired and alone inflated the shortlist) is **gone**. In its place: (1) a food that reaches a shortlist tier only at a **high intake** read off its dose curve is promoted **conditionally**, with a chip stating the needed intake (`Scoring.optimalMagnitudeOf` + `ascensionDose`); (2) conditional promotion requires the food to be **source-verified** (holds back green tea & cruciferous, which reach large only on unverified headline data); (3) the ★/⚠ champion must be an **unconditional** pick. Net shortlist: **★ tree nuts** (unconditional gold) + whole grains (~135 g/day) & fatty fish (~3 srv/wk) conditional; **⚠ trans fat / processed meat / sugary drinks** + ultra-processed (~30% energy) conditional. **Vegetables, fruit, coffee and leafy greens leave the shortlist** — they're moderate on relative effect even at high intake (BoP-consistent), and belong to the separate absolute-burden axis (§3b). Tests updated. |
 | 0.40 | 2026-07-01 | **High-intake dose-curve grounding for top-spot contenders.** A background pass grounded high-intake dose-response curves so magnitude can be read at *optimal/high* intake, not just one serving. Findings (all food-specific where possible; honest flags otherwise): **whole grains** extended to reach RR ~0.80 at ~135 g/day and a ~0.78 floor at ~210 g/day (Aune 2016) → *large at high intake*; **cruciferous** gains a Zhang-2011 curve reaching ~0.78 only at the highest quintile (~180 g/day, high-consuming population) → *large only if you eat a lot* (colon cancer reaches it at a realistic ~40–60 g/day); **leafy greens** gains a food-specific *CVD* curve (Hung 2004) that stays *moderate* — there is no verifiable leafy-green-specific mortality dose-response, and the "~25% per 100 g" figure is an aggregator misattribution of the fruit-&-veg umbrella. Bottom line: **total vegetables, fruit and leafy greens stay moderate even at ~550–800 g/day (~0.82–0.85 floor); whole grains, cruciferous (high intake), berries/blueberries and nuts are the ones that reach "large."** Curves added/extended with derived shapes (test-enforced); conditional shortlist crowning still gated pending the flip. |
 | 0.39 | 2026-07-01 | **Steelman backlog cleared + exception prevalence sourced.** (1) Added researched counter-arguments for the seven foods that had no steelman (avocado, coffee, french fries, green tea, poultry, tomatoes, trans fat) — every food now carries a challenge. Each landed *partial*: a real sub-type/substitution/preparation caveat that qualifies but doesn't overturn the verdict (e.g. trans-fat harm is *industrial* not ruminant; fries-harm is *deep-fried* not baked; poultry's "neutral" hides a red-meat-substitution benefit). Attributions real, figures snippet-cross-verified; see `research/counter-arguments-research.md`. (2) Pinned the major subgroup-exception prevalence figures to real reviews/surveillance (celiac Singh 2018; food allergies Spolidoro 2023; IBS Sperber 2021 Rome IV; G6PD Nkhoma 2009; alpha-gal CDC MMWR 2023; gout GBD 2021; PKU Hillert 2020) and flagged the lactose-malabsorption 68% figure as *retracted* (Storhaug 2017) rather than leaning on it; see `research/exceptions-research.md`. Also documented (§9 / Approach tab §10) how our method compares to established practice, and split the "how much a food matters" fix into individual realistic-dose magnitude (§3a) vs population burden (§3b) in the roadmap. |
 | 0.38 | 2026-07-01 | **New item: Berries (33 foods).** Split conceptually from whole fruit as a likely stronger member. Positive · Low for type-2 diabetes (Guo 2016 berry meta-analysis RR 0.82; blueberries strongest, Muraki 2013 HR 0.74; anthocyanin/MI signal Cassidy 2013). Full package: mechanism (Curtis 2019 blueberry vascular RCT), a T2D dose curve, exceptions (strawberry oral-allergy, salicylate sensitivity), a steelman (healthy-user confounding + blueberry-council funding), and `categoryUniformity: mixed` (signal concentrated in blueberries → "not all"). Held at Low certainty: moderate heterogeneity, confounding, and unclear funding. |

@@ -181,27 +181,25 @@
   }
 
   // Impact magnitude — HOW MUCH the food moves the needle (separate from how
-  // SURE we are). Derived from the recorded relative effect (pooledRR), with a
-  // one-tier bump when the food acts on all-cause mortality (the broadest, most
-  // consequential outcome). This is a relative-effect proxy; it does not capture
-  // absolute population burden (which would need GBD-style attributable
-  // fractions) — a documented limitation.
+  // SURE we are). A pure relative-effect reading from the recorded pooledRR.
+  //
+  // NOTE (v0.41): the former one-tier "all-cause mortality bump" has been RETIRED.
+  // It was a home-grown proxy for importance with no established analog, and it
+  // over-fired (it alone put moderate-RR foods like coffee/fruit/veg on the
+  // shortlist). "How much a food matters" at the population level is now the job of
+  // the separate absolute-burden axis (ROADMAP §3b, GBD PAF-style); "how much it
+  // helps if you eat a realistic amount" is handled by reading the dose curve at
+  // high intake (ROADMAP §3a). Magnitude here is just the relative effect.
   //   |ln(RR)| >= 0.22 -> large   (RR <= ~0.80 or >= ~1.25)
   //            >= 0.10 -> moderate (RR <= ~0.90 or >= ~1.11)
   //            >  0.03 -> small
   //   else             -> minimal (a true null moves nothing)
   var MAGNITUDE_ORDER = { minimal: 0, small: 1, moderate: 2, large: 3 };
-  function classifyMagnitude(ev, outcomes) {
+  function classifyMagnitude(ev) {
     if (!ev || ev.ciExcludesNull === false) return "minimal"; // no claimed effect → moves nothing
     var rr = ev.pooledRR;
     if (typeof rr !== "number" || rr <= 0) return "minimal";
-    var m = Math.abs(Math.log(rr));
-    var tier = m >= 0.22 ? 3 : m >= 0.1 ? 2 : m > 0.03 ? 1 : 0;
-    var broad =
-      Array.isArray(outcomes) &&
-      outcomes.some(function (o) { return /all-cause mortality/i.test(o); });
-    if (broad && tier > 0 && tier < 3) tier += 1;
-    return ["minimal", "small", "moderate", "large"][tier];
+    return magnitudeOfRR(rr);
   }
 
   // A food moves the needle as much as its STRONGEST outcome does — not just its

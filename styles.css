@@ -376,6 +376,10 @@ a { color: var(--accent); }
 .hl-chip.hl-cusp { background: transparent; border-style: dashed; color: var(--ink-soft); font-weight: 600; }
 .hl-chip.hl-cusp:hover { color: var(--ink); border-color: var(--accent); }
 .hl-short { font-weight: 400; opacity: 0.85; }
+.hl-cond {
+  font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+  color: var(--info); background: var(--info-bg); border-radius: 999px; padding: 1px 6px; white-space: nowrap;
+}
 
 /* Explore: what-if criteria diff */
 .explore {

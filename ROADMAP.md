@@ -274,7 +274,12 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       PREDIMED tested the whole Mediterranean *pattern* (EVOO supplied to the MedDiet
       arm), not the oil in isolation → `rctLevel: pattern` is correct; olive oil stays
       Low. Verified on Guasch-Ferré 2022 (HR 0.81).
-- [~] **(b) All-cause-mortality magnitude bump over-fires.** PARTIALLY addressed
+- [x] **(b) All-cause-mortality magnitude bump — RETIRED (v0.41).** Magnitude is now
+      pure relative effect; importance-at-population-scale moved to the queued
+      absolute-burden axis (§3b) and effect-at-realistic-intake to the dose curve (§3a,
+      conditional crowning). The over-fire is gone (coffee/fruit/veg no longer inflated
+      onto the shortlist). History below.
+- [~] ~~(b) All-cause-mortality magnitude bump over-fires.~~ PARTIALLY addressed
       (v0.31): magnitude is now the **max across a food's outcomes** (`maxMagnitude`),
       which is the structural half of the redesign. The bump itself STILL over-fires —
       the one-tier bump for acting on all-cause mortality pushes moderate-RR foods
@@ -580,17 +585,21 @@ reason** (the dose actually eaten), with no all-cause bump needed.
       not better) vs veg the monotonic case (more keeps helping). The qualifier pill
       carries the **specific ascension intake** ("~28 g/day"; "above ~800 g/day"), not
       a vague "if you eat a lot".
-- [ ] **GATED — do NOT flip on yet.** Enabling conditional shortlist crowning +
-      retiring the all-cause bump now would *drop* veg/fruit/whole-grains off the
-      shortlist and promote edge-of-range readings (green tea). The promotion report
-      showed only tree-nuts clears "large" (0.78) on today's curves; whole grains
-      (0.82) and fruit (0.86) plateau at *moderate*, and leafy greens/cruciferous have
-      **no curve at all**. So the crowning rule genuinely disagrees until the staples
-      have real high-intake curves.
-- [ ] **Prereq: high-intake dose-curve grounding pass** for leafy greens, cruciferous,
-      whole grains (and re-check fruit) against their cumulative high-vs-none contrasts.
-      THEN flip on: retire the bump, enable conditional "if you eat plenty" crowning
-      with the ascension-dose pill, and let the rule promote exactly what earns it.
+- [x] **Prereq DONE (v0.40): high-intake dose-curve grounding pass** — grounded
+      leafy greens (CVD; stays moderate), cruciferous (Zhang 2011; large only at
+      ~180 g/day, high-consuming), whole grains (extended to reach large at ~135 g/day),
+      total veg/fruit (stay moderate to ~800 g). Honest bottom line: veg/fruit/leafy
+      greens do NOT reach large; whole grains, cruciferous (high intake), berries, nuts do.
+- [x] **FLIPPED ON (v0.41).** Retired the all-cause bump (magnitude = pure relative
+      effect); added conditional "if you eat plenty: ~X" crowning read off the dose curve
+      (`optimalMagnitudeOf` + `ascensionDose`), gated on source-verification; champion
+      restricted to unconditional picks. Result: nuts unconditional gold; whole grains
+      (~135 g/day) + fatty fish (~3 srv/wk) conditional; veg/fruit/coffee/green-tea/
+      cruciferous off the shortlist (honest — moderate on relative effect / unverified).
+      Tests + docs updated.
+- [ ] **Still ahead (§3b): the absolute-burden axis** so veg/whole-grains/fruit can
+      rank on *population impact* — the axis they legitimately dominate — separately
+      from relative effect.
 
 ## 3b. Absolute population impact (beyond relative effect)  ⟶ *queued — the "real fix" for population importance (maintainer, 2026-07-01)*
 
