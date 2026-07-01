@@ -348,9 +348,11 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       whole grains, processed meat) because data is better at the class level — fine,
       but two problems: **(a) naming is ambiguous.** "Tree nuts (almonds, walnuts)"
       reads as if scoped to two nuts; the evidence actually pools tree-nut types broadly
-      (Aune) and applies to the class. Fix the convention: the bracket lists *examples*,
-      and record an explicit **scope** ("applies to the class; evidence pooled across
-      types") so it doesn't read as a narrow claim. **(b) it hides within-category
+      (Aune) and applies to the class. *Partly done (v0.33.x):* the redundant
+      "(examples, etc.)" is now lifted out of the name into a muted "e.g. …" subtitle, so
+      the title is just "Tree nuts" — reads as the class, not a two-item claim. Still to
+      do: record an explicit **scope** ("applies to the class; evidence pooled across
+      types"). **(b) it hides within-category
       variation.** Surface known heterogeneity on the card where it exists — e.g. for
       whole fruit, *berries/apples/grapes show the strongest signal (Muraki 2013) while
       sugary/tropical fruits are weaker or less-studied, and juice is separate and

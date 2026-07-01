@@ -1414,6 +1414,19 @@ for (const _f of FOODS) {
   if (UNIFORMITY_NOTE[_f.id]) _f.uniformityNote = UNIFORMITY_NOTE[_f.id];
 }
 
+// Lift the redundant "(examples, etc.)" out of category food NAMES into a separate
+// `examples` field (shown as a muted "e.g. …" subtitle instead of cluttering the
+// title). Rule: only brackets that are an EXAMPLE LIST — i.e. end in "etc." — are
+// lifted; brackets that SCOPE the verdict (e.g. potatoes "(boiled/baked)", milk
+// "(whole or low-fat)", tea "(green or black)") carry meaning and are left in place.
+for (const _f of FOODS) {
+  const _m = _f.name.match(/^(.*?)\s*\(([^)]*?)(?:,?\s*etc\.?)\)\s*$/i);
+  if (_m) {
+    _f.name = _m[1].trim();
+    _f.examples = _m[2].trim(); // e.g. "almonds, walnuts"
+  }
+}
+
 
 // Allow Node (tests) to import this data while the browser loads it as a script.
 if (typeof module !== "undefined" && module.exports) {

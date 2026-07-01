@@ -412,7 +412,7 @@
     if (state.query) {
       const q = state.query.toLowerCase();
       const hay = (
-        food.name + " " + food.category + " " + food.summary + " " +
+        food.name + " " + (food.examples || "") + " " + food.category + " " + food.summary + " " +
         food.rationale + " " + (food.outcomes || []).join(" ") + " " +
         (food.studies || []).map((s) => s.citation + " " + s.finding).join(" ")
       ).toLowerCase();
@@ -613,7 +613,9 @@
             "<div class='card-top'>" +
               "<div>" +
                 "<h3>" + escapeHtml(food.name) + "</h3>" +
-                "<p class='cat'>" + escapeHtml(food.category) + "</p>" +
+                "<p class='cat'>" + escapeHtml(food.category) +
+                  (food.examples ? " <span class='examples'>e.g. " + escapeHtml(food.examples) + "</span>" : "") +
+                "</p>" +
               "</div>" +
               "<span class='badge " + eff + "'>" + EFFECT_LABEL[eff] + "</span>" +
               leanChip(eff, aEv) +
@@ -991,9 +993,33 @@
     });
   });
 
+  // ---- Build stamp: which commit is live ----
+  // Zero-build static site, so there's no compile step to inject a SHA. We show the
+  // methodology version immediately, and fetch the latest main commit from the GitHub
+  // API (what Pages serves) so you can see exactly which build you're looking at.
+  // Degrades to "local" when offline / opened from file:// without network.
+  function renderBuildStamp() {
+    const mEl = document.getElementById("build-method");
+    if (mEl) mEl.textContent = "v" + (typeof METHODOLOGY_VERSION !== "undefined" ? METHODOLOGY_VERSION : "?");
+    const sEl = document.getElementById("build-sha");
+    if (!sEl || typeof fetch !== "function") return;
+    fetch("https://api.github.com/repos/00-1/eat/commits/main", { headers: { Accept: "application/vnd.github+json" } })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (data) {
+        const sha = data && data.sha ? String(data.sha).slice(0, 7) : null;
+        if (!sha) { sEl.textContent = "unknown"; return; }
+        sEl.textContent = sha;
+        sEl.href = "https://github.com/00-1/eat/commit/" + data.sha;
+        const when = data.commit && data.commit.author && data.commit.author.date;
+        if (when) sEl.title = "Latest commit on main · " + when.slice(0, 10);
+      })
+      .catch(function () { sEl.textContent = "local"; sEl.removeAttribute("href"); });
+  }
+
   // ---- Init ----
   document.getElementById("method-ver").textContent =
     "v" + (typeof METHODOLOGY_VERSION !== "undefined" ? METHODOLOGY_VERSION : "?");
+  renderBuildStamp();
   populateCategories();
   populateExplore();
   renderDataStatus();

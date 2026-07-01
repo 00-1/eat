@@ -197,6 +197,13 @@ a { color: var(--accent); }
   letter-spacing: 0.04em;
   color: var(--ink-soft);
 }
+/* examples lifted out of the name — normal case, not shouty like the category */
+.card .cat .examples {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  opacity: 0.85;
+}
 .summary { margin: 12px 0 14px; font-size: 0.95rem; color: var(--ink-soft); }
 
 .badge {
@@ -733,6 +740,14 @@ a { color: var(--accent); }
   color: var(--ink-soft);
 }
 .caveat strong { color: var(--ink); }
+.build-stamp {
+  margin: 14px 0 0;
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.build-stamp a { color: var(--ink-soft); }
+.build-stamp a:hover { color: var(--accent); }
 
 .visually-hidden {
   position: absolute;
