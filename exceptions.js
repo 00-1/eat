@@ -15,8 +15,14 @@
  * Each exception:
  *   { type, group, prevalence: { estimate, source }, severity, mitigation? }
  *   severity: "avoid" | "caution" | "mitigate"
- * Prevalence figures are well-established estimates with their basis recorded so
- * they can be verified/refined. See research/exceptions-research.md (pending).
+ * Prevalence figures: the major allergy/intolerance/condition rates are now pinned
+ * to real systematic reviews and surveillance (celiac Singh 2018; food allergies
+ * Spolidoro 2023; IBS Sperber 2021; G6PD Nkhoma 2009; alpha-gal CDC MMWR 2023;
+ * gout GBD 2021; PKU Hillert 2020). Where a headline source has since been
+ * retracted (lactose malabsorption's 68% figure, Storhaug 2017) we say so rather
+ * than quietly leaning on it. Smaller/where-relevant figures (kidney stones, GERD,
+ * histamine intolerance) remain estimate-with-basis pending a targeted check. See
+ * research/exceptions-research.md.
  */
 
 const EXCEPTION_TYPE_LABEL = {
@@ -34,7 +40,7 @@ const EXCEPTIONS = {
     {
       type: "allergy",
       group: "People with tree-nut allergy",
-      prevalence: { estimate: "~0.5–1% of the population", source: "food-allergy prevalence reviews" },
+      prevalence: { estimate: "~0.5% (challenge/point prevalence; self-reported higher)", source: "Spolidoro 2023, European systematic review (Allergy, DOI 10.1111/all.15801)" },
       severity: "avoid",
       mitigation: "Strict avoidance; carry prescribed epinephrine. Allergy is often to specific nuts.",
     },
@@ -43,14 +49,14 @@ const EXCEPTIONS = {
     {
       type: "intolerance",
       group: "People prone to gas/bloating, especially with IBS (galacto-oligosaccharides, a FODMAP)",
-      prevalence: { estimate: "IBS affects ~10% of adults; mild gas is more widespread", source: "IBS epidemiology; Monash FODMAP" },
+      prevalence: { estimate: "IBS affects ~4% of adults by strict Rome IV criteria (~10% under older criteria); mild gas is more widespread", source: "Sperber 2021, Rome Foundation Global Study (Gastroenterology); Monash FODMAP" },
       severity: "mitigate",
       mitigation: "Soak and cook thoroughly, rinse canned beans, and ramp up portions gradually so gut bacteria adapt.",
     },
     {
       type: "condition",
       group: "People with G6PD deficiency (fava beans → favism/haemolysis)",
-      prevalence: { estimate: "G6PD deficiency affects ~400 million people (esp. Mediterranean, African, South/East Asian ancestry)", source: "WHO / G6PD reviews" },
+      prevalence: { estimate: "G6PD deficiency affects ~400 million people (~4.9% weighted global prevalence; esp. Mediterranean, African, South/East Asian ancestry)", source: "Nkhoma 2009 meta-analysis (Blood Cells Mol Dis)" },
       severity: "avoid",
       mitigation: "Avoid fava (broad) beans specifically; other legumes are not implicated.",
     },
@@ -59,20 +65,20 @@ const EXCEPTIONS = {
     {
       type: "autoimmune",
       group: "People with celiac disease (gluten in wheat, barley, rye)",
-      prevalence: { estimate: "~1% of the population", source: "celiac seroprevalence meta-analyses" },
+      prevalence: { estimate: "~0.7% biopsy-confirmed (~1.4% seroprevalence)", source: "Singh 2018 meta-analysis, Clin Gastroenterol Hepatol (PMID 29551598)" },
       severity: "avoid",
       mitigation: "Choose naturally gluten-free whole grains: oats (certified), brown rice, quinoa, buckwheat.",
     },
     {
       type: "allergy",
       group: "People with wheat allergy",
-      prevalence: { estimate: "~0.4% of the population", source: "food-allergy reviews" },
+      prevalence: { estimate: "~0.1% (point prevalence; ~1.6% self-reported lifetime)", source: "Spolidoro 2023, European systematic review (Allergy, DOI 10.1111/all.15801)" },
       severity: "avoid",
     },
     {
       type: "intolerance",
       group: "People with IBS (wheat/rye fructans, a FODMAP)",
-      prevalence: { estimate: "IBS ~10% of adults", source: "Monash FODMAP" },
+      prevalence: { estimate: "IBS ~4% of adults by Rome IV (~10% under older criteria)", source: "Sperber 2021, Rome Foundation Global Study (Gastroenterology); Monash FODMAP" },
       severity: "mitigate",
       mitigation: "Sourdough and oats are lower-FODMAP; reduce portion or switch grain.",
     },
@@ -113,7 +119,7 @@ const EXCEPTIONS = {
     {
       type: "intolerance",
       group: "People with fructose malabsorption or IBS (high-FODMAP fruits like apple, pear, mango)",
-      prevalence: { estimate: "IBS ~10% of adults; fructose-malabsorption prevalence contested", source: "Monash FODMAP" },
+      prevalence: { estimate: "IBS ~4% of adults by Rome IV (~10% under older criteria); fructose-malabsorption prevalence contested", source: "Sperber 2021, Rome Foundation Global Study; Monash FODMAP" },
       severity: "mitigate",
       mitigation: "Choose lower-FODMAP fruit (berries, citrus, kiwi, grapes) and moderate portions.",
     },
@@ -129,7 +135,7 @@ const EXCEPTIONS = {
     {
       type: "allergy",
       group: "People with finned-fish allergy",
-      prevalence: { estimate: "~0.2–0.4% of adults", source: "food-allergy reviews" },
+      prevalence: { estimate: "~0.1–0.2% (point prevalence)", source: "Spolidoro 2023, European systematic review (Allergy)" },
       severity: "avoid",
     },
     {
@@ -145,14 +151,14 @@ const EXCEPTIONS = {
     {
       type: "allergy",
       group: "People with cow's-milk allergy",
-      prevalence: { estimate: "~0.5% of adults (2–3% of infants, usually outgrown)", source: "milk-allergy reviews" },
+      prevalence: { estimate: "~0.5–0.6% (point prevalence; 2–3% of infants, usually outgrown)", source: "Spolidoro 2023, European systematic review (Allergy)" },
       severity: "avoid",
       mitigation: "Use plant-based or lactose-free alternatives (note: milk allergy ≠ lactose intolerance).",
     },
     {
       type: "intolerance",
       group: "People with lactose intolerance",
-      prevalence: { estimate: "lactose malabsorption in ~65–70% of adults globally (varies widely by ancestry)", source: "NIDDK; systematic reviews" },
+      prevalence: { estimate: "lactose malabsorption in ~65–70% of adults globally, highly ancestry-dependent (~5% in northern Europeans to >90% in parts of East Asia)", source: "NIDDK (the widely-cited 68% pooled figure, Storhaug 2017, was retracted in 2025)" },
       severity: "mitigate",
       mitigation: "Yogurt is often tolerated because live cultures pre-digest lactose; or choose lactose-free.",
     },
@@ -177,7 +183,7 @@ const EXCEPTIONS = {
     {
       type: "intolerance",
       group: "People with IBS (larger servings are higher-FODMAP — sorbitol)",
-      prevalence: { estimate: "IBS ~10% of adults", source: "Monash FODMAP" },
+      prevalence: { estimate: "IBS ~4% of adults by Rome IV (~10% under older criteria)", source: "Sperber 2021, Rome Foundation Global Study (Gastroenterology); Monash FODMAP" },
       severity: "mitigate",
       mitigation: "Keep to about 1/3 of an avocado per serving.",
     },
@@ -192,7 +198,7 @@ const EXCEPTIONS = {
     {
       type: "allergy",
       group: "People with alpha-gal syndrome (tick-bite-acquired mammalian-meat allergy)",
-      prevalence: { estimate: "regional and rising; tens of thousands of US cases identified", source: "US CDC" },
+      prevalence: { estimate: ">100,000 lab-diagnosed US cases 2010–2022; CDC estimates up to ~450,000 affected (regional, rising)", source: "CDC MMWR 2023 (mm7230a2)" },
       severity: "avoid",
     },
     {
@@ -232,14 +238,14 @@ const EXCEPTIONS = {
     {
       type: "autoimmune",
       group: "People with celiac disease (wheat gluten)",
-      prevalence: { estimate: "~1% of the population", source: "celiac seroprevalence meta-analyses" },
+      prevalence: { estimate: "~0.7% biopsy-confirmed (~1.4% seroprevalence)", source: "Singh 2018 meta-analysis, Clin Gastroenterol Hepatol (PMID 29551598)" },
       severity: "avoid",
       mitigation: "Choose gluten-free options.",
     },
     {
       type: "allergy",
       group: "People with wheat allergy",
-      prevalence: { estimate: "~0.4% of the population", source: "food-allergy reviews" },
+      prevalence: { estimate: "~0.1% (point prevalence; ~1.6% self-reported lifetime)", source: "Spolidoro 2023, European systematic review (Allergy, DOI 10.1111/all.15801)" },
       severity: "avoid",
     },
   ],
@@ -247,7 +253,7 @@ const EXCEPTIONS = {
     {
       type: "allergy",
       group: "People with egg allergy",
-      prevalence: { estimate: "~0.2% of adults (1–2% of young children, often outgrown)", source: "food-allergy reviews" },
+      prevalence: { estimate: "~0.2% (point prevalence; 1–2% of young children, often outgrown)", source: "Spolidoro 2023, European systematic review (Allergy)" },
       severity: "avoid",
     },
     {
@@ -262,20 +268,20 @@ const EXCEPTIONS = {
     {
       type: "allergy",
       group: "People with alpha-gal syndrome (tick-bite-acquired mammalian-meat allergy)",
-      prevalence: { estimate: "regional and rising; tens of thousands of US cases identified", source: "US CDC" },
+      prevalence: { estimate: ">100,000 lab-diagnosed US cases 2010–2022; CDC estimates up to ~450,000 affected (regional, rising)", source: "CDC MMWR 2023 (mm7230a2)" },
       severity: "avoid",
     },
     {
       type: "condition",
       group: "People with gout (purines)",
-      prevalence: { estimate: "gout affects ~3–5% of adults", source: "rheumatology epidemiology" },
+      prevalence: { estimate: "gout affects ~3.9% of US adults (~1–4% globally)", source: "GBD 2021 gout (Lancet Rheumatol 2024); US NHANES" },
       severity: "caution",
       mitigation: "Limit red and organ meat portions.",
     },
     {
       type: "condition",
       group: "People with hereditary haemochromatosis (heme iron overload)",
-      prevalence: { estimate: "at-risk HFE genotype ~1 in 200 of Northern-European ancestry", source: "genetics reviews" },
+      prevalence: { estimate: "HFE C282Y homozygosity ~1 in 200–300 of Northern-European ancestry (higher in Irish, ~1 in 100)", source: "HFE genetics reviews; UK Biobank (PMC6334179)" },
       severity: "caution",
     },
   ],
@@ -284,14 +290,14 @@ const EXCEPTIONS = {
     {
       type: "allergy",
       group: "People with cow's-milk allergy",
-      prevalence: { estimate: "~0.5% of adults (2–3% of infants, usually outgrown)", source: "milk-allergy reviews" },
+      prevalence: { estimate: "~0.5–0.6% (point prevalence; 2–3% of infants, usually outgrown)", source: "Spolidoro 2023, European systematic review (Allergy)" },
       severity: "avoid",
       mitigation: "Use fortified plant-based alternatives.",
     },
     {
       type: "intolerance",
       group: "People with lactose intolerance (milk has the most lactose of the dairy foods)",
-      prevalence: { estimate: "lactose malabsorption in ~65–70% of adults globally (varies by ancestry)", source: "NIDDK; systematic reviews" },
+      prevalence: { estimate: "lactose malabsorption in ~65–70% of adults globally, highly ancestry-dependent (~5% in northern Europeans to >90% in parts of East Asia)", source: "NIDDK (the widely-cited 68% pooled figure, Storhaug 2017, was retracted in 2025)" },
       severity: "mitigate",
       mitigation: "Lactose-free milk, smaller amounts with food, or a lactase supplement.",
     },
@@ -300,13 +306,13 @@ const EXCEPTIONS = {
     {
       type: "allergy",
       group: "People with cow's-milk allergy",
-      prevalence: { estimate: "~0.5% of adults", source: "milk-allergy reviews" },
+      prevalence: { estimate: "~0.5–0.6% (point prevalence)", source: "Spolidoro 2023, European systematic review (Allergy)" },
       severity: "avoid",
     },
     {
       type: "intolerance",
       group: "People with lactose intolerance",
-      prevalence: { estimate: "~65–70% of adults globally have lactose malabsorption", source: "NIDDK" },
+      prevalence: { estimate: "~65–70% of adults globally have lactose malabsorption, highly ancestry-dependent (~5% N European to >90% E Asian)", source: "NIDDK (the widely-cited 68% figure, Storhaug 2017, was retracted in 2025)" },
       severity: "mitigate",
       mitigation: "Aged hard cheeses (cheddar, parmesan) are very low in lactose and usually well tolerated.",
     },
@@ -322,7 +328,7 @@ const EXCEPTIONS = {
     {
       type: "allergy",
       group: "People with cow's-milk allergy (butter contains trace milk protein)",
-      prevalence: { estimate: "~0.5% of adults", source: "milk-allergy reviews" },
+      prevalence: { estimate: "~0.5–0.6% (point prevalence)", source: "Spolidoro 2023, European systematic review (Allergy)" },
       severity: "caution",
       mitigation: "Clarified butter/ghee has less protein but is not guaranteed safe; the milk-allergic should be cautious.",
     },
@@ -370,7 +376,7 @@ const EXCEPTIONS = {
     {
       type: "condition",
       group: "People with phenylketonuria (PKU) — aspartame is a phenylalanine source",
-      prevalence: { estimate: "PKU affects ~1 in 10,000–15,000 births", source: "newborn-screening data" },
+      prevalence: { estimate: "PKU affects ~1 in 10,000 births in Europe (global ~1 in 24,000; varies widely, up to ~1 in 4,000 in Turkey)", source: "Hillert 2020 global PKU survey (Am J Hum Genet, PMID 32668217)" },
       severity: "avoid",
       mitigation: "Avoid aspartame specifically; other sweeteners are unaffected.",
     },
@@ -426,7 +432,7 @@ const EXCEPTIONS = {
     {
       type: "allergy",
       group: "People with soy allergy",
-      prevalence: { estimate: "~0.3–0.4% of adults (a Big-9 allergen)", source: "food-allergy reviews" },
+      prevalence: { estimate: "~0.3% (point prevalence; a Big-9 allergen)", source: "Spolidoro 2023, European systematic review (Allergy)" },
       severity: "avoid",
     },
     {
@@ -448,7 +454,7 @@ const EXCEPTIONS = {
     {
       type: "intolerance",
       group: "People with IBS (raffinose/FODMAPs cause gas/bloating)",
-      prevalence: { estimate: "IBS ~10% of adults", source: "Monash FODMAP" },
+      prevalence: { estimate: "IBS ~4% of adults by Rome IV (~10% under older criteria)", source: "Sperber 2021, Rome Foundation Global Study (Gastroenterology); Monash FODMAP" },
       severity: "mitigate",
       mitigation: "Cook well and increase portions gradually.",
     },
