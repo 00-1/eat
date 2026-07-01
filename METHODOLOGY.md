@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.31 — living document.** This file is the canonical description of how
+**Version 0.32 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -280,6 +280,16 @@ the null** across the data-dense exposure range.
 This deliberately makes **neutral the default** until the evidence clears a bar —
 it is harder to earn a directional label than to stay neutral.
 
+**A neutral verdict can still lean.** "Neutral" covers two different situations, and
+we distinguish them (`Scoring.leanOf`): if a food's point estimate is a *non-trivial
+size* (|ln RR| above the directionality floor) but its interval still crosses
+no-effect, we show which way it **leans** — an honest "the data tilt this way, we
+just can't rule out null" (red meat leans bad, cocoa leans good). If the estimate is
+within the floor (≈ RR 1.0), there is genuinely nothing there and it stays **flat**
+neutral (eggs, poultry, milk, butter). A lean is display-only — it never changes the
+verdict, certainty, or magnitude — and it reuses the *same* floor that separates
+directional from neutral, so it can't be hand-tuned.
+
 > The Burden-of-Proof method is itself **contested** (a 2023 *Nat Med* critique
 > argues its conservatism can overstate uncertainty). We adopt its *logic* — be
 > conservative, require the interval to exclude the null — without claiming its
@@ -401,6 +411,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.32 | 2026-07-01 | **Neutral lean + certainty-challenge steelmans.** (1) A neutral verdict now shows which way its **non-significant point estimate leans** (`Scoring.leanOf`), *only* when the estimate is a non-trivial size (\|ln RR\| > the directionality floor) but the interval still crosses no-effect: red meat and artificial sweeteners lean *bad*; cocoa and tomatoes lean *good*; eggs, poultry, milk, butter, potatoes, coconut oil and the alcohol headline are genuinely **flat** (estimate ≈ 1.0). Display-only — it never changes the verdict, certainty, magnitude or shortlists. (2) Steelmanning gains a fourth stance, **"Challenges our certainty"** — for arguments that AGREE with our direction but dispute our *confidence* (a different axis from holds/partial/valid). First use: **olive oil**, where credible experts are far more certain than our "Low" — we explain the Low is about crediting the oil *in isolation* (PREDIMED tested the whole Mediterranean pattern; it was retracted/republished in 2018) and flag the certainty question for a deeper research pass. |
 | 0.31 | 2026-07-01 | **Shortlist-correctness bundle.** (1) **Magnitude = max across a food's outcomes** (`Scoring.maxMagnitude`): a food's impact now reflects its strongest outcome, not just its headline one — so unprocessed red meat (neutral on mortality, negative on diabetes) and moderate alcohol (neutral on mortality, negative on cancer) register a real effect instead of "minimal". (2) **Veg-cusp artifact fixed:** leafy greens and cruciferous were recorded with CVD/cancer outcomes but not all-cause mortality, so they missed the all-cause magnitude bump that put fruit on the cusp — yet the same cited evidence (Aune 2017 F&V) already covers all-cause mortality. Aligning their outcomes list now puts **both vegetables on the cusp of Gold standard** (an artifact fix, not a re-grounding; the borrowed F&V RR still awaits a veg-specific pass). (3) **"Not all" caveat, applied evenly:** every item now records a `categoryUniformity` (`specific`/`uniform`/`mixed`) against one fixed question; the "not all" badge is derived uniformly from `mixed` (whole fruit, ultra-processed, artificial sweeteners) — not hand-picked. (4) **Champion (★ top pick) per direction:** among the qualifying gold/bin foods, the one with the largest headline \|ln(pooledRR)\| (tie-broken by certainty, then precision), restricted to specific/uniform — today **tree nuts** and **trans fat**. All computed, tested, no hand-assignment. |
 | 0.30 | 2026-06-29 | Every food now shows a **dose-response section**: foods without a recorded curve display an honest placeholder ("no curve recorded yet — a known gap, not a finding of 'no relationship'") rather than silently omitting it (only ~6 foods have curves so far). Queued a dedicated dose-response research pass to fetch the missing curves and mark genuinely-unavailable vs not-yet-fetched. |
 | 0.29 | 2026-06-29 | **Explore now re-derives the whole VERDICT per lens, not just certainty.** Each preset maps to a lens (`Scoring.verdictUnderLens`): *Observational only* keeps observation as the direction source (certainty drops); *Trials & mechanism only* **ignores cohorts** and lets `experimentalDirection` (what trials + mechanism point to) set the direction — "none" → *Insufficient*. The result is the project's thesis made visible: under trials/mechanism-only, **28 of 32 verdicts shift and 18 flip direction** — the sat-fat foods cohorts exonerate (cheese, butter, coconut, milk, eggs) get re-condemned by the LDL/cholesterol mechanism, the high-GI foods turn negative, fatty fish goes neutral (supplement RCTs are null), and the cohort-only winners (coffee, tea, leafy greens, fruit) become *Insufficient*. Added `experimentalDirection` per food + tests. |

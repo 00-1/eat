@@ -10,6 +10,8 @@
   --neg-bg: #fbeae8;
   --neu: #b8860b;
   --neu-bg: #f7f0dd;
+  --info: #2f6f9f;
+  --info-bg: #e8f0f6;
   --accent: #2e8b57;
   --radius: 14px;
   --shadow: 0 1px 2px rgba(20, 30, 25, 0.06), 0 6px 18px rgba(20, 30, 25, 0.05);
@@ -161,6 +163,7 @@ a { color: var(--accent); }
 .card.positive, .group-positive, .outcome-positive, .counter-holds, .exc-mitigate { --accent-c: var(--pos); }
 .card.neutral,  .group-neutral,  .outcome-neutral,  .counter-partial, .exc-caution { --accent-c: var(--neu); }
 .card.negative, .group-negative, .outcome-negative, .counter-valid,  .exc-avoid    { --accent-c: var(--neg); }
+.counter-certainty { --accent-c: var(--info); }
 
 .card details { width: 100%; }
 .card summary {
@@ -196,6 +199,17 @@ a { color: var(--accent); }
 .badge.positive { background: var(--pos-bg); color: var(--pos); }
 .badge.negative { background: var(--neg-bg); color: var(--neg); }
 .badge.neutral  { background: var(--neu-bg); color: var(--neu); }
+
+/* Lean — which way a neutral verdict's non-significant point estimate tilts.
+   Subordinate to the badge: no fill, just a small tinted arrow + word. */
+.lean {
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+.lean-positive { color: var(--pos); }
+.lean-negative { color: var(--neg); }
 
 .card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .outcomes { font-size: 0.78rem; color: var(--ink-soft); }
@@ -541,9 +555,10 @@ a { color: var(--accent); }
   border-radius: 999px;
   white-space: nowrap;
 }
-.stance-holds   { background: var(--pos-bg); color: var(--pos); }
-.stance-partial { background: var(--neu-bg); color: var(--neu); }
-.stance-valid   { background: var(--neg-bg); color: var(--neg); }
+.stance-holds     { background: var(--pos-bg); color: var(--pos); }
+.stance-partial   { background: var(--neu-bg); color: var(--neu); }
+.stance-valid     { background: var(--neg-bg); color: var(--neg); }
+.stance-certainty { background: var(--info-bg); color: var(--info); }
 .counter-who { margin: 6px 0 0; font-size: 0.82rem; color: var(--ink-soft); }
 .counter-eD { margin: 4px 0 0; font-size: 0.82rem; color: var(--ink-soft); }
 .counter-assess { margin: 6px 0 0; font-size: 0.86rem; }

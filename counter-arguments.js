@@ -1,12 +1,18 @@
 /*
  * Steelmanning attempts — popular counter-arguments against our verdicts, in
- * their strongest form, judged honestly:
- *   stance "holds"   — our verdict survives; we say WHY the argument fails under
- *                      our approach (usually biomarker/mechanism reductionism our
- *                      guardrail won't let override observed outcomes).
- *   stance "partial" — partly right (a sub-type, a substitution, a population), or
- *                      it matches our stated uncertainty.
- *   stance "valid"   — a genuine limitation we concede.
+ * their strongest form, judged honestly. `stance` records how our verdict fares:
+ *   stance "holds"     — our verdict survives; we say WHY the argument fails under
+ *                        our approach (usually biomarker/mechanism reductionism our
+ *                        guardrail won't let override observed outcomes).
+ *   stance "partial"   — partly right (a sub-type, a substitution, a population), or
+ *                        it matches our stated uncertainty.
+ *   stance "valid"     — a genuine limitation we concede.
+ *   stance "certainty" — a DIFFERENT axis: the argument AGREES with our direction
+ *                        but disputes our CERTAINTY (usually thinks we're too
+ *                        cautious — credible people are more confident than we are).
+ *                        We don't argue direction here; we defend or revisit the
+ *                        certainty rating. These are interesting precisely because
+ *                        the disagreement is about confidence, not verdict.
  *
  * Many real claims target a whole CATEGORY ("fruit", "carbs", "saturated fat"),
  * not one food. So claims live in two places:
@@ -97,6 +103,16 @@ const SHARED_CLAIMS = [
 ];
 
 const COUNTER_ARGUMENTS = {
+  "olive-oil": [
+    {
+      claim: "Olive oil's cardiovascular benefit is well-established — rating it only 'Low' certainty is surprisingly, needlessly cautious.",
+      proponents: "Mediterranean-diet researchers and the PREDIMED investigators (Estruch, Ros, Martínez-González); broad cardiology/AHA consensus and popular health media.",
+      evidenceCited: "PREDIMED RCT (~30% fewer major cardiovascular events on a Mediterranean diet with extra-virgin olive oil); large US cohorts (Guasch-Ferré 2022, ~19% lower CVD mortality at >7 g/day); decades of Mediterranean-diet epidemiology.",
+      stance: "certainty",
+      assessment:
+        "We AGREE on direction — olive oil is positive — so this isn't a verdict dispute; it challenges our confidence, which is the interesting part. Our 'Low' is narrower than it looks: it rates our confidence in the OIL ITSELF, not the Mediterranean pattern. PREDIMED randomized a whole dietary pattern (EVOO was supplied as one component of it), so it's strong evidence for the pattern, not for the oil in isolation; the oil-specific outcome-cohort base is comparatively modest and confounding-prone (olive-oil users eat better overall). PREDIMED was also retracted and republished in 2018 after randomization irregularities — the corrected result held, but that history argues FOR humility. So the confident experts and our Low aren't really in conflict: they're sure about the Mediterranean pattern; we're cautious about crediting the bottle of oil on its own. (Whether 'Low' is too cautious is flagged for a deeper research pass — we may simply not have grounded the oil-specific evidence enough yet.)",
+    },
+  ],
   "red-meat": [
     {
       claim: "Unprocessed red meat is unfairly maligned; the evidence against it is weak and low-certainty.",

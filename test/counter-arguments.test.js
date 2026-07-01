@@ -14,7 +14,7 @@ const {
   counterArgumentsFor,
 } = require("../counter-arguments.js");
 
-const STANCES = ["holds", "partial", "valid"];
+const STANCES = ["holds", "partial", "valid", "certainty"];
 const TAGS = Object.keys(TAG_LABEL);
 const FOOD_IDS = new Set(FOODS.map((f) => f.id));
 
@@ -60,6 +60,9 @@ test("counterArgumentsFor merges shared (scoped) + specific, flagging shared", (
   const sd = counterArgumentsFor("sugary-drinks");
   assert.ok(sd.some((c) => c.shared), "sugary-drinks missing shared claim");
   assert.ok(sd.some((c) => !c.shared), "sugary-drinks missing its specific claim");
+  // olive oil now carries a specific "challenges our certainty" steelman
+  const oo = counterArgumentsFor("olive-oil");
+  assert.ok(oo.some((c) => c.stance === "certainty"), "olive-oil missing its certainty steelman");
   // a food with no tags and no specific claims resolves to empty
-  assert.deepEqual(counterArgumentsFor("olive-oil"), []);
+  assert.deepEqual(counterArgumentsFor("avocado"), []);
 });

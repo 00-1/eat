@@ -244,6 +244,24 @@
     return Math.abs(Math.log(rr)) > DIRECTION_FLOOR;
   }
 
+  // For a NEUTRAL verdict, which way does the (non-significant) point estimate tilt?
+  // A food reads neutral either because its interval crosses no-effect OR because the
+  // effect is below the directionality floor. Those are different situations:
+  //   • estimate a non-trivial size (|ln RR| > floor) but not significant → it LEANS
+  //     ("the data tilt this way, we just can't rule out null") → "positive"/"negative"
+  //   • estimate within the floor (≈ RR 1.0) → genuinely nothing there → null (flat)
+  // Reuses the SAME floor that separates directional from neutral, so a lean is
+  // exactly "big enough to point somewhere, not solid enough to be a verdict". Returns
+  // null for directional foods (they have a verdict, not a lean). Display-only — it
+  // never changes the verdict, certainty, magnitude, or the shortlists.
+  function leanOf(ev) {
+    if (!ev || isDirectional(ev)) return null;
+    var rr = ev.pooledRR;
+    if (typeof rr !== "number" || rr <= 0) return null;
+    if (Math.abs(Math.log(rr)) <= DIRECTION_FLOOR) return null; // negligible → flat
+    return rr < 1 ? "positive" : "negative";
+  }
+
   function assess(ev, outcomes, settings) {
     var scores = computeScores(ev);
     var neutral = !isDirectional(ev);
@@ -420,6 +438,7 @@
     NEUTRAL_DIMS: NEUTRAL_DIMS,
     assess: assess,
     isDirectional: isDirectional,
+    leanOf: leanOf,
     verdictUnderLens: verdictUnderLens,
     PRESETS: PRESETS,
     BASIS_LABEL: BASIS_LABEL,

@@ -259,6 +259,20 @@ test("maxMagnitude takes the strongest of a food's outcomes", () => {
   );
 });
 
+test("leanOf: a neutral estimate leans only when it's a non-trivial size", () => {
+  // directional foods have a verdict, not a lean
+  assert.equal(S.leanOf({ pooledRR: 0.78, ciExcludesNull: true }), null);
+  // neutral, CI crosses null, non-trivial estimate → leans the way it points
+  assert.equal(S.leanOf({ pooledRR: 1.10, ciExcludesNull: false }), "negative");
+  assert.equal(S.leanOf({ pooledRR: 0.90, ciExcludesNull: false }), "positive");
+  // neutral but within the floor (≈1.0) → genuinely flat, no lean
+  assert.equal(S.leanOf({ pooledRR: 1.01, ciExcludesNull: false }), null);
+  assert.equal(S.leanOf({ pooledRR: 0.98, ciExcludesNull: false }), null);
+  assert.equal(S.leanOf({ pooledRR: 1.0, ciExcludesNull: false }), null);
+  // CI excludes null but effect below the floor (butter) → neutral & flat, no lean
+  assert.equal(S.leanOf({ pooledRR: 1.0134, ciExcludesNull: true }), null);
+});
+
 test("assess settings.zero forces a dim to 0 but keeps it in the denominator", () => {
   // A directional food carried partly by experimental evidence; zeroing it lowers
   // the total but not the max, so the tier can drop — the explore "observational

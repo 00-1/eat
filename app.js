@@ -94,6 +94,26 @@
     return "<span class='notall' title='" + escapeHtml(note) + "'>◑ not all</span>";
   }
 
+  // A neutral verdict's tilt: shows which way a non-significant point estimate leans
+  // (or nothing, when the estimate is genuinely flat). Derived by the engine, never
+  // hand-set; it does not change the verdict — it just says more than "neutral".
+  function leanFor(evidence) {
+    if (typeof Scoring === "undefined" || !Scoring.leanOf || !evidence) return null;
+    return Scoring.leanOf(evidence);
+  }
+  function leanChip(effect, evidence) {
+    if (effect !== "neutral") return "";
+    const lean = leanFor(evidence);
+    if (!lean) return "";
+    const arrow = lean === "positive" ? "↗" : "↘";
+    const word = lean === "positive" ? "good" : "bad";
+    return (
+      " <span class='lean lean-" + lean + "' " +
+      "title='The point estimate tilts this way, but the interval crosses no-effect — a non-significant lean, not a verdict.'>" +
+      arrow + " leaning " + word + "</span>"
+    );
+  }
+
   // ---- "As part of a food group" — the broader-class conclusion(s) ----
   // A food carries its own verdict PLUS the verdict(s) of the food group(s) it
   // belongs to, each scored live by the same engine. This is how tomatoes can read
@@ -460,7 +480,7 @@
     );
   }
 
-  const STANCE_LABEL = { holds: "Our verdict holds", partial: "Partly valid", valid: "Valid limitation" };
+  const STANCE_LABEL = { holds: "Our verdict holds", partial: "Partly valid", valid: "Valid limitation", certainty: "Challenges our certainty" };
 
   function scopeLabelFor(claim) {
     if (!claim.shared || typeof TAG_LABEL === "undefined") return "";
@@ -520,6 +540,7 @@
 
   function cardHtml(food) {
     const eff = food.effect;
+    const aEv = (typeof ASSESSMENTS !== "undefined" && ASSESSMENTS[food.id]) ? ASSESSMENTS[food.id].evidence : null;
     return (
       "<li class='card " + eff + "' data-food-card='" + escapeHtml(food.id) + "'>" +
         "<details>" +
@@ -530,6 +551,7 @@
                 "<p class='cat'>" + escapeHtml(food.category) + "</p>" +
               "</div>" +
               "<span class='badge " + eff + "'>" + EFFECT_LABEL[eff] + "</span>" +
+              leanChip(eff, aEv) +
             "</div>" +
             "<p class='summary'>" + escapeHtml(food.summary) + "</p>" +
             "<div class='card-meta'>" +

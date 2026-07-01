@@ -260,6 +260,23 @@ test("COHERENCE: every food declares at least one outcome", () => {
   }
 });
 
+test("neutral lean is coherent: only neutral foods lean, and it matches the estimate", () => {
+  for (const f of FOODS) {
+    const e = ASSESSMENTS[f.id].evidence;
+    const lean = S.leanOf(e);
+    if (f.effect !== "neutral") {
+      assert.equal(lean, null, `${f.id}: directional food should not carry a lean`);
+      continue;
+    }
+    if (lean) {
+      // a lean must agree with the point estimate and require a non-trivial size
+      if (lean === "positive") assert.ok(e.pooledRR < 1, `${f.id}: leans good but RR>=1`);
+      if (lean === "negative") assert.ok(e.pooledRR > 1, `${f.id}: leans bad but RR<=1`);
+      assert.ok(Math.abs(Math.log(e.pooledRR)) > 0.03, `${f.id}: lean on a within-floor estimate`);
+    }
+  }
+});
+
 test("every food records a valid categoryUniformity, evenly applied", () => {
   // Applied to EVERY item against one fixed question — not hand-picked. A "not all"
   // note is only meaningful (and only present) on genuinely `mixed` entries.
