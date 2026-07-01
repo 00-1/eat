@@ -63,16 +63,35 @@
     return Scoring.assess(a.evidence, food.outcomes, settings).tier;
   }
 
-  // How much the food moves the needle (direction-agnostic magnitude).
+  // How much the food moves the needle (direction-agnostic magnitude), taken as the
+  // MAX across all of its outcomes — the headline evidence plus any per-outcome
+  // verdicts. A food's impact reflects the strongest thing it does, so red meat
+  // (neutral on mortality, negative on diabetes) isn't buried as "minimal".
   function magnitudeOf(food) {
     const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
     if (!a || !a.evidence || typeof Scoring === "undefined") return null;
-    return Scoring.classifyMagnitude(a.evidence, food.outcomes);
+    const entries = [{ ev: a.evidence, outcomes: food.outcomes }];
+    (a.outcomeVerdicts || []).forEach(function (ov) {
+      entries.push({ ev: ov.evidence, outcomes: [ov.outcome] });
+    });
+    return Scoring.maxMagnitude(entries);
   }
   function magnitudeChip(food) {
     const mag = magnitudeOf(food);
     if (!mag) return "";
-    return "<span class='mag mag-" + mag + "' title='How much it moves the needle'>" + escapeHtml(Scoring.MAGNITUDE_LABEL[mag]) + "</span>";
+    return "<span class='mag mag-" + mag + "' title='How much it moves the needle, across all its outcomes'>" + escapeHtml(Scoring.MAGNITUDE_LABEL[mag]) + "</span>";
+  }
+
+  // "Not all" caveat — shown for entries whose members genuinely diverge
+  // (categoryUniformity === "mixed"), so a heterogeneous category is never read as
+  // a blanket claim. Derived uniformly from the recorded field, never hand-picked.
+  function isMixed(food) {
+    return food && food.categoryUniformity === "mixed";
+  }
+  function uniformityChip(food) {
+    if (!isMixed(food)) return "";
+    const note = food.uniformityNote || "The verdict doesn't apply uniformly across this category — some members are much stronger than others.";
+    return "<span class='notall' title='" + escapeHtml(note) + "'>◑ not all</span>";
   }
 
   // ---- "As part of a food group" — the broader-class conclusion(s) ----
@@ -516,6 +535,7 @@
             "<div class='card-meta'>" +
               (function () { var t = certaintyOf(food); return "<span class='tier " + t + "'>" + CERTAINTY_LABEL[t] + "</span>"; })() +
               magnitudeChip(food) +
+              uniformityChip(food) +
               doseChip(food) +
               groupChips(food) +
               basisChip(food) +
@@ -596,6 +616,32 @@
     return bits.join(", ");
   }
 
+  // ---- Champion: the single ★ top pick per direction ----
+  // Among the QUALIFYING (gold/bin) foods, crown the one with the largest headline
+  // effect |ln(pooledRR)|, tie-broken by certainty then precision (participants).
+  // Reproducible, not hand-picked. Restricted to specific/uniform entries — you
+  // can't crown a "not all" (mixed) category as THE thing to do or drop.
+  function lnRR(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    const rr = a && a.evidence && a.evidence.pooledRR;
+    return typeof rr === "number" && rr > 0 ? Math.abs(Math.log(rr)) : 0;
+  }
+  function participantsOf(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    return (a && a.evidence && a.evidence.participants) || 0;
+  }
+  function championOf(foods) {
+    const eligible = foods.filter((f) => !isMixed(f));
+    if (!eligible.length) return null;
+    return eligible.slice().sort((a, b) => {
+      const d = lnRR(b) - lnRR(a);
+      if (Math.abs(d) > 1e-9) return d;
+      const c = (CERTAINTY_RANK[certaintyOf(b)] || 0) - (CERTAINTY_RANK[certaintyOf(a)] || 0);
+      if (c !== 0) return c;
+      return participantsOf(b) - participantsOf(a);
+    })[0];
+  }
+
   function renderHighlights() {
     const el = document.getElementById("highlights");
     if (!el || typeof Scoring === "undefined") return;
@@ -603,18 +649,36 @@
     const pick = (tag) => FOODS.filter((f) => tagOf(f) === tag);
     const gold = pick("gold"), bin = pick("bin");
     const marginalGold = pick("marginal-gold"), marginalBin = pick("marginal-bin");
+    const goldChamp = championOf(gold), binChamp = championOf(bin);
 
-    const chipsHtml = (foods) =>
-      foods.map((f) => "<button class='hl-chip' data-food='" + escapeHtml(f.id) + "'>" + escapeHtml(f.name) + "</button>").join("");
+    const chipsHtml = (foods, champ) =>
+      foods
+        .map(function (f) {
+          const isChamp = champ && f.id === champ.id;
+          const star = isChamp ? "<span class='hl-star' title='Top pick — largest effect among the qualifying foods'>★ top pick</span> " : "";
+          const notall = isMixed(f)
+            ? " <span class='hl-notall' title='" + escapeHtml(f.uniformityNote || "Doesn't apply uniformly across the category") + "'>not all</span>"
+            : "";
+          return (
+            "<button class='hl-chip" + (isChamp ? " hl-champ" : "") + "' data-food='" + escapeHtml(f.id) + "'>" +
+              star + escapeHtml(f.name) + notall +
+            "</button>"
+          );
+        })
+        .join("");
     const cuspChips = (foods) =>
       foods
-        .map(
-          (f) =>
+        .map(function (f) {
+          const notall = isMixed(f)
+            ? " <span class='hl-notall' title='" + escapeHtml(f.uniformityNote || "Doesn't apply uniformly across the category") + "'>not all</span>"
+            : "";
+          return (
             "<button class='hl-chip hl-cusp' data-food='" + escapeHtml(f.id) + "'>" +
-              escapeHtml(f.name) +
+              escapeHtml(f.name) + notall +
               " <span class='hl-short'>(" + escapeHtml(shortfall(f)) + ")</span>" +
             "</button>"
-        )
+          );
+        })
         .join("");
     const cusp = (foods) =>
       foods.length
@@ -626,13 +690,13 @@
       "<div class='hl-card hl-gold'>" +
         "<h2>★ Gold standard</h2>" +
         "<p class='hl-sub'>High certainty, large positive effect — the surest things to add.</p>" +
-        "<div class='hl-chips'>" + (gold.length ? chipsHtml(gold) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+        "<div class='hl-chips'>" + (gold.length ? chipsHtml(gold, goldChamp) : "<span class='hl-empty'>none yet</span>") + "</div>" +
         cusp(marginalGold) +
       "</div>" +
       "<div class='hl-card hl-bin'>" +
         "<h2>✕ Bin fodder</h2>" +
         "<p class='hl-sub'>High certainty, large negative effect — the surest things to drop.</p>" +
-        "<div class='hl-chips'>" + (bin.length ? chipsHtml(bin) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+        "<div class='hl-chips'>" + (bin.length ? chipsHtml(bin, binChamp) : "<span class='hl-empty'>none yet</span>") + "</div>" +
         cusp(marginalBin) +
       "</div>";
 

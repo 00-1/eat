@@ -236,6 +236,29 @@ test("magnitude reflects relative effect size, with an all-cause-mortality bump"
   assert.equal(S.classifyMagnitude({ pooledRR: 1.0 }, ["All-cause mortality"]), "minimal"); // null isn't bumped
 });
 
+test("maxMagnitude takes the strongest of a food's outcomes", () => {
+  // A food moves the needle as much as its biggest outcome, not just its headline.
+  // Empty / all-null -> minimal.
+  assert.equal(S.maxMagnitude([]), "minimal");
+  assert.equal(S.maxMagnitude([{ ev: { pooledRR: 1.0, ciExcludesNull: false }, outcomes: [] }]), "minimal");
+  // headline neutral (minimal) but a directional per-outcome verdict lifts it
+  assert.equal(
+    S.maxMagnitude([
+      { ev: { pooledRR: 1.0, ciExcludesNull: false }, outcomes: ["All-cause mortality"] }, // minimal
+      { ev: { pooledRR: 1.10, ciExcludesNull: true }, outcomes: ["Type 2 diabetes"] },       // small
+    ]),
+    "small"
+  );
+  // the max wins even when it's the headline
+  assert.equal(
+    S.maxMagnitude([
+      { ev: { pooledRR: 0.78, ciExcludesNull: true }, outcomes: [] },       // large
+      { ev: { pooledRR: 0.97, ciExcludesNull: true }, outcomes: [] },       // small
+    ]),
+    "large"
+  );
+});
+
 test("assess settings.zero forces a dim to 0 but keeps it in the denominator", () => {
   // A directional food carried partly by experimental evidence; zeroing it lowers
   // the total but not the max, so the tier can drop — the explore "observational

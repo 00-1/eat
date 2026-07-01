@@ -254,13 +254,16 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       PREDIMED tested the whole Mediterranean *pattern* (EVOO supplied to the MedDiet
       arm), not the oil in isolation → `rctLevel: pattern` is correct; olive oil stays
       Low. Verified on Guasch-Ferré 2022 (HR 0.81).
-- [ ] **(b) All-cause-mortality magnitude bump over-fires.** The one-tier bump for
-      acting on all-cause mortality pushes moderate-RR foods (coffee RR 0.83,
-      |ln|≈0.19 → moderate) up to "large," the same tier as trans fat. Recalibrate:
-      e.g. only bump when the all-cause effect itself excludes null and is already
-      ≥ small, or make the bump a half-step, or gate it on absolute burden once
+- [~] **(b) All-cause-mortality magnitude bump over-fires.** PARTIALLY addressed
+      (v0.31): magnitude is now the **max across a food's outcomes** (`maxMagnitude`),
+      which is the structural half of the redesign. The bump itself STILL over-fires —
+      the one-tier bump for acting on all-cause mortality pushes moderate-RR foods
+      (coffee RR 0.83, |ln|≈0.19 → moderate) up to "large," the same tier as trans fat.
+      Recalibrate: e.g. only bump when the all-cause effect itself excludes null and is
+      already ≥ small, or make the bump a half-step, or gate it on absolute burden once
       §3 lands. Several foods currently inherit "large" this way — list them and
-      decide per case.
+      decide per case. (Now decoupled from the champion, which ranks on raw |ln RR|, so
+      this is lower-stakes than before.)
 - [x] **(c) Neutral-/12 vs directional-/16 cross-scale optics.** DONE (note option,
       v0.16): added an explicit METHODOLOGY caveat that the two scales aren't directly
       comparable (the butter-vs-olive-oil case spelled out), so the certainty tier is
@@ -275,23 +278,29 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       foods; (3) remaining **observational** grounding (~19 foods). This is the critical
       path that unlocks the mechanism lens, the per-food wrestling section, the dose
       curves, and most "provisional" flags at once.
-- [ ] **Crown a single champion per direction (reproducible).** Distinct from the
-      Gold-standard / Bin-fodder shortlists and the cusp: mark the #1 positive and #1
-      negative so e.g. nuts stays distinguished even if Gold grows. Rule (computed, not
-      hand-picked): among the qualifying (gold/bin) foods, the champion is the one with
-      the **largest effect magnitude** `|ln(pooledRR)|`, tie-broken by certainty then
-      precision. Today that's **nuts** (RR 0.78) and **trans fat** (RR 1.42). Surfaced
-      with a distinct "★ top pick" marker.
-- [ ] **Gold standard is artificially light — fix the veg artifact.** Only nuts
-      qualifies, and *no vegetable reaches even the cusp* purely because leafy-greens/
-      cruciferous were recorded with CVD/cancer outcomes but **not all-cause mortality**,
-      so they miss the all-cause magnitude bump that puts fruit on the cusp (same RR
-      0.90). Vegetables do lower all-cause mortality (the F&V umbrella). Fix via the
-      **(b) magnitude redesign** (magnitude = max across a food's outcomes) and/or
-      recording the all-cause outcome for the veg during grounding — expected to put
-      cruciferous/leafy on the cusp (and maybe into Gold if certainty lifts). This is an
-      artifact, not a real "veg < fruit."
-- [ ] **Top spots, with nuance — a "not all" caveat applied EVENLY.** A Gold-standard /
+- [x] **Crown a single champion per direction (reproducible). DONE (v0.31).** Among the
+      qualifying (gold/bin) foods, the champion is the one with the **largest effect
+      magnitude** `|ln(pooledRR)|`, tie-broken by certainty then precision, restricted to
+      `specific`/`uniform` (never a "not all" entry) — `championOf()` in app.js, tested.
+      Today that's **tree nuts** (RR 0.78) and **trans fat** (RR 1.42), surfaced with a
+      distinct "★ top pick" marker in the shortlists.
+- [x] **Gold standard veg artifact — FIXED (v0.31).** Leafy greens and cruciferous were
+      recorded with CVD/cancer outcomes but **not all-cause mortality**, so they missed
+      the all-cause magnitude bump that puts fruit on the cusp (same RR 0.90) — yet the
+      same cited evidence (Aune 2017 F&V) already covers all-cause mortality. Aligned
+      their outcomes list with the evidence (an artifact fix, not a re-grounding) → **both
+      now sit on the cusp of Gold standard**. Also shipped the **magnitude = max across a
+      food's outcomes** engine change (`Scoring.maxMagnitude`). The borrowed F&V RR still
+      awaits a veg-specific grounding pass; Gold entry would need certainty to lift.
+- [x] **"Not all" caveat applied EVENLY — DONE (v0.31).** Every item now records a
+      `categoryUniformity` (`specific`/`uniform`/`mixed`) against one fixed question; the
+      "not all" badge is derived uniformly from `mixed` (whole fruit, ultra-processed,
+      artificial sweeteners), shown on cards and shortlist/cusp chips. See the settled
+      design below.
+- [x] **Top spots, with nuance — a "not all" caveat applied EVENLY. DONE (v0.31).** The
+      spec below is implemented: `categoryUniformity` recorded for all 32 foods, "not all"
+      badge derived from `mixed`, champion restricted to specific/uniform. The first-pass
+      classifications themselves still want a review. A Gold-standard /
       Bin-fodder / cusp entry should signal how *actionable* it is. Rather than excluding
       heterogeneous categories, **keep them in the lists but badge them "not all"** —
       fruit stays (it's broadly good) but flagged "strongest for berries/apples; sugary/

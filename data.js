@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.30";
+const METHODOLOGY_VERSION = "0.31";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -151,7 +151,7 @@ const FOODS = [
     category: "Vegetables",
     effect: "positive",
     certainty: "moderate",
-    outcomes: ["Cardiovascular disease", "Cognitive decline"],
+    outcomes: ["All-cause mortality", "Cardiovascular disease", "Cognitive decline"],
     summary: "Higher intake tracks with lower cardiovascular risk and slower cognitive decline.",
     rationale:
       "Among the most consistently beneficial subgroups within fruit-and-vegetable research, with plausible mechanisms (nitrate, folate, potassium, fiber). Graded 'Moderate' rather than 'High' certainty because healthy-user confounding is substantial and RCT outcome data are thin.",
@@ -173,7 +173,9 @@ const FOODS = [
       },
     ],
     lastReviewed: "2026-06-28",
-    revisions: [],
+    revisions: [
+      { date: "2026-07-01", change: "Added 'All-cause mortality' to the recorded outcomes (v0.31) — it was already part of the cited evidence base (Aune 2017 F&V dose-response lowers CVD AND all-cause mortality; the study finding already stated it), so this aligns the outcomes list with the evidence and lets the all-cause magnitude bump apply, putting leafy greens on the cusp of Gold standard. The RR is still borrowed from the F&V umbrella; a cruciferous/leafy-SPECIFIC re-grounding remains queued. Verdict/certainty unchanged." },
+    ],
   },
   {
     id: "whole-fruit",
@@ -954,7 +956,7 @@ const FOODS = [
     category: "Vegetables",
     effect: "positive",
     certainty: "moderate",
-    outcomes: ["Cardiovascular disease", "Cancer"],
+    outcomes: ["All-cause mortality", "Cardiovascular disease", "Cancer"],
     summary: "Part of the broadly-protective vegetable signal, with some cruciferous-specific cancer evidence.",
     rationale:
       "Rests largely on the strong fruit-and-vegetable dose-response (each 200 g/day → lower CVD and mortality), plus cruciferous-specific cancer associations. Cruciferous-only hard-outcome data are thinner than the produce umbrella, so moderate not high.",
@@ -971,7 +973,9 @@ const FOODS = [
       },
     ],
     lastReviewed: "2026-06-29",
-    revisions: [],
+    revisions: [
+      { date: "2026-07-01", change: "Added 'All-cause mortality' to the recorded outcomes (v0.31) — already part of the cited F&V dose-response evidence (Aune 2017), so this aligns the outcomes list with the evidence and applies the all-cause magnitude bump, putting cruciferous on the cusp of Gold standard. The RR remains borrowed from the produce umbrella; a cruciferous-specific re-grounding is still queued. Verdict/certainty unchanged." },
+    ],
   },
   {
     id: "tomatoes",
@@ -1368,8 +1372,50 @@ for (const _id in EXPERIMENTAL_DIRECTION) {
   }
 }
 
+// How UNIFORMLY the verdict applies across the foods an entry names — recorded for
+// EVERY item against ONE fixed question, not hand-picked for the ones we happened to
+// discuss: "does this verdict apply roughly uniformly across the foods this entry
+// names, or is it concentrated/heterogeneous?"
+//   specific : the entry is a single food (no within-entry spread to worry about)
+//   uniform  : a category, but the direction holds broadly across its members
+//              (evidence is pooled across types and they behave alike)
+//   mixed    : a category whose members genuinely diverge — the verdict is
+//              concentrated in some and weak/absent (or reversed) in others
+// The "not all" badge is DERIVED uniformly from `mixed`; the single champion
+// (★ top pick) is restricted to `specific`/`uniform` (you can't crown a "not all"
+// entry as THE thing to do). These first-pass calls themselves want review.
+const CATEGORY_UNIFORMITY = {
+  // categories where the members behave alike (pooled evidence)
+  "tree-nuts": "uniform", "legumes": "uniform", "whole-grains": "uniform",
+  "leafy-greens": "uniform", "cruciferous": "uniform", "fatty-fish": "uniform",
+  "processed-meat": "uniform", "sugary-drinks": "uniform", "refined-grains": "uniform",
+  "red-meat": "uniform", "poultry": "uniform", "cheese": "uniform", "soy": "uniform",
+  "alcohol": "uniform",
+  // genuinely heterogeneous categories → "not all"
+  "whole-fruit": "mixed", "ultra-processed": "mixed", "artificial-sweeteners": "mixed",
+  // single foods / well-defined single substances
+  "olive-oil": "specific", "yogurt": "specific", "coffee": "specific",
+  "avocado": "specific", "trans-fat": "specific", "eggs": "specific",
+  "milk": "specific", "butter": "specific", "potatoes": "specific",
+  "french-fries": "specific", "coconut-oil": "specific", "green-tea": "specific",
+  "white-rice": "specific", "tomatoes": "specific", "cocoa": "specific",
+};
+
+// The specific within-category caveat shown on `mixed` entries (the "not all" story).
+// Only meaningful where CATEGORY_UNIFORMITY is "mixed".
+const UNIFORMITY_NOTE = {
+  "whole-fruit": "Strongest for berries, apples and grapes; sugary/tropical fruits are weaker, and fruit juice goes the other way.",
+  "ultra-processed": "A broad, heterogeneous class — some ultra-processed foods are far worse than others; the class verdict is an average.",
+  "artificial-sweeteners": "Different sweeteners (aspartame, sucralose, stevia…) behave differently; the class verdict masks real variation.",
+};
+
+for (const _f of FOODS) {
+  _f.categoryUniformity = CATEGORY_UNIFORMITY[_f.id] || "specific";
+  if (UNIFORMITY_NOTE[_f.id]) _f.uniformityNote = UNIFORMITY_NOTE[_f.id];
+}
+
 
 // Allow Node (tests) to import this data while the browser loads it as a script.
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION };
+  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE };
 }

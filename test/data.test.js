@@ -9,7 +9,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const S = require("../scoring.js");
-const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION } = require("../data.js");
+const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE } = require("../data.js");
 
 const EFFECTS = ["positive", "negative", "neutral"];
 const CERTAINTIES = ["high", "moderate", "low", "very-low"];
@@ -258,6 +258,62 @@ test("COHERENCE: every food declares at least one outcome", () => {
   for (const f of FOODS) {
     assert.ok(Array.isArray(f.outcomes) && f.outcomes.length >= 1, `${f.id}: no outcomes`);
   }
+});
+
+test("every food records a valid categoryUniformity, evenly applied", () => {
+  // Applied to EVERY item against one fixed question — not hand-picked. A "not all"
+  // note is only meaningful (and only present) on genuinely `mixed` entries.
+  const ok = ["specific", "uniform", "mixed"];
+  for (const f of FOODS) {
+    assert.ok(ok.includes(f.categoryUniformity), `${f.id}: bad categoryUniformity ${f.categoryUniformity}`);
+    if (f.categoryUniformity === "mixed") {
+      assert.ok(f.uniformityNote && f.uniformityNote.length, `${f.id}: mixed entry needs a uniformityNote`);
+    } else {
+      assert.ok(!f.uniformityNote, `${f.id}: non-mixed entry must not carry a uniformityNote`);
+    }
+  }
+  // every declared note maps to a real, mixed food
+  for (const id of Object.keys(UNIFORMITY_NOTE || {})) {
+    const f = FOODS.find((x) => x.id === id);
+    assert.ok(f, `uniformityNote for unknown food: ${id}`);
+    assert.equal(f.categoryUniformity, "mixed", `uniformityNote on non-mixed food: ${id}`);
+  }
+});
+
+test("CHAMPION is reproducible and never a 'not all' entry", () => {
+  // The ★ top pick per direction = the qualifying (gold/bin) food with the largest
+  // headline |ln(pooledRR)|, restricted to specific/uniform. Mirrors app.js.
+  const certaintyOf = (f) => S.assess(ASSESSMENTS[f.id].evidence, f.outcomes).tier;
+  const magOf = (f) => {
+    const a = ASSESSMENTS[f.id];
+    const entries = [{ ev: a.evidence, outcomes: f.outcomes }];
+    (a.outcomeVerdicts || []).forEach((ov) => entries.push({ ev: ov.evidence, outcomes: [ov.outcome] }));
+    return S.maxMagnitude(entries);
+  };
+  const tagOf = (f) => S.standout(f.effect, certaintyOf(f), magOf(f));
+  const lnRR = (f) => Math.abs(Math.log(ASSESSMENTS[f.id].evidence.pooledRR));
+  const champ = (tag) => {
+    const e = FOODS.filter((f) => tagOf(f) === tag && f.categoryUniformity !== "mixed");
+    e.sort((a, b) => lnRR(b) - lnRR(a));
+    return e[0];
+  };
+  const gc = champ("gold"), bc = champ("bin");
+  assert.ok(gc && gc.categoryUniformity !== "mixed", "gold champion must be specific/uniform");
+  assert.ok(bc && bc.categoryUniformity !== "mixed", "bin champion must be specific/uniform");
+  // sanity against the intended calibration (nuts / trans fat)
+  assert.equal(gc.id, "tree-nuts");
+  assert.equal(bc.id, "trans-fat");
+});
+
+test("veg artifact fixed: at least one vegetable reaches Gold or its cusp", () => {
+  const certaintyOf = (f) => S.assess(ASSESSMENTS[f.id].evidence, f.outcomes).tier;
+  const magOf = (f) => S.maxMagnitude([{ ev: ASSESSMENTS[f.id].evidence, outcomes: f.outcomes }]);
+  const veg = FOODS.filter((f) => f.category === "Vegetables");
+  const reaching = veg.filter((f) => {
+    const s = S.standout(f.effect, certaintyOf(f), magOf(f));
+    return s === "gold" || s === "marginal-gold";
+  });
+  assert.ok(reaching.length >= 1, "expected >=1 vegetable at Gold/cusp (veg-cusp artifact)");
 });
 
 test("directionality is consistent with the verdict (CI excludes null AND effect > floor)", () => {

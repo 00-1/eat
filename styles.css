@@ -262,6 +262,18 @@ a { color: var(--accent); }
 .mag-small    { opacity: 0.85; }
 .mag-minimal  { opacity: 0.7; }
 
+/* "Not all" caveat — a heterogeneous category whose verdict isn't uniform. */
+.notall {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px dashed var(--neu);
+  background: var(--neu-bg);
+  color: var(--neu);
+  white-space: nowrap;
+}
+
 /* Highlights: gold standard / bin fodder */
 .highlights {
   display: grid;
@@ -293,6 +305,18 @@ a { color: var(--accent); }
 }
 .hl-chip:hover { border-color: var(--accent); }
 .hl-empty { font-size: 0.86rem; color: var(--ink-soft); }
+/* Champion — the single ★ top pick per direction. */
+.hl-chip.hl-champ { border-color: var(--ink); border-width: 2px; padding: 6px 12px; }
+.hl-gold .hl-chip.hl-champ { background: var(--pos-bg); }
+.hl-bin  .hl-chip.hl-champ { background: var(--neg-bg); }
+.hl-star { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+.hl-gold .hl-star { color: var(--pos); }
+.hl-bin  .hl-star { color: var(--neg); }
+/* "Not all" marker inside a highlight chip. */
+.hl-notall {
+  font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+  color: var(--neu); border: 1px dashed var(--neu); border-radius: 999px; padding: 1px 6px;
+}
 .hl-cusp-h { margin: 14px 0 8px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); }
 .hl-cusp-note { font-weight: 400; text-transform: none; letter-spacing: 0; }
 .hl-chip.hl-cusp { background: transparent; border-style: dashed; color: var(--ink-soft); font-weight: 600; }

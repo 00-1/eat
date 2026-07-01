@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.30 — living document.** This file is the canonical description of how
+**Version 0.31 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -187,6 +187,14 @@ high-certainty and large (sugary drinks). So we also derive a **magnitude** tier
 (`pooledRR`), bumped one tier when the food acts on **all-cause mortality** (the
 broadest outcome). A true null moves nothing → minimal.
 
+A food's magnitude is taken as the **maximum across all of its outcomes**
+(`Scoring.maxMagnitude`) — its headline outcome *plus* any per-outcome verdicts —
+because a food moves the needle as much as the strongest thing it does. This is why
+unprocessed red meat (neutral on mortality, but negative on diabetes) and moderate
+alcohol (neutral on mortality, but negative on cancer) register a real effect rather
+than "minimal": the headline verdict stays neutral, but the impact axis reflects the
+outcome where they genuinely act.
+
 > **Intake convention.** The `pooledRR` behind both effect size and magnitude is
 > the relative risk at a **realistic habitual high-vs-low intake** — what the food
 > does in the amounts people actually eat — not per arbitrary small unit. A
@@ -202,16 +210,33 @@ broadest outcome). A true null moves nothing → minimal.
 **Standout shortlists** combine certainty and magnitude:
 
 - **★ Gold standard** — `effect: positive`, `certainty: high`, `magnitude: large`.
-  The surest, highest-impact things to add (currently nuts, whole grains, fibre).
+  The surest, highest-impact things to add (currently tree nuts).
 - **✕ Bin fodder** — `effect: negative`, `certainty: high`, `magnitude: large`.
   The surest, highest-impact things to drop (currently processed meat, sugary
   drinks, trans fat).
 
 Each list also shows an **"on the cusp"** tier: foods one notch short on a single
 axis (certainty-rank + magnitude-rank = 5), so you can see what would join if a
-threshold eased — e.g. trans fat sits just below Bin fodder on magnitude, and
-coffee/fish just below Gold standard on certainty. Both lists are *computed*, so
-they update automatically as facts/rules change.
+threshold eased — e.g. whole grains, whole fruit, coffee, leafy greens and
+cruciferous all sit just below Gold standard. Both lists are *computed*, so they
+update automatically as facts/rules change.
+
+**Champion (★ top pick).** Within each direction we crown a single champion — the
+qualifying (gold/bin) food with the **largest headline effect** `|ln(pooledRR)|`,
+tie-broken by certainty then precision. Today that is **tree nuts** (RR 0.78) and
+**trans fat** (RR 1.42). Reproducible, not hand-picked — and restricted to
+`specific`/`uniform` entries, so a "not all" category can never be crowned as *the*
+thing to do or drop.
+
+**"Not all" caveat, applied evenly.** Many entries are really *categories* (tree
+nuts, whole fruit, ultra-processed). Each item records a `categoryUniformity` —
+`specific` (a single food), `uniform` (a category whose members behave alike, with
+pooled evidence), or `mixed` (members genuinely diverge) — assessed against **one
+fixed question for every item**, not hand-picked. A **"not all"** badge is derived
+uniformly from `mixed`: whole fruit stays in the shortlists but is flagged
+(strongest for berries/apples; sugary/tropical and juice weaker), as are
+ultra-processed foods and artificial sweeteners — while genuinely uniform categories
+(nuts, processed meat) carry no caveat.
 
 ### 4d. Conclusions are derived live — and you can re-run the rule
 
@@ -376,6 +401,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.31 | 2026-07-01 | **Shortlist-correctness bundle.** (1) **Magnitude = max across a food's outcomes** (`Scoring.maxMagnitude`): a food's impact now reflects its strongest outcome, not just its headline one — so unprocessed red meat (neutral on mortality, negative on diabetes) and moderate alcohol (neutral on mortality, negative on cancer) register a real effect instead of "minimal". (2) **Veg-cusp artifact fixed:** leafy greens and cruciferous were recorded with CVD/cancer outcomes but not all-cause mortality, so they missed the all-cause magnitude bump that put fruit on the cusp — yet the same cited evidence (Aune 2017 F&V) already covers all-cause mortality. Aligning their outcomes list now puts **both vegetables on the cusp of Gold standard** (an artifact fix, not a re-grounding; the borrowed F&V RR still awaits a veg-specific pass). (3) **"Not all" caveat, applied evenly:** every item now records a `categoryUniformity` (`specific`/`uniform`/`mixed`) against one fixed question; the "not all" badge is derived uniformly from `mixed` (whole fruit, ultra-processed, artificial sweeteners) — not hand-picked. (4) **Champion (★ top pick) per direction:** among the qualifying gold/bin foods, the one with the largest headline \|ln(pooledRR)\| (tie-broken by certainty, then precision), restricted to specific/uniform — today **tree nuts** and **trans fat**. All computed, tested, no hand-assignment. |
 | 0.30 | 2026-06-29 | Every food now shows a **dose-response section**: foods without a recorded curve display an honest placeholder ("no curve recorded yet — a known gap, not a finding of 'no relationship'") rather than silently omitting it (only ~6 foods have curves so far). Queued a dedicated dose-response research pass to fetch the missing curves and mark genuinely-unavailable vs not-yet-fetched. |
 | 0.29 | 2026-06-29 | **Explore now re-derives the whole VERDICT per lens, not just certainty.** Each preset maps to a lens (`Scoring.verdictUnderLens`): *Observational only* keeps observation as the direction source (certainty drops); *Trials & mechanism only* **ignores cohorts** and lets `experimentalDirection` (what trials + mechanism point to) set the direction — "none" → *Insufficient*. The result is the project's thesis made visible: under trials/mechanism-only, **28 of 32 verdicts shift and 18 flip direction** — the sat-fat foods cohorts exonerate (cheese, butter, coconut, milk, eggs) get re-condemned by the LDL/cholesterol mechanism, the high-GI foods turn negative, fatty fish goes neutral (supplement RCTs are null), and the cohort-only winners (coffee, tea, leafy greens, fruit) become *Insufficient*. Added `experimentalDirection` per food + tests. |
 | 0.28 | 2026-06-29 | **Per-outcome verdicts populated** (closes a/a2). **Red meat** now reads neutral on mortality but **negative on type-2 diabetes** (Li 2024 Lancet IPD, HR 1.10 per 100 g/day; Shi 2023 higher) — resolving the red-meat-vs-white-rice inconsistency. **Alcohol** reads neutral on mortality but **negative on cancer** (Collaborative Group 2002, breast-cancer RR 1.071 per 10 g/day, no safe threshold), with the monotonic-harm dose curve now living on that per-outcome verdict. Cruciferous/leafy-green-specific figures could not be verified this round, so their self-verdict walk-back stays deferred. |

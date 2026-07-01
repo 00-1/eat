@@ -204,6 +204,23 @@
     return ["minimal", "small", "moderate", "large"][tier];
   }
 
+  // A food moves the needle as much as its STRONGEST outcome does — not just its
+  // headline one. Given the headline evidence plus any per-outcome evidence, return
+  // the largest magnitude band. This is why unprocessed red meat (neutral on
+  // mortality, but negative on diabetes) still registers a real effect, and why a
+  // food's shortlist impact reflects everything it does, not one summary line.
+  //   entries: [{ ev, outcomes }]  — each an evidence object + its outcome name(s)
+  function maxMagnitude(entries) {
+    if (!Array.isArray(entries) || !entries.length) return "minimal";
+    var best = "minimal";
+    for (var i = 0; i < entries.length; i++) {
+      var e = entries[i] || {};
+      var m = classifyMagnitude(e.ev, e.outcomes);
+      if (MAGNITUDE_ORDER[m] > MAGNITUDE_ORDER[best]) best = m;
+    }
+    return best;
+  }
+
   // Convenience: evidence -> { scores, total, max, tier, basis, magnitude, neutralScored }.
   // Tier is computed over the dimensions that apply to the verdict's kind.
   //
@@ -396,6 +413,7 @@
     tierFromTotal: tierFromTotal,
     classifyBasis: classifyBasis,
     classifyMagnitude: classifyMagnitude,
+    maxMagnitude: maxMagnitude,
     standout: standout,
     CERTAINTY_ORDER: CERTAINTY_ORDER,
     DIRECTIONAL_DIMS: DIRECTIONAL_DIMS,
