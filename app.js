@@ -320,8 +320,8 @@
     return (
       "<div class='dose dose-empty'>" +
         "<h4 class='block-h'>Dose-response <span class='block-sub'>— how risk changes across the range of intake</span></h4>" +
-        "<p class='dr-none'>No dose-response curve recorded yet. Not every food–outcome pair has a published " +
-        "dose-response, and we haven't run a dedicated pass to fetch the ones that do — so this is a known gap, " +
+        "<p class='dr-none'>No dose-response curve recorded for this food yet — either no clean dose-response is " +
+        "published for it, or our research pass hasn't fetched it. A known gap, " +
         "<strong>not</strong> a finding of “no relationship.”</p>" +
       "</div>"
     );
