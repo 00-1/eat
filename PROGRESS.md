@@ -50,3 +50,32 @@ The worker's disposition of every PLAN.md item it takes on. Format per item:
 - **Notable: 35** (added oats, seed-oils, brown-rice, peanuts, mushrooms)
 - **Long-tail: 9** (added pasta)
 - **Total FOODS: 44**
+
+## Tranche 2 — Fruits (Batch 2)
+Most Tranche-2 fruits already exist as `members` inside the **Whole fruit**
+card (categoryUniformity: mixed) — that's the honest disposition for foods
+that share the fibre/polyphenol/low-GL profile and are grouped in cohort data
+(Muraki 2013, Aune 2017, Wang 2014) rather than analysed alone. Recording
+their disposition here as members-of-whole-fruit avoids creating cards with
+no independent hard-outcome data:
+
+- **apples / pears**: member-of whole-fruit (`good`; Muraki 2013 T2D HR 0.93 per 3 servings/week)
+- **oranges / citrus**: member-of whole-fruit (`good`; Aune 2017 CVD/mortality ~9–12% lower)
+- **grapes**: member-of whole-fruit (`good`; Muraki 2013 HR 0.88 per 3 servings/week)
+- **cherries**: member-of whole-fruit (`likely`; tart-cherry RCTs BP/uric acid Chai 2018)
+- **kiwi**: member-of whole-fruit (`likely`; small RCTs Karlsen 2013)
+- **pomegranate**: member-of whole-fruit (`likely`; Sahebkar 2017 BP/lipid meta)
+- **peaches / stone fruit / plums / apricots**: member-of whole-fruit (`likely`)
+- **figs**: member-of whole-fruit (`likely`; inferred profile match)
+- **papaya / guava**: member-of whole-fruit (`likely`; inferred profile match)
+- **mango / pineapple (tropical)**: member-of whole-fruit (`likely`; higher-GI, under-studied)
+- **bananas**: member-of whole-fruit (`weaker`; Muraki 2013 individual T2D NS)
+- **watermelon**: member-of whole-fruit (`weaker`; high GI, low GL per serving)
+- **melon / cantaloupe**: member-of whole-fruit (`worse`; Muraki 2013 positively associated with T2D)
+- **cranberries**: member-of whole-fruit (`unknown`; hard-outcome data on the fruit itself scarce; usually eaten as sweetened juice/sauce)
+- **dried fruit (raisins, dates, dried apricots)**: HOLDING (retained; sits between whole fruit and concentrated sugar; small RCTs lipid-neutral but portions carry more sugar than fresh) + also flagged as `likely` in whole-fruit members
+- **olives (the fruit)**: member-of whole-fruit (`likely`; carries the olive-oil signal, but usually eaten pickled/salty)
+
+Signal-tier partition unchanged (35 notable + 9 long-tail); whole-fruit's
+member list expanded from 9 to 18 entries.
+

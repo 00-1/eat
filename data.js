@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.64";
+const METHODOLOGY_VERSION = "0.65";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -206,11 +206,20 @@ const FOODS = [
       { name: "Berries", tag: "good", note: "Strongest type-2-diabetes signal — blueberries HR 0.74 per 3 servings/week (Muraki 2013)." },
       { name: "Apples & pears", tag: "good", note: "T2D HR 0.93 per 3 servings/week (Muraki 2013); inversely linked to mortality (Wang 2014)." },
       { name: "Grapes", tag: "good", note: "Grapes/raisins HR 0.88 per 3 servings/week for T2D (Muraki 2013)." },
-      { name: "Citrus", tag: "good", note: "Inversely associated with CVD/all-cause mortality (~9–12% lower CVD; Aune 2017)." },
-      { name: "Stone fruit (peach, plum)", tag: "likely", note: "Shares the fibre/polyphenol profile; grouped with beneficial 'other fruits', rarely analysed alone." },
+      { name: "Citrus (oranges, grapefruit)", tag: "good", note: "Inversely associated with CVD/all-cause mortality (~9–12% lower CVD; Aune 2017)." },
+      { name: "Cherries", tag: "likely", note: "Tart-cherry RCTs lower BP/uric acid short-term (Chai 2018 J Nutr); shares the anthocyanin/polyphenol profile with berries but cohort-specific hard-outcome data is thin." },
+      { name: "Kiwi", tag: "likely", note: "Small RCTs improve LDL and BP markers (Karlsen 2013); part of general whole-fruit signal; no clean single-food cohort meta." },
+      { name: "Pomegranate", tag: "likely", note: "Small RCTs improve BP/lipids (Sahebkar 2017 meta); mechanism (polyphenols/punicalagin) fits the whole-fruit story; hard-outcome data thin." },
+      { name: "Stone fruit (peaches, plums, apricots)", tag: "likely", note: "Shares the fibre/polyphenol profile; grouped with beneficial 'other fruits', rarely analysed alone." },
+      { name: "Figs", tag: "likely", note: "Whole-fruit profile (fibre + polyphenols); very little food-specific data; inferred, not measured." },
+      { name: "Papaya & guava", tag: "likely", note: "Tropical fruits with vitamin C and lycopene (guava); food-specific hard-outcome data thin." },
       { name: "Tropical (mango, pineapple)", tag: "likely", note: "Whole-fruit profile but higher-GI and under-studied individually — inferred, not measured." },
       { name: "Bananas", tag: "weaker", note: "Higher-glycaemic; individual T2D association weaker/non-significant (Muraki 2013)." },
+      { name: "Watermelon", tag: "weaker", note: "High GI (~72) but low glycemic load per typical serving; part of the whole-fruit signal but under-studied individually." },
       { name: "Melon / cantaloupe", tag: "worse", note: "Cantaloupe was positively (adversely) associated with T2D in Muraki 2013 — a higher-GI outlier." },
+      { name: "Cranberries", tag: "unknown", note: "Sweetened cranberry juice/sauce is the dominant intake — sugar dominates the fruit; hard-outcome cohort data on the fruit itself is scarce." },
+      { name: "Dried fruit (raisins, dates, dried apricots)", tag: "likely", note: "Sits between whole fruit and concentrated sugar; small RCTs on dates/raisins are lipid-neutral, but eaten in larger sugar loads than fresh. Held in HOLDING as its own line." },
+      { name: "Olives (the fruit)", tag: "likely", note: "Whole olives carry the olive-oil signal in food form; typically eaten pickled (high sodium) — hard-outcome cohort data on olives specifically is sparse." },
       { name: "Fruit juice", tag: "worse", note: "Separate item: HR 1.08 per 3 servings/week — raises T2D risk; whole fruit beats juice (Muraki 2013)." },
     ],
     summary: "Whole fruit tracks with lower mortality and diabetes — but fruit juice does not.",
