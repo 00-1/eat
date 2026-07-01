@@ -990,13 +990,16 @@
 
   // Optimal amount to ADD, read off the dose curve: the near-optimal band (the range
   // where the effect is at its best tier). Null with no curve.
+  function addBand(curve) {
+    if (!curve || typeof Scoring === "undefined") return null;
+    const b = Scoring.optimalBand(curve, "positive");
+    if (!b || !(b.bestRR < 1)) return null;
+    const u = curve.unit ? " " + curve.unit : "";
+    return { text: b.single ? "~" + b.loX + u : "~" + b.loX + "–" + b.hiX + u };
+  }
   function addQuantity(food) {
     const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
-    if (!a || !a.doseCurve || typeof Scoring === "undefined") return null;
-    const b = Scoring.optimalBand(a.doseCurve, "positive");
-    if (!b || !(b.bestRR < 1)) return null;
-    const u = a.doseCurve.unit ? " " + a.doseCurve.unit : "";
-    return { text: b.single ? "~" + b.loX + u : "~" + b.loX + "–" + b.hiX + u };
+    return a ? addBand(a.doseCurve) : null;
   }
   // Highest "safe" dose for a food to REDUCE, from a (harm-shaped) dose curve.
   //   monotonic-harm → { none: true } ("no safe level" — risk from the first serving)
@@ -1020,7 +1023,7 @@
     if (!el || typeof Scoring === "undefined") return;
     const cls = {};
     FOODS.forEach(function (f) { cls[f.id] = standoutOf(f); });
-    const negOutcomes = (f) => ((ASSESSMENTS[f.id] || {}).outcomeVerdicts || []).filter((o) => o.effect === "negative");
+    const outcomesOf = (f, eff) => ((ASSESSMENTS[f.id] || {}).outcomeVerdicts || []).filter((o) => o.effect === eff);
 
     // Tier a headline-directional food: 1 = surest+largest (unconditional top tier),
     // 2 = a notch short OR top-tier only at high intake, 3 = everything else the
@@ -1036,26 +1039,32 @@
         ? "<span class='hl-champ-mark' title='Worst offender — largest effect among the surest'>⚠ worst</span> "
         : "<span class='hl-champ-mark' title='Top pick — largest effect among the surest'>★ top pick</span> ";
 
-    // Build entries. ADD = positive-verdict foods. REDUCE = negative-verdict foods,
-    // PLUS neutral-headline foods that carry a negative per-outcome verdict (alcohol
-    // → cancer, red meat → diabetes), listed under their specific outcome.
+    // Build entries.
+    //   ADD / REDUCE  = foods whose HEADLINE verdict is positive / negative (tiered).
+    //   *Outcome-specific* = foods NEUTRAL overall but carrying a per-outcome verdict
+    //   (red meat → diabetes, alcohol → cancer) — their own section, not lumped in with
+    //   genuinely directional foods, since the food is fine on the whole.
     const addEntries = FOODS.filter((f) => f.effect === "positive").map((f) => ({
       f: f, dir: "add", tier: tierFor(f, "gold"), dose: addQuantity(f),
     }));
     const redEntries = FOODS.filter((f) => f.effect === "negative").map((f) => ({
       f: f, dir: "reduce", tier: tierFor(f, "bin"), dose: safeQuantity((ASSESSMENTS[f.id] || {}).doseCurve),
     }));
-    FOODS.filter((f) => f.effect === "neutral" && negOutcomes(f).length).forEach((f) => {
-      const ov = negOutcomes(f)[0];
-      redEntries.push({
-        f: f, dir: "reduce", tier: 3, dose: safeQuantity(ov.doseCurve),
+    const addOutcome = [], redOutcome = [];
+    FOODS.filter((f) => f.effect === "neutral").forEach((f) => {
+      outcomesOf(f, "negative").forEach((ov) => redOutcome.push({
+        f: f, dir: "reduce", dose: safeQuantity(ov.doseCurve),
         forOutcome: shortOutcome(ov.outcome), neutralHeadline: true,
-      });
+      }));
+      outcomesOf(f, "positive").forEach((ov) => addOutcome.push({
+        f: f, dir: "add", dose: addBand(ov.doseCurve),
+        forOutcome: shortOutcome(ov.outcome), neutralHeadline: true,
+      }));
     });
 
     // Champions: the largest-effect UNCONDITIONAL pick among the tier-1 foods.
     const goldChamp = championOf(addEntries.filter((e) => e.tier === 1).map((e) => e.f));
-    const binChamp = championOf(redEntries.filter((e) => e.tier === 1 && !e.neutralHeadline).map((e) => e.f));
+    const binChamp = championOf(redEntries.filter((e) => e.tier === 1).map((e) => e.f));
     addEntries.forEach((e) => { e.isChamp = goldChamp && e.f.id === goldChamp.id; });
     redEntries.forEach((e) => { e.isChamp = binChamp && e.f.id === binChamp.id; });
 
@@ -1088,8 +1097,9 @@
       if (dc) return dc;
       return lnRR(b.f) - lnRR(a.f);
     });
-    const sectionHtml = (entries, tier, title, note) => {
-      const rows = sortEntries(entries.filter((e) => e.tier === tier));
+    // Render a section from an explicit list of entries (already grouped by the caller).
+    const sectionHtml = (rows, title, note) => {
+      rows = sortEntries(rows);
       if (!rows.length) return "";
       return (
         "<div class='hl-sec'>" +
@@ -1098,21 +1108,24 @@
         "</div>"
       );
     };
+    const tier = (entries, t) => entries.filter((e) => e.tier === t);
 
     el.innerHTML =
       "<div class='hl-card hl-gold'>" +
         "<h2>Worth adding</h2>" +
         "<p class='hl-sub'>What the evidence supports adding to your diet — with the amount that earns the benefit.</p>" +
-        sectionHtml(addEntries, 1, "Surest, biggest benefit", "high certainty and a large effect") +
-        sectionHtml(addEntries, 2, "Strong", "a notch short on one axis, or large only at a higher intake") +
-        sectionHtml(addEntries, 3, "Also supported", "smaller or less certain, but the evidence points to benefit") +
+        sectionHtml(tier(addEntries, 1), "Surest, biggest benefit", "high certainty and a large effect") +
+        sectionHtml(tier(addEntries, 2), "Strong", "a notch short on one axis, or large only at a higher intake") +
+        sectionHtml(tier(addEntries, 3), "Also supported", "smaller or less certain, but the evidence points to benefit") +
+        sectionHtml(addOutcome, "Fine overall — but helps a specific outcome", "neutral on the whole, with a benefit for one condition") +
       "</div>" +
       "<div class='hl-card hl-bin'>" +
         "<h2>Worth cutting down</h2>" +
         "<p class='hl-sub'>What the evidence supports reducing — with the highest safe amount, or where there's no safe level.</p>" +
-        sectionHtml(redEntries, 1, "Surest, biggest harm", "high certainty and a large effect") +
-        sectionHtml(redEntries, 2, "Strong reasons to cut down", "a notch short, or large only in quantity") +
-        sectionHtml(redEntries, 3, "Also worth reducing", "smaller, less certain, or harmful only for a specific outcome") +
+        sectionHtml(tier(redEntries, 1), "Surest, biggest harm", "high certainty and a large effect") +
+        sectionHtml(tier(redEntries, 2), "Strong reasons to cut down", "a notch short, or large only in quantity") +
+        sectionHtml(tier(redEntries, 3), "Also worth reducing", "smaller or less certain, but the evidence points to harm") +
+        sectionHtml(redOutcome, "Fine overall — but worth limiting for one risk", "neutral on the whole, but linked to a specific harm") +
       "</div>";
 
     // Clicking a row jumps to that card and opens it.

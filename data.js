@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.42";
+const METHODOLOGY_VERSION = "0.43";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1491,6 +1491,12 @@ const ASSESSMENTS = {
     sources: {
       pooledRR: { figure: "French fries vs T2D HR 1.20 (1.12–1.28) per +3 servings/week", cite: "Mousavi 2025 BMJ", id: "PMID:40769531" },
       participants: { figure: "205,107 across three US cohorts; 5.2M person-years", cite: "Mousavi 2025 BMJ", id: "PMID:40769531" },
+    },
+    doseCurve: {
+      outcome: "Type 2 diabetes", unit: "servings/week", shape: "monotonic-harm", normalRange: [0, 3],
+      points: [ { x: 0, rr: 1.0 }, { x: 3, rr: 1.20, lo: 1.12, hi: 1.28 }, { x: 6, rr: 1.44 } ],
+      note: "Deep-fried fries only — risk rises ~20% per 3 servings/week with no threshold (baked/boiled potatoes are null). Points beyond 3/wk are log-linear extrapolation from the reported per-serving slope.",
+      source: { cite: "Mousavi 2025 BMJ", id: "PMID:40769531" }, verified: false,
     },
   },
   "alcohol": {
