@@ -347,7 +347,10 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       curve, on cards + group/outcome/counter/exception blocks (colour = verdict/
       severity). Highlights keep their gradient; diff rows rely on the verdict chips.
       (v0.30.x)
-- [x] **Expanded card spans the full row** (no empty columns beside it). (v0.30.x)
+- [x] **Masonry box-packing for the food grid** (v0.30.x). Cards flow down columns
+      (CSS multi-column) and pack to fill gaps, so an expanded card grows *vertically
+      only* and the shorter cards fill the space around it — no empty columns, no
+      full-width stretch. (Reverted the earlier full-row-span approach.)
 - [ ] **Pin up to 3 expanded cards to the top for side-by-side comparison.** Let a
       user open up to three foods and have them pin to the top as a comparison strip so
       you can read them against each other (4th expand bumps the oldest, or is blocked).

@@ -127,24 +127,11 @@ a { color: var(--accent); }
   list-style: none;
   margin: 0 0 40px;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-  align-items: start;
-  grid-auto-flow: row dense; /* let unexpanded cards backfill gaps */
-}
-/* An expanded card uses the full row width instead of leaving empty columns
-   beside it; the remaining cards reflow (dense) to fill the freed space. */
-.card:has(details[open]) {
-  grid-column: 1 / -1;
-}
-/* Keep the expanded prose readable when the card goes full-width on wide screens,
-   while charts/curves still get the room. */
-.card:has(details[open]) .card-detail > .rationale,
-.card:has(details[open]) .card-detail > p,
-.card:has(details[open]) .card-detail > .consids,
-.card:has(details[open]) .card-detail > ul {
-  max-width: 70ch;
+  /* Masonry-style box packing: cards flow down columns and fill gaps, so a tall
+     (expanded) card doesn't leave empty space beside it. An expanded card grows
+     vertically only; the shorter cards pack around it. */
+  columns: 320px;
+  column-gap: 16px;
 }
 .card {
   background: var(--surface);
@@ -152,6 +139,9 @@ a { color: var(--accent); }
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
+  break-inside: avoid;             /* keep each card whole within a column */
+  -webkit-column-break-inside: avoid;
+  margin-bottom: 16px;             /* vertical gap (column-gap handles horizontal) */
 }
 
 /* Verdict / severity accent: a SOLID, SQUARE (non-curved) bar, inset from the
