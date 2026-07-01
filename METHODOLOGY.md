@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.52 — living document.** This file is the canonical description of how
+**Version 0.53 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -477,6 +477,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.53 | 2026-07-01 | **Foods-tab intro.** Added a brief concept lead at the top of the Foods tab — "What's the health impact of adding a food to your diet?" + a one-line factual summary (rated positive/negative/neutral, computed from studies by a reproducible method, shown with certainty and effect size, provisional). Restores a semantic page `h1` (removed with the old header). |
 | 0.52 | 2026-07-01 | **Stale-prose sweep.** Refreshed copy that lagged the features: the data-status banner (was "*most* figures are best-estimates" — false now that 27/35 are verified; now "N verified, the other M are best-estimates"); the Approach tab's "we don't yet compute / plan to add" burden-axis lines (shipped — now "shown as each card's Population impact"); a stray "Bin fodder" and "⚠ worst offender" in the methodology body; and the README shortlist description (still described the old Gold-standard/Worst-offenders + all-cause-bump model). Changelog rows keep their historical wording. |
 | 0.51 | 2026-07-01 | **Mobile controls fix + reorder.** Fixed a mobile bug where the search box ballooned to full height (in the ≤540px column layout, `flex:1 1 280px` grew *vertically*; pinned to natural height). Moved the search/filter/sort controls (and the data-status banner) down to sit directly above the food grid they act on, instead of stranded at the top above the summaries. |
 | 0.50 | 2026-07-01 | **Tone pass + readable dose curves.** Tone: softened the one moralising label — the negative champion "⚠ worst offender" → "⚠ biggest harm" (parallel with "★ top pick"), cleaned a stale "Bin fodder" reference and a shouty ALL-CAPS. (Food summaries were already factual — "raises X risk", "no safe level" — not preachy.) Dose curves: added y-axis scale labels + faint gridlines at the curve's actual RR range (central estimates, e.g. 1.0 and 0.78), so the chart shows magnitude, not just shape. |

@@ -75,6 +75,9 @@ a { color: var(--accent); }
 
 /* ---------- Controls ---------- */
 .view { padding-bottom: 8px; }
+.intro { margin: 22px 0 18px; }
+.intro-q { margin: 0 0 6px; font-size: clamp(1.35rem, 3.5vw, 1.95rem); line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); }
+.intro-sub { margin: 0; max-width: 68ch; font-size: 0.95rem; color: var(--ink-soft); }
 .controls {
   display: flex;
   flex-wrap: wrap;
