@@ -1570,7 +1570,7 @@ const ASSESSMENTS = {
     },
   },
   "soy": {
-    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 330826, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (~25–40 mg isoflavones/day)" },
+    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 330826, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~1–2 servings/day (≈25–40 mg isoflavones; 1 serving ≈ 100 g tofu / a cup of soy milk / ½ cup edamame)" },
     effectEstimate: "Cancer mortality RR 0.88 (95% CI 0.79–0.99) highest vs lowest; each 10 mg/day isoflavones ~7% lower cancer mortality, ~10% lower all-cause (Nachvak 2019, 23 studies). Strongest in high-intake Asian cohorts; generalisability to low-intake Western diets uncertain.",
     verified: true,
     sources: {
@@ -1578,9 +1578,9 @@ const ASSESSMENTS = {
       participants: { figure: "330,826 participants, 23 prospective studies", cite: "Nachvak 2019 J Acad Nutr Diet", id: "PMID:31278047" },
     },
     doseCurve: {
-      outcome: "Cancer / all-cause mortality", unit: "mg isoflavones/day", shape: "monotonic-benefit", normalRange: [0, 40],
-      points: [ { x: 0, rr: 1.0 }, { x: 20, rr: 0.94 }, { x: 40, rr: 0.90, lo: 0.83, hi: 0.97 } ],
-      note: "≈7% lower cancer mortality per 10 mg/day isoflavones. Points approximated from the reported per-unit slope (full spline not published).",
+      outcome: "Cancer / all-cause mortality", unit: "servings/day", shape: "monotonic-benefit", normalRange: [0, 2],
+      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 0.94 }, { x: 2, rr: 0.90, lo: 0.83, hi: 0.97 } ],
+      note: "≈7% lower cancer mortality per ~10 mg/day isoflavones; ~1 serving (100 g tofu, a cup of soy milk, or ½ cup edamame) ≈ ~20 mg. Expressed in food servings rather than mg isoflavones so the amount is actionable. Points approximated from the reported per-unit slope.",
       source: { cite: "Nachvak 2019 J Acad Nutr Diet", id: "PMID:31278047" }, verified: false,
     },
   },
