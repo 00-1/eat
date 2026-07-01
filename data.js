@@ -1453,7 +1453,7 @@ const ASSESSMENTS = {
       participants: { figure: "4 prospective cohorts (Mozaffarian 2006); industrial-vs-ruminant isolated in de Souza 2015", cite: "Mozaffarian 2006 NEJM", id: "PMID:16611951" },
     },
     doseCurve: {
-      outcome: "Coronary heart disease", unit: "% of energy", shape: "monotonic-harm", normalRange: [0, 1],
+      outcome: "Coronary heart disease", unit: "% of daily calories", shape: "monotonic-harm", normalRange: [0, 1],
       points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 1.10 }, { x: 2, rr: 1.21, lo: 1.10, hi: 1.33 }, { x: 3, rr: 1.32 }, { x: 4, rr: 1.42 } ],
       note: "Risk rises across the whole range — no safe threshold. Intermediate points approximated from the reported per-2%-energy slope.",
       source: { cite: "de Souza 2015 BMJ", id: "PMID:26268692" }, verified: false,
@@ -1468,7 +1468,7 @@ const ASSESSMENTS = {
       participants: { figure: "1,148,387 participants, 173,107 deaths, 18 cohorts", cite: "Liang 2025 Syst Rev", id: "10.1186/s13643-025-02800-8" },
     },
     doseCurve: {
-      outcome: "All-cause mortality", unit: "% of energy", shape: "monotonic-harm", normalRange: [0, 20],
+      outcome: "All-cause mortality", unit: "% of daily calories", shape: "monotonic-harm", normalRange: [0, 20],
       points: [ { x: 0, rr: 1.0 }, { x: 10, rr: 1.10, lo: 1.04, hi: 1.16 }, { x: 20, rr: 1.21 }, { x: 30, rr: 1.33 }, { x: 40, rr: 1.46 } ],
       note: "Roughly linear: ~10% higher mortality per 10% of energy from UPF. Points beyond 10% extrapolated from the per-increment slope.",
       source: { cite: "Liang 2025 Syst Rev", id: "10.1186/s13643-025-02800-8" }, verified: false,
