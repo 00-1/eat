@@ -103,6 +103,16 @@ const SHARED_CLAIMS = [
 ];
 
 const COUNTER_ARGUMENTS = {
+  "berries": [
+    {
+      claim: "Berry 'superfood' benefits are healthy-user confounding and industry spin — the RCTs miss hard glycemic endpoints, and much research is blueberry-council funded.",
+      proponents: "Nutrition-epidemiology methodologists on residual confounding; and blueberry-review authors themselves, who note NutriGrade rated no berry evidence 'high quality' and that flagship RCTs (e.g. Curtis 2019) left HOMA-IR unchanged.",
+      evidenceCited: "Cohort associations track overall diet quality; the U.S. Highbush Blueberry Council (a USDA checkoff) funds much positive berry research; berry RCTs consistently move vascular markers but not fasting glycemia.",
+      stance: "partial",
+      assessment:
+        "A fair hit that we already price in with Low certainty. The confounding and funding concerns are real, and the trial evidence is vascular-marker (FMD) not hard-outcome — which is exactly why berries aren't rated higher. But the type-2-diabetes cohort signal is consistent and specifically strongest for blueberries (Muraki 2013), and anthocyanin RCTs corroborate the direction on validated markers. So 'uncertain and modest' is right; 'no real effect' overshoots.",
+    },
+  ],
   "olive-oil": [
     {
       claim: "Olive oil's cardiovascular benefit is well-established — rating it only 'Low' certainty is surprisingly, needlessly cautious.",

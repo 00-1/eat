@@ -93,6 +93,22 @@ const EXCEPTIONS = {
       mitigation: "Keep vitamin-K intake consistent week to week rather than avoiding greens; tell your clinician.",
     },
   ],
+  "berries": [
+    {
+      type: "allergy",
+      group: "People with strawberry / pollen-food (oral allergy) syndrome",
+      prevalence: { estimate: "~3–4% of toddlers, declining to ~0.5–1% later; usually mild", source: "Bosnian pediatric prevalence study (PMC3354175)" },
+      severity: "caution",
+      mitigation: "Affected people avoid raw strawberries; cooked berries and other berries (e.g. blueberries) are usually tolerated.",
+    },
+    {
+      type: "intolerance",
+      group: "People with salicylate sensitivity (berries are high-salicylate)",
+      prevalence: { estimate: "general-population rate uncertain; higher in aspirin-sensitive asthma", source: "salicylate-intolerance reviews" },
+      severity: "mitigate",
+      mitigation: "Salicylate-sensitive individuals limit high-salicylate berries and substitute lower-salicylate fruit.",
+    },
+  ],
   "whole-fruit": [
     {
       type: "intolerance",

@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.37";
+const METHODOLOGY_VERSION = "0.38";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -389,6 +389,46 @@ const FOODS = [
     lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-07-01", change: "Source-verified (grounding pass): CVD HR 0.84 (0.75–0.95) at ≥2 servings/week (Pacheco 2022 JAHA, ~110k). Noted it's a 2-cohort pooled analysis, not a meta-analysis, and null for stroke — evidence base stays thin → Low. Verdict unchanged." },
+    ],
+  },
+  {
+    id: "berries",
+    name: "Berries (blueberries, strawberries, etc.)",
+    category: "Fruit",
+    effect: "positive",
+    certainty: "low",
+    outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
+    summary: "Berries track with lower diabetes risk — strongest for blueberries; a step above fruit generally.",
+    rationale:
+      "A berry-specific cohort meta-analysis (Guo 2016) finds ~18% lower type-2-diabetes risk at high vs low intake (RR 0.82), with a graded dose-response; the landmark blueberry signal is stronger still (Muraki 2013, HR ~0.74 per 3 servings/week). Anthocyanin RCTs corroborate on vascular markers (Curtis 2019: blueberries improved endothelial function). Held at Low certainty: moderate heterogeneity, healthy-user confounding, and much berry research is industry-adjacent (funding not always clear).",
+    considerations: {
+      confounding: "Berry eaters tend to have healthier overall diets; residual confounding likely.",
+      doseResponse: "Curvilinear — steeper benefit at lower intakes, plateauing; most benefit by a few servings/week.",
+      substitution: "Benefit is clearest replacing lower-fibre snacks or sugary/tropical fruit and juice.",
+    },
+    studies: [
+      {
+        citation: "Guo X, et al. European Journal of Clinical Nutrition. 2016.",
+        type: "Meta-analysis of prospective cohorts (~194,000)",
+        finding: "Highest vs lowest berry intake associated with ~18% lower type-2-diabetes risk (RR 0.82, 0.76–0.89); graded dose-response.",
+        search: "Guo anthocyanins berry fruits type 2 diabetes meta-analysis European Journal Clinical Nutrition 2016",
+      },
+      {
+        citation: "Muraki I, et al. BMJ. 2013.",
+        type: "Three US cohorts (~187,000)",
+        finding: "Blueberries showed the strongest single-fruit signal: ~26% lower type-2-diabetes risk per 3 servings/week (HR 0.74).",
+        search: "Muraki fruit consumption blueberries type 2 diabetes BMJ 2013",
+      },
+      {
+        citation: "Cassidy A, et al. Circulation. 2013.",
+        type: "Prospective cohort (~93,600 women, NHS II)",
+        finding: "Highest anthocyanin intake (largely from berries) associated with ~32% lower myocardial-infarction risk (HR 0.68).",
+        search: "Cassidy anthocyanin intake myocardial infarction women Circulation 2013",
+      },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "New item — split conceptually from whole fruit as a likely stronger-than-fruit contender. Source-verified on Guo 2016 (T2D RR 0.82) + Muraki 2013 (blueberries 0.74) + Cassidy 2013 (anthocyanins/MI). Marked 'mixed' uniformity: the signal is concentrated in blueberries." },
     ],
   },
 
@@ -1127,6 +1167,21 @@ const NUTRIGRADE_RUBRIC = {
 // app shows a "facts estimated" provenance chip and the data-status banner counts
 // it as unverified.
 const ASSESSMENTS = {
+  "berries": {
+    evidence: { pooledRR: 0.82, ciExcludesNull: true, participants: 194019, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "unknown", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (~17 g/day increments)" },
+    effectEstimate: "Type-2-diabetes RR 0.82 (95% CI 0.76–0.89) high vs low (Guo 2016, ~194k); blueberry-specific HR ~0.74 per 3 servings/week (Muraki 2013). Anthocyanin RCTs improve vascular markers (Curtis 2019). Strongest for blueberries.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "T2D RR 0.82 (0.76–0.89) high vs low; blueberries HR 0.74 (Muraki 2013)", cite: "Guo 2016 Eur J Clin Nutr; Muraki 2013 BMJ", id: "PMID:27530472" },
+      participants: { figure: "194,019 participants, 13,013 T2D cases, 5 cohorts (Guo 2016)", cite: "Guo 2016 Eur J Clin Nutr", id: "PMID:27530472" },
+    },
+    doseCurve: {
+      outcome: "Type 2 diabetes", unit: "servings/week", shape: "plateau-benefit", normalRange: [1, 4],
+      points: [ { x: 0, rr: 1.0 }, { x: 1.5, rr: 0.88 }, { x: 3, rr: 0.82, lo: 0.76, hi: 0.89 }, { x: 5, rr: 0.80 } ],
+      note: "Curvilinear — steeper benefit at low intake, plateauing by a few servings/week. Intermediate points approximated from the reported gradient.",
+      source: { cite: "Guo 2016 Eur J Clin Nutr; Muraki 2013 BMJ", id: "PMID:27530472" }, verified: false,
+    },
+  },
   "tree-nuts": {
     evidence: { pooledRR: 0.78, ciExcludesNull: true, participants: 819448, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "pattern", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~28 g/day (a daily handful) vs none" },
     effectEstimate: "RR 0.78 (95% CI 0.72–0.84) for all-cause mortality per 28 g/day; interval excludes no-effect → lower risk. I²=66% (dose-response).",
@@ -1544,6 +1599,7 @@ const MECHANISM = {
   "soy": { direction: "positive", trial: "Meta-analysis of 46 controlled trials (Blanco Mejia 2019): soy protein ~25 g/day lowered LDL-C ~4.8 mg/dL.", mechanism: "Soy protein/isoflavones modestly lower LDL (displaces animal protein/satfat; LDL-receptor effects). Underpins the FDA heart claim.", source: { cite: "Blanco Mejia 2019 J Nutr", id: "10.1093/jn/nxz020" }, confidence: "high" },
   "leafy-greens": { direction: "positive", trial: "Meta-analysis of 16 crossover RCTs (Siervo 2013): inorganic nitrate/beetroot lowered systolic BP −4.4 mmHg. CONFLICT: a 5-week leafy-green RCT with matched nitrate control found no ambulatory-BP effect.", mechanism: "Dietary nitrate → nitrite → nitric oxide → vasodilation → lower BP (validated acutely; sustained effect uncertain).", source: { cite: "Siervo 2013 J Nutr; null: Jackson 2020 Am J Clin Nutr", id: "PMID:23596162" }, confidence: "medium" },
   "whole-fruit": { direction: "positive", trial: "Crossover RCT (Koutsos 2020): 2 whole apples/day lowered total & LDL cholesterol and TG vs a sugar-matched apple drink.", mechanism: "Whole-fruit soluble fibre (pectin) + polyphenols reduce cholesterol absorption/bile-acid recycling. Does NOT extend to juice.", source: { cite: "Koutsos 2020 Am J Clin Nutr", id: "10.1093/ajcn/nqz282" }, confidence: "medium" },
+  "berries": { direction: "positive", trial: "6-month double-blind RCT (Curtis 2019): 1 cup/day blueberries improved flow-mediated dilatation (+1.45%) and arterial stiffness in metabolic-syndrome adults; anthocyanin RCT meta-analyses lower LDL-C.", mechanism: "Anthocyanins raise nitric-oxide/endothelial function and modestly improve lipids. Vascular markers positive; glycemic markers (HOMA-IR) often unchanged in RCTs.", source: { cite: "Curtis 2019 Am J Clin Nutr", id: "PMID:31136659" }, confidence: "high" },
   "cruciferous": { direction: "positive", trial: "Two double-blind RCTs (Armah 2015, n=130): high-glucoraphanin broccoli reduced plasma LDL-C ~5% over 12 weeks.", mechanism: "Glucoraphanin → sulforaphane → NRF2 pathway; LDL-lowering the validated surrogate. Single research group — generalisability uncertain.", source: { cite: "Armah 2015 Mol Nutr Food Res", id: "PMID:25851421" }, confidence: "medium" },
   "green-tea": { direction: "positive", trial: "Meta-analyses of RCTs: green-tea catechins lower LDL-C (Zheng 2011, 14 RCTs) and blood pressure (Peng 2014, 13 RCTs, SBP −2 mmHg).", mechanism: "EGCG reduces micellar cholesterol absorption and upregulates the LDL receptor; catechins improve endothelial NO.", source: { cite: "Zheng 2011 Am J Clin Nutr; Peng 2014 Sci Rep", id: "PMID:21715508" }, confidence: "high" },
   "avocado": { direction: "positive", trial: "Crossover controlled-feeding RCT (Wang 2015): 1 avocado/day lowered LDL-C, non-HDL and LDL particle number vs matched-fat diets.", mechanism: "MUFA (oleic acid) substitution plus fibre/phytosterols reduce LDL and LDL oxidation. (HAT trial missed its visceral-fat endpoint.)", source: { cite: "Wang 2015 J Am Heart Assoc", id: "PMID:25567051" }, confidence: "high" },
@@ -1598,6 +1654,7 @@ const CATEGORY_UNIFORMITY = {
   "alcohol": "uniform",
   // genuinely heterogeneous categories → "not all"
   "whole-fruit": "mixed", "ultra-processed": "mixed", "artificial-sweeteners": "mixed",
+  "berries": "mixed",
   // single foods / well-defined single substances
   "olive-oil": "specific", "yogurt": "specific", "coffee": "specific",
   "avocado": "specific", "trans-fat": "specific", "eggs": "specific",
@@ -1612,6 +1669,7 @@ const UNIFORMITY_NOTE = {
   "whole-fruit": "Strongest for berries, apples and grapes; sugary/tropical fruits are weaker, and fruit juice goes the other way.",
   "ultra-processed": "A broad, heterogeneous class — some ultra-processed foods are far worse than others; the class verdict is an average.",
   "artificial-sweeteners": "Different sweeteners (aspartame, sucralose, stevia…) behave differently; the class verdict masks real variation.",
+  "berries": "The signal is concentrated in blueberries (the strongest single fruit for diabetes); strawberries/cranberries are weaker, and cranberries are often eaten as sweetened juice.",
 };
 
 for (const _f of FOODS) {
@@ -1650,6 +1708,7 @@ const RESEARCHED_ON = {
   "cocoa": "2026-07-01", "poultry": "2026-07-01", "green-tea": "2026-07-01",
   "coconut-oil": "2026-07-01", "artificial-sweeteners": "2026-07-01",
   "tomatoes": "2026-07-01", "cruciferous": "2026-07-01", "leafy-greens": "2026-07-01",
+  "berries": "2026-07-01",
 };
 for (const _f of FOODS) { if (RESEARCHED_ON[_f.id]) _f.researchedOn = RESEARCHED_ON[_f.id]; }
 

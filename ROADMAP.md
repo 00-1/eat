@@ -340,6 +340,12 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       Net: fruit/UPF appear with a caveat, veg stay clean (uniform), nuts crowned, and
       the honest "go for berries specifically" message survives. Pairs with the (b)
       magnitude redesign. Buildable now (small).
+- [~] **Next food tranche — BERRIES added (v0.38).** Berries added as its own item
+      (Positive · Low for T2D; Guo 2016 RR 0.82, blueberries strongest per Muraki 2013),
+      split conceptually from whole fruit, with mechanism/dose-curve/exceptions/steelman
+      and `mixed` uniformity (blueberries carry the signal). Lands Positive · Low ·
+      moderate-magnitude (not on the shortlist — funding-unclear keeps certainty Low).
+      More contenders still to scout below.
 - [ ] **Target the next food tranche at top/bottom CONTENDERS.** Expand coverage toward
       likely **Gold-standard / Bin-fodder (and champion) candidates** — the strongest
       plausible positives and worst plausible negatives we don't yet list — rather than
