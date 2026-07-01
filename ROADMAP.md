@@ -218,6 +218,23 @@ group(s) it belongs to**, all computed by the same engine.
 - [ ] UI: card shows primary food verdict + "as part of" group chips (each with its
       own live-derived tier) + a component-context block; explore/shortlists/tests
       updated. Engine untouched.
+- [x] **Surface effects-by-outcome (v0.33).** A good/bad summary hides that a food acts
+      on specific outcomes. Done: collapsed verdict reads "for [outcome(s)]"; expanded
+      card leads with an **"Effects by outcome" ledger** (per-outcome direction +
+      certainty, ◆ where a dedicated per-outcome verdict exists, else the overall verdict
+      applied to its outcomes — unmarked rows honestly flagged, never invented); food
+      groups can carry a **reconciliation note** (fermented dairy: neutral class vs
+      positive members = different outcomes/intake basis).
+- [ ] **Complete the per-outcome ledger (research-gated).** The ledger is only fully
+      honest once every food has *dedicated* per-outcome evidence rather than the overall
+      verdict stamped across its outcomes. Populate `outcomeVerdicts` (direction +
+      certainty + ideally a dose curve) per food-outcome pair in the per-outcome grounding
+      pass — turns the ledger's unmarked rows into ◆ dedicated rows. Folds into the big
+      combined research pass.
+- [x] **Item-vs-group tension surfaced as a pattern (v0.33).** Fermented dairy (neutral)
+      vs cheese/yogurt (positive) is the first case; handled with the reconciliation note
+      above. If more groups develop the same split, reuse the `reconcile` field. (Distinct
+      from the obs-vs-mechanism "wrestle" section, which stays research-gated.)
 
 ## Walkthrough-surfaced calibration items  ⟶ *queued*
 

@@ -150,8 +150,8 @@ a { color: var(--accent); }
    rounded corners so it reads as a deliberate marker rather than a border that
    curves around the corner. Colour comes from --accent-c, set by the verdict /
    severity modifier classes below. */
-.card, .group-item, .outcome-item, .counter, .exc { position: relative; }
-.card::before, .group-item::before, .outcome-item::before, .counter::before, .exc::before {
+.card, .group-item, .outcome-item, .counter, .exc, .led-row { position: relative; }
+.card::before, .group-item::before, .outcome-item::before, .counter::before, .exc::before, .led-row::before {
   content: "";
   position: absolute;
   left: 0;
@@ -160,10 +160,23 @@ a { color: var(--accent); }
   width: 4px;
   background: var(--accent-c, var(--line));
 }
-.card.positive, .group-positive, .outcome-positive, .counter-holds, .exc-mitigate { --accent-c: var(--pos); }
-.card.neutral,  .group-neutral,  .outcome-neutral,  .counter-partial, .exc-caution { --accent-c: var(--neu); }
-.card.negative, .group-negative, .outcome-negative, .counter-valid,  .exc-avoid    { --accent-c: var(--neg); }
+.card.positive, .group-positive, .outcome-positive, .counter-holds, .exc-mitigate, .led-positive { --accent-c: var(--pos); }
+.card.neutral,  .group-neutral,  .outcome-neutral,  .counter-partial, .exc-caution, .led-neutral  { --accent-c: var(--neu); }
+.card.negative, .group-negative, .outcome-negative, .counter-valid,  .exc-avoid, .led-negative    { --accent-c: var(--neg); }
 .counter-certainty { --accent-c: var(--info); }
+
+/* Effects-by-outcome ledger — quick "good for this, neutral for that" scan. */
+.ledger { list-style: none; margin: 0 0 6px; padding: 0; display: grid; gap: 6px; }
+.led-row {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px;
+  padding: 7px 11px; padding-left: 14px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--bg);
+}
+.led-outcome { font-weight: 600; font-size: 0.88rem; flex: 1 1 auto; }
+.led-mark { color: var(--ink-soft); margin-left: 6px; font-size: 0.78rem; }
+.led-lean { font-size: 0.72rem; font-weight: 600; }
+.led-legend { font-size: 0.76rem; color: var(--ink-soft); margin: 2px 0 0; }
+.reconcile { font-size: 0.82rem; color: var(--ink-soft); margin: 6px 0 0; font-style: italic; }
 
 .card details { width: 100%; }
 .card summary {

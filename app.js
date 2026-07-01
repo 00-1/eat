@@ -138,6 +138,7 @@
               magChip +
             "</div>" +
             "<p class='group-rationale'>" + escapeHtml(g.rationale) + "</p>" +
+            (g.reconcile ? "<p class='reconcile'>" + escapeHtml(g.reconcile) + "</p>" : "") +
           "</li>"
         );
       })
@@ -145,6 +146,70 @@
     return (
       "<h4 class='block-h'>As part of a food group <span class='block-sub'>— what's known about the broader class, scored the same way</span></h4>" +
       "<ul class='group-list'>" + items + "</ul>"
+    );
+  }
+
+  // ---- Effects by outcome — the at-a-glance ledger ----
+  // The good/bad summary collapses what a food actually does to DIFFERENT outcomes.
+  // This ledger un-collapses it: one row per outcome the food touches, each with its
+  // own direction + certainty, so "positive for X, neutral for Y, negative for Z" is
+  // visible at a glance. Rows come from real scored entities only — a dedicated
+  // per-outcome verdict (◆) where we have one, otherwise the overall verdict applied
+  // to the outcomes it rests on. We do NOT invent per-outcome effect sizes we don't
+  // have; unmarked rows are honestly flagged as sharing the overall direction.
+  function outcomeLedgerHtml(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.evidence || typeof Scoring === "undefined") return "";
+    const ovs = Array.isArray(a.outcomeVerdicts) ? a.outcomeVerdicts : [];
+    const headOutcomes = Array.isArray(food.outcomes) ? food.outcomes : [];
+    const headCert = certaintyOf(food);
+    const headLean = food.effect === "neutral" ? leanFor(a.evidence) : null;
+    const used = [];
+    const matchOv = (name) =>
+      ovs.find(function (o) {
+        if (used.indexOf(o) !== -1) return false;
+        const x = o.outcome.toLowerCase(), y = name.toLowerCase();
+        return x === y || x.indexOf(y) === 0 || y.indexOf(x) === 0;
+      });
+    const rows = [];
+    headOutcomes.forEach(function (oc) {
+      const ov = matchOv(oc);
+      if (ov) {
+        used.push(ov);
+        rows.push({ outcome: ov.outcome, effect: ov.effect, certainty: Scoring.assess(ov.evidence, [ov.outcome]).tier, dedicated: true });
+      } else {
+        rows.push({ outcome: oc, effect: food.effect, certainty: headCert, lean: headLean, dedicated: false });
+      }
+    });
+    ovs.forEach(function (ov) {
+      if (used.indexOf(ov) !== -1) return;
+      rows.push({ outcome: ov.outcome, effect: ov.effect, certainty: Scoring.assess(ov.evidence, [ov.outcome]).tier, dedicated: true });
+    });
+    if (!rows.length) return "";
+    const anyDedi = rows.some(function (r) { return r.dedicated; });
+    const anyOverall = rows.some(function (r) { return !r.dedicated; });
+    const items = rows
+      .map(function (r) {
+        const leanTxt = r.effect === "neutral" && r.lean
+          ? " <span class='led-lean lean-" + r.lean + "'>leaning " + (r.lean === "positive" ? "good" : "bad") + "</span>" : "";
+        const mark = r.dedicated ? "<span class='led-mark' title='Has its own dedicated evidence'>◆</span>" : "";
+        return (
+          "<li class='led-row led-" + r.effect + "'>" +
+            "<span class='led-outcome'>" + escapeHtml(r.outcome) + mark + "</span>" +
+            "<span class='badge " + r.effect + "'>" + EFFECT_LABEL[r.effect] + "</span>" + leanTxt +
+            "<span class='tier " + r.certainty + "'>" + CERTAINTY_LABEL[r.certainty] + "</span>" +
+          "</li>"
+        );
+      })
+      .join("");
+    const legend = anyDedi && anyOverall
+      ? "<p class='led-legend'>◆ has its own dedicated evidence; other rows share the overall verdict's direction.</p>"
+      : anyDedi
+        ? "<p class='led-legend'>◆ has its own dedicated evidence.</p>"
+        : "<p class='led-legend'>These outcomes share the overall verdict's direction — per-outcome evidence isn't separated out yet (a research pass is queued).</p>";
+    return (
+      "<h4 class='block-h'>Effects by outcome <span class='block-sub'>— what it's been shown to affect, and which way</span></h4>" +
+      "<ul class='ledger'>" + items + "</ul>" + legend
     );
   }
 
@@ -562,13 +627,16 @@
               groupChips(food) +
               basisChip(food) +
               verifiedChip(food) +
-              "<span class='outcomes'>" + escapeHtml((food.outcomes || []).join(" · ")) + "</span>" +
+              ((food.outcomes || []).length
+                ? "<span class='outcomes' title='The outcome(s) this verdict is about'>for " + escapeHtml(food.outcomes.join(" · ")) + "</span>"
+                : "") +
               "<span class='expand-hint'>Evidence ▾</span>" +
             "</div>" +
           "</summary>" +
           "<div class='card-detail'>" +
             "<h4 class='block-h'>Why this verdict</h4>" +
             "<p class='rationale'>" + escapeHtml(food.rationale) + "</p>" +
+            outcomeLedgerHtml(food) +
             groupConclusionsHtml(food) +
             outcomeVerdictsHtml(food) +
             doseResponseHtml(food) +

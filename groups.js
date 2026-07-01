@@ -58,6 +58,8 @@
       summary: "As a broad class, fermented dairy is roughly neutral — a small protective signal that is fragile and heterogeneous.",
       rationale:
         "A dose-response meta-analysis (Guo 2017, ~938k) finds total fermented dairy associated with ~2% lower mortality and CVD per 20 g/day (RR 0.98) — statistically significant but trivially small, with very high heterogeneity (I²≈87–94%) and attenuated after removing one Swedish cohort. The effect is below our directionality floor, so the group reads neutral; specific members vary (yogurt favourable for diabetes, cheese modestly for CVD).",
+      reconcile:
+        "Not a contradiction with the positive members: this is the broad CLASS on mortality/CVD (a tiny, fragile, per-20 g/day signal), whereas cheese is positive on CVD and yogurt on diabetes — different outcomes, measured high-vs-low. A stronger, outcome-specific member signal can sit inside a neutral, washed-out class average.",
       evidence: {
         pooledRR: 0.98, ciExcludesNull: true, participants: 938465, heterogeneity: "high", directionallyConsistent: false,
         outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested",
