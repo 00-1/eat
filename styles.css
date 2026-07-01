@@ -152,9 +152,12 @@ a { color: var(--accent); }
 .pinned-sub { font-weight: 400; color: var(--ink-soft); }
 .pinned-strip {
   list-style: none; margin: 0; padding: 0;
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  /* Always three fixed columns, so a pin grows in HEIGHT only and there's room for
+     three across — a single pin stays one-third wide, it doesn't stretch full-width. */
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px; align-items: start;
 }
+@media (max-width: 760px) { .pinned-strip { grid-template-columns: 1fr; } }
 .card-pinned { border-color: var(--accent); box-shadow: 0 0 0 2px var(--pos-bg), var(--shadow); }
 
 /* Verdict / severity accent: a SOLID, SQUARE (non-curved) bar, inset from the
