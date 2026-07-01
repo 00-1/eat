@@ -61,14 +61,39 @@ the alcohol "benefit").
 - "Sweetener harm is causal/microbiome-transferable in humans" — mouse-level;
   human replication failed.
 
+## Second pass (2026-07-01) — the 7 foods that had no steelman
+
+Filled the seven items that previously showed the "no counter-argument assessed
+yet" placeholder. Each was researched by a dedicated background agent with real
+attributions; all landed **partial** (a genuine sub-type/substitution/preparation
+caveat that qualifies, but does not overturn, the verdict).
+
+| Food | Steelman (short) | Key sources |
+|---|---|---|
+| avocado | Benefit is confounding/substitution; the one hard-endpoint RCT (visceral fat) was null | Pacheco 2022 JAHA (DOI 10.1161/JAHA.121.024014); HAT trial PMID 35861827; Ioannidis critique |
+| coffee | Certainty is conditional on CYP1A2 genotype (slow metabolisers) and brew (unfiltered → LDL) | Cornelis JAMA 2006 PMID 16522833; Zhou & Hyppönen AJCN 2019 (no replication); Urgert & Katan PMID 9240930 |
+| french-fries | Harm is specific to deep-fried (baked/boiled/mashed null) — scope, not category | Mousavi BMJ 2025 (PMC12326520); Ibsen & Zhang editorial |
+| green-tea | Asian healthy-user confounding; hot-tea ESCC & extract hepatotoxicity point the other way | Inoue-Choi 2022 Ann Intern Med (M22-0041); Chen 2024 PMID 38938012; Islami 2020 PMID 30891750; EFSA 2018 (DOI 10.2903/j.efsa.2018.5239) |
+| poultry | "Neutral" hides a real substitution benefit; cancer signals weak/unreplicated | Pan 2012 PMID 22412075; Zheng 2019 PMID 31189526; Knüppel 2020 PMID 32814947 (did not survive multiple-testing correction) |
+| tomatoes | Cooked-tomato/prostate-cancer outcome signal argues Positive; but isolated lycopene goes null | Giovannucci JNCI 2002 PMID 11880478; Zu 2014 PMC3952200; Kristal 2011 PMID 21335507; Cochrane 2011 PMID 22071840; FDA review PMID 17623802 |
+| trans-fat | RR 1.42 is INDUSTRIAL TFA; ruminant TFA not associated with CHD — scope too broad | de Souza 2015 BMJ PMID 26268692; Mozaffarian MESA PMID 23407305; Lamarche RCT PMID 27899529 |
+
+Verification caveats (from the agents): figures cross-checked across web-search
+snippets, not page-rendered (journal fetches proxy-blocked). Flagged as
+single-sourced/unconfirmed: the HAT LDL magnitude, Mozaffarian's poultry weight-gain
+per-serving figure, the Ibsen/Zhang editorial DOI, and the exact Rowles/Erdman n.
+Attributions are documented general stances, not verified direct replies to each
+study (e.g. APRE did not formally respond to Mousavi 2025).
+
 ## Coverage gaps (unresearched, NOT refuted)
 
 This pass did **not** return verified claims for: grains/gluten/lectins (Gundry),
 legumes anti-nutrients, nuts (omega-6/oxalates), leafy-green oxalates, fish/mercury,
 olive-oil adulteration, eggs/cholesterol/TMAO, processed-meat nitrite defenses,
-raw milk / A1-A2, coffee (cortisol/acrylamide), the NOVA/UPF "unscientific" critique,
-potatoes/yogurt/avocado. The app's entries for these remain knowledge-based and
-flagged for a follow-up pass.
+raw milk / A1-A2, the NOVA/UPF "unscientific" critique, and yogurt. The app's
+entries for these remain knowledge-based and flagged for a follow-up pass.
+(coffee, avocado, tomatoes and potatoes/fries are now covered — see the second
+pass above.)
 
 ## Key sources
 

@@ -103,6 +103,76 @@ const SHARED_CLAIMS = [
 ];
 
 const COUNTER_ARGUMENTS = {
+  "avocado": [
+    {
+      claim: "The avocado–CVD association is a fragile observational signal driven by healthy-user confounding and substitution effects, and the one large RCT with a hard endpoint (visceral fat) was null.",
+      proponents: "John P.A. Ioannidis (Stanford), a longstanding critic of single-food nutritional epidemiology; and the HAT-trial investigators themselves (Kris-Etherton, Sabaté, Lichtenstein, Petersen), who reported a null primary outcome.",
+      evidenceCited: "Avocado eaters' healthy-user profile in NHANES (younger, more educated, higher income, lower BMI, more active); Pacheco 2022's benefit concentrated in substitution models (replacing butter/margarine/cheese/processed meat) with no stroke association; the HAT trial's null primary endpoint (visceral adipose tissue) despite industry funding.",
+      stance: "partial",
+      assessment:
+        "Largely right — and it matches, rather than overturns, our Low certainty. Pacheco 2022 (JAHA, pooled HR 0.84 for CVD) is observational, showed no stroke effect, and drew much of its signal from substitution modelling, so it plausibly reflects avocado replacing worse fats more than avocado itself. The HAT trial (Kris-Etherton/Sabaté 2022, PMID 35861827) was null on its pre-specified visceral-fat endpoint and industry-funded, so its small LDL improvement is a biomarker that under our guardrail can't override the absent hard-outcome effect — though it usefully showed no weight gain, defusing the calorie-density worry. Net: the direction stays Positive but the argument justifies keeping certainty Low.",
+    },
+  ],
+  "coffee": [
+    {
+      claim: "The single 'Positive, Moderate' verdict masks real heterogeneity: coffee's net effect may turn harmful for slow caffeine metabolisers (CYP1A2), and unfiltered brews measurably raise LDL — so certainty should be conditioned on genotype and preparation.",
+      proponents: "Marilyn Cornelis & Ahmed El-Sohemy (Toronto) and Hannia Campos (Harvard) for the CYP1A2 heart-attack study; Paolo Palatini (Padova) for CYP1A2–hypertension; Rob Urgert & Martijn Katan (Wageningen) and Dag Thelle (Tromsø) for unfiltered-coffee LDL.",
+      evidenceCited: "The CYP1A2 slow-metaboliser allele prolongs caffeine exposure (raising blood pressure and sympathetic tone); cafestol/kahweol diterpenes in unfiltered coffee suppress bile-acid synthesis and raise LDL, and paper filters remove them.",
+      stance: "partial",
+      assessment:
+        "Partly right, and unusually it rests on an actual outcome study, not just a marker: Cornelis et al. (JAMA 2006, PMID 16522833; ~2,000 MI cases/controls) found heart-attack risk rose only in slow metabolisers (OR ~1.67–2.33 in under-59s at ≥2 cups) while fast metabolisers trended protective. The preparation caveat is solid too — Urgert & Katan (Annu Rev Nutr 1997) quantified an LDL rise per cafestol dose, favouring filtered brewing. But it stays 'partial,' not verdict-overturning: the CYP1A2 cardiac interaction failed to replicate in the far larger UK Biobank analysis (Zhou & Hyppönen 2019, 347,077 people, no interaction), and IARC downgraded coffee to Group 3. So the flat 'Moderate' is directionally sound for filtered coffee in the general population, but the certainty is honestly conditional on brew and genotype.",
+    },
+  ],
+  "french-fries": [
+    {
+      claim: "The 'fries = negative for diabetes' verdict is too broad: the harm attaches specifically to deep-fried commercial fries (baked/boiled/mashed potatoes were null), so it likely reflects the deep-frying method plus fast-food correlates — not potatoes as a category — and shouldn't extend to home-baked or air-fried.",
+      proponents: "The BMJ linked-editorial authors (Ibsen & Zhang) and the study's own authors (incl. Mousavi), who stress preparation method over the potato; the industry-funded Alliance for Potato Research & Education, which defends potatoes as nutrient-dense.",
+      evidenceCited: "Mousavi et al. (BMJ 2025; >205,000 across NHS/NHS II/HPFS, 22,299 T2D cases): French fries HR 1.20 (1.12–1.28) per 3 servings/week, but combined baked/boiled/mashed potatoes not significantly associated. Deep-frying adds fats, acrylamide and advanced glycation end-products; air-frying cuts acrylamide ~90%.",
+      stance: "partial",
+      assessment:
+        "Partly right, and the primary study supports it: Mousavi 2025 found deep-fried fries at HR 1.20 but a null association for baked/boiled/mashed potatoes, so condemning 'fries' broadly over-reaches onto home-baked/air-fried preparations that were never tested. The confounding critique is weaker — the 1.20 survived adjustment for BMI, activity, energy and diet quality, and the internal contrast with null baked potatoes argues the frying process carries real signal, consistent with the acrylamide/AGE mechanisms (which corroborate but don't override the outcome). So the negative verdict holds for standard deep-fried fries at moderate certainty; the honest fix is scope — label it deep-fried fries specifically, not potatoes or air-fried 'fries.'",
+    },
+  ],
+  "green-tea": [
+    {
+      claim: "Tea's mortality benefit is largely healthy-user confounding in Asian cohorts, while the reproducibly causal tea signals point the other way (very hot tea raises oesophageal-cancer risk; concentrated green-tea-extract supplements cause liver injury) — so a blanket 'Positive' overstates it.",
+      proponents: "Farhad Islami and the Golestan/IARC investigators (hot-beverage carcinogenicity); EFSA and the US Pharmacopeia panel (green-tea-catechin hepatotoxicity); and the original cohort authors (Kuriyama; Abe/Saito), who concede residual confounding.",
+      evidenceCited: "Japanese cohorts note green-tea drinkers cluster with healthier lifestyles; Islami 2020 (Golestan) found objectively-measured tea ≥60 °C carried HR 1.41 for oesophageal squamous-cell cancer (hot beverages are IARC Group 2A); EFSA linked ≥800 mg/day EGCG from supplements to liver injury.",
+      stance: "partial",
+      assessment:
+        "The confounding point is real and is exactly why 'Low certainty' is right — but it doesn't flip the direction. The UK Biobank study (Inoue-Choi 2022, Ann Intern Med, ~498,000 people, mostly black tea in a Western population) found HR 0.87–0.88 at 2+ cups/day after adjustment — the non-Asian, non-green replication that defuses the healthy-user objection — and a 2024 38-cohort meta-analysis pooled HR 0.90. The temperature and extract harms are genuine but concern scalding heat and concentrated supplements, not brewed tea (EFSA explicitly exempts normal infusions; the Golestan risk is driven by ≥60 °C heat), so per our guardrail they qualify rather than override. Net: the argument correctly pins the uncertainty but fails as a case against a Positive direction.",
+    },
+  ],
+  "poultry": [
+    {
+      claim: "Poultry isn't truly 'neutral': the label hides a well-replicated substitution benefit (poultry replacing red/processed meat lowers mortality), while a few cohorts flag weight gain or specific cancers.",
+      proponents: "An Pan & Frank Hu (Harvard) and Zheng/Satija (BMJ) for the red-meat-substitution benefit; Mozaffarian & Hu for the weight-gain signal; Knüppel/Bradbury/Key (Oxford, UK Biobank) and Bonfiglio/Giannelli (Italy) for the weak cancer associations.",
+      evidenceCited: "Pan 2012 and Zheng 2019: swapping a daily serving of red meat for poultry is associated with 7–19% lower mortality. Mozaffarian 2011 (NEJM) lists poultry among foods with modest weight gain. Knüppel 2020 (UK Biobank) raw poultry–melanoma/prostate/NHL associations; Bonfiglio 2025 links >300 g/wk poultry to higher GI-cancer mortality. High-heat cooking forms HCAs/PAHs.",
+      stance: "partial",
+      assessment:
+        "The substitution point is genuine and well-replicated (Pan 2012, PMID 22412075; Zheng 2019, PMID 31189526), so 'neutral' as a standalone verdict is defensible against an absolute-harm claim but understates poultry's value as a swap for red meat. The cancer signals are weak and confounded: in Knüppel 2020 the poultry associations did not survive correction for multiple testing, and Bonfiglio 2025 rests on only 108 GI-cancer deaths with no adjustment for physical activity or cooking method. Per our guardrail the HCA/PAH chemistry alone can't upgrade harm when the outcome data are inconsistent — so a 'harmful' verdict fails, but the substitution upside means the flat 'neutral' is only a partial answer.",
+    },
+  ],
+  "tomatoes": [
+    {
+      claim: "Higher whole-tomato intake (especially cooked) is consistently associated with lower prostate-cancer risk in large cohorts and dose-response meta-analyses, so the verdict should be modestly Positive, not neutral.",
+      proponents: "Edward Giovannucci (Harvard, Health Professionals Follow-Up Study); Ke Zu et al. (2014 HPFS update); Rowles & Erdman (Illinois, 2018 meta-analysis); and the WCRF, which lists tomato/lycopene as 'limited-suggestive' for prostate cancer.",
+      evidenceCited: "Giovannucci HPFS (JNCI 2002) and Zu 2014 (JNCI; lethal-disease HR 0.72 top vs bottom lycopene quintile) show an inverse cooked-tomato/prostate-cancer signal; Rowles/Erdman 2018 found a dose-response for cooked (not raw) tomatoes. Mechanism: lycopene, more bioavailable when cooked, is anti-angiogenic.",
+      stance: "partial",
+      assessment:
+        "This is the strongest possible steelman because it argues from human outcomes, not a biomarker — and it's partly right: the cooked-tomato/prostate-cancer signal is real and reproducible. But it doesn't overturn 'neutral' for two reasons our guardrail reinforces. First, it's narrow (males, one cancer site) and can't justify a general positive verdict on tomatoes as a food. Second, the causal test failed the other way: isolated as a pill or measured as serum lycopene, RCTs and biomarker cohorts went null (Kristal 2011 PCPT; Cochrane 2011), and the FDA's evidence review permitted only a heavily-qualified claim. A modest, site-specific outcome signal against a biomarker that collapses when isolated lands honestly at neutral / low certainty, not Positive.",
+    },
+  ],
+  "trans-fat": [
+    {
+      claim: "The RR 1.42 applies specifically to INDUSTRIAL trans fat; de Souza 2015 itself found RUMINANT trans fat (dairy/beef) not associated with heart disease, so labelling the blanket category 'Negative, High' is too broad for the naturally-occurring subtype.",
+      proponents: "Russell de Souza & Sonia Anand (McMaster, the meta-analysis authors); Dariush Mozaffarian (trans-palmitoleate research); Benoît Lamarche (Laval, ruminant-vs-industrial RCTs). Regulators (WHO, FDA, EFSA) all specifically target industrial/partially-hydrogenated-oil trans fat.",
+      evidenceCited: "de Souza 2015 (BMJ): industrial TFA associated with CHD (RR 1.42, 1.05–1.92) but ruminant TFA not significant (0.93, 0.73–1.18); the paper even found ruminant trans-palmitoleate inversely associated with diabetes. Mozaffarian's MESA/Health-ABC cohorts linked trans-palmitoleate to lower incident diabetes. Bans (Denmark 2003, FDA 2018, WHO REPLACE) target industrial TFA only.",
+      stance: "partial",
+      assessment:
+        "The direction is correct and robust for industrial trans fat — de Souza 2015 (PMID 26268692) reports RR 1.42 for CHD, an observed outcome our guardrail privileges — but the same paper found ruminant TFA not significantly associated with heart disease, and trans-palmitoleate even trended protective for diabetes. So a blanket 'trans fat = Negative' overstates the case for the naturally-occurring dairy/beef subtype: the honest disposition is partial. The ruminant evidence is weaker and shorter-term and doesn't touch the strong industrial-TFA outcome data — the fix is scope (this verdict is about industrial partially-hydrogenated oils), not a change of direction.",
+    },
+  ],
   "berries": [
     {
       claim: "Berry 'superfood' benefits are healthy-user confounding and industry spin — the RCTs miss hard glycemic endpoints, and much research is blueberry-council funded.",

@@ -63,6 +63,9 @@ test("counterArgumentsFor merges shared (scoped) + specific, flagging shared", (
   // olive oil now carries a specific "challenges our certainty" steelman
   const oo = counterArgumentsFor("olive-oil");
   assert.ok(oo.some((c) => c.stance === "certainty"), "olive-oil missing its certainty steelman");
-  // a food with no tags and no specific claims resolves to empty
-  assert.deepEqual(counterArgumentsFor("avocado"), []);
+  // avocado now carries its researched steelman (a "partial" — confounding matches Low)
+  const av = counterArgumentsFor("avocado");
+  assert.ok(av.some((c) => c.stance === "partial"), "avocado missing its researched steelman");
+  // an unknown food id (no tags, no specific claims) resolves to empty
+  assert.deepEqual(counterArgumentsFor("not-a-real-food"), []);
 });
