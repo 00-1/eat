@@ -117,6 +117,25 @@ test("every food records a valid experimentalDirection (for the trials/mechanism
   }
 });
 
+test("every food has a grounded MECHANISM record; experimentalDirection is derived from it", () => {
+  const ok = ["positive", "negative", "neutral", "none"];
+  for (const f of FOODS) {
+    const m = ASSESSMENTS[f.id].mechanism;
+    assert.ok(m, `${f.id}: no mechanism record`);
+    assert.ok(ok.includes(m.direction), `${f.id}: bad mechanism.direction ${m.direction}`);
+    // experimentalDirection must be DERIVED from the mechanism record, not diverge
+    assert.equal(ASSESSMENTS[f.id].evidence.experimentalDirection, m.direction, `${f.id}: experimentalDirection != mechanism.direction`);
+    for (const k of ["trial", "mechanism"]) {
+      assert.ok(m[k] && String(m[k]).length > 15, `${f.id}: mechanism.${k} too thin`);
+    }
+    assert.ok(m.source && m.source.cite, `${f.id}: mechanism missing source cite`);
+    assert.ok(/PMID:\s*\d+|10\.\d{4,}\//i.test(m.source.id || ""), `${f.id}: mechanism.source.id must be a PMID/DOI (got "${m.source.id}")`);
+  }
+  // the grounding pass eliminated all "none" directions
+  const nones = FOODS.filter((f) => ASSESSMENTS[f.id].mechanism.direction === "none");
+  assert.equal(nones.length, 0, `expected no 'none' mechanism directions, got: ${nones.map((f) => f.id).join(", ")}`);
+});
+
 test("per-outcome verdicts (where present) are well-formed and directionally coherent", () => {
   for (const f of FOODS) {
     const ovs = ASSESSMENTS[f.id].outcomeVerdicts;

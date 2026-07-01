@@ -80,21 +80,23 @@ together.
 
 ### Mechanistic-lens follow-ups  ⟶ *queued*
 
-- [ ] **Review whether we have enough mechanistic data to populate the lens — and run
-      a mechanistic research pass.** The "Trials & mechanism only" lens is driven by a
-      single hand-judged `experimentalDirection` enum per food — currently the
-      **least-grounded data in the project**: no per-food trial/mechanism facts, no
-      sources, and ~13 foods are `none` → *Insufficient*. Before the lens can be
-      trusted: **(a)** record the actual trial / marker / validated-pathway / mechanism
-      evidence + sources per food (parallel to the observational `evidence`);
-      **(b)** *derive* `experimentalDirection` from that rather than asserting it;
-      **(c)** re-examine the `none` foods — several likely have real trials we omitted
-      (leafy-green nitrate→BP RCTs, soy/isoflavone LDL markers, avocado lipid feeding
-      studies, green-tea flavanol BP). Queue a dedicated **mechanistic research pass**.
-      Until then the lens is *illustrative, not verified* (now flagged in the UI).
-- [ ] **Per-food "Under a different lens" section — and wrestle with the
-      contradictions.** Add a detail-view block showing the food's verdict under
-      **Default / Observational only / Trials & mechanism only** (via
+- [x] **Mechanistic research pass — DONE (v0.36).** Recorded per-food trial/mechanism
+      evidence + sources in a `MECHANISM` record; **(a)** actual RCT/marker/pathway facts
+      captured; **(b)** `experimentalDirection` now *derived* from it, not asserted;
+      **(c)** the `none` foods re-examined — leafy-green nitrate→BP (Siervo 2013),
+      green-tea catechin LDL/BP, avocado lipid RCT (Wang 2015), tomato/lycopene markers,
+      etc. **All 12 hand-guesses that were wrong got corrected and zero `none` remain.**
+      Caveat: figures are snippet-cross-verified (WebFetch to journals is proxy-blocked),
+      not page-rendered — a notch below "opened the PDF."
+- [x] **Per-food "Under a different lens" section — DONE (v0.36).** Detail-view block
+      shows the verdict under **All evidence / Observational only / Trials & mechanism
+      only** (via `verdictUnderLens`), flagged **converge / in tension / contradict**,
+      with the grounded mechanism evidence + a per-food reconciliation note. Cheese
+      *contradicts* (matrix/outcomes overrule the LDL marker); eggs, coffee, red meat,
+      french fries are *in tension*; the strong positives/negatives *converge*. The
+      original spec is below (now implemented).
+- [~] **Original spec (implemented above):** a detail-view block showing the food's
+      verdict under **Default / Observational only / Trials & mechanism only** (via
       `verdictUnderLens`), flagged **AGREE** or **CONTRADICT**. Where they contradict
       (cheese +obs/−mech, butter & coconut & eggs neutral-obs/−mech, fruit
       +obs/insufficient-mech, fatty fish +obs/neutral-mech…), don't just display it —

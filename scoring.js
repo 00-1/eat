@@ -297,7 +297,7 @@
     },
     "mechanism": {
       label: "Trials & mechanism only",
-      note: "Throw out the cohort/observational data entirely and judge ONLY on trials + mechanism — the view of people who dismiss observational nutrition. Watch the foods cohorts exonerate get re-condemned, and the cohort-only winners become unprovable. (Caveat: these trial/mechanism directions are recorded judgements, not yet individually source-verified — a mechanistic research pass is queued.)",
+      note: "Throw out the cohort/observational data entirely and judge ONLY on trials + mechanism — the view of people who dismiss observational nutrition. Watch the foods cohorts exonerate get re-condemned, and the cohort-only winners become unprovable. (Each food's trial/mechanism direction is now grounded in recorded RCT/marker evidence with sources — see 'Under a different lens' on a food's card.)",
       lens: "experimental",
     },
   };

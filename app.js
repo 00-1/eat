@@ -620,6 +620,65 @@
     return "<h4 class='block-h'>Revision log</h4><ul class='revisions'>" + items + "</ul>";
   }
 
+  // ---- "Under a different lens" — wrestle observation vs trials/mechanism ----
+  // Re-derives the food's verdict under three lenses (all evidence / observational only
+  // / trials & mechanism only), flags whether they agree, and — where they diverge —
+  // shows the grounded mechanism evidence and a reconciliation. Operationalises the
+  // "mechanism corroborates, never overrides" guardrail, per food and challengeably.
+  function verdictMini(v) {
+    const VE = { positive: "Positive", negative: "Negative", neutral: "Neutral", insufficient: "Insufficient" };
+    if (!v || v.effect === "insufficient" || !v.tier) {
+      return "<span class='vchip vchip-insufficient'>Insufficient</span>";
+    }
+    return "<span class='vchip vchip-" + v.effect + "'>" + VE[v.effect] + "</span> " +
+      "<span class='diff-tierlabel'>" + CERTAINTY_LABEL[v.tier].replace(" certainty", "") + "</span>";
+  }
+  function reconGeneric(flagcls, def) {
+    if (flagcls === "agree") {
+      return def.effect === "neutral"
+        ? "Both lenses land neutral — no directional claim to reconcile."
+        : "Cohort outcomes and trials/mechanism agree — convergent evidence, which is why we can hold this with more confidence.";
+    }
+    if (flagcls === "contradict") {
+      return "The two lenses disagree on direction. Our guardrail prefers observed whole-food outcomes over an isolated marker/mechanism — but the tension is real and worth watching.";
+    }
+    const dd = def.effect === "positive" || def.effect === "negative";
+    return dd
+      ? "Cohort outcomes carry this verdict; trials/mechanism alone neither clearly confirm nor deny it, so a mechanism purist would be unconvinced."
+      : "Trials/markers lean one way, but the cohort outcomes don't bear it out — we hold neutral rather than upgrade on mechanism alone.";
+  }
+  function lensSectionHtml(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.evidence || !a.mechanism || typeof Scoring === "undefined" || !Scoring.verdictUnderLens) return "";
+    const ev = a.evidence, oc = food.outcomes || [];
+    const def = Scoring.verdictUnderLens(ev, oc, "default");
+    const obs = Scoring.verdictUnderLens(ev, oc, "observational");
+    const exp = Scoring.verdictUnderLens(ev, oc, "experimental");
+    const dir = function (v) { return v && (v.effect === "positive" || v.effect === "negative") ? v.effect : null; };
+    const dd = dir(def), de = dir(exp);
+    let flag, flagcls;
+    if (dd && de && dd === de) { flag = "Lenses converge"; flagcls = "agree"; }
+    else if (dd && de && dd !== de) { flag = "Lenses contradict"; flagcls = "contradict"; }
+    else if (!dd && !de) { flag = "Lenses converge"; flagcls = "agree"; }
+    else { flag = "In tension"; flagcls = "tension"; }
+    const m = a.mechanism;
+    const recon = m.note ? m.note : reconGeneric(flagcls, def);
+    const src = m.source ? escapeHtml(m.source.cite) + (m.source.id ? " · " + escapeHtml(m.source.id) : "") : "";
+    return (
+      "<h4 class='block-h'>Under a different lens <span class='block-sub'>— does the verdict hold if you judge on only one kind of evidence?</span></h4>" +
+      "<div class='lens-grid'>" +
+        "<div class='lens-col'><span class='lens-k'>All evidence</span>" + verdictMini(def) + "</div>" +
+        "<div class='lens-col'><span class='lens-k'>Observational only</span>" + verdictMini(obs) + "</div>" +
+        "<div class='lens-col'><span class='lens-k'>Trials &amp; mechanism only</span>" + verdictMini(exp) + "</div>" +
+      "</div>" +
+      "<p class='lens-flag lens-" + flagcls + "'>" + flag + "</p>" +
+      "<p class='lens-mech'><span class='counter-k'>What trials &amp; mechanism show:</span> " + escapeHtml(m.trial) +
+        " <span class='lens-path'>" + escapeHtml(m.mechanism) + "</span>" +
+        (src ? " <span class='dr-src'>" + src + "</span>" : "") + "</p>" +
+      "<p class='lens-recon'><span class='counter-k'>Reconciliation:</span> " + escapeHtml(recon) + "</p>"
+    );
+  }
+
   function cardHtml(food, isPinned) {
     const eff = food.effect;
     const aEv = (typeof ASSESSMENTS !== "undefined" && ASSESSMENTS[food.id]) ? ASSESSMENTS[food.id].evidence : null;
@@ -660,6 +719,7 @@
             outcomeLedgerHtml(food) +
             groupConclusionsHtml(food) +
             outcomeVerdictsHtml(food) +
+            lensSectionHtml(food) +
             doseResponseHtml(food) +
             assessmentHtml(food) +
             studiesHtml(food) +

@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.35";
+const METHODOLOGY_VERSION = "0.36";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1452,32 +1452,56 @@ const ASSESSMENTS = {
   },
 };
 
-// What TRIALS + MECHANISM alone point to (direction), per food — the input for the
-// "Trials & mechanism only" explore lens, which IGNORES observational data. This is
-// deliberately the view of someone who dismisses cohort evidence: it lets LDL- and
-// glycemic-mechanism (and trial-marker) reasoning set the verdict. "none" = no
-// meaningful trial/mechanism basis → that lens reports "insufficient". Recorded as a
-// judgement (with the food's rationale/considerations as justification); merged into
-// each `evidence` below so the engine reads it as a normal fact.
-//   positive : trial/pattern or favorable validated markers (PREDIMED, fibre→LDL/glycemic)
-//   negative : LDL/sat-fat, high-glycemic, or carcinogen/processing mechanism, or harmful markers
-//   neutral  : the strongest trial is null (cocoa COSMOS; omega-3 supplement RCTs; sweetener substitution)
-//   none     : no trial and no clear mechanism either way → insufficient under this lens
-const EXPERIMENTAL_DIRECTION = {
-  "tree-nuts": "positive", "legumes": "positive", "whole-grains": "positive",
-  "leafy-greens": "none", "whole-fruit": "none", "fatty-fish": "neutral",
-  "olive-oil": "positive", "yogurt": "none", "coffee": "none", "avocado": "none",
-  "processed-meat": "negative", "sugary-drinks": "negative", "trans-fat": "negative",
-  "ultra-processed": "negative", "refined-grains": "negative", "eggs": "negative",
-  "red-meat": "negative", "poultry": "none", "milk": "negative", "cheese": "negative",
-  "butter": "negative", "potatoes": "negative", "french-fries": "negative",
-  "alcohol": "negative", "artificial-sweeteners": "neutral", "coconut-oil": "negative",
-  "green-tea": "none", "white-rice": "negative", "soy": "positive", "cruciferous": "none",
-  "tomatoes": "none", "cocoa": "neutral",
+// What TRIALS + MECHANISM alone point to, per food — the grounded input for the
+// "Trials & mechanism only" explore lens (which IGNORES observational cohorts) and for
+// the per-food "under a different lens" section. This is deliberately the view of
+// someone who dismisses cohort epidemiology: RCTs on hard outcomes where they exist,
+// else validated surrogate markers (LDL, BP, glucose), else a validated causal pathway.
+// Each record carries the trial + mechanism + a real source, so the `direction` is
+// DERIVED from recorded evidence, not asserted. (Grounded in the v0.36 mechanistic
+// research pass; figures snippet-cross-verified — WebFetch to journals is proxy-blocked.)
+//   positive : RCT/pattern trial or favorable validated markers point to benefit
+//   negative : validated harmful pathway/marker (LDL↑, BP↑, high-glycemic, carcinogen)
+//   neutral  : the strongest trial is null, or trial vs mechanism genuinely conflict
+//   none     : no trial and no clear mechanism either way (none remain after grounding)
+const MECHANISM = {
+  "tree-nuts": { direction: "positive", trial: "PREDIMED (Med diet + mixed nuts) cut major CVD events; 61-trial lipid meta-analysis (Del Gobbo 2015) shows nuts lower LDL/ApoB/TG.", mechanism: "Unsaturated fat, fibre, phytosterols → lower LDL.", source: { cite: "Del Gobbo 2015 Am J Clin Nutr; Estruch 2018 NEJM (PREDIMED)", id: "PMID:26561616" }, confidence: "high" },
+  "legumes": { direction: "positive", trial: "Meta-analysis of 26 RCTs (Ha 2014): dietary pulses ~130 g/day lowered LDL-C by −0.17 mmol/L vs control.", mechanism: "Viscous fibre reduces bile-acid reabsorption → hepatic LDL-receptor upregulation; improved glycemic response.", source: { cite: "Ha 2014 CMAJ", id: "10.1503/cmaj.131727" }, confidence: "high" },
+  "whole-grains": { direction: "positive", trial: "Meta-analysis of 58 RCTs (Ho 2016): oat β-glucan ~3.5 g/day lowered LDL-C −0.19 mmol/L and ApoB.", mechanism: "Viscous soluble fibre (β-glucan) → reduced cholesterol/bile-acid reabsorption; blunts postprandial glucose.", source: { cite: "Ho 2016 Br J Nutr", id: "PMID:27724985" }, confidence: "high" },
+  "olive-oil": { direction: "positive", trial: "EUROLIVE crossover RCT: high-phenolic olive oil dose-dependently reduced oxidized LDL and raised HDL; PREDIMED EVOO arm cut CVD events (pattern-level).", mechanism: "Olive polyphenols reduce LDL oxidation (EFSA-recognised); MUFA-for-satfat improves lipids/BP.", source: { cite: "Covas 2006 Ann Intern Med (EUROLIVE); Estruch 2018 NEJM", id: "10.7326/0003-4819-145-5-200609050-00006" }, confidence: "high" },
+  "soy": { direction: "positive", trial: "Meta-analysis of 46 controlled trials (Blanco Mejia 2019): soy protein ~25 g/day lowered LDL-C ~4.8 mg/dL.", mechanism: "Soy protein/isoflavones modestly lower LDL (displaces animal protein/satfat; LDL-receptor effects). Underpins the FDA heart claim.", source: { cite: "Blanco Mejia 2019 J Nutr", id: "10.1093/jn/nxz020" }, confidence: "high" },
+  "leafy-greens": { direction: "positive", trial: "Meta-analysis of 16 crossover RCTs (Siervo 2013): inorganic nitrate/beetroot lowered systolic BP −4.4 mmHg. CONFLICT: a 5-week leafy-green RCT with matched nitrate control found no ambulatory-BP effect.", mechanism: "Dietary nitrate → nitrite → nitric oxide → vasodilation → lower BP (validated acutely; sustained effect uncertain).", source: { cite: "Siervo 2013 J Nutr; null: Jackson 2020 Am J Clin Nutr", id: "PMID:23596162" }, confidence: "medium" },
+  "whole-fruit": { direction: "positive", trial: "Crossover RCT (Koutsos 2020): 2 whole apples/day lowered total & LDL cholesterol and TG vs a sugar-matched apple drink.", mechanism: "Whole-fruit soluble fibre (pectin) + polyphenols reduce cholesterol absorption/bile-acid recycling. Does NOT extend to juice.", source: { cite: "Koutsos 2020 Am J Clin Nutr", id: "10.1093/ajcn/nqz282" }, confidence: "medium" },
+  "cruciferous": { direction: "positive", trial: "Two double-blind RCTs (Armah 2015, n=130): high-glucoraphanin broccoli reduced plasma LDL-C ~5% over 12 weeks.", mechanism: "Glucoraphanin → sulforaphane → NRF2 pathway; LDL-lowering the validated surrogate. Single research group — generalisability uncertain.", source: { cite: "Armah 2015 Mol Nutr Food Res", id: "PMID:25851421" }, confidence: "medium" },
+  "green-tea": { direction: "positive", trial: "Meta-analyses of RCTs: green-tea catechins lower LDL-C (Zheng 2011, 14 RCTs) and blood pressure (Peng 2014, 13 RCTs, SBP −2 mmHg).", mechanism: "EGCG reduces micellar cholesterol absorption and upregulates the LDL receptor; catechins improve endothelial NO.", source: { cite: "Zheng 2011 Am J Clin Nutr; Peng 2014 Sci Rep", id: "PMID:21715508" }, confidence: "high" },
+  "avocado": { direction: "positive", trial: "Crossover controlled-feeding RCT (Wang 2015): 1 avocado/day lowered LDL-C, non-HDL and LDL particle number vs matched-fat diets.", mechanism: "MUFA (oleic acid) substitution plus fibre/phytosterols reduce LDL and LDL oxidation. (HAT trial missed its visceral-fat endpoint.)", source: { cite: "Wang 2015 J Am Heart Assoc", id: "PMID:25567051" }, confidence: "high" },
+  "tomatoes": { direction: "positive", trial: "Meta-analysis of 21 intervention trials (Cheng 2017): tomato/lycopene improved FMD (+2.5%), lowered systolic BP and LDL-C.", mechanism: "Lycopene reduces LDL oxidation/oxidative stress and improves NO-mediated endothelial function. Trials small/heterogeneous.", source: { cite: "Cheng 2017 Atherosclerosis", id: "PMID:28129549" }, confidence: "medium" },
+  "coffee": { direction: "neutral", trial: "RCTs: UNFILTERED coffee raises cholesterol (cafestol diterpenes); caffeine transiently raises BP (Mesas 2011 meta-analysis) but attenuates with habituation. FILTERED coffee is ~neutral on LDL.", mechanism: "Cafestol/kahweol downregulate the LDL receptor (unfiltered only); caffeine → transient sympathetic BP rise. Net: mixed, brew-dependent.", source: { cite: "Mesas 2011 Am J Clin Nutr", id: "10.3945/ajcn.111.016667" }, confidence: "medium", note: "Mechanism is brew-dependent and mild; filtered coffee is neutral. This is why the mechanism lens can't condemn coffee even though observation shows clear benefit." },
+  "fatty-fish": { direction: "neutral", trial: "Low-dose fish-oil supplement RCTs are null on hard CVD outcomes (VITAL, ASCEND, Cochrane); only a high-dose purified-EPA DRUG (REDUCE-IT) was positive, and that is contested (mineral-oil placebo).", mechanism: "EPA/DHA lower triglycerides (validated), but the food/supplement doesn't move hard outcomes → net neutral.", source: { cite: "Manson 2019 NEJM (VITAL); ASCEND 2018 NEJM", id: "10.1056/NEJMoa1811403" }, confidence: "high" },
+  "cocoa": { direction: "neutral", trial: "COSMOS RCT (n=21,442): cocoa-flavanol supplement did not significantly cut total CVD events (HR 0.90, P=0.11).", mechanism: "Flavanols raise nitric-oxide → improve FMD and modestly lower BP (favorable markers), but the hard-outcome trial is null.", source: { cite: "Sesso 2022 Am J Clin Nutr (COSMOS)", id: "PMID:35294962" }, confidence: "high" },
+  "artificial-sweeteners": { direction: "neutral", trial: "Substitution RCTs favour sweeteners over sugar for weight (Rogers 2016), but a human RCT (Suez 2022) shows saccharin/sucralose can impair glycemia via the microbiome.", mechanism: "Energy displacement (benefit vs sugar) vs microbiome-mediated glucose intolerance (harm) — validated but opposing pathways → net neutral.", source: { cite: "Rogers 2016 Int J Obes; Suez 2022 Cell", id: "PMID:26365102" }, confidence: "medium" },
+  "yogurt": { direction: "neutral", trial: "Meta-analysis of 9 RCTs (He 2019): probiotic yogurt did not significantly improve HbA1c, fasting glucose, insulin or HOMA-IR.", mechanism: "Proposed gut-microbiota/SCFA effects on insulin sensitivity — plausible but not robustly validated; marker effects null.", source: { cite: "He 2019 Nutrients", id: "10.3390/nu11030671" }, confidence: "medium" },
+  "poultry": { direction: "neutral", trial: "Controlled-feeding RCT (Bergeron/APPROACH 2019): white meat raised LDL/ApoB near-identically to red meat, and both were worse than plant protein.", mechanism: "Lean poultry is lower in satfat than fatty red meat, but its LDL effect is indistinguishable — no distinct beneficial pathway.", source: { cite: "Bergeron 2019 Am J Clin Nutr (APPROACH)", id: "10.1093/ajcn/nqz035" }, confidence: "medium" },
+  "milk": { direction: "neutral", trial: "Meta-analyses of RCTs (Derakhshandeh-Rishehri 2021) find no adverse effect of dairy/milk on LDL, HDL, TG or total cholesterol.", mechanism: "Milk-fat satfat would raise LDL, but the fluid-dairy matrix (MFGM, calcium) attenuates it → null in trials.", source: { cite: "Derakhshandeh-Rishehri 2021 Diabetes Metab Syndr", id: "PMID:34562868" }, confidence: "medium" },
+  "potatoes": { direction: "neutral", trial: "No hard-outcome RCT; interventional trials are null/mixed on surrogates (cooled resistant-starch potato improved fasting glucose; fried-potato RCT null).", mechanism: "Whole potato is high-glycemic (would raise postprandial glucose), but preparation dominates and diverges → no consistent direction.", source: { cite: "resistant-starch potato crossover RCT 2021", id: "PMID:33119948" }, confidence: "low" },
+  "french-fries": { direction: "neutral", trial: "30-day RCT (Smith 2022): French fries vs calorie-matched almonds — no difference in fat mass, fasting glucose, insulin or HbA1c.", mechanism: "Proposed high-glycemic-load + acrylamide harm, but the trial was null and acrylamide human carcinogenicity is unproven. (Industry-funded, short.)", source: { cite: "Smith 2022 Am J Clin Nutr", id: "10.1093/ajcn/nqac045" }, confidence: "medium", note: "Trials are null, yet the OBSERVATIONAL verdict is negative (T2D). A genuine contradiction — see the wrestle." },
+  "eggs": { direction: "negative", trial: "Meta-analysis of 17 RCTs (Li 2020): added dietary cholesterol raised LDL-C ~8 mg/dL and the LDL/HDL ratio slightly.", mechanism: "Dietary cholesterol modestly suppresses the LDL receptor → higher LDL — but the effect is small, saturable and dwarfed by saturated fat.", source: { cite: "Li 2020 Nutrients", id: "PMID:32635569" }, confidence: "medium", note: "Mechanistically mildly LDL-raising, yet cohorts are null in the general population — a case where observation overrules a small surrogate signal." },
+  "red-meat": { direction: "negative", trial: "Crossover RCT (Wang/Hazen 2019): red meat raised TMAO 2–3× (reversible). BOLD RCT: LEAN beef in a low-satfat pattern was lipid-neutral.", mechanism: "Carnitine → TMA → TMAO (atherogenic) plus satfat → LDL. Harm tracks satfat load + TMAO; lean red meat is LDL-neutral.", source: { cite: "Wang 2019 Eur Heart J; Roussell 2012 Am J Clin Nutr (BOLD)", id: "PMID:30535398" }, confidence: "high" },
+  "cheese": { direction: "negative", trial: "Head-to-head crossover RCTs (Brassard 2017; Hjerpsted 2011; Feeney 2018): cheese raises LDL LESS than butter at equal saturated fat.", mechanism: "Cheese matrix (calcium + casein) forms fatty-acid soaps → more fecal fat, less SFA absorbed → attenuated LDL rise. Still net LDL-raising vs low-SFA.", source: { cite: "Brassard 2017 Am J Clin Nutr", id: "PMID:28251937" }, confidence: "high", note: "Mechanism says (mildly) LDL-raising, but cohorts show LOWER CVD — the matrix/whole-food outcome overrules the isolated marker." },
+  "butter": { direction: "negative", trial: "Crossover RCT (Engel 2015): butter raised total and LDL cholesterol vs olive oil.", mechanism: "Saturated fat (palmitic/myristic) downregulates the LDL receptor → higher LDL vs unsaturated oils.", source: { cite: "Engel 2015 Am J Clin Nutr", id: "PMID:26135349" }, confidence: "high" },
+  "coconut-oil": { direction: "negative", trial: "Meta-analysis of 16 clinical trials (Neelakantan 2020): coconut oil raised LDL-C +10.5 mg/dL vs non-tropical vegetable oils.", mechanism: "~85% saturated fat (lauric/myristic) downregulates the LDL receptor → raises LDL. (Also raises HDL.)", source: { cite: "Neelakantan 2020 Circulation", id: "PMID:31928080" }, confidence: "high" },
+  "trans-fat": { direction: "negative", trial: "Feeding RCTs (Mensink & Katan 1990; Mensink 2003 meta of 60 trials): trans fat raises LDL AND lowers HDL — the worst total:HDL of any fat.", mechanism: "Reduced LDL clearance + raised Lp(a) + lowered HDL — a uniquely, unambiguously atherogenic dual pathway.", source: { cite: "Mensink & Katan 1990 NEJM; Mensink 2003 Am J Clin Nutr", id: "PMID:2374566" }, confidence: "high" },
+  "sugary-drinks": { direction: "negative", trial: "RCT meta-analysis (Nguyen 2023): adding SSBs causes weight gain; double-blind RCT (Geidl-Flueck 2021): fructose/sucrose drinks doubled hepatic de-novo lipogenesis.", mechanism: "Liquid fructose → hepatic DNL → VLDL/triglycerides; low satiety → positive energy balance. Trials and mechanism agree.", source: { cite: "Nguyen 2023 Am J Clin Nutr; Geidl-Flueck 2021 J Hepatol", id: "PMID:36789935" }, confidence: "high" },
+  "refined-grains": { direction: "negative", trial: "Meta-analysis of 80 RCTs (Sanders 2023): vs whole grain, refined grain gives higher postprandial glucose, insulin and HbA1c.", mechanism: "High glycemic index/load → larger glucose/insulin excursions. (No effect on fasting markers; postprandial only.)", source: { cite: "Sanders 2023 Crit Rev Food Sci Nutr", id: "10.1080/10408398.2021.2017838" }, confidence: "medium" },
+  "white-rice": { direction: "negative", trial: "Acute/short RCTs: white rice gives higher postprandial glucose/insulin than brown; but a 3-month substitution RCT (Mohan 2019) was null on glucose/HbA1c overall.", mechanism: "High glycemic index → postprandial glucose/insulin spikes. Medium-term hard-surrogate trial null — so a weak/contested harm.", source: { cite: "Kumar/Mohan 2014; Mohan 2019 Br J Nutr", id: "PMID:24447043" }, confidence: "medium" },
+  "ultra-processed": { direction: "negative", trial: "Inpatient randomized crossover trial (Hall 2019): an ad-libitum ultra-processed diet caused ~500 kcal/day overeating and weight gain vs an unprocessed diet matched for nutrients.", mechanism: "Hyper-palatability, energy density and fast eating rate → passive overconsumption. Causation directly demonstrated.", source: { cite: "Hall 2019 Cell Metabolism", id: "PMID:31105044" }, confidence: "high" },
+  "processed-meat": { direction: "negative", trial: "DASH-Sodium controlled-feeding RCT: cutting sodium lowered systolic BP up to ~6–7 mmHg (processed meat is a major sodium source). IARC Group 1 for colorectal cancer.", mechanism: "Sodium → blood pressure (RCT-proven); N-nitroso/heme nitrosation → colorectal carcinogenesis (hazard-graded).", source: { cite: "Sacks 2001 NEJM (DASH-Sodium); Bouvard 2015 Lancet Oncol (IARC)", id: "PMID:11136953" }, confidence: "high" },
+  "alcohol": { direction: "negative", trial: "Meta-analysis of 36 RCTs (Roerecke 2017): reducing alcohol lowered blood pressure dose-dependently.", mechanism: "Ethanol raises BP (RCT-reversible); ethanol → acetaldehyde, an IARC Group 1 carcinogen. Both point to harm.", source: { cite: "Roerecke 2017 Lancet Public Health", id: "PMID:29253389" }, confidence: "high" },
 };
-for (const _id in EXPERIMENTAL_DIRECTION) {
+for (const _id in MECHANISM) {
   if (ASSESSMENTS[_id] && ASSESSMENTS[_id].evidence) {
-    ASSESSMENTS[_id].evidence.experimentalDirection = EXPERIMENTAL_DIRECTION[_id];
+    ASSESSMENTS[_id].mechanism = MECHANISM[_id];
+    ASSESSMENTS[_id].evidence.experimentalDirection = MECHANISM[_id].direction;
   }
 }
 
@@ -1580,5 +1604,5 @@ const HOLDING_LIST = [
 
 // Allow Node (tests) to import this data while the browser loads it as a script.
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, HOLDING_LIST, RESEARCHED_ON };
+  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, HOLDING_LIST, RESEARCHED_ON, MECHANISM };
 }
