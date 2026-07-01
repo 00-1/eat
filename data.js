@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.39";
+const METHODOLOGY_VERSION = "0.40";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1222,14 +1222,20 @@ const ASSESSMENTS = {
     },
     doseCurve: {
       outcome: "All-cause mortality", unit: "g/day", shape: "plateau-benefit", normalRange: [0, 90],
-      points: [ { x: 0, rr: 1.0 }, { x: 30, rr: 0.93 }, { x: 90, rr: 0.83, lo: 0.79, hi: 0.88 }, { x: 120, rr: 0.82 } ],
-      note: "Risk falls roughly linearly up to ~90 g/day (about 3 servings), then plateaus.",
+      points: [ { x: 0, rr: 1.0 }, { x: 45, rr: 0.91 }, { x: 90, rr: 0.83, lo: 0.79, hi: 0.88 }, { x: 135, rr: 0.80, lo: 0.75, hi: 0.86 }, { x: 210, rr: 0.78, lo: 0.72, hi: 0.85 } ],
+      note: "Steepest fall up to ~1 serving/day; reaches RR ~0.80 by ~135 g/day and a ~0.78 floor at ~210 g/day, then plateaus. Intermediate points modelled from the per-90 g slope and reported plateau.",
       source: { cite: "Aune 2016 BMJ", id: "PMID:27301975" }, verified: false,
     },
   },
   "leafy-greens": {
     evidence: { pooledRR: 0.9, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "high vs low habitual intake (part of ~800 g/day fruit & veg)" },
     effectEstimate: "Part of the fruit-and-veg dose-response; lower CVD/mortality up to ~800 g/day F&V; interval excludes no-effect.",
+    doseCurve: {
+      outcome: "Cardiovascular disease", unit: "servings/day", shape: "monotonic-benefit", normalRange: [0.3, 1.5],
+      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 0.89, lo: 0.83, hi: 0.96 }, { x: 2, rr: 0.84, lo: 0.75, hi: 0.94 } ],
+      note: "No verifiable leafy-green-SPECIFIC all-cause-mortality dose-response exists; this is the food-specific CVD curve (Hung 2004, per serving/day). Effect is moderate, not large — the widely-repeated '25% per 100 g' figure is an aggregator misattribution of the fruit-&-veg umbrella.",
+      source: { cite: "Hung 2004 JNCI", id: "PMID:15523086" }, verified: false,
+    },
   },
   "whole-fruit": {
     evidence: { pooledRR: 0.9, ciExcludesNull: true, participants: 833234, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "per 200 g/day fruit (~2–3 servings/day)" },
@@ -1563,6 +1569,12 @@ const ASSESSMENTS = {
   "cruciferous": {
     evidence: { pooledRR: 0.90, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "higher vs lower intake (within the F&V dose-response)" },
     effectEstimate: "≈10% lower mortality/CVD as part of the fruit-and-veg dose-response; cruciferous-specific cancer signal too.",
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "g/day", shape: "monotonic-benefit", normalRange: [20, 60],
+      points: [ { x: 0, rr: 1.0 }, { x: 40, rr: 0.91, lo: 0.84, hi: 0.98 }, { x: 80, rr: 0.88, lo: 0.77, hi: 1.00 }, { x: 130, rr: 0.85, lo: 0.76, hi: 0.96 }, { x: 180, rr: 0.78, lo: 0.71, hi: 0.85 } ],
+      note: "Cruciferous-specific quintile curve (Zhang 2011, Shanghai cohorts) — reaches RR ~0.78 only at the highest quintile (~150–210 g/day) in a HIGH-consuming population, so 'large' here needs a lot. Colon cancer reaches a comparable effect at a more realistic ~40–60 g/day (Lai 2025). x-values are approximate quintile midpoints.",
+      source: { cite: "Zhang 2011 Am J Clin Nutr", id: "PMID:21593509" }, verified: false,
+    },
   },
   "tomatoes": {
     evidence: { pooledRR: 0.95, ciExcludesNull: false, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "high vs low blood lycopene (tomato-derived, biomarker)" },
