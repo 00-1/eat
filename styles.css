@@ -327,6 +327,13 @@ a { color: var(--accent); }
   color: var(--neu);
   white-space: nowrap;
 }
+.notall-note {
+  margin: 10px 0; padding: 10px 13px 10px 14px;
+  border: 1px solid var(--neu); border-left-width: 4px; border-radius: 8px;
+  background: var(--neu-bg); font-size: 0.86rem; color: var(--ink);
+  display: flex; gap: 8px; align-items: baseline;
+}
+.notall-note .notall { flex: none; }
 
 /* Highlights: gold standard / worst offenders */
 .highlights {

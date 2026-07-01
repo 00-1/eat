@@ -93,6 +93,18 @@
     const note = food.uniformityNote || "The verdict doesn't apply uniformly across this category — some members are much stronger than others.";
     return "<span class='notall' title='" + escapeHtml(note) + "'>◑ not all</span>";
   }
+  // Full explanation of the "not all" badge, shown in the expanded card so the
+  // within-category variation is spelled out (not just a tooltip).
+  function uniformityNoteHtml(food) {
+    if (!isMixed(food)) return "";
+    const note = food.uniformityNote || "The verdict doesn't apply uniformly across this category — some members are much stronger than others.";
+    return (
+      "<p class='notall-note'>" +
+        "<span class='notall'>◑ not all</span> " +
+        "<span><strong>Doesn't apply evenly across this category.</strong> " + escapeHtml(note) + "</span>" +
+      "</p>"
+    );
+  }
 
   // Contested — credible high-quality sources genuinely DISAGREE on the direction
   // (distinct from low certainty, which is thin-but-consistent). Surfaced honestly
@@ -790,6 +802,7 @@
           "<div class='card-detail'>" +
             "<h4 class='block-h'>Why this verdict</h4>" +
             "<p class='rationale'>" + escapeHtml(food.rationale) + "</p>" +
+            uniformityNoteHtml(food) +
             contestedNoteHtml(food) +
             outcomeLedgerHtml(food) +
             groupConclusionsHtml(food) +
@@ -1077,7 +1090,7 @@
         : "";
       const forO = e.forOutcome ? " <span class='hl-row-for'>for " + escapeHtml(e.forOutcome) + "</span>" : "";
       const dose = e.dose
-        ? "<span class='hl-row-dose" + (e.dose.none ? " is-none" : "") + "'>" + (e.dir === "add" ? "best at " : "") + escapeHtml(e.dose.text) + "</span>"
+        ? "<span class='hl-row-dose" + (e.dose.none ? " is-none" : "") + "'>" + escapeHtml(e.dose.text) + "</span>"
         : "<span class='hl-row-dose is-muted'>—</span>";
       const meta = e.neutralHeadline
         ? ""
