@@ -299,8 +299,10 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       qualifying (gold/bin) foods, the champion is the one with the **largest effect
       magnitude** `|ln(pooledRR)|`, tie-broken by certainty then precision, restricted to
       `specific`/`uniform` (never a "not all" entry) — `championOf()` in app.js, tested.
-      Today that's **tree nuts** (RR 0.78) and **trans fat** (RR 1.42), surfaced with a
-      distinct "★ top pick" marker in the shortlists.
+      Today that's **tree nuts** (RR 0.78) and **trans fat** (RR 1.42), listed **first** in
+      their shortlist with a direction-appropriate marker — **★ top pick** (positive) /
+      **⚠ worst offender** (negative). (v0.33.x: champion moved to front; negative marker
+      + section renamed "Bin fodder" → **⚠ Worst offenders**.)
 - [x] **Gold standard veg artifact — FIXED (v0.31).** Leafy greens and cruciferous were
       recorded with CVD/cancer outcomes but **not all-cause mortality**, so they missed
       the all-cause magnitude bump that puts fruit on the cusp (same RR 0.90) — yet the

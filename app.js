@@ -741,21 +741,29 @@
     const marginalGold = pick("marginal-gold"), marginalBin = pick("marginal-bin");
     const goldChamp = championOf(gold), binChamp = championOf(bin);
 
-    const chipsHtml = (foods, champ) =>
-      foods
+    const champMarker = function (kind) {
+      return kind === "bin"
+        ? "<span class='hl-champ-mark' title='Worst offender — largest effect among the qualifying foods'>⚠ worst offender</span> "
+        : "<span class='hl-champ-mark' title='Top pick — largest effect among the qualifying foods'>★ top pick</span> ";
+    };
+    const chipsHtml = (foods, champ, kind) => {
+      // Champion first, then the rest in their existing order.
+      const ordered = champ ? [champ].concat(foods.filter(function (f) { return f.id !== champ.id; })) : foods;
+      return ordered
         .map(function (f) {
           const isChamp = champ && f.id === champ.id;
-          const star = isChamp ? "<span class='hl-star' title='Top pick — largest effect among the qualifying foods'>★ top pick</span> " : "";
+          const marker = isChamp ? champMarker(kind) : "";
           const notall = isMixed(f)
             ? " <span class='hl-notall' title='" + escapeHtml(f.uniformityNote || "Doesn't apply uniformly across the category") + "'>not all</span>"
             : "";
           return (
             "<button class='hl-chip" + (isChamp ? " hl-champ" : "") + "' data-food='" + escapeHtml(f.id) + "'>" +
-              star + escapeHtml(f.name) + notall +
+              marker + escapeHtml(f.name) + notall +
             "</button>"
           );
         })
         .join("");
+    };
     const cuspChips = (foods) =>
       foods
         .map(function (f) {
@@ -780,13 +788,13 @@
       "<div class='hl-card hl-gold'>" +
         "<h2>★ Gold standard</h2>" +
         "<p class='hl-sub'>High certainty, large positive effect — the surest things to add.</p>" +
-        "<div class='hl-chips'>" + (gold.length ? chipsHtml(gold, goldChamp) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+        "<div class='hl-chips'>" + (gold.length ? chipsHtml(gold, goldChamp, "gold") : "<span class='hl-empty'>none yet</span>") + "</div>" +
         cusp(marginalGold) +
       "</div>" +
       "<div class='hl-card hl-bin'>" +
-        "<h2>✕ Bin fodder</h2>" +
+        "<h2>⚠ Worst offenders</h2>" +
         "<p class='hl-sub'>High certainty, large negative effect — the surest things to drop.</p>" +
-        "<div class='hl-chips'>" + (bin.length ? chipsHtml(bin, binChamp) : "<span class='hl-empty'>none yet</span>") + "</div>" +
+        "<div class='hl-chips'>" + (bin.length ? chipsHtml(bin, binChamp, "bin") : "<span class='hl-empty'>none yet</span>") + "</div>" +
         cusp(marginalBin) +
       "</div>";
 

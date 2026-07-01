@@ -343,7 +343,7 @@
     limited: "Neither cohort nor causal evidence is strong — held cautiously.",
   };
 
-  // Standout classification, used for the Gold standard / Bin fodder shortlists
+  // Standout classification, used for the Gold standard / Worst offenders shortlists
   // and the "on the cusp" marginal tiers. Qualifying = top tier on BOTH axes
   // (certainty high + magnitude large). Marginal = exactly one tier short on a
   // single axis (the two tier-ranks sum to 5), so you can see what would join if

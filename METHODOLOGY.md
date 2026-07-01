@@ -211,9 +211,9 @@ outcome where they genuinely act.
 
 - **★ Gold standard** — `effect: positive`, `certainty: high`, `magnitude: large`.
   The surest, highest-impact things to add (currently tree nuts).
-- **✕ Bin fodder** — `effect: negative`, `certainty: high`, `magnitude: large`.
+- **⚠ Worst offenders** — `effect: negative`, `certainty: high`, `magnitude: large`.
   The surest, highest-impact things to drop (currently processed meat, sugary
-  drinks, trans fat).
+  drinks, trans fat). *(Formerly labelled "Bin fodder".)*
 
 Each list also shows an **"on the cusp"** tier: foods one notch short on a single
 axis (certainty-rank + magnitude-rank = 5), so you can see what would join if a
@@ -221,11 +221,12 @@ threshold eased — e.g. whole grains, whole fruit, coffee, leafy greens and
 cruciferous all sit just below Gold standard. Both lists are *computed*, so they
 update automatically as facts/rules change.
 
-**Champion (★ top pick).** Within each direction we crown a single champion — the
-qualifying (gold/bin) food with the **largest headline effect** `|ln(pooledRR)|`,
-tie-broken by certainty then precision. Today that is **tree nuts** (RR 0.78) and
-**trans fat** (RR 1.42). Reproducible, not hand-picked — and restricted to
-`specific`/`uniform` entries, so a "not all" category can never be crowned as *the*
+**Champion — one per direction, shown first.** Within each direction we crown a single
+champion — the qualifying food with the **largest headline effect** `|ln(pooledRR)|`,
+tie-broken by certainty then precision — and list it first: **★ top pick** on the
+positive side, **⚠ worst offender** on the negative. Today that is **tree nuts**
+(RR 0.78) and **trans fat** (RR 1.42). Reproducible, not hand-picked — and restricted
+to `specific`/`uniform` entries, so a "not all" category can never be crowned as *the*
 thing to do or drop.
 
 **"Not all" caveat, applied evenly.** Many entries are really *categories* (tree

@@ -301,7 +301,7 @@ a { color: var(--accent); }
   white-space: nowrap;
 }
 
-/* Highlights: gold standard / bin fodder */
+/* Highlights: gold standard / worst offenders */
 .highlights {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -336,9 +336,9 @@ a { color: var(--accent); }
 .hl-chip.hl-champ { border-color: var(--ink); border-width: 2px; padding: 6px 12px; }
 .hl-gold .hl-chip.hl-champ { background: var(--pos-bg); }
 .hl-bin  .hl-chip.hl-champ { background: var(--neg-bg); }
-.hl-star { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
-.hl-gold .hl-star { color: var(--pos); }
-.hl-bin  .hl-star { color: var(--neg); }
+.hl-champ-mark { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+.hl-gold .hl-champ-mark { color: var(--pos); }
+.hl-bin  .hl-champ-mark { color: var(--neg); }
 /* "Not all" marker inside a highlight chip. */
 .hl-notall {
   font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;

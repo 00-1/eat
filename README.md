@@ -140,8 +140,9 @@ Direction and certainty don't say how *big* an effect is, so each food also gets
 computed **magnitude** (large / moderate / small / minimal) from its recorded
 relative effect, with a bump for acting on all-cause mortality. Two computed
 shortlists fall out of it: **★ Gold standard** (positive · high certainty · large)
-and **✕ Bin fodder** (negative · high certainty · large), shown at the top of the
-Foods view. (Magnitude is a *relative*-effect proxy, not absolute burden — see
+and **⚠ Worst offenders** (negative · high certainty · large), shown at the top of the
+Foods view. Each list crowns a single computed champion — the largest-effect member
+(**★ top pick** / **⚠ worst offender**), shown first. (Magnitude is a *relative*-effect proxy, not absolute burden — see
 `METHODOLOGY.md`.)
 
 ## Steelmanning attempts
