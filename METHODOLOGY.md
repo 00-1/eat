@@ -392,6 +392,36 @@ We try to state what *would* change our mind, so verdicts are falsifiable.
 
 ---
 
+## 9. Comparison to established methods — where we agree and deviate
+
+We benchmarked this project against how the field grades diet evidence (full write-up:
+[`research/methodology-review.md`](./research/methodology-review.md)).
+
+**We agree with best practice on the fundamentals:**
+- **Effect size ≠ certainty.** Keeping magnitude and certainty as separate axes is
+  near-universal (GRADE, Burden of Proof, examine.com). We do this — and it's where we
+  *improve* on our NutriGrade base, which folds effect size into the cohort certainty score.
+- **Grade on outcomes, not nutrient profiling.** Single-food nutrient scores generate
+  well-known absurdities (Nutri-Score rates EVOO "D"; Tufts' Food Compass scored Lucky
+  Charms above steak). Judging by observed outcomes avoids that failure mode.
+- **Mechanism corroborates, never overrides.** Backed by the surrogate-endpoint tradition
+  (Fleming–DeMets; CAST) and Bradford Hill (plausibility is supporting, not decisive).
+- **Dose-response shape, heterogeneous-category flags, uncertainty communication** — all
+  standard advice we follow.
+
+**We deliberately deviate in two places — with caveats:**
+- **We rank single foods; rigorous systems grade patterns or evidence.** No validated
+  system ranks individual foods (USDA guidance and the HEI/DASH/Mediterranean indices score
+  whole *patterns*). We accept the risk only because we grade on outcomes and caveat heavily,
+  and we frame the shortlists as "largest, surest **relative** effect," not "healthiest."
+- **The all-cause-mortality magnitude bump is a rough proxy.** The principled measure of
+  "how much a food matters" is **absolute attributable burden** (GBD-style PAF), not a
+  relative-risk tier promotion — a known limitation (see §3 in the roadmap). This is also why
+  vegetables sit mid-shortlist: on *relative* effect they're modest (~10%), and Burden of
+  Proof likewise rates vegetables→heart-disease only 2 stars ("weak") despite a large mean
+  effect — veg dominate on *absolute burden*, a different axis. "Healthiest" and "biggest
+  sure effect" are genuinely different questions, and our shortlist answers the second.
+
 ## Reference frameworks
 
 - **NutriGrade** — Schwingshackl et al., *Adv Nutr* 2016 (certainty scoring for

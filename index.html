@@ -363,6 +363,55 @@
           <code>research/counter-arguments-research.md</code>.
         </p>
       </section>
+
+      <section>
+        <h3>10. How this compares to established methods</h3>
+        <p>
+          We benchmarked our design against the way the field actually does this — formal
+          grading (GRADE, NutriGrade, WCRF/AICR, IARC), population burden (GBD, IHME's
+          <em>Burden of Proof</em>), dietary-pattern guidance (USDA/NESR, the Mediterranean/DASH
+          diet-quality indices), and consumer tools (examine.com, Nutri-Score, NOVA, Tufts'
+          Food Compass, Yuka). Full write-up in <code>research/methodology-review.md</code>.
+        </p>
+        <p><strong>Where we agree with best practice:</strong></p>
+        <ul class="legend" style="display:block">
+          <li><strong>Effect size and certainty are separate axes.</strong> GRADE, Burden of Proof
+            and examine.com all keep "how big" apart from "how sure." We do too — and it's a spot
+            where we <em>improve</em> on our NutriGrade base, which blends effect size into the
+            certainty score for cohort studies.</li>
+          <li><strong>Judge by outcomes, not by nutrient profiling.</strong> The tools that score
+            single foods from their nutrients produce famous absurdities — Nutri-Score rates
+            extra-virgin olive oil a "D," and Tufts' Food Compass scored Lucky Charms above steak.
+            Grading on observed health <em>outcomes</em> is what keeps us out of that trap.</li>
+          <li><strong>Mechanism corroborates, never overrides.</strong> The surrogate-endpoint
+            literature (e.g. the CAST trial: the drug fixed the arrhythmia marker but raised
+            deaths) is exactly why we let observed outcomes adjudicate and treat LDL/BP mechanisms
+            as support, not proof.</li>
+          <li><strong>Model the dose-response shape, flag heterogeneous categories, and communicate
+            uncertainty</strong> — all standard advice we follow (curves, the "not all" badge, the
+            contested flag, certainty tiers).</li>
+        </ul>
+        <p><strong>Where we deliberately differ — and the honest caveats:</strong></p>
+        <dl class="traps">
+          <dt>We rank single foods; rigorous systems don't.</dt>
+          <dd>GRADE grades evidence; the USDA guidelines and diet-quality indices score whole
+            <em>patterns</em>. Ranking individual foods is inherently fragile — we accept it only
+            because we grade on outcomes and caveat heavily, and we frame the shortlists as
+            "largest, surest <em>relative</em> effect," <strong>not</strong> "healthiest overall."</dd>
+          <dt>"Healthiest" and "biggest effect" are different questions — and the veg puzzle.</dt>
+          <dd>Vegetables sit mid-table on <em>relative</em> effect (~10% lower risk), so they don't
+            top our shortlist — and that matches the evidence: Burden of Proof rates
+            vegetables → heart disease only <em>2 stars ("weak")</em> despite a large average effect.
+            Where vegetables, whole grains and fruit genuinely dominate is <em>absolute population
+            burden</em> (GBD's biggest diet risks are high sodium, low whole grains, low fruit) —
+            a different axis we don't yet compute. So a modest-effect staple can be a nutrition
+            all-star and still rank low on "biggest sure effect."</dd>
+          <dt>Our all-cause-mortality weighting is a rough proxy.</dt>
+          <dd>We nudge foods that act on all-cause mortality up one magnitude tier. The principled
+            version of "how much a food matters" is absolute attributable burden (GBD-style), not a
+            relative-risk bump — a known limitation we're weighing how to fix.</dd>
+        </dl>
+      </section>
     </article>
   </main>
 
