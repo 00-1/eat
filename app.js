@@ -129,6 +129,28 @@
     if (food.scope !== "group") return "";
     return "<span class='scope-chip' title='This card is a whole food group — the verdict is the average across its members, which can differ. Some members may have their own card.'>◎ food group</span>";
   }
+  // Member <-> group cross-links: where a group card and one of its members both have
+  // their own card, make the containment navigable (jump between them) instead of
+  // leaving them as confusing peers in the same list.
+  function jumpLink(ref) {
+    return "<button class='scope-jump' data-food='" + escapeHtml(ref.id) + "'>" + escapeHtml(ref.name) + "</button>";
+  }
+  function scopeLinksHtml(food) {
+    var out = "";
+    if (food.memberCards && food.memberCards.length) {
+      out +=
+        "<p class='scope-links'><span class='scope-links-k'>◎ Whole food group.</span> " +
+        "These members have their own card: " +
+        food.memberCards.map(jumpLink).join(" ") + "</p>";
+    }
+    if (food.memberOf && food.memberOf.length) {
+      out +=
+        "<p class='scope-links'><span class='scope-links-k'>Part of a group verdict.</span> " +
+        "This sits inside our verdict for " +
+        food.memberOf.map(jumpLink).join(" ") + " — see the group card for the class-wide picture.</p>";
+    }
+    return out;
+  }
   // Within-category guidance for a "not all" food. When we've recorded a per-member
   // breakdown (`members`), show it in full — each member tagged good / likely / weaker
   // / worse / unknown — so "which ones actually?" is answered, and "concentrated
@@ -877,6 +899,7 @@
           "<div class='card-detail'>" +
             "<h4 class='block-h'>Why this verdict</h4>" +
             "<p class='rationale'>" + escapeHtml(food.rationale) + "</p>" +
+            scopeLinksHtml(food) +
             uniformityNoteHtml(food) +
             contestedNoteHtml(food) +
             outcomeLedgerHtml(food) +
@@ -1386,6 +1409,15 @@
   // Clicking a card's summary pins it (or unpins if already pinned) instead of the
   // native in-place <details> toggle — so expanding always moves it to the top row.
   listEl.addEventListener("click", function (e) {
+    // Member <-> group jump links inside an expanded card take priority over the
+    // summary-pin behaviour.
+    const jump = e.target.closest ? e.target.closest(".scope-jump") : null;
+    if (jump && listEl.contains(jump)) {
+      e.preventDefault();
+      e.stopPropagation();
+      jumpToFood(jump.getAttribute("data-food"));
+      return;
+    }
     const summary = e.target.closest ? e.target.closest("summary") : null;
     if (!summary || !listEl.contains(summary)) return;
     const card = summary.closest("[data-food-card]");

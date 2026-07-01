@@ -357,6 +357,21 @@ a { color: var(--accent); }
   white-space: nowrap;
 }
 
+/* Member <-> group cross-links inside an expanded card. */
+.scope-links {
+  margin: 10px 0; padding: 9px 12px;
+  border: 1px dashed var(--line); border-radius: 8px;
+  background: var(--bg); font-size: 0.86rem; color: var(--ink); line-height: 1.5;
+}
+.scope-links-k { font-weight: 700; color: var(--ink-soft); }
+.scope-jump {
+  font: inherit; font-weight: 600;
+  color: var(--accent); background: none; border: 0;
+  padding: 0 2px; margin: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.scope-jump:hover { color: var(--ink); }
+
 /* Within-category member breakdown (the "which berries, actually?" table). */
 .members { margin: 12px 0; }
 .member-intro { margin: 0 0 8px; font-size: 0.88rem; color: var(--ink); }

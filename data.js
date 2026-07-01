@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.57";
+const METHODOLOGY_VERSION = "0.58";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1999,6 +1999,20 @@ const FOOD_SCOPE = {
 };
 for (const _f of FOODS) { _f.scope = FOOD_SCOPE[_f.id] || "item"; }
 
+// Card membership — where a group-scope card and one of its members BOTH have their
+// own card, cross-link them so the containment is navigable instead of confusing
+// (e.g. "Soy foods" sits under the "Legumes" group; "French fries" under "Fried
+// foods"). Keyed group id → member card ids. Both directions are derived (below the
+// name-lift loop, so links carry the final displayed names). Only list pairs where
+// BOTH sides are real cards.
+const CARD_MEMBERS = {
+  "legumes": ["soy"],
+  "whole-fruit": ["berries"],
+  "whole-grains": ["wholemeal-bread"],
+  "refined-grains": ["white-bread", "white-rice"],
+  "fried-foods": ["french-fries"],
+};
+
 // Lift the redundant "(examples, etc.)" out of category food NAMES into a separate
 // `examples` field (shown as a muted "e.g. …" subtitle instead of cluttering the
 // title). Rule: only brackets that are an EXAMPLE LIST — i.e. end in "etc." — are
@@ -2009,6 +2023,23 @@ for (const _f of FOODS) {
   if (_m) {
     _f.name = _m[1].trim();
     _f.examples = _m[2].trim(); // e.g. "almonds, walnuts"
+  }
+}
+
+// Attach member <-> group cross-links AFTER the name-lift above, so each link stores
+// the final displayed name (e.g. "Legumes", not "Legumes (beans, …, etc.)").
+{
+  const _byId = {};
+  for (const _f of FOODS) _byId[_f.id] = _f;
+  for (const _gid in CARD_MEMBERS) {
+    const _g = _byId[_gid];
+    if (!_g) continue;
+    for (const _mid of CARD_MEMBERS[_gid]) {
+      const _m = _byId[_mid];
+      if (!_m) continue;
+      (_g.memberCards = _g.memberCards || []).push({ id: _m.id, name: _m.name });
+      (_m.memberOf = _m.memberOf || []).push({ id: _g.id, name: _g.name });
+    }
   }
 }
 
@@ -2094,5 +2125,5 @@ for (const _k in BURDEN) {
 
 // Allow Node (tests) to import this data while the browser loads it as a script.
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, FOOD_SCOPE, HOLDING_LIST, RESEARCHED_ON, MECHANISM, BURDEN };
+  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, FOOD_SCOPE, CARD_MEMBERS, HOLDING_LIST, RESEARCHED_ON, MECHANISM, BURDEN };
 }

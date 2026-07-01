@@ -9,7 +9,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const S = require("../scoring.js");
-const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE, FOOD_SCOPE, HOLDING_LIST, RESEARCHED_ON, BURDEN } = require("../data.js");
+const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE, FOOD_SCOPE, CARD_MEMBERS, HOLDING_LIST, RESEARCHED_ON, BURDEN } = require("../data.js");
 
 const EFFECTS = ["positive", "negative", "neutral"];
 const CERTAINTIES = ["high", "moderate", "low", "very-low"];
@@ -364,6 +364,31 @@ test("every food records a valid scope, and FOOD_SCOPE maps only real foods", ()
   assert.equal(scopeOf("legumes"), "group");
   assert.equal(scopeOf("whole-fruit"), "group");
   assert.equal(scopeOf("eggs"), "item");
+});
+
+test("CARD_MEMBERS cross-links are bidirectional and reference real cards", () => {
+  const byId = new Map(FOODS.map((f) => [f.id, f]));
+  for (const gid of Object.keys(CARD_MEMBERS || {})) {
+    const g = byId.get(gid);
+    assert.ok(g, `CARD_MEMBERS group is not a real food: ${gid}`);
+    assert.equal(g.scope, "group", `CARD_MEMBERS group must be group-scope: ${gid}`);
+    for (const mid of CARD_MEMBERS[gid]) {
+      const m = byId.get(mid);
+      assert.ok(m, `CARD_MEMBERS member is not a real food: ${mid}`);
+      // group -> member attached
+      assert.ok((g.memberCards || []).some((r) => r.id === mid), `${gid}: memberCards missing ${mid}`);
+      // member -> group attached (reverse link derived)
+      assert.ok((m.memberOf || []).some((r) => r.id === gid), `${mid}: memberOf missing ${gid}`);
+    }
+  }
+  // every attached link points at a real food name that matches
+  for (const f of FOODS) {
+    for (const r of (f.memberCards || []).concat(f.memberOf || [])) {
+      const t = byId.get(r.id);
+      assert.ok(t, `${f.id}: cross-link to unknown food ${r.id}`);
+      assert.equal(r.name, t.name, `${f.id}: stale cross-link name for ${r.id}`);
+    }
+  }
 });
 
 test("CHAMPION is reproducible and never a 'not all' entry", () => {
