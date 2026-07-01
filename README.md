@@ -138,12 +138,14 @@ when you change the *method* (the rules in `scoring.js`), bump
 
 Direction and certainty don't say how *big* an effect is, so each food also gets a
 computed **magnitude** (large / moderate / small / minimal) from its recorded
-relative effect, with a bump for acting on all-cause mortality. Two computed
-shortlists fall out of it: **★ Gold standard** (positive · high certainty · large)
-and **⚠ Worst offenders** (negative · high certainty · large), shown at the top of the
-Foods view. Each list crowns a single computed champion — the largest-effect member
-(**★ top pick** / **⚠ worst offender**), shown first. (Magnitude is a *relative*-effect proxy, not absolute burden — see
-`METHODOLOGY.md`.)
+relative effect. The Foods view opens with three computed summary panels —
+**Worth adding**, **Worth cutting down**, and **Fine either way** (neutral) — each
+split into tiers by certainty × magnitude (surest+biggest → also-supported), with
+the per-food amount read off its dose curve. Each directional panel crowns a single
+computed champion, the largest-effect member (**★ top pick** / **⚠ biggest harm**),
+shown first. Magnitude is a *relative*-effect proxy; **how much a food matters at
+population scale** is a separate **Population impact** axis (GBD attributable burden)
+shown on each card — see `METHODOLOGY.md`.
 
 ## Steelmanning attempts
 

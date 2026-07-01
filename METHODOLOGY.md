@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.51 — living document.** This file is the canonical description of how
+**Version 0.52 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -204,7 +204,7 @@ outcome where they genuinely act.
 > does in the amounts people actually eat — not per arbitrary small unit. A
 > per-tiny-unit figure (e.g. trans fat "per 2% of energy") understates calorie-dense
 > foods eaten in quantity and would make junk look benign; this convention is why
-> trans fat lands at *large* magnitude (and in Bin fodder) rather than moderate.
+> trans fat lands at *large* magnitude (and among the biggest harms) rather than moderate.
 >
 > **Two things magnitude deliberately is NOT.** (1) It is a *relative-effect*
 > proxy, not **absolute population burden** — how much a food matters at population
@@ -254,7 +254,7 @@ population burden*, a separate axis (ROADMAP §3b).
 **Champion — one per direction, shown first.** Within each direction we crown a single
 champion — the qualifying food with the **largest headline effect** `|ln(pooledRR)|`,
 tie-broken by certainty then precision — and list it first: **★ top pick** on the
-positive side, **⚠ worst offender** on the negative. Today that is **tree nuts**
+positive side, **⚠ biggest harm** on the negative. Today that is **tree nuts**
 (RR 0.78) and **trans fat** (RR 1.42). The champion must be an **unconditional** pick
 (never a "if you eat plenty" entry) and is restricted to `specific`/`uniform` entries,
 so a "not all" category can never be crowned as *the* thing to do or drop.
@@ -477,6 +477,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.52 | 2026-07-01 | **Stale-prose sweep.** Refreshed copy that lagged the features: the data-status banner (was "*most* figures are best-estimates" — false now that 27/35 are verified; now "N verified, the other M are best-estimates"); the Approach tab's "we don't yet compute / plan to add" burden-axis lines (shipped — now "shown as each card's Population impact"); a stray "Bin fodder" and "⚠ worst offender" in the methodology body; and the README shortlist description (still described the old Gold-standard/Worst-offenders + all-cause-bump model). Changelog rows keep their historical wording. |
 | 0.51 | 2026-07-01 | **Mobile controls fix + reorder.** Fixed a mobile bug where the search box ballooned to full height (in the ≤540px column layout, `flex:1 1 280px` grew *vertically*; pinned to natural height). Moved the search/filter/sort controls (and the data-status banner) down to sit directly above the food grid they act on, instead of stranded at the top above the summaries. |
 | 0.50 | 2026-07-01 | **Tone pass + readable dose curves.** Tone: softened the one moralising label — the negative champion "⚠ worst offender" → "⚠ biggest harm" (parallel with "★ top pick"), cleaned a stale "Bin fodder" reference and a shouty ALL-CAPS. (Food summaries were already factual — "raises X risk", "no safe level" — not preachy.) Dose curves: added y-axis scale labels + faint gridlines at the curve's actual RR range (central estimates, e.g. 1.0 and 0.78), so the chart shows magnitude, not just shape. |
 | 0.49 | 2026-07-01 | **Added a "Fine either way" neutral panel.** The summary now has a third, amber panel (completing the green/amber/red traffic light) for foods with no net verdict — so the biggest category isn't silently omitted. Grouped by recorded `lean` into a good→neutral→bad gradient (leans slightly beneficial / no clear effect / leans slightly worse), excluding neutral foods that already appear in the add/cut "neutral overall — but…" sections. The honest recommendation is "eat to taste — no health reason to seek out or avoid," in normal amounts (deliberately *not* "as much as you like" or a health range). |

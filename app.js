@@ -993,12 +993,13 @@
     if (!el) return;
     const total = FOODS.length;
     const verified = FOODS.filter(isVerified).length;
+    const unverified = total - verified;
     el.innerHTML =
       "<strong>Data status:</strong> " + verified + " of " + total +
-      " foods source-verified. The <em>method</em> is tested and reproducible, but most of the " +
-      "underlying figures (relative risks, sample sizes, prevalences) are best-estimates from " +
-      "background knowledge, not yet individually checked against the cited papers — so treat " +
-      "verdicts as <strong>provisional</strong>. (Verification is the top item in the roadmap.)";
+      " foods are <strong>source-verified</strong> — their score-driving figures checked against the " +
+      "cited papers. The other " + unverified + " are still best-estimates from background knowledge, " +
+      "not yet individually checked — treat those verdicts as <strong>provisional</strong> (look for the " +
+      "“facts estimated” chip). The scoring method itself is tested and reproducible.";
   }
 
   // ---- Highlights: the sure, high-impact bets in each direction ----
