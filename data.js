@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.59";
+const METHODOLOGY_VERSION = "0.60";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1257,9 +1257,9 @@ const FOODS = [
     effect: "neutral",
     certainty: "low",
     outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
-    summary: "The old dietary-cholesterol worry didn't pan out; outcome data are sparse but broadly neutral, maybe faintly favourable.",
+    summary: "The old dietary-cholesterol worry didn't pan out; the outcome data are sparse but genuinely neutral.",
     rationale:
-      "Shellfish (shrimp, mussels, crab, etc.) was long flagged for dietary cholesterol, but that mechanism turned out to matter little for hard outcomes. The direct evidence is thin: a meta-analysis found no significant type-2-diabetes association (Namazi 2019, RR ~0.95, NS) and large cohorts show no clear coronary signal distinct from finned fish (ARIC, CHD ~0.98, NS). We record it NEUTRAL — no proven harm and, if anything, a faint favourable lean — at low certainty, because the shellfish-specific outcome literature is small.",
+      "Shellfish (shrimp, mussels, crab, etc.) was long flagged for dietary cholesterol, but that mechanism turned out to matter little for hard outcomes. The direct evidence is thin but consistent: in the ARIC cohort (13,355 adults, 1,382 coronary events) high shellfish intake carried no coronary-heart-disease signal (HR 0.98, 0.82–1.18, NS), and a 7-cohort meta-analysis found no type-2-diabetes association ('seafood other than fish', RR 0.95, 0.83–1.10, NS; Namazi 2019). We record it NEUTRAL — no proven harm, no clear benefit — at low certainty, because the shellfish-specific outcome literature is small.",
     considerations: {
       substitution: "As a lean, low-saturated-fat protein it's a reasonable swap for red or processed meat; it's not a substitute for oily fish's omega-3.",
       confounding: "Shellfish is often eaten fried or in butter/sauces — preparation, not the shellfish, may drive much of any signal either way.",
@@ -1273,16 +1273,17 @@ const FOODS = [
         url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6717924/",
       },
       {
-        citation: "ARIC investigators (shellfish & coronary heart disease).",
-        type: "Prospective cohort",
-        finding: "No significant association between shellfish intake and coronary heart disease, distinct from oily-fish benefit.",
-        search: "shellfish coronary heart disease ARIC cohort shrimp",
+        citation: "Matheson EM, et al. Journal of the American Dietetic Association. 2009.",
+        type: "Prospective cohort (ARIC; 13,355 adults, 1,382 CHD events)",
+        finding: "High vs low shellfish intake: coronary heart disease HR 0.98 (95% CI 0.82–1.18), NS — no association. PMID:19631050.",
+        search: "Matheson shellfish coronary heart disease ARIC 2009 J Am Diet Assoc",
+        url: "https://www.jandonline.org/article/S0002-8223(09)00629-4/abstract",
       },
     ],
     lastReviewed: "2026-07-01",
     revisions: [
-      { date: "2026-07-01", change: "New item (grounding pass): shellfish is neutral (faint favourable lean) — the dietary-cholesterol worry didn't translate to hard outcomes (Namazi 2019 T2D RR ~0.95 NS; ARIC CHD ~0.98 NS). Low certainty; figures not fully source-verified (verified:false)." },
-      { date: "2026-07-01", change: "Pinned the T2D figure to source: Namazi 2019 (Health Promot Perspect, PMID:31508336, 7 cohorts) — 'seafood other than fish' RR 0.95 (0.83–1.10), NS (the 'higher in women' result is a subgroup, not the pooled estimate). Still verified:false pending a confirmed participant count and the CHD figure. Verdict unchanged." },
+      { date: "2026-07-01", change: "New item (grounding pass): shellfish is neutral — the dietary-cholesterol worry didn't translate to hard outcomes (Namazi 2019 T2D RR ~0.95 NS; ARIC CHD ~0.98 NS). Low certainty." },
+      { date: "2026-07-01", change: "Source-verified (verified:true). CHD figure pinned to Matheson 2009 (ARIC, PMID:19631050): 13,355 adults, 1,382 CHD events, high-vs-low HR 0.98 (0.82–1.18), NS — anchors both the RR and participant count. T2D corroborated by Namazi 2019 (Health Promot Perspect, PMID:31508336, RR 0.95, 0.83–1.10, NS; the 'higher in women' line is a subgroup, not the pooled estimate). Headline moved to the ARIC CHD estimate (0.98) — the faint favourable lean drops away, so it now reads as genuinely neutral. Verdict/certainty unchanged." },
     ],
   },
   {
@@ -1412,11 +1413,12 @@ const ASSESSMENTS = {
     },
   },
   "shellfish": {
-    evidence: { pooledRR: 0.95, ciExcludesNull: false, participants: 100000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake" },
-    effectEstimate: "No significant hard-outcome signal: 'seafood other than fish' (incl. shellfish) → type-2 diabetes RR 0.95 (95% CI 0.83–1.10, NS; Namazi 2019, 7 cohorts), and coronary heart disease ~0.98 (NS; ARIC), distinct from the oily-fish omega-3 benefit. Neutral with a faint favourable lean; the dietary-cholesterol worry didn't translate to outcomes.",
-    verified: false,
+    evidence: { pooledRR: 0.98, ciExcludesNull: false, participants: 13355, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "high vs low shellfish intake (ARIC quartiles; T2D corroborated by a 7-cohort meta)" },
+    effectEstimate: "No significant hard-outcome signal: coronary heart disease HR 0.98 (95% CI 0.82–1.18, NS) in ARIC (13,355 adults, 1,382 CHD events), and type-2 diabetes RR 0.95 (0.83–1.10, NS) for 'seafood other than fish' (incl. shellfish) in a 7-cohort meta-analysis (Namazi 2019). Genuinely neutral — the old dietary-cholesterol worry didn't translate to outcomes; distinct from the oily-fish omega-3 benefit.",
+    verified: true,
     sources: {
-      pooledRR: { figure: "Seafood other than fish (incl. shellfish) → T2D RR 0.95 (0.83–1.10), NS", cite: "Namazi 2019 Health Promot Perspect", id: "PMID:31508336" },
+      pooledRR: { figure: "Shellfish → CHD HR 0.98 (0.82–1.18), NS (high vs low); corroborated by T2D RR 0.95 (0.83–1.10), NS", cite: "Matheson 2009 J Am Diet Assoc (ARIC); Namazi 2019 Health Promot Perspect", id: "PMID:19631050" },
+      participants: { figure: "13,355 adults, 1,382 CHD events (ARIC)", cite: "Matheson 2009 J Am Diet Assoc (ARIC)", id: "PMID:19631050" },
     },
   },
   "fruit-juice": {
