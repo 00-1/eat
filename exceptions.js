@@ -521,6 +521,40 @@ const EXCEPTIONS = {
       mitigation: "Choose higher-cocoa, lower-sugar products; mind portion.",
     },
   ],
+  "fried-foods": [
+    {
+      type: "contaminant",
+      group: "Anyone eating high-temperature fried starches (acrylamide, a probable carcinogen)",
+      prevalence: { estimate: "acrylamide forms in most deep-fried and heavily-browned starchy foods", source: "EFSA/FDA acrylamide guidance" },
+      severity: "caution",
+      mitigation: "Fry to golden (not brown), avoid reusing oil repeatedly, and prefer grilling, baking, roasting or air-frying.",
+    },
+  ],
+  "shellfish": [
+    {
+      type: "allergy",
+      group: "People with shellfish allergy (crustaceans/molluscs — one of the most common adult food allergies)",
+      prevalence: { estimate: "~1–2% of adults (a Big-9 allergen; often lifelong)", source: "Spolidoro 2023, European systematic review (Allergy); food-allergy surveillance" },
+      severity: "avoid",
+      mitigation: "Strict avoidance; reactions can be severe. Allergy may be to crustaceans, molluscs, or both.",
+    },
+    {
+      type: "condition",
+      group: "People with gout (shellfish are moderately high in purines)",
+      prevalence: { estimate: "gout affects ~3.9% of US adults (~1–4% globally)", source: "GBD 2021 gout (Lancet Rheumatol 2024); US NHANES" },
+      severity: "caution",
+      mitigation: "Limit portions during or after flares; stay hydrated.",
+    },
+  ],
+  "fruit-juice": [
+    {
+      type: "condition",
+      group: "People with diabetes or prediabetes (rapidly-absorbed liquid sugar)",
+      prevalence: { estimate: "diabetes ~10% of adults; far higher with prediabetes", source: "diabetes epidemiology" },
+      severity: "caution",
+      mitigation: "Prefer whole fruit; keep juice to a small glass with a meal.",
+    },
+  ],
 };
 
 if (typeof module !== "undefined" && module.exports) {

@@ -40,6 +40,7 @@ const FOOD_TAGS = {
   "white-bread": ["high-carb", "gluten-grain"],
   "leafy-greens": ["plant-antinutrient"],
   "whole-fruit": ["fruit", "high-carb"],
+  "fruit-juice": ["fruit", "high-carb"],
   "yogurt": ["saturated-fat"],
   "sugary-drinks": ["high-carb"],
   "refined-grains": ["high-carb", "gluten-grain"],

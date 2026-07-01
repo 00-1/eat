@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.55";
+const METHODOLOGY_VERSION = "0.56";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1208,6 +1208,121 @@ const FOODS = [
     lastReviewed: "2026-07-01",
     revisions: [],
   },
+  {
+    id: "fried-foods",
+    name: "Fried foods",
+    category: "Other",
+    effect: "negative",
+    certainty: "low",
+    outcomes: ["Cardiovascular disease"],
+    summary: "Regular fried food tracks with clearly higher cardiovascular risk — the frying, not any one food, carries it.",
+    rationale:
+      "Across 17 cohorts (~562,000; Qin 2021, Heart), the highest vs lowest fried-food intake was linked to ~28% more major cardiovascular events (RR 1.28, 1.15–1.43) and ~22% more coronary heart disease, with a graded per-serving dose-response; fried-food intake also tracks higher all-cause mortality (Sun 2019, BMJ, HR 1.08 for ≥1 serving/day). Low certainty: consistent direction across many cohorts but high heterogeneity (I²=82%) and heavy confounding by the fast-food pattern, with no supporting trials. This is the general 'anything deep-fried' verdict; our French-fries item is the same story for one specific food.",
+    considerations: {
+      substitution: "The gain is in the method — grilling, baking, roasting or air-frying instead of deep-frying, more than cutting the underlying food.",
+      confounding: "Fried food strongly marks a fast-food, low-vegetable pattern; residual confounding likely inflates the association.",
+      heterogeneity: "Effect sizes vary widely across cohorts (I²=82%) — the pooled figure is a broad average, not a precise per-serving law.",
+    },
+    components: [
+      {
+        name: "The frying (trans/oxidised fats, acrylamide, energy density)",
+        worry: "Isn't this just double-counting foods we already rate — fries, fried chicken, crisps?",
+        resolution: "It's the cross-cutting method verdict. Deep-frying, especially in reused oil, generates trans and oxidised fats plus acrylamide and packs in calories — a harm that rides on top of whatever is being fried. We keep the food-specific items (e.g. French fries) and this method-level one because people ask both 'are chips bad?' and 'is frying bad?'.",
+      },
+    ],
+    studies: [
+      {
+        citation: "Qin P, et al. Heart. 2021.",
+        type: "Meta-analysis of 17 prospective cohorts (~562,000; 36,727 CVD events)",
+        finding: "Highest vs lowest fried-food intake: major cardiovascular events RR 1.28 (1.15–1.43), coronary heart disease 1.22; graded per-serving dose-response; I²=82%.",
+        search: "Qin fried food cardiovascular disease meta-analysis Heart 2021",
+        url: "https://heart.bmj.com/content/107/19/1567",
+      },
+      {
+        citation: "Sun Y, et al. BMJ. 2019.",
+        type: "Prospective cohort (US women, ~107,000)",
+        finding: "≥1 serving/day of fried food associated with higher all-cause and cardiovascular mortality (HR ~1.08).",
+        search: "Sun fried food mortality older women BMJ 2019",
+      },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "New item (grounding pass): fried food (as a preparation method) is negative for cardiovascular disease — RR 1.28 highest-vs-lowest, source-verified on Qin 2021 Heart (17 cohorts, ~562k) with Sun 2019 BMJ for mortality. Sits alongside the food-specific French-fries item." },
+    ],
+  },
+  {
+    id: "shellfish",
+    name: "Shellfish",
+    category: "Seafood",
+    effect: "neutral",
+    certainty: "low",
+    outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
+    summary: "The old dietary-cholesterol worry didn't pan out; outcome data are sparse but broadly neutral, maybe faintly favourable.",
+    rationale:
+      "Shellfish (shrimp, mussels, crab, etc.) was long flagged for dietary cholesterol, but that mechanism turned out to matter little for hard outcomes. The direct evidence is thin: a meta-analysis found no significant type-2-diabetes association (Namazi 2019, RR ~0.95, NS) and large cohorts show no clear coronary signal distinct from finned fish (ARIC, CHD ~0.98, NS). We record it NEUTRAL — no proven harm and, if anything, a faint favourable lean — at low certainty, because the shellfish-specific outcome literature is small.",
+    considerations: {
+      substitution: "As a lean, low-saturated-fat protein it's a reasonable swap for red or processed meat; it's not a substitute for oily fish's omega-3.",
+      confounding: "Shellfish is often eaten fried or in butter/sauces — preparation, not the shellfish, may drive much of any signal either way.",
+    },
+    studies: [
+      {
+        citation: "Namazi N, et al. 2019.",
+        type: "Meta-analysis of prospective cohorts (type-2 diabetes)",
+        finding: "Shellfish intake not significantly associated with type-2-diabetes risk (RR ~0.95, CI crosses 1).",
+        search: "shellfish seafood type 2 diabetes meta-analysis cohort 2019",
+      },
+      {
+        citation: "ARIC investigators (shellfish & coronary heart disease).",
+        type: "Prospective cohort",
+        finding: "No significant association between shellfish intake and coronary heart disease, distinct from oily-fish benefit.",
+        search: "shellfish coronary heart disease ARIC cohort shrimp",
+      },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "New item (grounding pass): shellfish is neutral (faint favourable lean) — the dietary-cholesterol worry didn't translate to hard outcomes (Namazi 2019 T2D RR ~0.95 NS; ARIC CHD ~0.98 NS). Low certainty; figures not fully source-verified (verified:false)." },
+    ],
+  },
+  {
+    id: "fruit-juice",
+    name: "Fruit juice",
+    category: "Beverages",
+    effect: "neutral",
+    certainty: "low",
+    outcomes: ["Type 2 diabetes"],
+    summary: "100% juice isn't the diabetes driver sugary drinks are — but it loses whole fruit's fibre, so it's a step down, not an equal.",
+    rationale:
+      "The headline harm attributed to 'juice' is mostly sugar-sweetened fruit DRINKS. For 100% fruit juice specifically, a large meta-analysis found no significant type-2-diabetes association (Xi 2014, RR 1.03, 0.91–1.18) — while the same analysis put sweetened fruit drinks at RR 1.28. A single-serving cohort signal exists (Muraki 2013, HR ~1.08 per 3 servings/week) and stroke/CVD data are neutral-to-favourable (D'Elia 2021). We record 100% juice NEUTRAL: no clear hard-outcome harm, but it's the inferior way to get fruit — juicing strips the fibre and intact structure that make whole fruit protective, and it's easy to overdrink.",
+    considerations: {
+      substitution: "Prefer whole fruit (it keeps the fibre and protective structure); keep 100% juice to a small glass and don't confuse it with sugar-sweetened fruit 'drinks', which are worse.",
+      confounding: "Juice drinkers differ in overall diet; the small single-serving signal may be partly the sugary-drink pattern it travels with.",
+    },
+    components: [
+      {
+        name: "Loss of the whole-fruit matrix (fibre + structure)",
+        worry: "If whole fruit is positive, why isn't its juice?",
+        resolution: "Juicing removes the fibre and cell structure that slow sugar absorption and carry much of fruit's benefit — the whole-apple RCT effect doesn't extend to juice. So 100% juice lands neutral, below whole fruit but above sugar-sweetened fruit drinks.",
+      },
+    ],
+    studies: [
+      {
+        citation: "Xi B, et al. PLoS ONE. 2014.",
+        type: "Meta-analysis of prospective cohorts (~137,000)",
+        finding: "100% fruit juice not significantly associated with type-2 diabetes (RR 1.03, 0.91–1.18); sugar-sweetened fruit drinks were (RR 1.28).",
+        search: "Xi fruit juice type 2 diabetes meta-analysis PLoS ONE 2014",
+      },
+      {
+        citation: "Muraki I, et al. BMJ. 2013.",
+        type: "Three US cohorts",
+        finding: "Fruit juice associated with slightly higher type-2-diabetes risk (HR ~1.08 per 3 servings/week), opposite to whole fruit.",
+        search: "Muraki fruit juice whole fruit type 2 diabetes BMJ 2013",
+      },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "New item (grounding pass): 100% fruit juice is neutral for type-2 diabetes (Xi 2014 RR 1.03 NS, source-verified) — the diabetes harm is from sugar-sweetened fruit drinks (1.28), not 100% juice; still inferior to whole fruit (Muraki 2013). Splits off the whole-fruit contrast honestly." },
+    ],
+  },
 ];
 
 /*
@@ -1278,6 +1393,42 @@ const ASSESSMENTS = {
     effectEstimate: "No protection for CVD/all-cause mortality (Aune 2016) and higher type-2-diabetes risk than wholegrain bread (Hu 2020); a weight-gain signal (SUN, overweight/obesity OR 1.40). Recorded neutral (no proven independent hard-outcome harm) but leaning bad — refined, high-glycemic, and the leading dietary sodium source.",
     verified: false,
     sources: {},
+  },
+  "fried-foods": {
+    evidence: { pooledRR: 1.28, ciExcludesNull: true, participants: 562445, heterogeneity: "high", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "highest vs lowest total fried-food intake (~per weekly serving, 114 g)" },
+    effectEstimate: "Major cardiovascular events RR 1.28 (95% CI 1.15–1.43) highest vs lowest fried-food intake, CHD 1.22, with a graded ~3% rise per weekly serving (Qin 2021 Heart, 17 cohorts, ~562k); all-cause mortality HR ~1.08 (Sun 2019 BMJ). I²=82% (high heterogeneity).",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Major CV events RR 1.28 (1.15–1.43) highest vs lowest; CHD 1.22; +3% per weekly serving; I²=82%", cite: "Qin 2021 Heart", id: "PMID:33468573" },
+      participants: { figure: "562,445 across 17 cohorts; 36,727 cardiovascular events", cite: "Qin 2021 Heart", id: "PMID:33468573" },
+    },
+    doseCurve: {
+      outcome: "Cardiovascular disease", unit: "servings/week", shape: "monotonic-harm", normalRange: [0, 2],
+      points: [ { x: 0, rr: 1.0 }, { x: 3, rr: 1.09 }, { x: 7, rr: 1.28, lo: 1.15, hi: 1.43 } ],
+      note: "Risk climbs ~3% per weekly serving with no clear threshold; ~1 serving ≈ 114 g. Highest-vs-lowest anchors the top point; intermediate points from the reported per-serving slope.",
+      source: { cite: "Qin 2021 Heart", id: "PMID:33468573" }, verified: false,
+    },
+  },
+  "shellfish": {
+    evidence: { pooledRR: 0.96, ciExcludesNull: false, participants: 100000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake" },
+    effectEstimate: "No significant hard-outcome signal: type-2 diabetes RR ~0.95 (NS; Namazi 2019) and coronary heart disease ~0.98 (NS; ARIC), distinct from the oily-fish omega-3 benefit. Neutral with a faint favourable lean; the dietary-cholesterol worry didn't translate to outcomes.",
+    verified: false,
+    sources: {},
+  },
+  "fruit-juice": {
+    evidence: { pooledRR: 1.03, ciExcludesNull: false, participants: 137663, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~1 small glass/day of 100% juice" },
+    effectEstimate: "100% fruit juice not significantly associated with type-2 diabetes (RR 1.03, 0.91–1.18; Xi 2014, ~137k) — the harm attributed to 'juice' is from sugar-sweetened fruit DRINKS (RR 1.28). A small single-serving signal exists (Muraki 2013, HR ~1.08 per 3 servings/week); still inferior to whole fruit.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "100% juice → T2D RR 1.03 (0.91–1.18), NS; sweetened fruit drinks RR 1.28", cite: "Xi 2014 PLoS ONE", id: "PMID:24682091" },
+      participants: { figure: "~137,663 participants (100% fruit juice stratum)", cite: "Xi 2014 PLoS ONE", id: "PMID:24682091" },
+    },
+    doseCurve: {
+      outcome: "Type 2 diabetes", unit: "servings/day", shape: "flat", normalRange: [0, 1],
+      points: [ { x: 0, rr: 1.0 }, { x: 0.43, rr: 1.03, lo: 0.91, hi: 1.18 }, { x: 1, rr: 1.06 } ],
+      note: "Essentially flat for 100% juice within normal intake; the steep harm curve belongs to sugar-sweetened fruit drinks, not this. Single-serving signal (Muraki 2013) is ~1.08 per 3 servings/week. Points approximated.",
+      source: { cite: "Xi 2014 PLoS ONE; Muraki 2013 BMJ", id: "PMID:24682091" }, verified: false,
+    },
   },
   "berries": {
     evidence: { pooledRR: 0.82, ciExcludesNull: true, participants: 194019, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "unknown", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (~17 g/day increments)" },
@@ -1774,6 +1925,9 @@ const MECHANISM = {
   "ultra-processed": { direction: "negative", trial: "Inpatient randomized crossover trial (Hall 2019): an ad-libitum ultra-processed diet caused ~500 kcal/day overeating and weight gain vs an unprocessed diet matched for nutrients.", mechanism: "Hyper-palatability, energy density and fast eating rate → passive overconsumption. Causation directly demonstrated.", source: { cite: "Hall 2019 Cell Metabolism", id: "PMID:31105044" }, confidence: "high" },
   "processed-meat": { direction: "negative", trial: "DASH-Sodium controlled-feeding RCT: cutting sodium lowered systolic BP up to ~6–7 mmHg (processed meat is a major sodium source). IARC Group 1 for colorectal cancer.", mechanism: "Sodium → blood pressure (RCT-proven); N-nitroso/heme nitrosation → colorectal carcinogenesis (hazard-graded).", source: { cite: "Sacks 2001 NEJM (DASH-Sodium); Bouvard 2015 Lancet Oncol (IARC)", id: "PMID:11136953" }, confidence: "high" },
   "alcohol": { direction: "negative", trial: "Meta-analysis of 36 RCTs (Roerecke 2017): reducing alcohol lowered blood pressure dose-dependently.", mechanism: "Ethanol raises BP (RCT-reversible); ethanol → acetaldehyde, an IARC Group 1 carcinogen. Both point to harm.", source: { cite: "Roerecke 2017 Lancet Public Health", id: "PMID:29253389" }, confidence: "high" },
+  "fried-foods": { direction: "negative", trial: "No favourable RCT; deep-frying (especially in reused oil) generates trans and oxidised fatty acids plus acrylamide, and fried foods are energy-dense — controlled-feeding trials of trans fat (Mensink & Katan) confirm the atherogenic lipid pathway.", mechanism: "High-heat/repeated frying → trans + oxidised lipids and aldehydes → higher LDL, lower HDL and endothelial dysfunction; high energy density drives weight gain. A method-level harm riding on top of whatever is fried.", source: { cite: "Mensink & Katan 1990 NEJM (trans fat); Qin 2021 Heart", id: "PMID:2374566" }, confidence: "medium" },
+  "shellfish": { direction: "neutral", trial: "Meta-analysis of dietary-cholesterol RCTs (Li 2020): added dietary cholesterol raises LDL only modestly, and the shellfish cholesterol worry never showed up in hard outcomes.", mechanism: "Shellfish is lean and low in saturated fat; its dietary cholesterol nudges LDL slightly but also HDL, leaving the ratio roughly unchanged — no clear beneficial or harmful pathway.", source: { cite: "Li 2020 Nutrients (dietary cholesterol)", id: "PMID:32635569" }, confidence: "medium" },
+  "fruit-juice": { direction: "negative", trial: "Crossover RCT (Koutsos 2020): whole apples lowered cholesterol vs a sugar-matched apple DRINK — the whole-fruit benefit did not extend to the juice form.", mechanism: "Juicing strips the fibre and intact cell structure that slow sugar absorption, leaving rapidly-absorbed liquid sugar — the protective whole-fruit matrix is lost, though 100% juice retains some polyphenols and potassium.", source: { cite: "Koutsos 2020 Am J Clin Nutr", id: "10.1093/ajcn/nqz282" }, confidence: "medium" },
 };
 for (const _id in MECHANISM) {
   if (ASSESSMENTS[_id] && ASSESSMENTS[_id].evidence) {
@@ -1810,6 +1964,7 @@ const CATEGORY_UNIFORMITY = {
   "milk": "specific", "butter": "specific", "potatoes": "specific",
   "french-fries": "specific", "coconut-oil": "specific", "green-tea": "specific",
   "white-rice": "specific", "tomatoes": "specific", "cocoa": "specific",
+  "fried-foods": "specific", "shellfish": "specific", "fruit-juice": "specific",
 };
 
 // The specific within-category caveat shown on `mixed` entries (the "not all" story).
@@ -1858,6 +2013,7 @@ const RESEARCHED_ON = {
   "coconut-oil": "2026-07-01", "artificial-sweeteners": "2026-07-01",
   "tomatoes": "2026-07-01", "cruciferous": "2026-07-01", "leafy-greens": "2026-07-01",
   "berries": "2026-07-01", "wholemeal-bread": "2026-07-01", "white-bread": "2026-07-01",
+  "fried-foods": "2026-07-01", "shellfish": "2026-07-01", "fruit-juice": "2026-07-01",
 };
 for (const _f of FOODS) { if (RESEARCHED_ON[_f.id]) _f.researchedOn = RESEARCHED_ON[_f.id]; }
 
@@ -1873,13 +2029,11 @@ const HOLDING_LIST = [
   { name: "Garlic & other alliums", reason: "thin", note: "Popular claims rest mainly on blood-pressure/cholesterol markers; hard-outcome cohort evidence is thin." },
   { name: "Onions", reason: "unresearched", note: "Part of the broad vegetable signal, but little food-specific hard-outcome data — not yet assessed on its own." },
   { name: "Mushrooms", reason: "unresearched", note: "Some intriguing cohort signals; not yet researched to our standard." },
-  { name: "Shellfish (shrimp, mussels, etc.)", reason: "thin", note: "Sparse and mixed outcome evidence, separate from the fatty-fish signal." },
   { name: "Seeds (chia, flax, pumpkin, etc.)", reason: "thin", note: "Favourable lipid/marker studies, but little hard-outcome cohort evidence yet." },
   { name: "Honey", reason: "unresearched", note: "Often marketed as a 'natural' sugar; little outcome evidence either way — not yet researched." },
   { name: "Herbs & spices", reason: "thin", note: "Mostly small biomarker studies; no notable hard-outcome evidence yet." },
   { name: "Plant milks (oat, almond, soy drink, etc.)", reason: "unresearched", note: "Highly variable products; not yet assessed as a category." },
   { name: "Dried fruit", reason: "unresearched", note: "Sits between whole fruit and concentrated sugar; not yet assessed separately." },
-  { name: "Fruit juice", reason: "thin", note: "Contrasts with whole fruit (worse for diabetes), but not yet given its own sourced verdict." },
 ];
 
 // ── Absolute population burden (GBD) — a SEPARATE axis from relative effect ──
