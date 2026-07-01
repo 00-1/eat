@@ -35,3 +35,21 @@ populated from the substitution prose we already have, and only where a comparat
 materially changes the read. It's honest, low-noise, and we can promote to a sourced
 matrix (C) later for the foods that have real substitution HRs. Avoid summary-row
 chips for now — the summary is already busy.
+
+## DECISION (user): go full/sourced — but as a GRAPH, not a dense matrix
+User wants the ambitious version. Important reframe: a literal N×N matrix over hundreds
+of foods is ~90k cells and almost entirely EMPTY — the literature only estimates a
+handful of swaps. So "full matrix" = a **sourced substitution graph**:
+- **Sourced edges** where a real substitution estimate exists:
+  `swaps: [{ with: "legumes", deltaRR: 0.83, outcome: "…", cite, id }]`. Known-rich
+  sources: processed/red meat → nuts/fish/legumes/whole grains (Zheng 2019 BMJ;
+  Guasch-Ferré 2019); butter → olive oil (Guasch-Ferré 2022); refined → whole grain;
+  SSB → water/coffee; juice → whole fruit; white → brown rice; potato/fries → whole
+  grain (Mousavi 2025).
+- **Derived comparisons** where no direct HR exists: within a food's role/category,
+  rank by our own verdicts ("a better swap than X, worse than Y"), clearly flagged
+  `derived` vs `sourced` so we never imply a substitution study that doesn't exist.
+- Render as a "Compared with…" block on the card: sourced swaps first (with the HR +
+  citation), then the derived within-category ranking.
+This is more useful AND more honest than a sparse matrix. A dense all-pairs matrix is
+explicitly NOT the goal.
