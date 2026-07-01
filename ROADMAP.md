@@ -564,15 +564,33 @@ actually aim for). At a realistic added intake veg is a **large** effect, not a
 modest one — which puts it on/above the shortlist cusp **honestly and for the right
 reason** (the dose actually eaten), with no all-cause bump needed.
 
-- [ ] Record a food-specific **realistic added intake** (with basis) and read
-      magnitude off the `doseCurve` at that intake, not at one unit. Where no curve
-      exists, fall back to the current single-RR magnitude and flag it honestly.
-- [ ] Separate this cleanly from **certainty** (dose doesn't make us more sure — veg
-      stays confounding/heterogeneity-limited, cf. BoP's conservative 2 stars) and
-      from **§3b population burden** below.
-- [ ] Open design question for the maintainer: how to set each food's "realistic
-      added amount" reproducibly (a fixed target like "a generous daily serving as
-      actually consumed", vs the dose-curve nadir, vs a percentile of intake data).
+- [x] **Engine + card readings DONE (v0.39.x).** `Scoring.doseExtremeReading`
+      (best case for positives / worst case for negatives) and `Scoring.ascensionDose`
+      (the smallest intake at which a food reaches a target magnitude tier, + curve
+      shape) read named points off the recorded curve — reproducible + unit-tested.
+      Each charted card now shows a "reading the curve" block: positives → "Best case
+      ~28 g/day → ~22% lower risk (large) — the sweet spot" (wording reflects
+      plateau/monotonic/J-U shape); negatives → where harm appears + worst measured
+      intake. Informative only; no shortlist change yet.
+- [x] Separated cleanly from **certainty** (dose doesn't make us surer) and from
+      **§3b population burden**.
+- [x] **Design decided (maintainer, 2026-07-01):** "optimal" = the dose curve's
+      plateau/nadir; monotonic-to-edge is tagged "as far as studied" (no
+      extrapolation). Nuts are the plateau/"sweet-spot" case (optimum ~28 g, more is
+      not better) vs veg the monotonic case (more keeps helping). The qualifier pill
+      carries the **specific ascension intake** ("~28 g/day"; "above ~800 g/day"), not
+      a vague "if you eat a lot".
+- [ ] **GATED — do NOT flip on yet.** Enabling conditional shortlist crowning +
+      retiring the all-cause bump now would *drop* veg/fruit/whole-grains off the
+      shortlist and promote edge-of-range readings (green tea). The promotion report
+      showed only tree-nuts clears "large" (0.78) on today's curves; whole grains
+      (0.82) and fruit (0.86) plateau at *moderate*, and leafy greens/cruciferous have
+      **no curve at all**. So the crowning rule genuinely disagrees until the staples
+      have real high-intake curves.
+- [ ] **Prereq: high-intake dose-curve grounding pass** for leafy greens, cruciferous,
+      whole grains (and re-check fruit) against their cumulative high-vs-none contrasts.
+      THEN flip on: retire the bump, enable conditional "if you eat plenty" crowning
+      with the ascension-dose pill, and let the rule promote exactly what earns it.
 
 ## 3b. Absolute population impact (beyond relative effect)  ⟶ *queued — the "real fix" for population importance (maintainer, 2026-07-01)*
 
