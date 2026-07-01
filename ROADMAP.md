@@ -545,14 +545,45 @@ what we *don't* know is a feature, not an embarrassment.
       files are served as-is, and confirmed all asset paths are relative (works under
       the `/eat/` project subpath). README links the live site.
 
-## 3. Absolute impact (beyond relative effect)  ⟶ *queued — the "real fix" (maintainer, 2026-07-01)*
+## 3a. Magnitude at a REALISTIC ADDED intake (dose-integrated), not per serving  ⟶ *queued — cuts to the guiding purpose (maintainer, 2026-07-01)*
+
+**The guiding question is "what happens to health when you ADD this food to your
+diet."** Magnitude today reads the pooled RR at a modest single-serving-ish
+contrast (whole fruit per 200 g/day; leafy greens "high vs low"). But people add
+foods in *food-specific realistic quantities* — often **many** servings of veg
+(7–10 portions/day), a tablespoon of oil, a small amount of trans fat. Reading
+every food at ~one serving understates the ones people pile on, and is only a
+**partial answer** to our own question.
+
+This is **distinct from — and more central than — absolute population burden.** It
+is an *individual-level* dose question ("if I add a realistic amount of veg, what
+happens to *me*"), answered by **integrating the food's dose-response curve up to a
+realistic added intake**, not by GBD PAF. Worked example: Aune 2017 F&V — all-cause
+mortality RR ≈ **0.90 at 200 g/day but ≈ 0.69 at ~800 g/day** (the amount people
+actually aim for). At a realistic added intake veg is a **large** effect, not a
+modest one — which puts it on/above the shortlist cusp **honestly and for the right
+reason** (the dose actually eaten), with no all-cause bump needed.
+
+- [ ] Record a food-specific **realistic added intake** (with basis) and read
+      magnitude off the `doseCurve` at that intake, not at one unit. Where no curve
+      exists, fall back to the current single-RR magnitude and flag it honestly.
+- [ ] Separate this cleanly from **certainty** (dose doesn't make us more sure — veg
+      stays confounding/heterogeneity-limited, cf. BoP's conservative 2 stars) and
+      from **§3b population burden** below.
+- [ ] Open design question for the maintainer: how to set each food's "realistic
+      added amount" reproducibly (a fixed target like "a generous daily serving as
+      actually consumed", vs the dose-curve nadir, vs a percentile of intake data).
+
+## 3b. Absolute population impact (beyond relative effect)  ⟶ *queued — the "real fix" for population importance (maintainer, 2026-07-01)*
 
 Magnitude is currently a *relative*-effect proxy, patched by the all-cause bump
 (§(b)) — a home-grown proxy with no established analog. The methodology review
 (`research/methodology-review.md`) identifies the principled replacement: a
 **separate absolute attributable-burden axis** (GBD PAF-style), which supersedes
 the bump rather than patching it. Maintainer decision: build this instead of a
-near-term bump softening.
+near-term bump softening. NB: this answers "how much does this food matter at the
+*population* level," a **different** question from §3a's individual "what happens
+when *I* add a realistic amount" — keep the two axes separate.
 
 **What it answers.** "How much does this food *matter* at the population level?" —
 a genuinely different question from "how big and sure is its relative effect?"
