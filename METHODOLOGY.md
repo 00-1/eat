@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.48 — living document.** This file is the canonical description of how
+**Version 0.49 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -477,6 +477,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.49 | 2026-07-01 | **Added a "Fine either way" neutral panel.** The summary now has a third, amber panel (completing the green/amber/red traffic light) for foods with no net verdict — so the biggest category isn't silently omitted. Grouped by recorded `lean` into a good→neutral→bad gradient (leans slightly beneficial / no clear effect / leans slightly worse), excluding neutral foods that already appear in the add/cut "neutral overall — but…" sections. The honest recommendation is "eat to taste — no health reason to seek out or avoid," in normal amounts (deliberately *not* "as much as you like" or a health range). |
 | 0.48 | 2026-07-01 | **Added bread — white & wholemeal (35 foods).** Bread has genuine food-level evidence (not just generic grain data), is eaten in quantity, and is the #1 population sodium source, so it earns its own items. **Wholemeal/wholegrain bread** → positive · moderate (type-2 diabetes HR 0.79, Hu 2020 BMJ; colorectal cancer Bao 2024) — in the add list at ~3 slices/day. **White bread** → neutral · low but *leaning bad* (no protection for CVD/mortality, higher T2D than wholemeal, weight-gain signal; the leading dietary sodium source) — cross-linked to refined grains. Full treatment (evidence+sources, mechanism, dose curve, exceptions, shared-claim tags). |
 | 0.47 | 2026-07-01 | **Flag high population-impact items on the summary lists.** Rows whose GBD burden is quantified high/very-high now carry a subtle indigo "◍ impact" tag (whole grains, nuts, fruit, veg, fatty fish; alcohol on the cut side), tying the population-burden axis to the quick summary without re-cluttering — the tag appears only on the handful of notable-burden foods. |
 | 0.46 | 2026-07-01 | **Within-category member breakdown for "not all" foods.** A `mixed` food can now record a per-member `members` breakdown (`good / likely / weaker / worse / unknown` + a one-line basis) plus a `memberIntro` on whether the effect generalises — so "which ones, actually?" is answered (e.g. berries: blueberries good, raspberries/blackberries *likely* (share the profile, under-studied), strawberries weaker, cranberries worse). Central framing: *concentrated evidence ≠ a member-specific effect*, so an under-studied member is "likely," not "bad." Prototyped on berries; other mixed categories (whole fruit, ultra-processed, sweeteners) to follow via a research pass. |

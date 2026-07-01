@@ -1182,6 +1182,31 @@
     };
     const tier = (entries, t) => entries.filter((e) => e.tier === t);
 
+    // Neutral panel: foods with no net verdict AND no directional per-outcome verdict
+    // (those live in the add/cut "neutral overall — but…" sections). Grouped by their
+    // recorded `lean` into a good→neutral→bad gradient. The honest recommendation is
+    // "eat to taste" — not "as much as you like" (calories/displacement still apply)
+    // and not a health range (no basis) — carried in each section's subtitle.
+    const neuLean = (f) => Scoring.leanOf((ASSESSMENTS[f.id] || {}).evidence);
+    const neutralFoods = FOODS.filter(function (f) {
+      return f.effect === "neutral" && !outcomesOf(f, "negative").length && !outcomesOf(f, "positive").length;
+    });
+    const neutralRow = (f) =>
+      "<button class='hl-row' data-food='" + escapeHtml(f.id) + "'>" +
+        "<span class='hl-row-top'><span class='hl-row-name'>" + escapeHtml(f.name) + "</span></span>" +
+        (burdenChip(f) ? "<span class='hl-row-tags'>" + burdenChip(f) + "</span>" : "") +
+      "</button>";
+    const neutralSection = (list, title, note) => {
+      if (!list.length) return "";
+      const rows = list.slice().sort((a, b) => lnRR(b) - lnRR(a));
+      return (
+        "<div class='hl-sec'>" +
+          "<p class='hl-sec-h'>" + escapeHtml(title) + " <span class='hl-sec-note'>— " + escapeHtml(note) + "</span></p>" +
+          "<div class='hl-rows'>" + rows.map(neutralRow).join("") + "</div>" +
+        "</div>"
+      );
+    };
+
     el.innerHTML =
       "<div class='hl-card hl-gold'>" +
         "<h2>Worth adding</h2>" +
@@ -1198,6 +1223,13 @@
         sectionHtml(tier(redEntries, 2), "Strong reasons to cut down", "a notch short, or large only in quantity") +
         sectionHtml(tier(redEntries, 3), "Also worth reducing", "smaller or less certain, but the evidence points to harm") +
         sectionHtml(redOutcome, "Neutral overall — but worth limiting for one risk", "no net verdict, but linked to a specific harm") +
+      "</div>" +
+      "<div class='hl-card hl-neutral'>" +
+        "<h2>Fine either way</h2>" +
+        "<p class='hl-sub'>No clear health effect from adding these — eat them for taste, not for or against your health. (Normal amounts: neutral is measured at typical intakes, not unlimited.)</p>" +
+        neutralSection(neutralFoods.filter((f) => neuLean(f) === "positive"), "Leans slightly beneficial", "a mild plus, but don't count on it") +
+        neutralSection(neutralFoods.filter((f) => !neuLean(f)), "No clear effect", "eat to taste — no health reason to seek it out or avoid it") +
+        neutralSection(neutralFoods.filter((f) => neuLean(f) === "negative"), "Leans slightly worse", "fine in normal amounts; easy on large or frequent servings") +
       "</div>" +
       "<p class='hl-burden-note'>" +
         "<strong>A different question — population impact.</strong> Some foods are modest per serving but huge in aggregate, because nearly everyone eats too little (or too much) of them. On <em>population burden</em>, GBD ranks eating too little <strong>whole grains (#2)</strong>, <strong>fruit (#3)</strong>, <strong>nuts (#4)</strong> and <strong>vegetables (#5)</strong> among the very top dietary risks worldwide — a different axis from the per-serving effect above. Each card's <em>Population impact</em> section shows it." +
