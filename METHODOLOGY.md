@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.53 — living document.** This file is the canonical description of how
+**Version 0.54 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -477,6 +477,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.54 | 2026-07-01 | **Intro styling.** Restyled the Foods-tab intro: a green "Diet effects" eyebrow kicker + the question `h1` + a hairline rule + a shorter subtitle, all inside a left green accent bar (ties to the app's green identity). |
 | 0.53 | 2026-07-01 | **Foods-tab intro.** Added a brief concept lead at the top of the Foods tab — "What's the health impact of adding a food to your diet?" + a one-line factual summary (rated positive/negative/neutral, computed from studies by a reproducible method, shown with certainty and effect size, provisional). Restores a semantic page `h1` (removed with the old header). |
 | 0.52 | 2026-07-01 | **Stale-prose sweep.** Refreshed copy that lagged the features: the data-status banner (was "*most* figures are best-estimates" — false now that 27/35 are verified; now "N verified, the other M are best-estimates"); the Approach tab's "we don't yet compute / plan to add" burden-axis lines (shipped — now "shown as each card's Population impact"); a stray "Bin fodder" and "⚠ worst offender" in the methodology body; and the README shortlist description (still described the old Gold-standard/Worst-offenders + all-cause-bump model). Changelog rows keep their historical wording. |
 | 0.51 | 2026-07-01 | **Mobile controls fix + reorder.** Fixed a mobile bug where the search box ballooned to full height (in the ≤540px column layout, `flex:1 1 280px` grew *vertically*; pinned to natural height). Moved the search/filter/sort controls (and the data-status banner) down to sit directly above the food grid they act on, instead of stranded at the top above the summaries. |
