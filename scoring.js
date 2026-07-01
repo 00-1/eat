@@ -379,6 +379,34 @@
     return "low";
   }
 
+  // Signal tier — pure, derived. Splits every food into "notable" (worth a full card
+  // + eligible for the summary panels) or "long-tail" ("eat to taste — no strong
+  // signal either way"). Falls out of fields already recorded, so it can't be
+  // hand-picked. See PLANNING/design/phase0-spec.md.
+  //
+  //   notable  iff  directional verdict OR neutral-but-leaning OR any directional
+  //                 per-outcome verdict OR contested OR burden ≥ high OR
+  //                 categoryUniformity === "mixed"
+  //   long-tail  otherwise
+  function signalTier(food, assessment) {
+    if (!food || !assessment) return "long-tail";
+    if (food.effect && food.effect !== "neutral") return "notable";
+    var ev = assessment.evidence || {};
+    if (leanOf(ev)) return "notable";
+    var ovs = assessment.outcomeVerdicts || [];
+    for (var i = 0; i < ovs.length; i++) {
+      if (ovs[i] && ovs[i].effect && ovs[i].effect !== "neutral") return "notable";
+    }
+    if (food.contested) return "notable";
+    var b = assessment.burden;
+    if (b && (b.direction || b.deathsM != null)) {
+      var tier = burdenTier(b.deathsM);
+      if (tier === "high" || tier === "very-high") return "notable";
+    }
+    if (food.categoryUniformity === "mixed") return "notable";
+    return "long-tail";
+  }
+
   // Dose-response SHAPE vocabulary — plain-language labels for how risk changes
   // across the range of normal intake. A single RR is one point on this curve; the
   // shape is the rest of the story (the dose makes the poison; diminishing returns;
@@ -594,6 +622,7 @@
     BURDEN_ORDER: BURDEN_ORDER,
     BURDEN_LABEL: BURDEN_LABEL,
     burdenTier: burdenTier,
+    signalTier: signalTier,
     MAGNITUDE_LABEL: MAGNITUDE_LABEL,
     DOSE_SHAPE: DOSE_SHAPE,
     classifyDoseShape: classifyDoseShape,
