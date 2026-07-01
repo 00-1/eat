@@ -352,17 +352,25 @@
         const lo = Math.min(p1, p2), hi = Math.max(p1, p2);
         const benefit = lo === hi ? "about " + hi + "% lower risk" : "about " + lo + "–" + hi + "% lower risk";
         const monotonic = /monotonic/.test(shape);
+        // Is the top of the band the last studied point (data runs out) or a real
+        // boundary where the next point drops below top-tier? We must not claim
+        // "more adds little" when we simply have no data above.
+        const edgeLimited = band.atStudiedEdge;
+        const topStr = "~" + band.hiX + unit;
         const how = band.single
-          ? (/plateau|threshold/.test(shape)
-              ? "the sweet spot — eating more adds little"
-              : /j-u-curve/.test(shape)
-                ? "a sweet spot — beyond it the benefit fades"
-                : monotonic && band.atStudiedEdge
-                  ? "and more keeps helping, as far as studied"
-                  : "beyond this the benefit tails off")
-          : (monotonic && band.atStudiedEdge
-              ? "anywhere in this range is near-best — and more may help further, as far as studied"
-              : "a broad sweet spot — anywhere in this range is near-best; more adds little");
+          ? (band.atStudiedEdge
+              ? (monotonic ? "and more may help further, but " + topStr + " is the most studied"
+                           : "the most studied intake — no data recorded above it")
+              : /plateau|threshold/.test(shape)
+                ? "the sweet spot — more than this adds little"
+                : /j-u-curve/.test(shape)
+                  ? "a sweet spot — beyond it the benefit fades"
+                  : "above this the benefit slips below top-tier")
+          : (edgeLimited
+              ? (monotonic
+                  ? "near-best across this range, and possibly higher — " + topStr + " is the most studied"
+                  : "near-best across this range; not studied above " + topStr)
+              : "near-best from the low end up to " + topStr + "; above that it slips below top-tier");
         rows.push(
           "<li class='dr-read dr-read-good'><span class='dr-read-k'>Best case</span> " +
           "<span class='dr-pill dr-pill-good'>" + escapeHtml(dose) + "</span> " +
