@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.36";
+const METHODOLOGY_VERSION = "0.37";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1150,6 +1150,12 @@ const ASSESSMENTS = {
       pooledRR: { figure: "All-cause mortality HR 0.94 (0.91–0.98) high vs low; 0.94 (0.89–0.99) per 50 g/day", cite: "Zargarzadeh 2023 Adv Nutr", id: "PMID:36811595" },
       participants: { figure: "1,141,793 participants, 93,373 deaths, 32 cohorts", cite: "Zargarzadeh 2023 Adv Nutr", id: "PMID:36811595" },
     },
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "g/day", shape: "plateau-benefit", normalRange: [50, 100],
+      points: [ { x: 0, rr: 1.0 }, { x: 50, rr: 0.94, lo: 0.89, hi: 0.99 }, { x: 100, rr: 0.92 } ],
+      note: "≈6% lower mortality per 50 g/day, with curvilinear flattening. A small effect; intermediate detail limited.",
+      source: { cite: "Zargarzadeh 2023 Adv Nutr", id: "PMID:36811595" }, verified: false,
+    },
   },
   "whole-grains": {
     evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 700000, heterogeneity: "high", directionallyConsistent: true, outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~90 g/day vs low intake" },
@@ -1178,6 +1184,12 @@ const ASSESSMENTS = {
       pooledRR: { figure: "All-cause mortality RR 0.90 (0.86–0.94) per 200 g/day fruit; I²=44%", cite: "Aune 2017 Int J Epidemiol", id: "PMID:28338764" },
       participants: { figure: "833,234 participants, 56,423 deaths, 16 cohorts (fruit & mortality)", cite: "Wang 2014 BMJ", id: "PMID:25073782" },
     },
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "g/day", shape: "plateau-benefit", normalRange: [150, 300],
+      points: [ { x: 0, rr: 1.0 }, { x: 100, rr: 0.94 }, { x: 200, rr: 0.90, lo: 0.85, hi: 0.91 }, { x: 300, rr: 0.88 }, { x: 400, rr: 0.87 }, { x: 550, rr: 0.86 } ],
+      note: "Benefit flattens beyond ~2–3 servings/day (Wang threshold; Aune plateau to ~800 g F&V). Intermediate points approximated to the reported nonlinear shape.",
+      source: { cite: "Aune 2017 Int J Epidemiol; Wang 2014 BMJ", id: "PMID:28338764" }, verified: false,
+    },
   },
   "fatty-fish": {
     evidence: { pooledRR: 0.85, ciExcludesNull: true, participants: 1140000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (~1–2 servings/week)" },
@@ -1186,6 +1198,12 @@ const ASSESSMENTS = {
     sources: {
       pooledRR: { figure: "CHD-mortality RR 0.85 (0.77–0.94) highest vs lowest; I²=51%, 27 studies", cite: "Zhang 2020 Nutrients", id: "10.3390/nu12082278" },
       participants: { figure: "1,139,553 participants (Zhang 2020); corroborated 1.44M (Ricci 2023)", cite: "Zhang 2020 Nutrients", id: "10.3390/nu12082278" },
+    },
+    doseCurve: {
+      outcome: "CHD / CVD mortality", unit: "servings/week", shape: "plateau-benefit", normalRange: [1, 3],
+      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 0.84 }, { x: 2, rr: 0.81 }, { x: 3, rr: 0.79 }, { x: 4, rr: 0.79, lo: 0.67, hi: 0.94 } ],
+      note: "Most benefit by ~1–2 servings/week, then flat (Zhang 2020 category estimates for total fish; fatty-fish-specific splines aren't published separately).",
+      source: { cite: "Zhang 2020 Nutrients; Ricci 2023", id: "10.3390/nu12082278" }, verified: false,
     },
   },
   "olive-oil": {
@@ -1196,6 +1214,12 @@ const ASSESSMENTS = {
       pooledRR: { figure: "All-cause mortality HR 0.81 (0.78–0.84); CVD-mortality 0.81 (0.75–0.87), >7 g/day", cite: "Guasch-Ferré 2022 JACC", id: "PMID:35027106" },
       participants: { figure: "~92,000 across two US cohorts (NHS + HPFS, 28-yr follow-up)", cite: "Guasch-Ferré 2022 JACC", id: "PMID:35027106" },
     },
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "g/day", shape: "plateau-benefit", normalRange: [0, 20],
+      points: [ { x: 0, rr: 1.0 }, { x: 1.5, rr: 0.94 }, { x: 4.5, rr: 0.87 }, { x: 7, rr: 0.84 }, { x: 15, rr: 0.81, lo: 0.78, hi: 0.84 }, { x: 20, rr: 0.81 }, { x: 30, rr: 0.81 } ],
+      note: "Benefit appears from >0–1.5 g/day and flattens beyond ~20 g/day. Intermediate points approximated from the reported intake categories.",
+      source: { cite: "Guasch-Ferré 2022 JACC", id: "PMID:35027106" }, verified: false,
+    },
   },
   "yogurt": {
     evidence: { pooledRR: 0.86, ciExcludesNull: true, participants: 579832, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "80 g/day vs none (dose-response plateau)" },
@@ -1204,6 +1228,12 @@ const ASSESSMENTS = {
     sources: {
       pooledRR: { figure: "T2D RR 0.86 (0.83–0.90) at 80 g/day; non-linear, plateaus", cite: "Gijsbers 2016 Am J Clin Nutr", id: "PMID:26912494" },
       participants: { figure: "579,832 individuals, 43,118 T2D cases, 22 cohorts", cite: "Gijsbers 2016 Am J Clin Nutr", id: "PMID:26912494" },
+    },
+    doseCurve: {
+      outcome: "Type 2 diabetes", unit: "g/day", shape: "plateau-benefit", normalRange: [0, 100],
+      points: [ { x: 0, rr: 1.0 }, { x: 20, rr: 0.94 }, { x: 40, rr: 0.90 }, { x: 60, rr: 0.88 }, { x: 80, rr: 0.86, lo: 0.83, hi: 0.90 }, { x: 100, rr: 0.86 }, { x: 120, rr: 0.87 } ],
+      note: "Non-linear inverse association plateauing around ~80 g/day. Intermediate points approximated along the reported spline.",
+      source: { cite: "Gijsbers 2016 Am J Clin Nutr", id: "PMID:26912494" }, verified: false,
     },
   },
   "coffee": {
@@ -1277,6 +1307,12 @@ const ASSESSMENTS = {
       pooledRR: { figure: "Industrial trans fat, CHD RR 1.42 (1.05–1.92) highest vs lowest; per-2%-energy RR 1.23 (1.11–1.37)", cite: "de Souza 2015 BMJ; Mozaffarian 2006 NEJM", id: "PMID:26268692" },
       participants: { figure: "4 prospective cohorts (Mozaffarian 2006); industrial-vs-ruminant isolated in de Souza 2015", cite: "Mozaffarian 2006 NEJM", id: "PMID:16611951" },
     },
+    doseCurve: {
+      outcome: "Coronary heart disease", unit: "% of energy", shape: "monotonic-harm", normalRange: [0, 1],
+      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 1.10 }, { x: 2, rr: 1.21, lo: 1.10, hi: 1.33 }, { x: 3, rr: 1.32 }, { x: 4, rr: 1.42 } ],
+      note: "Risk rises across the whole range — no safe threshold. Intermediate points approximated from the reported per-2%-energy slope.",
+      source: { cite: "de Souza 2015 BMJ", id: "PMID:26268692" }, verified: false,
+    },
   },
   "ultra-processed": {
     evidence: { pooledRR: 1.15, ciExcludesNull: true, participants: 1148387, heterogeneity: "high", directionallyConsistent: true, outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "highest vs lowest intake (per 10% increment: 1.10)" },
@@ -1286,6 +1322,12 @@ const ASSESSMENTS = {
       pooledRR: { figure: "All-cause mortality HR 1.15 (1.09–1.22) high vs low; 1.10 (1.04–1.16) per 10% increment; I²=91%", cite: "Liang 2025 Syst Rev", id: "10.1186/s13643-025-02800-8" },
       participants: { figure: "1,148,387 participants, 173,107 deaths, 18 cohorts", cite: "Liang 2025 Syst Rev", id: "10.1186/s13643-025-02800-8" },
     },
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "% of energy", shape: "monotonic-harm", normalRange: [0, 20],
+      points: [ { x: 0, rr: 1.0 }, { x: 10, rr: 1.10, lo: 1.04, hi: 1.16 }, { x: 20, rr: 1.21 }, { x: 30, rr: 1.33 }, { x: 40, rr: 1.46 } ],
+      note: "Roughly linear: ~10% higher mortality per 10% of energy from UPF. Points beyond 10% extrapolated from the per-increment slope.",
+      source: { cite: "Liang 2025 Syst Rev", id: "10.1186/s13643-025-02800-8" }, verified: false,
+    },
   },
   "refined-grains": {
     evidence: { pooledRR: 1.27, ciExcludesNull: true, participants: 148858, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "≥350 g/day vs <50 g/day (PURE)" },
@@ -1294,6 +1336,12 @@ const ASSESSMENTS = {
     sources: {
       pooledRR: { figure: "All-cause mortality HR 1.27 (1.11–1.46); major CVD 1.33 (1.16–1.52), ≥350 vs <50 g/day (PURE)", cite: "Swaminathan 2021 BMJ (PURE)", id: "PMID:33536317" },
       participants: { figure: "148,858 across 21 countries (PURE); contested by Gaesser 2022 (17 cohorts, industry-funded, CVD 1.08 NS)", cite: "Swaminathan 2021 BMJ; Gaesser 2022 Trends Cardiovasc Med", id: "PMID:33536317" },
+    },
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "g/day", shape: "threshold-harm", normalRange: [0, 50],
+      points: [ { x: 0, rr: 1.0 }, { x: 25, rr: 1.0 }, { x: 100, rr: 1.06 }, { x: 200, rr: 1.14 }, { x: 300, rr: 1.21 }, { x: 375, rr: 1.27, lo: 1.11, hi: 1.46 } ],
+      note: "Little change at low intake, climbing above ~1–2 servings/day (PURE). Intermediate category points interpolated; contested (see the note above).",
+      source: { cite: "Swaminathan 2021 BMJ (PURE)", id: "PMID:33536317" }, verified: false,
     },
   },
   "eggs": {
@@ -1318,6 +1366,12 @@ const ASSESSMENTS = {
         outcome: "Type 2 diabetes", effect: "negative",
         evidence: { pooledRR: 1.10, ciExcludesNull: true, participants: 1970000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "per 100 g/day" },
         rationale: "Unlike the contested mortality signal, the diabetes association is consistent: HR 1.10 (1.06–1.15) per 100 g/day in the largest IPD meta-analysis (1.97M; Shi 2023 puts it higher at 1.27). Modest and confounding-prone, so Low certainty — but directional. This is why red meat reads neutral overall yet negative for diabetes (mirroring white rice).",
+        doseCurve: {
+          outcome: "Type 2 diabetes", unit: "g/day", shape: "monotonic-harm", normalRange: [0, 100],
+          points: [ { x: 0, rr: 1.0 }, { x: 50, rr: 1.05 }, { x: 100, rr: 1.10, lo: 1.06, hi: 1.15 }, { x: 150, rr: 1.15 }, { x: 200, rr: 1.21 } ],
+          note: "≈10% higher T2D risk per 100 g/day (Li 2024 IPD). Intermediate points from the per-100 g slope.",
+          source: { cite: "Li 2024 Lancet Diabetes Endocrinol", id: "PMID:39174153" }, verified: false,
+        },
         source: { cite: "Li 2024 Lancet Diabetes Endocrinol (IPD, 1.97M); Shi 2023 EHJ", id: "PMID:39174153" },
         verified: true,
       },
@@ -1343,6 +1397,12 @@ const ASSESSMENTS = {
     sources: {
       pooledRR: { figure: "Total CVD RR 0.90 (0.82–0.99), CHD 0.86 (0.77–0.96), high vs low; non-linear, peak ~40 g/day", cite: "Chen 2017 Eur J Nutr", id: "PMID:27517544" },
       participants: { figure: "15 prospective cohorts (CVD); de Goede 2016 stroke pool ~762,000 (null)", cite: "Chen 2017 Eur J Nutr", id: "PMID:27517544" },
+    },
+    doseCurve: {
+      outcome: "Cardiovascular disease", unit: "g/day", shape: "j-u-curve", normalRange: [20, 60],
+      points: [ { x: 0, rr: 1.0 }, { x: 10, rr: 0.96 }, { x: 20, rr: 0.93 }, { x: 40, rr: 0.90, lo: 0.82, hi: 0.99 }, { x: 80, rr: 0.95 } ],
+      note: "A 'sweet spot': lowest CVD risk near ~40 g/day, with the benefit fading at higher intake. Intermediate points approximated to the reported L/J shape.",
+      source: { cite: "Chen 2017 Eur J Nutr", id: "PMID:27517544" }, verified: false,
     },
   },
   "butter": {
@@ -1408,6 +1468,12 @@ const ASSESSMENTS = {
   "green-tea": {
     evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 1960000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "3–4 cups/day vs none" },
     effectEstimate: "≈4% lower CVD mortality and stroke per cup/day; ~0.88 at a realistic 3 cups/day; plateaus, no hard-outcome trial.",
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "cups/day", shape: "monotonic-benefit", normalRange: [1, 3],
+      points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 0.96 }, { x: 2, rr: 0.91, lo: 0.88, hi: 0.94 }, { x: 3, rr: 0.87 }, { x: 5, rr: 0.80, lo: 0.72, hi: 0.89 } ],
+      note: "≈4% lower all-cause mortality per cup/day; strongest in higher-intake Japanese cohorts. Intermediate points approximated.",
+      source: { cite: "Tang 2015 Br J Nutr", id: "PMID:26202661" }, verified: false,
+    },
   },
   "white-rice": {
     evidence: { pooledRR: 1.16, ciExcludesNull: true, participants: 577426, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (non-linear; harm above ~300 g/day)" },
@@ -1431,6 +1497,12 @@ const ASSESSMENTS = {
     sources: {
       pooledRR: { figure: "Cancer mortality RR 0.88 (0.79–0.99) high vs low; dose-response per 10 mg/day isoflavones", cite: "Nachvak 2019 J Acad Nutr Diet", id: "PMID:31278047" },
       participants: { figure: "330,826 participants, 23 prospective studies", cite: "Nachvak 2019 J Acad Nutr Diet", id: "PMID:31278047" },
+    },
+    doseCurve: {
+      outcome: "Cancer / all-cause mortality", unit: "mg isoflavones/day", shape: "monotonic-benefit", normalRange: [0, 40],
+      points: [ { x: 0, rr: 1.0 }, { x: 20, rr: 0.94 }, { x: 40, rr: 0.90, lo: 0.83, hi: 0.97 } ],
+      note: "≈7% lower cancer mortality per 10 mg/day isoflavones. Points approximated from the reported per-unit slope (full spline not published).",
+      source: { cite: "Nachvak 2019 J Acad Nutr Diet", id: "PMID:31278047" }, verified: false,
     },
   },
   "cruciferous": {

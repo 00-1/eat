@@ -142,12 +142,13 @@ A single RR is one point on a curve; the shape is the rest of the story. Done:
 - [x] **Every food now shows a dose-response section** (v0.30) — foods without a
       recorded curve display an honest "no curve recorded yet — known gap, not a
       finding of 'no relationship'" placeholder (only ~6 foods have curves so far).
-- [ ] **Dedicated dose-response research pass** — most foods are missing a curve.
-      Fetch published dose-response points (with sources) for each food–outcome pair,
-      and where a pass confirms none exists, mark it **genuinely unavailable** vs the
-      default **not-fetched-yet** (a per-food `doseCurveStatus`), so the placeholder
-      can say which. Grab curve points whenever verifying a figure (cheap once the
-      paper is open).
+- [~] **Dedicated dose-response research pass — largely DONE (v0.37).** Added 12 curves
+      (olive oil, yogurt, soy, green tea, whole fruit, legumes, fatty fish, trans fat,
+      refined grains, ultra-processed, cheese J-curve, red-meat→T2D) → **17 of 32 foods
+      charted.** Shapes derived from points (`classifyDoseShape`). Still to do: the
+      remaining ~15 foods; mark genuinely-unavailable vs not-fetched (`doseCurveStatus`);
+      point-level source-checking to flip curves to `verified:true` (intermediate points
+      are currently approximated from reported per-unit slopes).
 - [ ] **Per-outcome curves**: alcohol's cancer curve (monotonic harm) and mortality
       curve (contested J) are different shapes — needs the per-outcome model so each
       gets its own line instead of one curve + a caveat note.
