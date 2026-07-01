@@ -455,3 +455,23 @@ test("ascensionDose: intake to reach a target tier, with shape", () => {
   assert.equal(h.x, 150);
   assert.ok(h.atStudiedEdge);
 });
+
+test("optimalBand: contiguous near-best range at the same magnitude tier", () => {
+  // Nuts: 28 g and 45 g are both 'large'; 15 g is only 'moderate' → band 28–45.
+  const nuts = { unit: "g/day", points: [
+    { x: 0, rr: 1 }, { x: 15, rr: 0.86 }, { x: 28, rr: 0.78 }, { x: 45, rr: 0.8 },
+  ] };
+  const b = S.optimalBand(nuts, "positive");
+  assert.equal(b.loX, 28);
+  assert.equal(b.hiX, 45);
+  assert.equal(b.single, false);
+  assert.equal(b.tier, "large");
+  // A single-point peak stays single.
+  const one = { unit: "g/day", points: [
+    { x: 0, rr: 1 }, { x: 10, rr: 0.9 }, { x: 20, rr: 0.78 }, { x: 30, rr: 0.9 },
+  ] };
+  const b2 = S.optimalBand(one, "positive");
+  assert.equal(b2.loX, 20);
+  assert.equal(b2.hiX, 20);
+  assert.equal(b2.single, true);
+});

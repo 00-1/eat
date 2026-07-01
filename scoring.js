@@ -520,6 +520,39 @@
     return null;
   }
 
+  // The near-optimal BAND: the contiguous run of intakes (around the best point)
+  // over which the effect holds its best magnitude tier — so "28 g" becomes the
+  // honest "28–45 g" when higher intakes are barely different. Reproducible from the
+  // curve. Returns {loX, hiX, bestRR, loRR, hiRR, tier, single, atStudiedEdge, unit}.
+  function optimalBand(doseCurve, direction) {
+    var r = curveReadings(doseCurve);
+    if (!r) return null;
+    var pts = doseCurve.points.filter(function (p) {
+      return p && typeof p.x === "number" && typeof p.rr === "number" && p.rr > 0;
+    }).sort(function (a, b) { return a.x - b.x; });
+    var ext = direction === "negative" ? r.peak : r.nadir;
+    var tier = magnitudeOfRR(ext.rr);
+    var ei = -1;
+    for (var k = 0; k < pts.length; k++) { if (pts[k].x === ext.x) { ei = k; break; } }
+    if (ei === -1) return null;
+    var inBand = function (p) {
+      var dirOk = direction === "negative" ? p.rr > 1 : p.rr < 1;
+      return dirOk && magnitudeOfRR(p.rr) === tier;
+    };
+    var lo = ei, hi = ei;
+    while (lo - 1 >= 0 && inBand(pts[lo - 1])) lo--;
+    while (hi + 1 < pts.length && inBand(pts[hi + 1])) hi++;
+    return {
+      unit: r.unit,
+      loX: pts[lo].x, hiX: pts[hi].x,
+      loRR: pts[lo].rr, hiRR: pts[hi].rr,
+      bestRR: ext.rr, bestX: ext.x,
+      tier: tier,
+      single: lo === hi,
+      atStudiedEdge: pts[hi].x === pts[pts.length - 1].x,
+    };
+  }
+
   var api = {
     MAX: MAX,
     THRESHOLDS: THRESHOLDS,
@@ -527,6 +560,7 @@
     curveReadings: curveReadings,
     doseExtremeReading: doseExtremeReading,
     ascensionDose: ascensionDose,
+    optimalBand: optimalBand,
     computeScores: computeScores,
     totalScore: totalScore,
     tierFromTotal: tierFromTotal,

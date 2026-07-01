@@ -340,20 +340,33 @@
     const magL = (m) => (Scoring.MAGNITUDE_LABEL[m] || m).toLowerCase();
     const rows = [];
     if (food.effect === "positive") {
-      const best = Scoring.doseExtremeReading(c, "positive");
-      if (best && best.rr < 1) {
+      const band = Scoring.optimalBand(c, "positive");
+      if (band && band.bestRR < 1) {
         const shape = c.shape || "";
-        const how = /plateau|threshold/.test(shape)
-          ? "the sweet spot — eating more adds little"
-          : /j-u-curve/.test(shape)
-            ? "a sweet spot — beyond it the benefit fades"
-            : best.atStudiedEdge
-              ? "and more keeps helping, as far as studied"
-              : "beyond this the benefit tails off";
+        // dose label: a range when a band of intakes is near-best, else a single point
+        const dose = band.single
+          ? "~" + band.loX + unit
+          : "~" + band.loX + "–" + band.hiX + unit;
+        // benefit as a range across the band (min..max % lower risk)
+        const p1 = pct(band.loRR, false), p2 = pct(band.hiRR, false);
+        const lo = Math.min(p1, p2), hi = Math.max(p1, p2);
+        const benefit = lo === hi ? "about " + hi + "% lower risk" : "about " + lo + "–" + hi + "% lower risk";
+        const monotonic = /monotonic/.test(shape);
+        const how = band.single
+          ? (/plateau|threshold/.test(shape)
+              ? "the sweet spot — eating more adds little"
+              : /j-u-curve/.test(shape)
+                ? "a sweet spot — beyond it the benefit fades"
+                : monotonic && band.atStudiedEdge
+                  ? "and more keeps helping, as far as studied"
+                  : "beyond this the benefit tails off")
+          : (monotonic && band.atStudiedEdge
+              ? "anywhere in this range is near-best — and more may help further, as far as studied"
+              : "a broad sweet spot — anywhere in this range is near-best; more adds little");
         rows.push(
           "<li class='dr-read dr-read-good'><span class='dr-read-k'>Best case</span> " +
-          "<span class='dr-pill dr-pill-good'>~" + escapeHtml(String(best.x)) + escapeHtml(unit) + "</span> " +
-          "→ about " + pct(best.rr, false) + "% lower risk (" + magL(best.magnitude) + ") — " + how + "</li>"
+          "<span class='dr-pill dr-pill-good'>" + escapeHtml(dose) + "</span> " +
+          "→ " + benefit + " (" + magL(band.tier) + ") — " + how + "</li>"
         );
       }
     } else if (food.effect === "negative") {
