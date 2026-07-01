@@ -55,6 +55,7 @@ const FOODS = [
       substitution: "Benefit is clearest when nuts replace refined snacks; they are calorie-dense, so 'added on top' may differ.",
       confounding: "Nut eaters tend to be more health-conscious; cohorts adjust for this but residual confounding remains.",
       doseResponse: "Risk reduction flattens above ~15–28 g/day — more is not proportionally better.",
+      variety: "Benefits are broadly consistent across nut types (peanuts ≈ tree nuts; Bao 2013) — almonds are best-evidenced for LDL-lowering, walnuts add omega-3/ALA — differences of emphasis, not direction. No study stratifies salted vs unsalted outcomes; choose unsalted/dry-roasted if you're salt-sensitive.",
     },
     studies: [
       {

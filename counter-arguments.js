@@ -103,6 +103,16 @@ const SHARED_CLAIMS = [
 ];
 
 const COUNTER_ARGUMENTS = {
+  "tree-nuts": [
+    {
+      claim: "Most nuts people actually eat are salted and roasted, so the sodium cancels out the benefit — the 'add nuts' verdict only holds for raw nuts.",
+      proponents: "A common-sense reading from sodium/blood-pressure guidance (WHO <2000 mg/day; hypertension advocacy); reasonable given nuts' salt-snack reputation.",
+      evidenceCited: "A 28 g serving of salted nuts adds ~90–190 mg sodium (roasted salted peanuts ~120 mg, salted almonds ~185 mg); sodium raises blood pressure, a causal CVD pathway.",
+      stance: "holds",
+      assessment:
+        "The verdict survives, because the benefit was measured largely in people eating salted/roasted nuts. Bao 2013 (NEJM, tree nuts HR 0.83, peanuts 0.88) and Luu 2015 (a low-income US cohort eating mostly salted/roasted peanuts) both found robust lower mortality, and PREDIMED (Estruch 2018) got ~28% fewer CVD events with specifically raw nuts — so both salted-inclusive cohorts and raw-nut RCTs point the same way. A serving's ~90–190 mg sodium is only ~5–10% of the daily budget, and nuts' potassium/magnesium/unsaturated fat lower BP in trials on net. Honest caveat: no study directly compares salted vs unsalted outcomes, so this rests on mechanism plus the raw-nut RCT; unsalted/dry-roasted is the marginally better choice, especially if you're salt-sensitive — but salting doesn't erase the benefit.",
+    },
+  ],
   "avocado": [
     {
       claim: "The avocado–CVD association is a fragile observational signal driven by healthy-user confounding and substitution effects, and the one large RCT with a hard endpoint (visceral fat) was null.",
