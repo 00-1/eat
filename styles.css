@@ -150,8 +150,8 @@ a { color: var(--accent); }
    rounded corners so it reads as a deliberate marker rather than a border that
    curves around the corner. Colour comes from --accent-c, set by the verdict /
    severity modifier classes below. */
-.card, .group-item, .outcome-item, .counter, .exc, .led-row { position: relative; }
-.card::before, .group-item::before, .outcome-item::before, .counter::before, .exc::before, .led-row::before {
+.card, .group-item, .outcome-item, .counter, .exc, .led-row, .diff-row { position: relative; }
+.card::before, .group-item::before, .outcome-item::before, .counter::before, .exc::before, .led-row::before, .diff-row::before {
   content: "";
   position: absolute;
   left: 0;
@@ -367,12 +367,24 @@ a { color: var(--accent); }
 .explore-empty { margin: 0; font-size: 0.86rem; color: var(--ink-soft); }
 .diff-summary { margin: 0 0 10px; font-size: 0.88rem; font-weight: 600; color: var(--ink); }
 .diff-summary-note { font-weight: 400; color: var(--ink-soft); }
+/* two labelled groups: direction flips vs certainty-only shifts */
+.diff-group + .diff-group { margin-top: 16px; }
+.diff-group-h {
+  margin: 0 0 8px; font-size: 0.78rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink);
+}
+.diff-group-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
 .diff-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .diff-row {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px;
-  background: var(--surface);
+  padding: 7px 10px; padding-left: 14px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
 }
+/* square accent bar (same mechanism as cards): coloured by the after-effect */
+.diff-row.eff-positive { --accent-c: var(--pos); }
+.diff-row.eff-neutral  { --accent-c: var(--neu); }
+.diff-row.eff-negative { --accent-c: var(--neg); }
+.diff-row.eff-insufficient { --accent-c: var(--line); }
 .vchip {
   font-size: 0.74rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
   border: 1px solid transparent;
@@ -386,8 +398,11 @@ a { color: var(--accent); }
   font-size: 0.92rem; font-weight: 600; color: var(--ink); text-align: left;
 }
 .diff-jump:hover { color: var(--accent); text-decoration: underline; }
-.diff-change { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.diff-change { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .diff-arrow { color: var(--ink-soft); font-weight: 700; }
+/* certainty demoted to muted text so it doesn't compete with the direction pill */
+.diff-tierlabel { font-size: 0.74rem; font-weight: 600; color: var(--ink-soft); }
+.diff-tierlabel.diff-after { color: var(--ink); font-weight: 700; }
 
 .block-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
 

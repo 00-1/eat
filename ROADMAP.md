@@ -371,8 +371,8 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       stripe = AI smell). Kept the colour cue but changed the *form*: a **solid, square
       (non-curved) accent bar**, inset from the rounded corners so it can't follow the
       curve, on cards + group/outcome/counter/exception blocks (colour = verdict/
-      severity). Highlights keep their gradient; diff rows rely on the verdict chips.
-      (v0.30.x)
+      severity). Highlights keep their gradient. (v0.30.x; extended to the outcome
+      ledger and Explore diff rows in v0.33.x.)
 - [x] **Masonry box-packing for the food grid** (v0.30.x). Cards flow down columns
       (CSS multi-column) and pack to fill gaps, so an expanded card grows *vertically
       only* and the shorter cards fill the space around it — no empty columns, no
@@ -383,11 +383,19 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       Note the tension with "expanded = full-row width" (good for one card, but a
       three-way compare wants them side by side) — resolve as part of the UI research
       pass below, since it's a layout-direction decision.
+- [~] **Explore "What if we judged on…" diff — first-pass declutter (v0.33.x).** Was
+      visually noisy: up to four competing coloured pills per row (before/after × effect/
+      certainty), and it had lost the accent-bar colour cue. Now: rows carry the square
+      accent bar (coloured by the after-effect), certainty is demoted to muted text so only
+      the DIRECTION is a coloured pill, and the list is split into **"Changes the verdict"**
+      (direction flips) vs **"Only changes certainty"** (tier-only). A deeper rethink of this
+      section's layout is still a good candidate for the UI research pass below.
 - [ ] **UI research pass.** Generate and evaluate directions for the overall UI — the
       shortlist/champion presentation, the food grid + expand/compare interaction, the
-      dose-curve and lens visualisations, density vs. readability, mobile. Produce a few
-      concrete design directions (not just tweaks) to choose from before investing in a
-      bigger redesign. The current look is functional but ad-hoc; this sets a direction.
+      dose-curve and **Explore/lens diff** visualisations, the effects-by-outcome ledger,
+      density vs. readability, mobile. Produce a few concrete design directions (not just
+      tweaks) to choose from before investing in a bigger redesign. The current look is
+      functional but ad-hoc; this sets a direction.
 
 ## 1. Verify and tighten the inputs  ⟶ *in progress*
 

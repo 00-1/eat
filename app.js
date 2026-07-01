@@ -820,16 +820,20 @@
       return;
     }
 
-    // Helper: render a verdict (effect + tier) as a compact chip.
+    // Compact renderers. Only the DIRECTION gets a coloured pill; certainty is
+    // demoted to muted text so a row shows at most one colour change (two on a flip),
+    // not four competing pills. The row's colour cue is the accent bar (after-effect).
     const VE = { positive: "Positive", negative: "Negative", neutral: "Neutral", insufficient: "Insufficient" };
-    const verdictChip = function (v) {
-      if (!v || v.effect === "insufficient" || !v.tier) {
-        return "<span class='vchip vchip-insufficient' title='No trial/mechanism basis to judge'>Insufficient</span>";
-      }
-      return "<span class='vchip vchip-" + v.effect + "'>" + VE[v.effect] + "</span>" +
-why_tier(v.tier);
+    const effClass = function (eff) { return eff === "insufficient" || !eff ? "insufficient" : eff; };
+    const effChip = function (eff) {
+      return eff === "insufficient" || !eff
+        ? "<span class='vchip vchip-insufficient' title='No trial/mechanism basis to judge'>Insufficient</span>"
+        : "<span class='vchip vchip-" + eff + "'>" + VE[eff] + "</span>";
     };
-    function why_tier(t) { return "<span class='tier " + t + "'>" + CERTAINTY_LABEL[t].replace(" certainty", "") + "</span>"; }
+    const tierText = function (t, cls) {
+      if (!t) return "";
+      return "<span class='diff-tierlabel " + (cls || "") + "'>" + CERTAINTY_LABEL[t].replace(" certainty", "") + "</span>";
+    };
 
     // Compare each food's canonical verdict to its verdict under the chosen lens —
     // DIRECTION and certainty, both re-derived live.
@@ -856,28 +860,42 @@ why_tier(v.tier);
       return;
     }
 
-    const items = rows
-      .map(function (r) {
-        return (
-          "<li class='diff-row " + (r.dirChanged ? "diff-flip" : "diff-tier") + "' data-food='" + escapeHtml(r.food.id) + "'>" +
-            "<button class='diff-jump' data-food='" + escapeHtml(r.food.id) + "'>" + escapeHtml(r.food.name) + "</button>" +
-            "<span class='diff-change'>" +
-              verdictChip(r.before) +
-              "<span class='diff-arrow'>→</span>" +
-              verdictChip(r.after) +
-            "</span>" +
-          "</li>"
-        );
-      })
-      .join("");
+    const renderRow = function (r) {
+      const change = r.dirChanged
+        ? effChip(r.before.effect) + tierText(r.before.tier) +
+            "<span class='diff-arrow'>→</span>" +
+            effChip(r.after.effect) + tierText(r.after.tier, "diff-after")
+        : effChip(r.after.effect) + tierText(r.before.tier) +
+            "<span class='diff-arrow'>→</span>" +
+            tierText(r.after.tier, "diff-after");
+      return (
+        "<li class='diff-row eff-" + effClass(r.after.effect) + "' data-food='" + escapeHtml(r.food.id) + "'>" +
+          "<button class='diff-jump' data-food='" + escapeHtml(r.food.id) + "'>" + escapeHtml(r.food.name) + "</button>" +
+          "<span class='diff-change'>" + change + "</span>" +
+        "</li>"
+      );
+    };
+    const group = function (title, sub, list) {
+      if (!list.length) return "";
+      return (
+        "<div class='diff-group'>" +
+          "<p class='diff-group-h'>" + title + " <span class='diff-group-sub'>" + sub + "</span></p>" +
+          "<ul class='diff-list'>" + list.map(renderRow).join("") + "</ul>" +
+        "</div>"
+      );
+    };
 
-    const flips = rows.filter(function (r) { return r.dirChanged; }).length;
+    const flipRows = rows.filter(function (r) { return r.dirChanged; });
+    const tierRows = rows.filter(function (r) { return !r.dirChanged; });
     const summary =
       "<p class='diff-summary'>" + rows.length + " of " + FOODS.length + " verdicts shift" +
-      (flips ? " · <strong>" + flips + " change direction</strong>" : "") +
+      (flipRows.length ? " · <strong>" + flipRows.length + " change direction</strong>" : "") +
       " <span class='diff-summary-note'>(the published verdicts on the cards don’t change — this is a what-if)</span></p>";
 
-    diffEl.innerHTML = summary + "<ul class='diff-list'>" + items + "</ul>";
+    diffEl.innerHTML =
+      summary +
+      group("Changes the verdict", "— the direction flips under this lens", flipRows) +
+      group("Only changes certainty", "— same direction, different confidence", tierRows);
 
     diffEl.querySelectorAll(".diff-jump").forEach(function (btn) {
       btn.addEventListener("click", function () {
