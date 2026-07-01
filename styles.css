@@ -360,6 +360,10 @@ a { color: var(--accent); }
   gap: 16px;
   margin: 4px 0 22px;
 }
+/* Stack the two summary panels full-width on narrow screens, like the food grid. */
+@media (max-width: 760px) {
+  .highlights { grid-template-columns: 1fr; }
+}
 .hl-card {
   border: 1px solid var(--line);
   border-radius: var(--radius);
