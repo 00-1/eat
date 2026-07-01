@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.58";
+const METHODOLOGY_VERSION = "0.59";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1266,10 +1266,11 @@ const FOODS = [
     },
     studies: [
       {
-        citation: "Namazi N, et al. 2019.",
-        type: "Meta-analysis of prospective cohorts (type-2 diabetes)",
-        finding: "Shellfish intake not significantly associated with type-2-diabetes risk (RR ~0.95, CI crosses 1).",
-        search: "shellfish seafood type 2 diabetes meta-analysis cohort 2019",
+        citation: "Namazi N, et al. Health Promotion Perspectives. 2019.",
+        type: "Meta-analysis of 7 prospective cohorts (type-2 diabetes)",
+        finding: "'Seafood other than fish' (incl. shellfish) not significantly associated with type-2-diabetes risk (RR 0.95, 95% CI 0.83–1.10). PMID:31508336.",
+        search: "Namazi seafood shellfish type 2 diabetes meta-analysis Health Promotion Perspectives 2019",
+        url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6717924/",
       },
       {
         citation: "ARIC investigators (shellfish & coronary heart disease).",
@@ -1281,6 +1282,7 @@ const FOODS = [
     lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-07-01", change: "New item (grounding pass): shellfish is neutral (faint favourable lean) — the dietary-cholesterol worry didn't translate to hard outcomes (Namazi 2019 T2D RR ~0.95 NS; ARIC CHD ~0.98 NS). Low certainty; figures not fully source-verified (verified:false)." },
+      { date: "2026-07-01", change: "Pinned the T2D figure to source: Namazi 2019 (Health Promot Perspect, PMID:31508336, 7 cohorts) — 'seafood other than fish' RR 0.95 (0.83–1.10), NS (the 'higher in women' result is a subgroup, not the pooled estimate). Still verified:false pending a confirmed participant count and the CHD figure. Verdict unchanged." },
     ],
   },
   {
@@ -1410,10 +1412,12 @@ const ASSESSMENTS = {
     },
   },
   "shellfish": {
-    evidence: { pooledRR: 0.96, ciExcludesNull: false, participants: 100000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake" },
-    effectEstimate: "No significant hard-outcome signal: type-2 diabetes RR ~0.95 (NS; Namazi 2019) and coronary heart disease ~0.98 (NS; ARIC), distinct from the oily-fish omega-3 benefit. Neutral with a faint favourable lean; the dietary-cholesterol worry didn't translate to outcomes.",
+    evidence: { pooledRR: 0.95, ciExcludesNull: false, participants: 100000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake" },
+    effectEstimate: "No significant hard-outcome signal: 'seafood other than fish' (incl. shellfish) → type-2 diabetes RR 0.95 (95% CI 0.83–1.10, NS; Namazi 2019, 7 cohorts), and coronary heart disease ~0.98 (NS; ARIC), distinct from the oily-fish omega-3 benefit. Neutral with a faint favourable lean; the dietary-cholesterol worry didn't translate to outcomes.",
     verified: false,
-    sources: {},
+    sources: {
+      pooledRR: { figure: "Seafood other than fish (incl. shellfish) → T2D RR 0.95 (0.83–1.10), NS", cite: "Namazi 2019 Health Promot Perspect", id: "PMID:31508336" },
+    },
   },
   "fruit-juice": {
     evidence: { pooledRR: 1.03, ciExcludesNull: false, participants: 137663, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~1 small glass/day of 100% juice" },
