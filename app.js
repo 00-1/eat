@@ -953,23 +953,35 @@
   function render() {
     // keep only still-existing pins
     state.pinned = state.pinned.filter(function (id) { return FOODS.some(function (f) { return f.id === id; }); });
-    // Pinned foods come FIRST (in pin order, shown regardless of the active filter),
-    // then everything matching the filter — one grid, pinned expanded at the top.
+    // The grid shows NOTABLE foods only (the ~40 with a directional / leaning /
+    // per-outcome / contested / high-burden / mixed signal). Long-tail foods
+    // ("eat to taste — no strong signal") render as a compact list below the grid
+    // (see renderLongTail). Exceptions: a pinned card and any card the user's
+    // search-query matches always show inline in the grid, even if they'd
+    // otherwise land in the long tail — so nothing becomes unreachable.
+    const isSearching = !!(state.query && state.query.trim());
+    const showInGrid = function (f) {
+      if (isPinned(f.id)) return true;
+      if (f.signalTier === "notable") return true;
+      if (isSearching && matches(f)) return true; // search reaches into the long tail
+      return false;
+    };
     const pinnedFoods = state.pinned
       .map(function (id) { return FOODS.find(function (f) { return f.id === id; }); })
       .filter(Boolean);
-    const rest = FOODS.filter(function (f) { return matches(f) && !isPinned(f.id); }).sort(sortFoods);
+    const rest = FOODS.filter(function (f) { return matches(f) && !isPinned(f.id) && showInGrid(f); }).sort(sortFoods);
     const ordered = pinnedFoods.concat(rest);
     listEl.innerHTML = ordered.map(function (f) { return cardHtml(f, isPinned(f.id)); }).join("");
     emptyEl.hidden = ordered.length !== 0;
 
-    const total = FOODS.length;
-    const filteredCount = FOODS.filter(matches).length;
+    const notableTotal = FOODS.filter(function (f) { return f.signalTier === "notable"; }).length;
+    const filteredCount = ordered.length;
     countEl.textContent =
-      filteredCount === total
-        ? "Showing all " + total + " foods"
-        : "Showing " + filteredCount + " of " + total + " foods";
+      filteredCount === notableTotal && !isSearching
+        ? "Showing all " + notableTotal + " notable foods (long-tail below)"
+        : "Showing " + filteredCount + " of " + notableTotal + " notable foods";
     layoutMasonry();
+    renderLongTail();
   }
 
   // ---- Masonry packing (keeps DOM order + pinning) ----
@@ -1134,8 +1146,12 @@
   function renderHighlights() {
     const el = document.getElementById("highlights");
     if (!el || typeof Scoring === "undefined") return;
+    // Summary panels showcase only NOTABLE foods — long-tail ("eat to taste")
+    // foods have no strong signal by construction and would only clutter the
+    // add/cut/neutral tiers. They render as a compact list below the grid.
+    const NOTABLE = FOODS.filter(function (f) { return f.signalTier === "notable"; });
     const cls = {};
-    FOODS.forEach(function (f) { cls[f.id] = standoutOf(f); });
+    NOTABLE.forEach(function (f) { cls[f.id] = standoutOf(f); });
     const outcomesOf = (f, eff) => ((ASSESSMENTS[f.id] || {}).outcomeVerdicts || []).filter((o) => o.effect === eff);
 
     // Tier a headline-directional food: 1 = surest+largest (unconditional top tier),
@@ -1157,14 +1173,14 @@
     //   *Outcome-specific* = foods NEUTRAL overall but carrying a per-outcome verdict
     //   (red meat → diabetes, alcohol → cancer) — their own section, not lumped in with
     //   genuinely directional foods, since the food is fine on the whole.
-    const addEntries = FOODS.filter((f) => f.effect === "positive").map((f) => ({
+    const addEntries = NOTABLE.filter((f) => f.effect === "positive").map((f) => ({
       f: f, dir: "add", tier: tierFor(f, "gold"), dose: addQuantity(f),
     }));
-    const redEntries = FOODS.filter((f) => f.effect === "negative").map((f) => ({
+    const redEntries = NOTABLE.filter((f) => f.effect === "negative").map((f) => ({
       f: f, dir: "reduce", tier: tierFor(f, "bin"), dose: safeQuantity((ASSESSMENTS[f.id] || {}).doseCurve),
     }));
     const addOutcome = [], redOutcome = [];
-    FOODS.filter((f) => f.effect === "neutral").forEach((f) => {
+    NOTABLE.filter((f) => f.effect === "neutral").forEach((f) => {
       outcomesOf(f, "negative").forEach((ov) => redOutcome.push({
         f: f, dir: "reduce", dose: safeQuantity(ov.doseCurve),
         forOutcome: shortOutcome(ov.outcome), neutralHeadline: true,
@@ -1232,7 +1248,7 @@
     // "eat to taste" — not "as much as you like" (calories/displacement still apply)
     // and not a health range (no basis) — carried in each section's subtitle.
     const neuLean = (f) => Scoring.leanOf((ASSESSMENTS[f.id] || {}).evidence);
-    const neutralFoods = FOODS.filter(function (f) {
+    const neutralFoods = NOTABLE.filter(function (f) {
       return f.effect === "neutral" && !outcomesOf(f, "negative").length && !outcomesOf(f, "positive").length;
     });
     const neutralRow = (f) =>
@@ -1490,6 +1506,83 @@
       showView("approach");
     });
   });
+
+  // ---- Long-tail: "eat to taste — no strong signal either way" ----
+  // Foods whose signalTier is "long-tail" are neutral, not leaning, without a
+  // directional per-outcome verdict, not contested, and not high-burden. They
+  // don't belong in the summary panels or as full cards in the grid — they'd
+  // dilute the signal. But hiding them would be dishonest (they're really
+  // neutral), so we surface them here: one compact row each, grouped by
+  // category, tap to expand a short note. Rerenders on every render() so any
+  // pin move that pulls a long-tail food into the grid also drops it from here.
+  function renderLongTail() {
+    const el = document.getElementById("long-tail");
+    if (!el) return;
+    const longTail = FOODS.filter(function (f) {
+      return f.signalTier === "long-tail" && !isPinned(f.id);
+    });
+    if (!longTail.length) { el.innerHTML = ""; return; }
+    // Group by category, keep alpha order inside each.
+    const byCat = {};
+    longTail.forEach(function (f) {
+      (byCat[f.category] = byCat[f.category] || []).push(f);
+    });
+    Object.keys(byCat).forEach(function (c) {
+      byCat[c].sort(function (a, b) { return a.name.localeCompare(b.name); });
+    });
+    const catsSorted = Object.keys(byCat).sort();
+    const leanNote = function (f) {
+      const lean = Scoring.leanOf((ASSESSMENTS[f.id] || {}).evidence);
+      if (lean === "positive") return " leans slightly beneficial";
+      if (lean === "negative") return " leans slightly worse";
+      return "";
+    };
+    const rowHtml = function (f) {
+      const a = ASSESSMENTS[f.id] || {};
+      // Short "to taste" amount: prefer the recorded intakeBasis (already
+      // written in habitual-intake terms), else omit — never invent a number.
+      const amount = (a.evidence && a.evidence.intakeBasis) ? String(a.evidence.intakeBasis) : "";
+      const summary = f.summary || "";
+      const rationale = f.rationale || "";
+      const why = summary + (leanNote(f) ? " · " + leanNote(f).trim() : "");
+      return (
+        "<li class='lt-item'>" +
+          "<details class='lt-details'>" +
+            "<summary class='lt-summary'>" +
+              "<span class='lt-name'>" + escapeHtml(f.name) + "</span>" +
+              (amount ? "<span class='lt-amount'>" + escapeHtml(amount) + "</span>" : "") +
+            "</summary>" +
+            "<div class='lt-body'>" +
+              "<p class='lt-why'>" + escapeHtml(why) + "</p>" +
+              "<p class='lt-rationale'>" + escapeHtml(rationale) + "</p>" +
+              "<p class='lt-jump'><button class='lt-open' data-food='" + escapeHtml(f.id) + "'>Open the full card →</button></p>" +
+            "</div>" +
+          "</details>" +
+        "</li>"
+      );
+    };
+    const catHtml = catsSorted.map(function (c) {
+      return (
+        "<div class='lt-cat'>" +
+          "<h3 class='lt-cat-h'>" + escapeHtml(c) + "</h3>" +
+          "<ul class='lt-list'>" + byCat[c].map(rowHtml).join("") + "</ul>" +
+        "</div>"
+      );
+    }).join("");
+    el.innerHTML =
+      "<h2>Eat to taste <span class='lt-sub'>— no strong signal either way (" + longTail.length + " foods)</span></h2>" +
+      "<p class='lt-intro'>These foods are genuinely neutral in the evidence: no directional verdict, no leaning point estimate, no dedicated per-outcome signal, not contested, and not among the top-burden GBD risks. Eat them for taste. Tap a row for the short story or to open the full card.</p>" +
+      "<div class='lt-cats'>" + catHtml + "</div>";
+    // Wire "Open the full card →" to pin the food (which pulls it into the
+    // grid at the top, expanded, per the existing pin mechanic).
+    el.querySelectorAll(".lt-open").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        jumpToFood(btn.dataset.food);
+      });
+    });
+  }
 
   // ---- Holding list: known foods we can't yet give a verdict for ----
   // Named honestly rather than turned into empty cards (which would imply we'd

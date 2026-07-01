@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.62";
+const METHODOLOGY_VERSION = "0.63";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -2190,6 +2190,23 @@ for (const _k in BURDEN) {
   for (const _id of _b.foods) {
     if (ASSESSMENTS[_id]) {
       ASSESSMENTS[_id].burden = Object.assign({}, _b, { key: _k, sharedAcross: _shared ? _b.risk.replace(/^Diet (low|high) in /, "") : null });
+    }
+  }
+}
+
+// ── Signal tier (derived) ──
+// Split every food into "notable" (worth a full card + eligible for the summary
+// panels) or "long-tail" ("eat to taste — no strong signal either way"). Pure
+// function of recorded fields — see scoring.js:signalTier and
+// PLANNING/design/phase0-spec.md. Must run AFTER burden is attached so burdenTier
+// can read `assessment.burden.deathsM`.
+{
+  const _S = (typeof module !== "undefined" && module.exports)
+    ? require("./scoring.js")
+    : (typeof Scoring !== "undefined" ? Scoring : null);
+  if (_S && typeof _S.signalTier === "function") {
+    for (const _f of FOODS) {
+      _f.signalTier = _S.signalTier(_f, ASSESSMENTS[_f.id] || {});
     }
   }
 }

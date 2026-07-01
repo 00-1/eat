@@ -465,3 +465,41 @@ test("BURDEN (absolute population impact) is well-formed and maps to real foods"
     }
   }
 });
+
+test("signalTier is exported and returns 'notable' or 'long-tail' for every food", () => {
+  assert.equal(typeof S.signalTier, "function", "Scoring.signalTier not exported");
+  for (const f of FOODS) {
+    const tier = S.signalTier(f, ASSESSMENTS[f.id]);
+    assert.ok(["notable", "long-tail"].includes(tier), `${f.id}: bad signalTier ${tier}`);
+    // stored derived field must equal the freshly computed one
+    assert.equal(f.signalTier, tier, `${f.id}: stored signalTier "${f.signalTier}" != computed "${tier}"`);
+  }
+});
+
+test("signalTier: every food is exactly one of notable / long-tail (partition)", () => {
+  let notable = 0, longTail = 0;
+  for (const f of FOODS) {
+    if (f.signalTier === "notable") notable++;
+    else if (f.signalTier === "long-tail") longTail++;
+    else assert.fail(`${f.id}: signalTier "${f.signalTier}" is neither notable nor long-tail`);
+  }
+  assert.equal(notable + longTail, FOODS.length, "signalTier partition doesn't cover every food");
+  // at least a handful in each bucket — sanity, not calibration
+  assert.ok(notable >= 5, `expected ≥5 notable foods, got ${notable}`);
+  assert.ok(longTail >= 1, `expected ≥1 long-tail food, got ${longTail}`);
+});
+
+test("signalTier anchors: directional / contested / per-outcome / no-lean", () => {
+  // trans-fat: directional (negative) → notable
+  const tf = FOODS.find((f) => f.id === "trans-fat");
+  assert.equal(tf.signalTier, "notable", "trans-fat should be notable (directional)");
+  // artificial-sweeteners: contested → notable
+  const as = FOODS.find((f) => f.id === "artificial-sweeteners");
+  assert.equal(as.signalTier, "notable", "artificial-sweeteners should be notable (contested)");
+  // red-meat: neutral overall BUT has a directional per-outcome T2D verdict → notable
+  const rm = FOODS.find((f) => f.id === "red-meat");
+  assert.equal(rm.signalTier, "notable", "red-meat should be notable (directional per-outcome)");
+  // poultry: neutral, no lean, no directional per-outcome, not contested → long-tail
+  const p = FOODS.find((f) => f.id === "poultry");
+  assert.equal(p.signalTier, "long-tail", "poultry should be long-tail (neutral, no lean, no per-outcome)");
+});

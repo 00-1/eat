@@ -915,6 +915,47 @@ a { color: var(--accent); }
 .build-stamp a { color: var(--ink-soft); }
 .build-stamp a:hover { color: var(--accent); }
 
+/* Long-tail — "eat to taste, no strong signal either way" */
+.long-tail { margin: 26px 0 6px; }
+.long-tail h2 { margin: 0 0 4px; font-size: 1.05rem; }
+.lt-sub { font-weight: 400; font-size: 0.9rem; color: var(--ink-soft); }
+.lt-intro { margin: 0 0 12px; font-size: 0.86rem; color: var(--ink-soft); max-width: 80ch; }
+.lt-cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.lt-cat-h {
+  margin: 0 0 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--ink-soft);
+}
+.lt-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.lt-item { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.lt-summary {
+  display: flex; align-items: baseline; gap: 8px; padding: 7px 10px;
+  font-size: 0.88rem; cursor: pointer; list-style: none;
+}
+.lt-summary::-webkit-details-marker { display: none; }
+.lt-summary::before {
+  content: "▸"; display: inline-block; width: 0.9em; color: var(--ink-soft);
+  transition: transform 0.15s ease;
+}
+.lt-details[open] > .lt-summary::before { transform: rotate(90deg); }
+.lt-name { font-weight: 600; flex: 1 1 auto; }
+.lt-amount {
+  font-size: 0.72rem; color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.lt-body {
+  padding: 6px 10px 10px 22px; border-top: 1px solid var(--line);
+  font-size: 0.82rem; color: var(--ink-soft);
+}
+.lt-why { margin: 6px 0 6px; color: var(--ink); }
+.lt-rationale { margin: 0 0 8px; }
+.lt-jump { margin: 0; }
+.lt-open {
+  background: transparent; border: 1px solid var(--line); border-radius: 6px;
+  padding: 3px 9px; font: inherit; font-size: 0.78rem; color: var(--accent);
+  cursor: pointer;
+}
+.lt-open:hover { background: var(--neu-bg); }
+
 /* Holding list — known foods we haven't yet assessed */
 .holding { margin: 26px 0 6px; }
 .holding h2 { margin: 0 0 4px; font-size: 1.05rem; }
