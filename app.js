@@ -1117,7 +1117,7 @@
         sectionHtml(tier(addEntries, 1), "Surest, biggest benefit", "high certainty and a large effect") +
         sectionHtml(tier(addEntries, 2), "Strong", "a notch short on one axis, or large only at a higher intake") +
         sectionHtml(tier(addEntries, 3), "Also supported", "smaller or less certain, but the evidence points to benefit") +
-        sectionHtml(addOutcome, "Fine overall — but helps a specific outcome", "neutral on the whole, with a benefit for one condition") +
+        sectionHtml(addOutcome, "Neutral overall — but helps a specific outcome", "no net verdict, but a benefit shows up for one condition") +
       "</div>" +
       "<div class='hl-card hl-bin'>" +
         "<h2>Worth cutting down</h2>" +
@@ -1125,7 +1125,7 @@
         sectionHtml(tier(redEntries, 1), "Surest, biggest harm", "high certainty and a large effect") +
         sectionHtml(tier(redEntries, 2), "Strong reasons to cut down", "a notch short, or large only in quantity") +
         sectionHtml(tier(redEntries, 3), "Also worth reducing", "smaller or less certain, but the evidence points to harm") +
-        sectionHtml(redOutcome, "Fine overall — but worth limiting for one risk", "neutral on the whole, but linked to a specific harm") +
+        sectionHtml(redOutcome, "Neutral overall — but worth limiting for one risk", "no net verdict, but linked to a specific harm") +
       "</div>";
 
     // Clicking a row jumps to that card and opens it.
