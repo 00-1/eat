@@ -1232,7 +1232,7 @@
         neutralSection(neutralFoods.filter((f) => neuLean(f) === "negative"), "Leans slightly worse", "fine in normal amounts; easy on large or frequent servings") +
       "</div>" +
       "<p class='hl-burden-note'>" +
-        "<strong>A different question — population impact.</strong> Some foods are modest per serving but huge in aggregate, because nearly everyone eats too little (or too much) of them. On <em>population burden</em>, GBD ranks eating too little <strong>whole grains (#2)</strong>, <strong>fruit (#3)</strong>, <strong>nuts (#4)</strong> and <strong>vegetables (#5)</strong> among the very top dietary risks worldwide — a different axis from the per-serving effect above. Each card's <em>Population impact</em> section shows it." +
+        "<strong>A different question — population impact.</strong> Some foods are modest per serving but huge in aggregate, because nearly everyone eats too little (or too much) of them. GBD's <strong>#1</strong> diet risk worldwide is <strong>too much sodium (salt)</strong> — not a single food here, but it rides in processed foods and bread. Just behind it: eating too little <strong>whole grains (#2)</strong>, <strong>fruit (#3)</strong>, <strong>nuts (#4)</strong> and <strong>vegetables (#5)</strong> — a different axis from the per-serving effect above, shown in each card's <em>Population impact</em> section." +
       "</p>";
 
     // Clicking a row jumps to that card and opens it.
