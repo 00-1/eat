@@ -432,3 +432,26 @@ test("dose-curve readings: nadir/peak/threshold and best-case magnitude", () => 
   assert.equal(S.doseExtremeReading(null, "positive"), null);
   assert.equal(S.curveReadings({ points: [{ x: 0, rr: 1 }] }), null);
 });
+
+test("ascensionDose: intake to reach a target tier, with shape", () => {
+  // Nuts: plateau, reaches 'large' (rr<=0.80) first at 28 g/day.
+  const nuts = { unit: "g/day", points: [
+    { x: 0, rr: 1 }, { x: 15, rr: 0.86 }, { x: 28, rr: 0.78 }, { x: 45, rr: 0.8 },
+  ] };
+  const a = S.ascensionDose(nuts, "positive", "large");
+  assert.equal(a.x, 28);
+  assert.equal(a.shape, "plateau-benefit");
+  // Fruit: plateaus at 0.86 (moderate) — never reaches 'large'.
+  const fruit = { unit: "g/day", points: [
+    { x: 0, rr: 1 }, { x: 200, rr: 0.9 }, { x: 550, rr: 0.86 },
+  ] };
+  assert.equal(S.ascensionDose(fruit, "positive", "large"), null);
+  assert.equal(S.ascensionDose(fruit, "positive", "moderate").x, 200); // 0.90 -> moderate
+  // Harm curve reaching 'large' at its high end.
+  const harm = { unit: "g/day", points: [
+    { x: 0, rr: 1 }, { x: 50, rr: 1.1 }, { x: 150, rr: 1.42 },
+  ] };
+  const h = S.ascensionDose(harm, "negative", "large");
+  assert.equal(h.x, 150);
+  assert.ok(h.atStudiedEdge);
+});

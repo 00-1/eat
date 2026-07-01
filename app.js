@@ -327,6 +327,58 @@
     );
   }
 
+  // Plain-language "what dose does what" readings pulled straight off the curve:
+  // best case at optimal intake (positives), and where harm begins / worst case
+  // (negatives). Values come from Scoring so they're reproducible, and the wording
+  // reflects the shape (a plateau "sweet spot" vs "more keeps helping").
+  function doseReadingsHtml(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.doseCurve || typeof Scoring === "undefined") return "";
+    const c = a.doseCurve;
+    const unit = c.unit ? " " + c.unit : "";
+    const pct = (rr, harm) => Math.round((harm ? rr - 1 : 1 - rr) * 100);
+    const magL = (m) => (Scoring.MAGNITUDE_LABEL[m] || m).toLowerCase();
+    const rows = [];
+    if (food.effect === "positive") {
+      const best = Scoring.doseExtremeReading(c, "positive");
+      if (best && best.rr < 1) {
+        const shape = c.shape || "";
+        const how = /plateau|threshold/.test(shape)
+          ? "the sweet spot — eating more adds little"
+          : /j-u-curve/.test(shape)
+            ? "a sweet spot — beyond it the benefit fades"
+            : best.atStudiedEdge
+              ? "and more keeps helping, as far as studied"
+              : "beyond this the benefit tails off";
+        rows.push(
+          "<li class='dr-read dr-read-good'><span class='dr-read-k'>Best case</span> " +
+          "<span class='dr-pill dr-pill-good'>~" + escapeHtml(String(best.x)) + escapeHtml(unit) + "</span> " +
+          "→ about " + pct(best.rr, false) + "% lower risk (" + magL(best.magnitude) + ") — " + how + "</li>"
+        );
+      }
+    } else if (food.effect === "negative") {
+      const r = Scoring.curveReadings(c);
+      const worstX = r && r.peak ? r.peak.x : null;
+      if (r && r.harmThreshold && r.harmThreshold.x !== worstX) {
+        rows.push(
+          "<li class='dr-read dr-read-bad'><span class='dr-read-k'>Harm appears</span> around " +
+          "<span class='dr-pill dr-pill-bad'>~" + escapeHtml(String(r.harmThreshold.x)) + escapeHtml(unit) + "</span></li>"
+        );
+      }
+      const worst = Scoring.doseExtremeReading(c, "negative");
+      if (worst && worst.rr > 1) {
+        rows.push(
+          "<li class='dr-read dr-read-bad'><span class='dr-read-k'>Worst measured</span> " +
+          "<span class='dr-pill dr-pill-bad'>~" + escapeHtml(String(worst.x)) + escapeHtml(unit) +
+          (worst.atStudiedEdge ? " (as far as studied)" : "") + "</span> " +
+          "→ about " + pct(worst.rr, true) + "% higher risk (" + magL(worst.magnitude) + ")</li>"
+        );
+      }
+    }
+    if (!rows.length) return "";
+    return "<ul class='dr-readings'>" + rows.join("") + "</ul>";
+  }
+
   function doseResponseHtml(food) {
     const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
     if (!a || typeof Scoring === "undefined" || !Scoring.DOSE_SHAPE) return "";
@@ -344,6 +396,7 @@
         "<p class='dr-shape-line'><span class='dr-shape dr-" + (meta.dir || "neutral") + "'>" + escapeHtml(meta.label || c.shape) + "</span> " +
           "<span class='dr-shape-note'>" + escapeHtml(meta.note || "") + "</span></p>" +
         svg +
+        doseReadingsHtml(food) +
         (c.note ? "<p class='dr-note'>" + escapeHtml(c.note) + "</p>" : "") +
         "<p class='dr-src'><span class='dr-src-out'>" + escapeHtml(c.outcome || "") + "</span>" +
           (c.source ? " · " + escapeHtml(c.source.cite) : "") + " " + prov + "</p>" +

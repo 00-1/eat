@@ -520,6 +520,15 @@ a { color: var(--accent); }
 .dr-pt-harm { fill: var(--neg); }
 .dr-axis { fill: var(--ink-soft); font-size: 10px; }
 .dr-note { margin: 6px 0 0; font-size: 0.83rem; color: var(--ink-soft); }
+.dr-readings { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.dr-read { font-size: 0.84rem; color: var(--ink); line-height: 1.35; }
+.dr-read-k { font-weight: 700; margin-right: 4px; }
+.dr-pill {
+  display: inline-block; font-size: 0.76rem; font-weight: 700; padding: 1px 8px;
+  border-radius: 999px; border: 1px solid transparent; white-space: nowrap;
+}
+.dr-pill-good { background: var(--pos-bg); color: var(--pos); border-color: #c7e8d4; }
+.dr-pill-bad { background: var(--neg-bg); color: var(--neg); border-color: #f3cfce; }
 .dose-empty { border-style: dashed; }
 .dr-none { margin: 2px 0 0; font-size: 0.85rem; color: var(--ink-soft); }
 .dr-src { margin: 8px 0 0; font-size: 0.78rem; color: var(--ink-soft); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }

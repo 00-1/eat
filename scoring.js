@@ -486,12 +486,47 @@
     };
   }
 
+  // The "ascension dose": the smallest intake at which the food first reaches a
+  // target magnitude tier (in its own direction) on its dose curve — i.e. the
+  // amount you'd need to eat for it to earn that shortlist rung. This is what a
+  // qualifier pill states ("~28 g/day", "above ~800 g/day"). Also returns the
+  // curve shape so the UI can word it as a sweet-spot (plateau) vs "more helps"
+  // (monotonic). Returns null if the curve never reaches the target tier.
+  //   targetTier: "small" | "moderate" | "large" (default "large")
+  function ascensionDose(doseCurve, direction, targetTier) {
+    if (!doseCurve || !Array.isArray(doseCurve.points)) return null;
+    var want = MAGNITUDE_ORDER[targetTier || "large"];
+    if (want == null) return null;
+    var pts = doseCurve.points.filter(function (p) {
+      return p && typeof p.x === "number" && typeof p.rr === "number" && p.rr > 0;
+    });
+    if (pts.length < 2) return null;
+    var sorted = pts.slice().sort(function (a, b) { return a.x - b.x; });
+    var maxX = sorted[sorted.length - 1].x;
+    for (var i = 0; i < sorted.length; i++) {
+      var p = sorted[i];
+      var beneficial = p.rr < 1, harmful = p.rr > 1;
+      var matchesDir = direction === "negative" ? harmful : beneficial;
+      if (matchesDir && MAGNITUDE_ORDER[magnitudeOfRR(p.rr)] >= want) {
+        return {
+          x: p.x,
+          rr: p.rr,
+          unit: doseCurve.unit || null,
+          shape: classifyDoseShape(sorted),
+          atStudiedEdge: p.x === maxX,
+        };
+      }
+    }
+    return null;
+  }
+
   var api = {
     MAX: MAX,
     THRESHOLDS: THRESHOLDS,
     magnitudeOfRR: magnitudeOfRR,
     curveReadings: curveReadings,
     doseExtremeReading: doseExtremeReading,
+    ascensionDose: ascensionDose,
     computeScores: computeScores,
     totalScore: totalScore,
     tierFromTotal: tierFromTotal,
