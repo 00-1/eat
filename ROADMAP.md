@@ -377,16 +377,19 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       curve, on cards + group/outcome/counter/exception blocks (colour = verdict/
       severity). Highlights keep their gradient. (v0.30.x; extended to the outcome
       ledger and Explore diff rows in v0.33.x.)
-- [x] **Masonry box-packing for the food grid** (v0.30.x). Cards flow down columns
-      (CSS multi-column) and pack to fill gaps, so an expanded card grows *vertically
-      only* and the shorter cards fill the space around it — no empty columns, no
-      full-width stretch. (Reverted the earlier full-row-span approach.)
-- [x] **Pin up to 3 expanded cards to the top for side-by-side comparison. DONE.**
-      Expanding a food now PINS it to a comparison strip at the top (up to 3, side by
-      side) and scrolls to it — which also fixes the old "expand makes the card jump"
-      problem (masonry columns reflowing). Clicking a pinned card unpins it (returns to
-      the grid, collapsed); a 4th pin replaces the oldest (FIFO). Resolves the
-      "expanded = full-row vs three-way compare" tension: the strip is a responsive grid.
+- [x] **Grid ordering: row-major (v0.35.x).** Tried CSS multi-column masonry (v0.30.x)
+      but it reads column-major (top-to-bottom), which fought the "pinned = first three
+      across the top" model. Reverted to a **row-major CSS grid** (left-to-right, wraps to
+      next row) with `align-items:start` so a tall expanded card doesn't stretch its
+      neighbours. Trade-off accepted: a lone expanded card can leave a gap in its row (no
+      masonry packing) — but horizontal ordering is more intuitive and pairs with pinning.
+- [x] **Pin up to 3 expanded cards to the top for side-by-side comparison. DONE (v0.35.x).**
+      Expanding a food PINS it to the **front of the grid** (not a separate section) and
+      scrolls to it, so up to three open foods occupy the top row for side-by-side
+      comparison — and it fixes the old "expand makes the card jump" problem. Clicking a
+      pinned card unpins it (returns to its sorted position, collapsed); a 4th pin replaces
+      the oldest (FIFO). (Reworked from an initial separate-strip version — pinned cards
+      now live inline as the first grid items, per maintainer feedback.)
 - [~] **Explore "What if we judged on…" diff — first-pass declutter (v0.33.x).** Was
       visually noisy: up to four competing coloured pills per row (before/after × effect/
       certainty), and it had lost the accent-bar colour cue. Now: rows carry the square

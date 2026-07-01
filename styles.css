@@ -129,35 +129,24 @@ a { color: var(--accent); }
   list-style: none;
   margin: 0 0 40px;
   padding: 0;
-  /* Masonry-style box packing: cards flow down columns and fill gaps, so a tall
-     (expanded) card doesn't leave empty space beside it. An expanded card grows
-     vertically only; the shorter cards pack around it. */
-  columns: 320px;
-  column-gap: 16px;
+  /* Row-major grid: cards read left-to-right across the top, then wrap to the next
+     row. Pinned foods are ordered first, so opening up to three puts them across the
+     top row for side-by-side comparison. align-items:start keeps each card its
+     natural height (a tall, expanded pinned card doesn't stretch its neighbours). */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  align-items: start;
 }
+.grid-hint { margin: -4px 0 14px; font-size: 0.82rem; color: var(--ink-soft); }
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
-  break-inside: avoid;             /* keep each card whole within a column */
-  -webkit-column-break-inside: avoid;
-  margin-bottom: 16px;             /* vertical gap (column-gap handles horizontal) */
 }
-
-/* Pinned comparison strip — expanded cards sit side-by-side at the top. */
-.pinned-wrap { margin: 4px 0 24px; }
-.pinned-head { margin: 0 0 10px; font-size: 0.9rem; font-weight: 700; color: var(--ink); }
-.pinned-sub { font-weight: 400; color: var(--ink-soft); }
-.pinned-strip {
-  list-style: none; margin: 0; padding: 0;
-  /* Always three fixed columns, so a pin grows in HEIGHT only and there's room for
-     three across — a single pin stays one-third wide, it doesn't stretch full-width. */
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px; align-items: start;
-}
-@media (max-width: 760px) { .pinned-strip { grid-template-columns: 1fr; } }
+/* A pinned (expanded, top-row) card gets a subtle ring so it reads as pinned. */
 .card-pinned { border-color: var(--accent); box-shadow: 0 0 0 2px var(--pos-bg), var(--shadow); }
 
 /* Verdict / severity accent: a SOLID, SQUARE (non-curved) bar, inset from the

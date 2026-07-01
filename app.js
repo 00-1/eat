@@ -6,8 +6,6 @@
 
   // ---- Elements ----
   const listEl = document.getElementById("list");
-  const pinnedEl = document.getElementById("pinned");
-  const pinnedWrapEl = document.getElementById("pinned-wrap");
   const countEl = document.getElementById("count");
   const emptyEl = document.getElementById("empty");
   const searchEl = document.getElementById("search");
@@ -686,9 +684,10 @@
   }
 
   // ---- Render ----
-  // ---- Pinning: expanding a food pins it to a comparison strip at the top ----
-  // Solves the "expand makes the card jump" problem (the masonry columns reflow) and
-  // enables side-by-side comparison. Up to MAX_PINNED; pinning a 4th bumps the oldest.
+  // ---- Pinning: expanding a food pins it to the FRONT of the grid (top row) ----
+  // Pinned foods live in the normal grid, just ordered first and rendered expanded —
+  // so opening one moves it to the top row (and we scroll to it) instead of expanding
+  // in place. Up to MAX_PINNED; pinning a 4th bumps the oldest.
   const MAX_PINNED = 3;
   function isPinned(id) { return state.pinned.indexOf(id) !== -1; }
   function togglePin(id) {
@@ -700,29 +699,29 @@
     scrollToPinned(id);
   }
   function scrollToPinned(id) {
-    const el = pinnedEl && pinnedEl.querySelector("[data-food-card='" + id + "']");
+    const el = listEl.querySelector("[data-food-card='" + id + "']");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function render() {
     // keep only still-existing pins
     state.pinned = state.pinned.filter(function (id) { return FOODS.some(function (f) { return f.id === id; }); });
-    const pinned = state.pinned
+    // Pinned foods come FIRST (in pin order, shown regardless of the active filter),
+    // then everything matching the filter — one grid, pinned expanded at the top.
+    const pinnedFoods = state.pinned
       .map(function (id) { return FOODS.find(function (f) { return f.id === id; }); })
       .filter(Boolean);
-    if (pinnedEl) pinnedEl.innerHTML = pinned.map(function (f) { return cardHtml(f, true); }).join("");
-    if (pinnedWrapEl) pinnedWrapEl.hidden = pinned.length === 0;
-
-    const filtered = FOODS.filter(matches).sort(sortFoods);
-    const grid = filtered.filter(function (f) { return !isPinned(f.id); });
-    listEl.innerHTML = grid.map(function (f) { return cardHtml(f, false); }).join("");
-    emptyEl.hidden = filtered.length !== 0;
+    const rest = FOODS.filter(function (f) { return matches(f) && !isPinned(f.id); }).sort(sortFoods);
+    const ordered = pinnedFoods.concat(rest);
+    listEl.innerHTML = ordered.map(function (f) { return cardHtml(f, isPinned(f.id)); }).join("");
+    emptyEl.hidden = ordered.length !== 0;
 
     const total = FOODS.length;
+    const filteredCount = FOODS.filter(matches).length;
     countEl.textContent =
-      filtered.length === total
+      filteredCount === total
         ? "Showing all " + total + " foods"
-        : "Showing " + filtered.length + " of " + total + " foods";
+        : "Showing " + filteredCount + " of " + total + " foods";
   }
 
   // ---- Provenance: are a food's recorded facts source-verified yet? ----
@@ -981,17 +980,14 @@
   }
 
   // Clicking a card's summary pins it (or unpins if already pinned) instead of the
-  // native in-place <details> toggle — so expanding always moves it to the top strip.
-  [listEl, pinnedEl].forEach(function (container) {
-    if (!container) return;
-    container.addEventListener("click", function (e) {
-      const summary = e.target.closest ? e.target.closest("summary") : null;
-      if (!summary || !container.contains(summary)) return;
-      const card = summary.closest("[data-food-card]");
-      if (!card) return;
-      e.preventDefault(); // we control open state via state.pinned + render()
-      togglePin(card.getAttribute("data-food-card"));
-    });
+  // native in-place <details> toggle — so expanding always moves it to the top row.
+  listEl.addEventListener("click", function (e) {
+    const summary = e.target.closest ? e.target.closest("summary") : null;
+    if (!summary || !listEl.contains(summary)) return;
+    const card = summary.closest("[data-food-card]");
+    if (!card) return;
+    e.preventDefault(); // we control open state via state.pinned + render()
+    togglePin(card.getAttribute("data-food-card"));
   });
 
   function populateExplore() {
