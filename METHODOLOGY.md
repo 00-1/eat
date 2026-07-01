@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.54 — living document.** This file is the canonical description of how
+**Version 0.55 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -477,6 +477,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.55 | 2026-07-01 | **Verification pass + burden figures.** Green tea source-verified (Zhang 2023 CHD RR 0.88, N corrected 1.96M→772,922, outcome → coronary heart disease) → 28 of 35 verified. Confirmed honest gaps that stay unverified: coconut oil (no hard-outcome data), tomatoes (biomarker not intake), white bread (no clean RR), cruciferous/leafy-greens (only population-specific or N-unconfirmable sources), poultry (N unconfirmable). Filled the previously-blank GBD burden figures: legumes ~1.12M deaths/yr (high), processed meat ~304k & red meat ~896k *contested* & trans fat ~500k CHD (moderate), SSB ~242k (low) — mostly GBD 2019, flagged. Red meat carries a caveat that its 2019 figure is a since-questioned ~36× jump. |
 | 0.54 | 2026-07-01 | **Intro styling.** Restyled the Foods-tab intro: a green "Diet effects" eyebrow kicker + the question `h1` + a hairline rule + a shorter subtitle, all inside a left green accent bar (ties to the app's green identity). |
 | 0.53 | 2026-07-01 | **Foods-tab intro.** Added a brief concept lead at the top of the Foods tab — "What's the health impact of adding a food to your diet?" + a one-line factual summary (rated positive/negative/neutral, computed from studies by a reproducible method, shown with certainty and effect size, provisional). Restores a semantic page `h1` (removed with the old header). |
 | 0.52 | 2026-07-01 | **Stale-prose sweep.** Refreshed copy that lagged the features: the data-status banner (was "*most* figures are best-estimates" — false now that 27/35 are verified; now "N verified, the other M are best-estimates"); the Approach tab's "we don't yet compute / plan to add" burden-axis lines (shipped — now "shown as each card's Population impact"); a stray "Bin fodder" and "⚠ worst offender" in the methodology body; and the README shortlist description (still described the old Gold-standard/Worst-offenders + all-cause-bump model). Changelog rows keep their historical wording. |

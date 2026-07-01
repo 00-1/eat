@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.54";
+const METHODOLOGY_VERSION = "0.55";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -994,8 +994,8 @@ const FOODS = [
     category: "Beverages",
     effect: "positive",
     certainty: "moderate",
-    outcomes: ["Cardiovascular disease", "Stroke"],
-    summary: "A few cups a day track with modestly lower cardiovascular and stroke risk.",
+    outcomes: ["Coronary heart disease"],
+    summary: "A few cups a day track with modestly lower coronary heart disease risk.",
     rationale:
       "Large dose-response cohort meta-analyses show a consistent, modest inverse association that plateaus around 2–3 cups/day. No trial on hard outcomes exists and short-term trials show no biomarker change, so causal certainty is capped — but the cohort signal is broad and graded.",
     considerations: {
@@ -1657,8 +1657,13 @@ const ASSESSMENTS = {
   },
 
   "green-tea": {
-    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 1960000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "3–4 cups/day vs none" },
-    effectEstimate: "≈4% lower CVD mortality and stroke per cup/day; ~0.88 at a realistic 3 cups/day; plateaus, no hard-outcome trial.",
+    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 772922, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~4 cups/day vs none" },
+    effectEstimate: "Green tea → coronary heart disease RR 0.88 (95% CI 0.81–0.96) at ~4 cups/day (Zhang 2023, 7 cohorts, 772,922 participants); nonlinear, plateauing; no hard-outcome trial. (Black tea shows a similar all-cause-mortality signal in UK Biobank, Inoue-Choi 2022.)",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Green tea → CHD RR 0.88 (0.81–0.96) at 4 cups/day (nonlinear; ~0.85 at 3 cups)", cite: "Zhang 2023 Nutr Metab Cardiovasc Dis", id: "PMID:36849317" },
+      participants: { figure: "7 prospective cohorts, 9,211 CHD cases among 772,922 participants", cite: "Zhang 2023 Nutr Metab Cardiovasc Dis", id: "PMID:36849317" },
+    },
     doseCurve: {
       outcome: "All-cause mortality", unit: "cups/day", shape: "monotonic-benefit", normalRange: [1, 3],
       points: [ { x: 0, rr: 1.0 }, { x: 1, rr: 0.96 }, { x: 2, rr: 0.91, lo: 0.88, hi: 0.94 }, { x: 3, rr: 0.87 }, { x: 5, rr: 0.80, lo: 0.72, hi: 0.89 } ],
@@ -1894,11 +1899,11 @@ const BURDEN = {
   "low-nuts": { risk: "Diet low in nuts & seeds", direction: "low", deathsM: 2.0, deaths: "~2 million/yr", dalysM: 50, rank: 4, tmrel: "~16–25 g/day", foods: ["tree-nuts"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
   "low-veg": { risk: "Diet low in vegetables", direction: "low", deathsM: 1.5, deaths: "~1.5 million/yr", dalysM: 34, rank: 5, tmrel: "~290–430 g/day", foods: ["leafy-greens", "cruciferous", "tomatoes"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
   "low-seafood": { risk: "Diet low in seafood omega-3", direction: "low", deathsM: 1.0, deaths: "~1 million/yr (approx; >2% of global deaths, #6)", dalysM: null, rank: 6, tmrel: "~250 mg/day omega-3", foods: ["fatty-fish"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
-  "low-legumes": { risk: "Diet low in legumes", direction: "low", deathsM: null, deaths: "lower tier (global count not isolated)", dalysM: null, rank: null, tmrel: "~50–70 g/day", foods: ["legumes"], note: "A leading diet risk in parts of Latin America, South Asia and sub-Saharan Africa.", source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
-  "high-processed-meat": { risk: "Diet high in processed meat", direction: "high", deathsM: null, deaths: "lower tier (~172k IHD deaths, GBD 2019)", dalysM: null, rank: null, tmrel: "0 g/day", foods: ["processed-meat"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
-  "high-red-meat": { risk: "Diet high in red meat", direction: "high", deathsM: null, deaths: "contested: ~25k/yr (GBD 2017) vs ~896k/yr (GBD 2019)", dalysM: null, rank: null, tmrel: "0 g/day", foods: ["red-meat"], note: "GBD 2019 raised this ~36-fold via a TMREL change, formally contested in the Lancet (2022).", source: { cite: "GBD 2017/2019; Lancet 2022 correspondence", id: "PMID:30954305" } },
-  "high-ssb": { risk: "Diet high in sugar-sweetened beverages", direction: "high", deathsM: null, deaths: "lower tier (global count not isolated)", dalysM: null, rank: null, tmrel: "0 g/day", foods: ["sugary-drinks"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
-  "high-trans-fat": { risk: "Diet high in trans fat", direction: "high", deathsM: null, deaths: "lower tier (global count not isolated)", dalysM: null, rank: null, tmrel: "0% of energy", foods: ["trans-fat"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "low-legumes": { risk: "Diet low in legumes", direction: "low", deathsM: 1.12, deaths: "~1.12 million/yr", dalysM: 24.3, rank: null, tmrel: "~50–70 g/day", foods: ["legumes"], note: "GBD 2019 (secondary analysis); a leading diet risk in parts of Latin America, South Asia and sub-Saharan Africa.", source: { cite: "GBD 2019 (Diet Collaborators)", id: "DOI:10.1016/S0140-6736(20)30752-2" } },
+  "high-processed-meat": { risk: "Diet high in processed meat", direction: "high", deathsM: 0.304, deaths: "~304,000/yr", dalysM: 8.56, rank: null, tmrel: "0 g/day", foods: ["processed-meat"], note: "GBD 2019 (secondary analysis).", source: { cite: "GBD 2019 (Diet Collaborators)", id: "DOI:10.1016/S0140-6736(20)30752-2" } },
+  "high-red-meat": { risk: "Diet high in red meat", direction: "high", deathsM: 0.896, deaths: "~896,000/yr (contested)", dalysM: 23.9, rank: null, tmrel: "0 g/day", foods: ["red-meat"], note: "GBD 2019's ~896k is ~36× GBD 2017's ~25k, from a since-questioned change of the red-meat TMREL to zero (contested in the Lancet, 2022) — treat as an upper bound.", source: { cite: "GBD 2019; Lancet 2022 correspondence", id: "DOI:10.1016/S0140-6736(20)30752-2" } },
+  "high-ssb": { risk: "Diet high in sugar-sweetened beverages", direction: "high", deathsM: 0.242, deaths: "~242,000/yr", dalysM: 6.31, rank: null, tmrel: "0 g/day", foods: ["sugary-drinks"], note: "GBD 2019.", source: { cite: "GBD 2019 (Diet Collaborators)", id: "DOI:10.1016/S0140-6736(20)30752-2" } },
+  "high-trans-fat": { risk: "Diet high in trans fat", direction: "high", deathsM: 0.5, deaths: "~500,000/yr (coronary heart disease; WHO)", dalysM: null, rank: null, tmrel: "0% of energy", foods: ["trans-fat"], note: "WHO estimate (CHD deaths); the all-cause GBD total isn't separately isolated.", source: { cite: "WHO (trans-fat elimination); GBD 2019 ~645k IHD", id: "DOI:10.1016/S0140-6736(20)30752-2" } },
   "low-milk": { risk: "Diet low in milk", direction: "low", deathsM: null, deaths: "lower tier (global count not isolated)", dalysM: null, rank: null, tmrel: "~350–520 g/day", foods: ["milk"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
   "alcohol": { risk: "Alcohol use", direction: "high", deathsM: 2.8, deaths: "~2.8 million/yr", dalysM: null, rank: null, tmrel: "0 drinks/day", foods: ["alcohol"], separate: true, note: "A SEPARATE GBD risk (not one of the 15 dietary risks); #1 risk factor for ages 15–49.", source: { cite: "GBD 2016 Alcohol Collaborators, Lancet 2018", id: "DOI:10.1016/S0140-6736(18)31310-2" } },
 };
