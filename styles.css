@@ -904,6 +904,9 @@ a { color: var(--accent); }
 
 @media (max-width: 540px) {
   .controls { flex-direction: column; align-items: stretch; }
+  /* In a column, flex-grow:1 would make the search box expand VERTICALLY — pin it to
+     its natural height. */
+  .controls .search { flex: 0 0 auto; }
   .filter-row { justify-content: space-between; }
   .consid { grid-template-columns: 1fr; gap: 2px; }
   .tier-list li { grid-template-columns: 1fr; gap: 4px; }

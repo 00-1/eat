@@ -19,6 +19,21 @@
 
   <!-- ============================ FOODS VIEW ============================ -->
   <main id="view-foods" class="wrap view">
+    <section id="highlights" class="highlights" aria-label="Standout foods"></section>
+
+    <section class="explore" aria-label="Explore alternate criteria">
+      <div class="explore-head">
+        <label class="select-wrap explore-select">
+          <span class="explore-k">What if we judged on…</span>
+          <select id="explore" class="select" aria-label="Explore alternate evidence criteria"></select>
+        </label>
+        <p id="explore-note" class="explore-note"></p>
+      </div>
+      <div id="explore-diff" class="explore-diff" aria-live="polite"></div>
+    </section>
+
+    <p id="data-status" class="data-status" aria-live="polite"></p>
+
     <section class="controls" aria-label="Filter foods">
       <input
         type="search"
@@ -48,21 +63,6 @@
           <option value="alpha">Sort: A–Z</option>
         </select>
       </label>
-    </section>
-
-    <p id="data-status" class="data-status" aria-live="polite"></p>
-
-    <section id="highlights" class="highlights" aria-label="Standout foods"></section>
-
-    <section class="explore" aria-label="Explore alternate criteria">
-      <div class="explore-head">
-        <label class="select-wrap explore-select">
-          <span class="explore-k">What if we judged on…</span>
-          <select id="explore" class="select" aria-label="Explore alternate evidence criteria"></select>
-        </label>
-        <p id="explore-note" class="explore-note"></p>
-      </div>
-      <div id="explore-diff" class="explore-diff" aria-live="polite"></div>
     </section>
 
     <p id="count" class="count" aria-live="polite"></p>
