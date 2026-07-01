@@ -279,11 +279,13 @@ Three issues the food-by-food review exposed where the engine is behaving but th
       which is the structural half of the redesign. The bump itself STILL over-fires —
       the one-tier bump for acting on all-cause mortality pushes moderate-RR foods
       (coffee RR 0.83, |ln|≈0.19 → moderate) up to "large," the same tier as trans fat.
-      Recalibrate: e.g. only bump when the all-cause effect itself excludes null and is
-      already ≥ small, or make the bump a half-step, or gate it on absolute burden once
-      §3 lands. Several foods currently inherit "large" this way — list them and
-      decide per case. (Now decoupled from the champion, which ranks on raw |ln RR|, so
-      this is lower-stakes than before.)
+      **DECISION (2026-07-01, maintainer): do NOT ship a near-term softening** (gating
+      the bump on significance / half-step). The bump is a home-grown proxy for "how
+      much a food matters" with no established analog; the principled replacement is an
+      **absolute attributable-burden axis** (GBD PAF-style) — see §3, now promoted to a
+      real queued task. The absolute-burden axis supersedes the bump entirely rather
+      than patching it. (Already decoupled from the champion, which ranks on raw |ln RR|,
+      so the over-fire is display-only and low-stakes until §3 lands.)
 - [x] **(c) Neutral-/12 vs directional-/16 cross-scale optics.** DONE (note option,
       v0.16): added an explicit METHODOLOGY caveat that the two scales aren't directly
       comparable (the butter-vs-olive-oil case spelled out), so the certainty tier is
@@ -543,11 +545,37 @@ what we *don't* know is a feature, not an embarrassment.
       files are served as-is, and confirmed all asset paths are relative (works under
       the `/eat/` project subpath). README links the live site.
 
-## 3. Absolute impact (beyond relative effect)  ⟶ *idea*
+## 3. Absolute impact (beyond relative effect)  ⟶ *queued — the "real fix" (maintainer, 2026-07-01)*
 
-Magnitude is currently a *relative*-effect proxy (it under-rates trans fat). A
-future input could record absolute/attributable burden (GBD-style) so "moves the
-needle" reflects real population impact, not just relative risk.
+Magnitude is currently a *relative*-effect proxy, patched by the all-cause bump
+(§(b)) — a home-grown proxy with no established analog. The methodology review
+(`research/methodology-review.md`) identifies the principled replacement: a
+**separate absolute attributable-burden axis** (GBD PAF-style), which supersedes
+the bump rather than patching it. Maintainer decision: build this instead of a
+near-term bump softening.
+
+**What it answers.** "How much does this food *matter* at the population level?" —
+a genuinely different question from "how big and sure is its relative effect?"
+Broad staples (vegetables, whole grains, fruit) legitimately dominate absolute
+burden (GBD's top diet risks: high sodium, low whole grains, low fruit) precisely
+because they're eaten in quantity — even though their *per-serving relative* effect
+is modest. Keeping the two axes separate resolves the veg/fruit puzzle honestly.
+
+**Design sketch (to refine):**
+- [ ] Record a per-food/-outcome **absolute-burden input**: relative effect ×
+      exposure prevalence (how common/how much consumed vs a TMREL counterfactual) ×
+      baseline outcome frequency. GBD's PAF is the reference formula. Data source:
+      GBD 2019 diet estimates where a food maps to a GBD risk; honest "not estimated"
+      otherwise (per the highlight-inadequacies policy).
+- [ ] Add it as a **second measure** alongside magnitude+certainty — never fold it
+      back into the relative-effect magnitude tier.
+- [ ] Offer the shortlist under **either lens**: "biggest sure *relative* effect"
+      (current) vs "biggest *population impact*" — labelled so they're not conflated.
+- [ ] Once it lands, **remove the all-cause magnitude bump** (§(b)) entirely.
+
+Caveats: PAF depends on a chosen counterfactual (TMREL) and on exposure data that
+vary by population; GBD uses a mediation matrix to avoid double-counting shared
+pathways (e.g. fibre). Treat early numbers as provisional and sourced.
 
 ## Done
 
