@@ -555,6 +555,59 @@ const EXCEPTIONS = {
       mitigation: "Prefer whole fruit; keep juice to a small glass with a meal.",
     },
   ],
+  "oats": [
+    {
+      type: "autoimmune",
+      group: "People with celiac disease (cross-contamination with wheat/barley/rye)",
+      prevalence: { estimate: "~0.7% biopsy-confirmed (~1.4% seroprevalence)", source: "Singh 2018 meta-analysis, Clin Gastroenterol Hepatol (PMID 29551598)" },
+      severity: "avoid",
+      mitigation: "Buy CERTIFIED gluten-free oats — most standard oats are cross-contaminated during processing. Pure oats' avenin is tolerated by most (but not all) coeliacs.",
+    },
+  ],
+  "seed-oils": [],
+  "brown-rice": [
+    {
+      type: "contaminant",
+      group: "Frequent-eaters and infants (inorganic arsenic in rice — brown rice is higher than white)",
+      prevalence: { estimate: "population-wide exposure; brown rice averages 80% more inorganic arsenic than white per FDA surveys", source: "FDA rice arsenic surveys (2013–2016); EFSA 2021" },
+      severity: "mitigate",
+      mitigation: "Rinse before cooking, cook in excess water (6:1) and drain like pasta, and vary rice with other whole grains — cuts inorganic arsenic by ~50%. Not a reason to avoid brown rice; a reason to vary and rinse.",
+    },
+  ],
+  "peanuts": [
+    {
+      type: "allergy",
+      group: "People with peanut allergy",
+      prevalence: { estimate: "~1–2% of children in high-income countries; a substantial fraction persist into adulthood", source: "Spolidoro 2023 European systematic review (Allergy, DOI 10.1111/all.15801)" },
+      severity: "avoid",
+      mitigation: "Strict avoidance; carry prescribed epinephrine. Early introduction in infants at high risk lowers subsequent allergy incidence (LEAP trial, Du Toit 2015 NEJM).",
+    },
+    {
+      type: "contaminant",
+      group: "Peanuts from poorly-regulated supply chains (aflatoxin B1 — IARC Group 1)",
+      prevalence: { estimate: "significant exposure in low-income tropical settings; strict batch limits in regulated markets (EU 2 μg/kg B1, FDA 20 μg/kg total)", source: "IARC monographs on aflatoxins; regulatory limits" },
+      severity: "mitigate",
+      mitigation: "Buy from reputable brands with tested batches; discard any visibly mouldy or discoloured peanuts; peanut butter from major brands is routinely tested.",
+    },
+  ],
+  "mushrooms": [
+    {
+      type: "condition",
+      group: "People foraging wild mushrooms (poisonous species — Amanita phalloides etc.)",
+      prevalence: { estimate: "hundreds of poisoning deaths worldwide annually from misidentification", source: "clinical toxicology reports" },
+      severity: "avoid",
+      mitigation: "Only eat mushrooms you have positively identified with expert help or bought from a regulated seller. The evidence base is for cultivated culinary species (button, shiitake, oyster, etc.)." ,
+    },
+  ],
+  "pasta": [
+    {
+      type: "autoimmune",
+      group: "People with celiac disease or non-celiac gluten sensitivity",
+      prevalence: { estimate: "coeliac ~0.7% biopsy-confirmed (~1.4% seroprevalence); NCGS estimates vary widely", source: "Singh 2018 meta-analysis, Clin Gastroenterol Hepatol (PMID 29551598)" },
+      severity: "avoid",
+      mitigation: "Use certified gluten-free pasta (rice, corn, legume-based); note legume-based pastas differ in glycemic and satiety profile.",
+    },
+  ],
 };
 
 if (typeof module !== "undefined" && module.exports) {

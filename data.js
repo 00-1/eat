@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.63";
+const METHODOLOGY_VERSION = "0.64";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -457,6 +457,225 @@ const FOODS = [
     lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-07-01", change: "New item — split conceptually from whole fruit as a likely stronger-than-fruit contender. Source-verified on Guo 2016 (T2D RR 0.82) + Muraki 2013 (blueberries 0.74) + Cassidy 2013 (anthocyanins/MI). Marked 'mixed' uniformity: the signal is concentrated in blueberries." },
+    ],
+  },
+
+  // ============ Tranche 1 (worker coverage grind, v0.64) ============
+  {
+    id: "oats",
+    name: "Oats & oatmeal",
+    category: "Grains",
+    effect: "positive",
+    certainty: "moderate",
+    outcomes: ["Type 2 diabetes"],
+    summary: "A few servings a week track with clearly lower type-2-diabetes risk — the wholegrain benefit in porridge form.",
+    rationale:
+      "Direct food-level cohort evidence: in three US cohorts (~195,000; Hu 2020 BMJ), oatmeal ≥2 servings/week vs <1/month was associated with 21% lower type-2-diabetes risk (HR 0.79, 0.75–0.83). Randomized-trial support is on the surrogate side — oat β-glucan lowers LDL-C (WMD −0.27 mmol/L across 13 RCTs; Yu 2022) — a validated causal pathway for CVD, though hard-outcome trials don't exist. Moderate certainty rather than High: single cohort family (NHS/NHSII/HPFS) drives the T2D figure, and healthy-user confounding is substantial.",
+    considerations: {
+      substitution: "Most of the gain is swapping oatmeal FOR refined breakfast (sugary cereals, white toast); vs no breakfast is a smaller question.",
+      preparation: "Steel-cut and rolled oats are lower-GI than instant/quick oats; added sugar/cream can pull the balance the other way.",
+      confounding: "Oatmeal eaters tend to have healthier overall diets; residual confounding likely inflates the association.",
+    },
+    studies: [
+      {
+        citation: "Hu Y, et al. BMJ. 2020.",
+        type: "Prospective cohorts (NHS, NHS II, HPFS; ~195,000)",
+        finding: "Oatmeal ≥2 servings/week vs <1/month: 21% lower type-2-diabetes risk (HR 0.79, 0.75–0.83).",
+        search: "Hu wholegrain foods individual type 2 diabetes BMJ 2020 m2206",
+      },
+      {
+        citation: "Yu J, et al. Nutrients. 2022.",
+        type: "Meta-analysis of 13 RCTs (927 hypercholesterolaemic adults)",
+        finding: "Oat β-glucan lowered LDL-C by 0.27 mmol/L (95% CI −0.35 to −0.20) and total cholesterol by 0.24 mmol/L; triglycerides and HDL unchanged.",
+        search: "Yu oat beta-glucan lipid profile hypercholesterolemic meta-analysis Nutrients 2022",
+      },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "New item (worker Tranche 1). Grounded on Hu 2020 BMJ oatmeal-specific figure (HR 0.79 for T2D) + Yu 2022 β-glucan RCT-meta (LDL surrogate). Positive · Moderate; cross-links to Whole grains as a member." },
+    ],
+  },
+  {
+    id: "seed-oils",
+    name: "Seed oils (canola, sunflower, soybean, etc.)",
+    category: "Fats & oils",
+    effect: "positive",
+    certainty: "low",
+    outcomes: ["Cardiovascular disease", "All-cause mortality"],
+    summary: "The linoleic acid in common seed oils tracks with LOWER — not higher — cardiovascular risk in the best biomarker cohorts.",
+    contested:
+      "The 'seed oils are poison' claim (that omega-6 linoleic acid drives inflammation and heart disease) contradicts the strongest evidence: an individual-participant biomarker meta-analysis of 30 prospective cohorts (Marklund 2019 CHARGE, ~68,700 participants, 15,198 events) found higher circulating linoleic acid associated with LOWER total CVD (HR 0.93, 0.88–0.99) and LOWER cardiovascular mortality (0.78, 0.70–0.85). The contrarian case leans on animal models, one recovered old trial (Ramsden 2016 Minnesota Coronary Experiment reanalysis) and mechanistic conjecture — none of which override the outcome cohorts.",
+    rationale:
+      "Higher tissue and circulating linoleic acid (LA) — the marker of real dietary intake, not self-report — is inversely associated with cardiovascular disease and mortality across 30 cohorts (Marklund 2019). Dietary LA is inversely associated with CHD in prospective cohorts (Farvid 2014, RR 0.85 highest vs lowest). Refined canola oil lowers LDL-C in RCTs (Amiri 2020 meta of 42 trials, −0.23 mmol/L LDL vs comparator oils). Low certainty: the outcome-trial gold standard is absent, the pooled N is only ~69k (the biomarker meta is small vs food-cohort megas), CHARGE authors received Unilever support (funding graded mixed), and no publication-bias test — the engine docks it to Low despite the biomarker-cohort strength. Direction is confident; the tier reflects those input-quality gaps, not doubt about the sign.",
+    considerations: {
+      substitution: "The signal is strongest when seed oils REPLACE saturated fat (butter, lard, tropical oils); adding on top of the same diet is a different question.",
+      confounding: "LA intake correlates with vegetable-oil / plant-forward patterns; residual confounding likely inflates the estimate.",
+      variety: "The pooled figure is for total seed-oil LA — different oils have different fatty-acid profiles (canola has more ALA/omega-3, sunflower is nearly pure LA); the outcome data don't yet split them cleanly.",
+      thermal: "Repeated high-heat frying oxidises seed-oil PUFAs and generates aldehydes — a real per-use concern (see the Fried foods card). The cohort signal reads through TOTAL intake, mostly non-fried.",
+    },
+    components: [
+      {
+        name: "Linoleic acid (omega-6)",
+        worry: "Isn't omega-6 pro-inflammatory and thus atherogenic?",
+        resolution: "The pro-inflammatory pathway is real in vitro but doesn't translate to outcomes — in 30 prospective biomarker cohorts, higher circulating LA is inversely associated with CVD/mortality (Marklund 2019). The whole-food outcome data override the isolated pathway model.",
+      },
+    ],
+    studies: [
+      {
+        citation: "Marklund M, et al. Circulation. 2019 (CHARGE FORCE).",
+        type: "Individual-participant biomarker meta-analysis of 30 prospective cohorts (~68,700; 15,198 CVD events)",
+        finding: "Higher circulating linoleic acid: total CVD HR 0.93 (0.88–0.99); CV mortality 0.78 (0.70–0.85); ischemic stroke 0.88 (0.79–0.98). Arachidonic acid not associated with harm.",
+        search: "Marklund linoleic acid biomarker cardiovascular CHARGE Circulation 2019",
+      },
+      {
+        citation: "Farvid MS, et al. Circulation. 2014.",
+        type: "Meta-analysis of prospective cohorts (dietary LA & CHD)",
+        finding: "Higher dietary LA associated with lower CHD risk (RR 0.85 highest vs lowest; per 5%-energy RR 0.90).",
+        search: "Farvid dietary linoleic acid coronary heart disease meta-analysis Circulation 2014",
+      },
+      {
+        citation: "Amiri M, et al. Nutr Metab Cardiovasc Dis. 2020.",
+        type: "Meta-analysis of 42 controlled clinical trials (canola oil)",
+        finding: "Canola oil vs comparator oils: LDL-C −0.23 mmol/L, TC −0.27 mmol/L, LDL/HDL −0.21; blood pressure and glycemic markers largely unchanged.",
+        search: "Amiri canola oil lipid meta-analysis Nutr Metab Cardiovasc Dis 2020",
+      },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "New item (worker Tranche 1). Grounded on Marklund 2019 CHARGE biomarker meta (LA→lower CVD/CV mortality across 30 cohorts) + Farvid 2014 (dietary LA→CHD) + Amiri 2020 canola LDL. Positive · Low computed (9/16: docks on N=69k precision + mixed funding + untested pub bias — the direction is confident, the input-quality gaps put it at Low, not Moderate). Contested flag captures the 'seed oils are poison' contrarian narrative — the outcome data disagree with it." },
+    ],
+  },
+  {
+    id: "brown-rice",
+    name: "Brown rice",
+    category: "Grains",
+    effect: "positive",
+    certainty: "moderate",
+    outcomes: ["Type 2 diabetes"],
+    summary: "The wholegrain sister to white rice — a few servings a week tracks with lower diabetes risk; the direct swap is where the benefit lives.",
+    rationale:
+      "Brown rice is the wholegrain contrast to the (harmful) white-rice signal. In three US cohorts (~197,000; Sun 2010 Arch Intern Med), ≥2 servings/week of brown rice vs <1/month was associated with 11% lower type-2-diabetes risk (HR 0.89, 0.81–0.97), and a 50 g/day substitution (brown → white) lowered modelled T2D risk by 16%. Hu 2020 BMJ (same cohort family) corroborates: HR 0.88 (0.82–0.94). Moderate certainty: consistent across two independent analyses in the same cohort family (~200k) with low heterogeneity, hard outcome, dose-response context and a validated bran-fibre mechanism; the effect is small vs whole grains as a class (36% for whole-grain substitution), and Asian rice-staple populations aren't represented, so it's not High.",
+    considerations: {
+      substitution: "The clearest move is swapping white → brown rice; the substitution HR (16% lower T2D per 50 g/day swap; Sun 2010) is stronger than either single-food HR.",
+      populationDependence: "Signal is from US cohorts where brown rice is a minor food; brown-rice-staple populations aren't in this evidence base.",
+      confounding: "Brown-rice eaters skew health-conscious; confounding likely inflates the small effect.",
+    },
+    studies: [
+      {
+        citation: "Sun Q, et al. Arch Intern Med. 2010.",
+        type: "Three US cohorts (NHS, NHS II, HPFS; ~197,228)",
+        finding: "≥2 servings/week brown rice vs <1/month: T2D HR 0.89 (0.81–0.97); replacing 50 g/day white with brown rice ↓16% T2D; replacing with whole grains ↓36%.",
+        search: "Sun brown rice white rice type 2 diabetes Arch Intern Med 2010",
+      },
+      {
+        citation: "Hu Y, et al. BMJ. 2020.",
+        type: "Prospective cohorts (NHS, NHS II, HPFS; ~195,000)",
+        finding: "Brown rice ≥2 servings/week vs <1/month: T2D HR 0.88 (0.82–0.94) — corroborates Sun 2010 in the same cohort family.",
+        search: "Hu wholegrain foods brown rice type 2 diabetes BMJ 2020 m2206",
+      },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "New item (worker Tranche 1). Grounded on Sun 2010 Arch Intern Med (brown rice HR 0.89; substitution 16%) + Hu 2020 corroboration. Positive · Moderate (10/16 computed: consistent across two analyses in ~200k, hard outcome, dose-response, bran-fibre mechanism); cross-links to Whole grains (parent) and White rice (contrast)." },
+    ],
+  },
+  {
+    id: "peanuts",
+    name: "Peanuts (& peanut butter)",
+    category: "Legumes",
+    effect: "positive",
+    certainty: "moderate",
+    outcomes: ["All-cause mortality", "Cardiovascular disease"],
+    summary: "A daily handful tracks with lower mortality across ethnicities — the affordable member of the nuts-and-mortality signal.",
+    rationale:
+      "Peanuts sit inside the nut-mortality signal even though botanically they're legumes. In Luu 2015 (JAMA Intern Med), three prospective cohorts (~206,000; Southern Community Cohort Study + Shanghai Women's + Shanghai Men's) — where intake was primarily or exclusively peanuts — found highest vs lowest quintile associated with 17–21% lower total mortality (HR 0.79, 0.73–0.86 US; 0.83, 0.77–0.88 Shanghai), driven by cardiovascular mortality. Ischemic heart disease HR ~0.60–0.70 across ethnicities. This roughly matches the tree-nut all-cause figure (Aune 2016, 0.78 per 28 g/day), so peanuts inherit the tree-nut certainty tier once you accept the food-level parallel. Moderate certainty: broad ethnic representation strengthens generalisability; healthy-user confounding remains.",
+    considerations: {
+      substitution: "Peanut butter counts (Luu 2015 pooled paste and whole nut); the food substituted matters more than the form.",
+      variety: "Signal covers unsalted/lightly-salted; heavily salted or chocolate-coated peanut candies pull the balance toward the sweets-and-snacks pattern.",
+      confounding: "Peanut-eaters skew health-conscious in the US cohorts; the Chinese cohorts weaken (but don't eliminate) this concern.",
+      allergy: "Peanut allergy is a distinct medical exception (see the exceptions block) — this verdict is for the general population.",
+    },
+    components: [
+      {
+        name: "Aflatoxin (mould contamination)",
+        worry: "Aflatoxin B1 in poorly-stored peanuts is a Group 1 carcinogen — doesn't that flip the verdict?",
+        resolution: "Aflatoxin is a real concern for peanuts stored in humid, unregulated conditions (a major driver of hepatocellular carcinoma in low-income tropical settings). In regulated food supplies with monitored batch limits, exposure is low; the cohort mortality signal is favourable across US and Chinese contexts. Prefer reputable brands; discard visibly mouldy peanuts.",
+      },
+    ],
+    studies: [
+      {
+        citation: "Luu HN, et al. JAMA Internal Medicine. 2015.",
+        type: "Three prospective cohorts (~206,000; 14,440 deaths)",
+        finding: "Highest vs lowest quintile of nut/peanut intake: total mortality HR 0.79 (0.73–0.86) US, 0.83 (0.77–0.88) Shanghai; driven by cardiovascular mortality; IHD HR 0.60–0.70 across ethnicities.",
+        search: "Luu peanut nut consumption total cause-specific mortality JAMA Internal Medicine 2015",
+      },
+      {
+        citation: "Aune D, et al. BMC Medicine. 2016.",
+        type: "Dose-response meta-analysis (~819,000; peanut-inclusive)",
+        finding: "Nuts (including peanuts) 28 g/day: ~22% lower all-cause mortality (RR 0.78, 0.72–0.84).",
+        search: "Aune nut peanut consumption mortality dose-response BMC Medicine 2016",
+      },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "New item (worker Tranche 1). Grounded on Luu 2015 (3 cohorts, 206k, peanut-specific mortality signal) + Aune 2016 tree-nut meta (peanut-inclusive). Positive · Moderate. Note that although peanuts are legumes, the cohort evidence groups them with tree nuts on outcomes." },
+    ],
+  },
+  {
+    id: "mushrooms",
+    name: "Mushrooms",
+    category: "Vegetables",
+    effect: "positive",
+    certainty: "low",
+    outcomes: ["All-cause mortality"],
+    summary: "A small but graded mortality signal — modestly protective, likely part of a broader healthy pattern.",
+    rationale:
+      "In a meta-analysis of 5 prospective cohorts (Ba 2021 Nutr J, ~601,893 participants), high vs low mushroom intake was associated with a small but significant lower risk of all-cause mortality (pooled RR 0.94, 95% CI 0.91–0.98). The effect size is small — |ln RR| just above the directionality floor — and healthy-user confounding is substantial (mushroom eaters skew health-conscious). Mechanistic support is thin: mushrooms carry ergothioneine and glutathione (antioxidants) plus vitamin D2 (when UV-exposed), but no validated causal marker connects them to mortality. Low certainty; the direction is honest, the magnitude modest.",
+    considerations: {
+      substitution: "Substituting mushrooms for red/processed meat (as an umami-rich replacement) plausibly extends the mortality benefit further; not directly tested.",
+      confounding: "Mushroom intake marks a health-conscious pattern; residual confounding likely inflates a small association.",
+      preparation: "Cohorts don't distinguish preparation; heavily buttered or deep-fried mushrooms are a different exposure.",
+      variety: "Effect is for total mushrooms; specific species (shiitake, oyster, button) aren't cleanly separated in cohort data.",
+    },
+    studies: [
+      {
+        citation: "Ba DM, et al. Nutrition Journal. 2021.",
+        type: "Meta-analysis of 5 prospective cohort studies (~601,893)",
+        finding: "High vs low mushroom intake: all-cause mortality pooled RR 0.94 (0.91–0.98). Continuous NHANES analysis: HR 0.84 (0.67–1.06), NS.",
+        search: "Ba mushroom consumption mortality NHANES meta-analysis Nutrition Journal 2021",
+      },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "New item (worker Tranche 1); graduated from HOLDING_LIST. Grounded on Ba 2021 (5-cohort meta, 601k) → all-cause mortality RR 0.94 (0.91–0.98). Small effect, but clears the directionality floor → Positive · Low." },
+    ],
+  },
+  {
+    id: "pasta",
+    name: "Pasta",
+    category: "Grains",
+    effect: "neutral",
+    certainty: "very-low",
+    outcomes: ["Type 2 diabetes"],
+    summary: "Not a heart or diabetes villain in the cohorts — low-GI when cooked al dente; the sauce (and portion) drives more than the pasta.",
+    rationale:
+      "Pasta lacks a clean single-food hard-outcome pooled RR. The best contextual evidence sits inside low-GI dietary-pattern trials (Chiavaroli 2021 BMJ, low-GI/GL cardiometabolic RCT meta): pasta is a low-glycemic-index refined grain when cooked al dente (GI ~40–50), so it doesn't behave like white bread or breakfast cereals on postprandial glucose. Ecological and cohort evidence from Italian populations (large pasta consumers) shows no obesity or T2D excess vs low-consumers. Recorded neutral · low — no proven benefit, no proven harm at typical intakes; the honest gap is a pasta-specific hard-outcome cohort meta.",
+    considerations: {
+      preparation: "GI rises with overcooking (soft, not al dente) and with white-flour vs whole-wheat versions.",
+      substitution: "The sauce and portion size usually matter more than the pasta itself; creamy/heavy or oversized portions turn the exposure into a different food.",
+      confounding: "Cohort evidence is embedded in Mediterranean-pattern data — hard to isolate pasta from the pattern.",
+    },
+    studies: [
+      {
+        citation: "Chiavaroli L, et al. BMJ. 2021.",
+        type: "Meta-analysis of RCTs (low-GI/GL diets for type-2 diabetes)",
+        finding: "Low-glycemic-index dietary patterns (which include al-dente pasta) improved HbA1c and cardiometabolic risk factors vs higher-GI comparators; no adverse signal for pasta-inclusive patterns.",
+        search: "Chiavaroli glycaemic index type 2 diabetes cardiometabolic BMJ 2021",
+      },
+    ],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "New item (worker Tranche 1). Recorded neutral · low: no pasta-specific hard-outcome pooled RR exists; low-GI context (Chiavaroli 2021) shows no harm signal. verified:false — the numbers are contextual, not a pasta-specific meta." },
     ],
   },
 
@@ -1946,6 +2165,57 @@ const ASSESSMENTS = {
       participants: { figure: "21,442 randomized (866 primary CVD events; median 3.6 yr)", cite: "Sesso 2022 Am J Clin Nutr (COSMOS RCT)", id: "PMID:35294962" },
     },
   },
+
+  // ============ Tranche 1 (v0.64) ============
+  "oats": {
+    evidence: { pooledRR: 0.79, ciExcludesNull: true, participants: 195000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "≥2 servings/week oatmeal vs <1/month" },
+    effectEstimate: "Type-2 diabetes HR 0.79 (0.75–0.83) for oatmeal ≥2 servings/week vs <1/month across three US cohorts (Hu 2020, ~195,000; NHS+NHSII+HPFS). LDL-C −0.27 mmol/L from oat β-glucan RCTs (Yu 2022, 13 trials).",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Oatmeal & T2D HR 0.79 (0.75–0.83), ≥2 servings/week vs <1/month; corroborated by LDL-C −0.27 mmol/L in oat β-glucan RCT-meta (Yu 2022)", cite: "Hu 2020 BMJ", id: "PMID:32641435" },
+      participants: { figure: "~195,000 across NHS, NHSII, HPFS", cite: "Hu 2020 BMJ", id: "PMID:32641435" },
+    },
+  },
+  "seed-oils": {
+    evidence: { pooledRR: 0.78, ciExcludesNull: true, participants: 68659, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "mixed", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest circulating linoleic acid (biomarker; per interquintile range)" },
+    effectEstimate: "Biomarker meta (Marklund 2019 CHARGE, 30 cohorts, ~68,700): higher circulating linoleic acid → total CVD HR 0.93 (0.88–0.99); CV mortality 0.78 (0.70–0.85); ischemic stroke 0.88 (0.79–0.98); CHD 0.94 (0.88–1.00, NS). Dietary LA → CHD RR 0.85 highest vs lowest (Farvid 2014). Canola-oil RCT-meta lowers LDL-C 0.23 mmol/L (Amiri 2020).",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "CV mortality HR 0.78 (0.70–0.85) per interquintile range of biomarker LA; total CVD 0.93 (0.88–0.99); ischemic stroke 0.88 (0.79–0.98)", cite: "Marklund 2019 Circulation (CHARGE FORCE)", id: "PMID:30971107" },
+      participants: { figure: "68,659 participants across 30 prospective cohorts, 15,198 CVD events; individual-participant biomarker meta", cite: "Marklund 2019 Circulation (CHARGE FORCE)", id: "PMID:30971107" },
+    },
+  },
+  "brown-rice": {
+    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 197228, heterogeneity: "low", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "≥2 servings/week brown rice vs <1/month" },
+    effectEstimate: "Type-2 diabetes HR 0.88 (0.82–0.94) for brown rice ≥2 servings/week vs <1/month (Hu 2020, ~195,000); 0.89 (0.81–0.97) in Sun 2010 across NHS+NHSII+HPFS (~197,228); replacing 50 g/day white with brown rice ↓16% T2D risk.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Brown rice ≥2 servings/week vs <1/month → T2D HR 0.88 (0.82–0.94; Hu 2020); 0.89 (0.81–0.97; Sun 2010); 50 g/d white→brown swap ↓16%", cite: "Sun 2010 Arch Intern Med; Hu 2020 BMJ", id: "PMID:20548009" },
+      participants: { figure: "~197,228 across NHS+NHSII+HPFS (Sun 2010, 39,765 men + 157,463 women)", cite: "Sun 2010 Arch Intern Med", id: "PMID:20548009" },
+    },
+  },
+  "peanuts": {
+    evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 206029, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest quintile of peanut/nut intake (~one handful daily)" },
+    effectEstimate: "Total mortality HR 0.79 (0.73–0.86) in US Southern Community Cohort Study and 0.83 (0.77–0.88) in Shanghai Women's + Men's Health Study for highest vs lowest peanut quintile (Luu 2015, 3 cohorts, ~206,000, 14,440 deaths); driven by cardiovascular mortality (IHD HR 0.60–0.70). Corroborated by Aune 2016 tree-nut meta (peanut-inclusive, 819k, RR 0.78 per 28 g/day).",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Highest vs lowest quintile: total mortality HR 0.79 (0.73–0.86) US SCCS; 0.83 (0.77–0.88) Shanghai; IHD 0.60–0.70 across ethnicities", cite: "Luu 2015 JAMA Internal Medicine", id: "PMID:25730101" },
+      participants: { figure: "~206,029 across SCCS (71,764 US), SWHS + SMHS (134,265 Chinese), 14,440 deaths", cite: "Luu 2015 JAMA Internal Medicine", id: "PMID:25730101" },
+    },
+  },
+  "mushrooms": {
+    evidence: { pooledRR: 0.94, ciExcludesNull: true, participants: 601893, heterogeneity: "low", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "high vs low mushroom intake (categorical, ~½ cup/day or more)" },
+    effectEstimate: "All-cause mortality pooled RR 0.94 (95% CI 0.91–0.98) across 5 prospective cohort studies (Ba 2021 Nutr J, 601,893 participants). Continuous NHANES analysis HR 0.84 (0.67–1.06), NS. A small but graded protective signal; healthy-user confounding likely inflates it.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "All-cause mortality pooled RR 0.94 (0.91–0.98), 5-cohort meta-analysis", cite: "Ba 2021 Nutrition Journal", id: "PMID:34548082" },
+      participants: { figure: "~601,893 across 5 prospective cohort studies (Ba 2021 meta of Wang 2016, Kim 2017, NHANES 2003–2014, etc.)", cite: "Ba 2021 Nutrition Journal", id: "PMID:34548082" },
+    },
+  },
+  "pasta": {
+    evidence: { pooledRR: 1.00, ciExcludesNull: false, participants: 10000, heterogeneity: "unknown", outcomeType: "surrogate", doseResponse: "none", rctLevel: "pattern", funding: "mixed", pubBias: "untested", confoundingRisk: "high", intakeBasis: "habitual pasta intake within a Mediterranean-style pattern (~1–2 servings/day)" },
+    effectEstimate: "No pasta-specific hard-outcome cohort meta; low-GI pattern RCTs (Chiavaroli 2021 BMJ) show low-GI diets (which include al-dente pasta) improve HbA1c and cardiometabolic markers vs higher-GI comparators — no adverse signal, but no direct pasta hard-outcome figure. Honest neutral · low.",
+  },
 };
 
 // What TRIALS + MECHANISM alone point to, per food — the grounded input for the
@@ -1978,6 +2248,12 @@ const MECHANISM = {
   "coffee": { direction: "neutral", trial: "RCTs: UNFILTERED coffee raises cholesterol (cafestol diterpenes); caffeine transiently raises BP (Mesas 2011 meta-analysis) but attenuates with habituation. FILTERED coffee is ~neutral on LDL.", mechanism: "Cafestol/kahweol downregulate the LDL receptor (unfiltered only); caffeine → transient sympathetic BP rise. Net: mixed, brew-dependent.", source: { cite: "Mesas 2011 Am J Clin Nutr", id: "10.3945/ajcn.111.016667" }, confidence: "medium", note: "Mechanism is brew-dependent and mild; filtered coffee is neutral. This is why the mechanism lens can't condemn coffee even though observation shows clear benefit." },
   "fatty-fish": { direction: "neutral", trial: "Low-dose fish-oil supplement RCTs are null on hard CVD outcomes (VITAL, ASCEND, Cochrane); only a high-dose purified-EPA DRUG (REDUCE-IT) was positive, and that is contested (mineral-oil placebo).", mechanism: "EPA/DHA lower triglycerides (validated), but the food/supplement doesn't move hard outcomes → net neutral.", source: { cite: "Manson 2019 NEJM (VITAL); ASCEND 2018 NEJM", id: "10.1056/NEJMoa1811403" }, confidence: "high" },
   "cocoa": { direction: "neutral", trial: "COSMOS RCT (n=21,442): cocoa-flavanol supplement did not significantly cut total CVD events (HR 0.90, P=0.11).", mechanism: "Flavanols raise nitric-oxide → improve FMD and modestly lower BP (favorable markers), but the hard-outcome trial is null.", source: { cite: "Sesso 2022 Am J Clin Nutr (COSMOS)", id: "PMID:35294962" }, confidence: "high" },
+  "oats": { direction: "positive", trial: "Meta-analysis of 13 RCTs (Yu 2022) in hypercholesterolaemic adults: oat β-glucan lowered LDL-C by 0.27 mmol/L and total cholesterol 0.24 mmol/L.", mechanism: "Soluble β-glucan fibre binds bile acids in the gut → hepatic LDL-receptor upregulation → lower serum LDL (a validated causal marker for CVD).", source: { cite: "Yu 2022 Nutrients (oat β-glucan meta-analysis)", id: "PMID:35631184" }, confidence: "high" },
+  "seed-oils": { direction: "positive", trial: "CHARGE biomarker meta of 30 cohorts (Marklund 2019): higher circulating linoleic acid → lower CV mortality (HR 0.78). Canola-oil RCT-meta (Amiri 2020) lowers LDL-C.", mechanism: "Substituting linoleic-acid-rich oils for saturated fat lowers serum LDL-C (feeding-trial-proven) — the validated causal pathway.", source: { cite: "Marklund 2019 Circulation (CHARGE FORCE)", id: "PMID:30971107" }, confidence: "high", note: "Trials on hard outcomes are absent (nutrition-trial limits), so mechanism + biomarker cohorts carry the direction; the contrarian 'omega-6 inflames' pathway isn't validated on outcomes." },
+  "brown-rice": { direction: "positive", trial: "Sun 2010 substitution analysis: 50 g/day white→brown rice ↓16% T2D modelled risk. Bran-fibre RCTs improve glycemic markers.", mechanism: "Retained bran and germ → higher fibre, lower glycemic index, more magnesium → blunted postprandial glucose vs the same amount of white rice.", source: { cite: "Sun 2010 Arch Intern Med", id: "PMID:20548009" }, confidence: "medium" },
+  "peanuts": { direction: "positive", trial: "Nut-inclusive RCTs (PREDIMED and Del Gobbo 2015 lipid meta) show LDL-lowering; peanut-specific LDL trials confirm the effect.", mechanism: "Monounsaturated fat + fibre + phytosterols → lower LDL; magnesium/arginine → modest BP/vascular benefit.", source: { cite: "Del Gobbo 2015 Am J Clin Nutr (nut lipid meta); Estruch 2018 NEJM (PREDIMED)", id: "PMID:26561616" }, confidence: "high" },
+  "mushrooms": { direction: "neutral", trial: "No hard-outcome RCT and no validated causal surrogate — the strongest signals are on biomarkers (ergothioneine, glutathione, vitamin D2 from UV-exposed mushrooms) that don't cleanly translate to outcomes.", mechanism: "Antioxidant amino acids and low energy density — plausible but not validated as causal pathways to mortality.", source: { cite: "Ba 2021 Nutrition Journal (cohort meta; no trial)", id: "PMID:34548082" }, confidence: "low", note: "Direction is positive on observation, neutral on trials/mechanism alone — a case where the observation lens moves the verdict." },
+  "pasta": { direction: "neutral", trial: "Chiavaroli 2021 BMJ low-GI RCT-meta: pasta-inclusive low-GI diets improve HbA1c/lipids vs higher-GI, but there is no pasta-isolated outcome trial.", mechanism: "Al dente pasta has a lower glycemic index than most refined grains (starch–protein matrix slows digestion); heavily overcooked pasta rises to typical refined-grain GI.", source: { cite: "Chiavaroli 2021 BMJ (low-GI diets & T2D)", id: "PMID:34348965" }, confidence: "medium" },
   "artificial-sweeteners": { direction: "neutral", trial: "Substitution RCTs favour sweeteners over sugar for weight (Rogers 2016), but a human RCT (Suez 2022) shows saccharin/sucralose can impair glycemia via the microbiome.", mechanism: "Energy displacement (benefit vs sugar) vs microbiome-mediated glucose intolerance (harm) — validated but opposing pathways → net neutral.", source: { cite: "Rogers 2016 Int J Obes; Suez 2022 Cell", id: "PMID:26365102" }, confidence: "medium" },
   "yogurt": { direction: "neutral", trial: "Meta-analysis of 9 RCTs (He 2019): probiotic yogurt did not significantly improve HbA1c, fasting glucose, insulin or HOMA-IR.", mechanism: "Proposed gut-microbiota/SCFA effects on insulin sensitivity — plausible but not robustly validated; marker effects null.", source: { cite: "He 2019 Nutrients", id: "10.3390/nu11030671" }, confidence: "medium" },
   "poultry": { direction: "neutral", trial: "Controlled-feeding RCT (Bergeron/APPROACH 2019): white meat raised LDL/ApoB near-identically to red meat, and both were worse than plant protein.", mechanism: "Lean poultry is lower in satfat than fatty red meat, but its LDL effect is indistinguishable — no distinct beneficial pathway.", source: { cite: "Bergeron 2019 Am J Clin Nutr (APPROACH)", id: "10.1093/ajcn/nqz035" }, confidence: "medium" },
@@ -2025,7 +2301,9 @@ const CATEGORY_UNIFORMITY = {
   "leafy-greens": "uniform", "cruciferous": "uniform", "fatty-fish": "uniform",
   "processed-meat": "uniform", "sugary-drinks": "uniform", "refined-grains": "uniform",
   "red-meat": "uniform", "poultry": "uniform", "cheese": "uniform", "soy": "uniform",
-  "alcohol": "uniform",
+  "alcohol": "uniform", "peanuts": "uniform", "mushrooms": "uniform",
+  // v0.64 additions: whole classes with mixed behaviour across sub-types
+  "seed-oils": "mixed",
   // genuinely heterogeneous categories → "not all"
   "whole-fruit": "mixed", "ultra-processed": "mixed", "artificial-sweeteners": "mixed",
   "berries": "mixed",
@@ -2036,6 +2314,7 @@ const CATEGORY_UNIFORMITY = {
   "french-fries": "specific", "coconut-oil": "specific", "green-tea": "specific",
   "white-rice": "specific", "tomatoes": "specific", "cocoa": "specific",
   "fried-foods": "specific", "shellfish": "specific", "fruit-juice": "specific",
+  "oats": "specific", "brown-rice": "specific", "pasta": "specific",
 };
 
 // The specific within-category caveat shown on `mixed` entries (the "not all" story).
@@ -2045,6 +2324,7 @@ const UNIFORMITY_NOTE = {
   "ultra-processed": "A broad, heterogeneous class — some ultra-processed foods are far worse than others; the class verdict is an average.",
   "artificial-sweeteners": "Different sweeteners (aspartame, sucralose, stevia…) behave differently; the class verdict masks real variation.",
   "berries": "The signal is concentrated in blueberries (the strongest single fruit for diabetes); strawberries/cranberries are weaker, and cranberries are often eaten as sweetened juice.",
+  "seed-oils": "The pooled CVD-mortality signal is for the linoleic-acid-rich vegetable oils as a class; individual oils diverge in fatty-acid profile — canola carries ALA (omega-3), sunflower is nearly pure omega-6, and repeatedly-heated frying oils are a different exposure again.",
 };
 
 for (const _f of FOODS) {
@@ -2067,6 +2347,7 @@ const FOOD_SCOPE = {
   "soy": "group", "red-meat": "group", "poultry": "group",
   "processed-meat": "group", "sugary-drinks": "group", "refined-grains": "group",
   "ultra-processed": "group", "fried-foods": "group", "artificial-sweeteners": "group",
+  "seed-oils": "group",
 };
 for (const _f of FOODS) { _f.scope = FOOD_SCOPE[_f.id] || "item"; }
 
@@ -2077,9 +2358,9 @@ for (const _f of FOODS) { _f.scope = FOOD_SCOPE[_f.id] || "item"; }
 // name-lift loop, so links carry the final displayed names). Only list pairs where
 // BOTH sides are real cards.
 const CARD_MEMBERS = {
-  "legumes": ["soy"],
+  "legumes": ["soy", "peanuts"],
   "whole-fruit": ["berries"],
-  "whole-grains": ["wholemeal-bread"],
+  "whole-grains": ["wholemeal-bread", "oats", "brown-rice"],
   "refined-grains": ["white-bread", "white-rice"],
   "fried-foods": ["french-fries"],
 };
@@ -2134,6 +2415,9 @@ const RESEARCHED_ON = {
   "tomatoes": "2026-07-01", "cruciferous": "2026-07-01", "leafy-greens": "2026-07-01",
   "berries": "2026-07-01", "wholemeal-bread": "2026-07-01", "white-bread": "2026-07-01",
   "fried-foods": "2026-07-01", "shellfish": "2026-07-01", "fruit-juice": "2026-07-01",
+  // v0.64 additions (worker Tranche 1)
+  "oats": "2026-07-01", "seed-oils": "2026-07-01", "brown-rice": "2026-07-01",
+  "peanuts": "2026-07-01", "mushrooms": "2026-07-01", "pasta": "2026-07-01",
 };
 for (const _f of FOODS) { if (RESEARCHED_ON[_f.id]) _f.researchedOn = RESEARCHED_ON[_f.id]; }
 
@@ -2146,14 +2430,14 @@ for (const _f of FOODS) { if (RESEARCHED_ON[_f.id]) _f.researchedOn = RESEARCHED
 // stated, not hidden. `reason`: "thin" = little/mixed hard-outcome evidence exists;
 // "unresearched" = we simply haven't run the evidence pass yet.
 const HOLDING_LIST = [
-  { name: "Garlic & other alliums", reason: "thin", note: "Popular claims rest mainly on blood-pressure/cholesterol markers; hard-outcome cohort evidence is thin." },
-  { name: "Onions", reason: "unresearched", note: "Part of the broad vegetable signal, but little food-specific hard-outcome data — not yet assessed on its own." },
-  { name: "Mushrooms", reason: "unresearched", note: "Some intriguing cohort signals; not yet researched to our standard." },
-  { name: "Seeds (chia, flax, pumpkin, etc.)", reason: "thin", note: "Favourable lipid/marker studies, but little hard-outcome cohort evidence yet." },
+  { name: "Garlic & other alliums", reason: "thin", note: "Zhu 2014 (PMID:24681077) 8-cohort meta found NO association between allium vegetables and colorectal cancer (RR 1.06, 0.96–1.17); garlic SUPPLEMENTS were associated with HIGHER CRC (1.18, 1.02–1.36). No clean hard-outcome cohort signal for alliums specifically." },
+  { name: "Onions", reason: "unresearched", note: "Part of the broad vegetable signal, but little onion-specific hard-outcome data — not yet assessed on its own." },
+  { name: "Seeds (chia, flax, pumpkin, etc.)", reason: "thin", note: "Favourable lipid/marker studies (Rodriguez-Leyva 2013 flaxseed BP meta), but little hard-outcome cohort evidence yet." },
   { name: "Honey", reason: "unresearched", note: "Often marketed as a 'natural' sugar; little outcome evidence either way — not yet researched." },
   { name: "Herbs & spices", reason: "thin", note: "Mostly small biomarker studies; no notable hard-outcome evidence yet." },
   { name: "Plant milks (oat, almond, soy drink, etc.)", reason: "unresearched", note: "Highly variable products; not yet assessed as a category." },
   { name: "Dried fruit", reason: "unresearched", note: "Sits between whole fruit and concentrated sugar; not yet assessed separately." },
+  { name: "Energy drinks", reason: "thin", note: "Only acute-marker RCTs exist (Gualberto 2024, 17 RCTs: caffeinated energy drinks raise SBP/DBP/CO/QTc acutely in healthy adults). No hard-outcome cohort data; case reports of arrhythmia but no epidemiologic signal we can pin." },
 ];
 
 // ── Absolute population burden (GBD) — a SEPARATE axis from relative effect ──
