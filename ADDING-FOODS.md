@@ -175,6 +175,14 @@ curve (see below).
   members behave alike) / `mixed` (members genuinely diverge). Assessed against one
   fixed question for **every** item; the "not all" badge derives from `mixed`, and the
   single champion (★/⚠) requires `specific`/`uniform`. Add a `uniformityNote` on `mixed`.
+  For a `mixed` food, also record a **`members`** breakdown so "which ones, actually?"
+  is answered: `[{name, tag, note}]` with `tag` ∈ `good | likely | weaker | worse |
+  unknown`, plus a one-line `memberIntro` on whether the effect **generalises**. Key
+  rule: most category effects rest on shared properties (fibre, anthocyanins,
+  unsaturated fat), so an under-studied member is **`likely`**, not `unknown`/bad —
+  *concentrated evidence ≠ a member-specific effect*. Use `unknown` only when it truly
+  hasn't been studied and doesn't clearly share the profile; `worse` for a member that
+  genuinely diverges (e.g. cranberries eaten as sweetened juice).
 - `contested` — a string, present only when credible high-quality sources genuinely
   **disagree on direction** (≠ low certainty). Renders a ⚖ badge + a callout laying out
   both sides. Use it instead of silently picking a side.

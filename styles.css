@@ -335,6 +335,24 @@ a { color: var(--accent); }
 }
 .notall-note .notall { flex: none; }
 
+/* Within-category member breakdown (the "which berries, actually?" table). */
+.members { margin: 12px 0; }
+.member-intro { margin: 0 0 8px; font-size: 0.88rem; color: var(--ink); }
+.member-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.member { display: flex; gap: 8px; align-items: baseline; font-size: 0.86rem; }
+.m-tag {
+  flex: none; min-width: 58px; text-align: center; font-size: 0.68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.03em; padding: 2px 7px; border-radius: 999px;
+  border: 1px solid transparent;
+}
+.m-tag.m-good { background: var(--pos-bg); color: var(--pos); border-color: #c7e8d4; }
+.m-tag.m-likely { background: var(--info-bg); color: var(--info); border-color: #cfe0f3; }
+.m-tag.m-weaker { background: var(--neu-bg); color: var(--neu); border-color: #e0e3df; }
+.m-tag.m-worse { background: var(--neg-bg); color: var(--neg); border-color: #f3cfce; }
+.m-tag.m-unknown { background: #eef0ee; color: #6b7169; border-color: #dfe3df; }
+.m-body { color: var(--ink); }
+.member-foot { margin: 8px 0 0; font-size: 0.8rem; color: var(--ink-soft); }
+
 /* Highlights: gold standard / worst offenders */
 .highlights {
   display: grid;

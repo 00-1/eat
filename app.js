@@ -122,10 +122,35 @@
     const note = food.uniformityNote || "The verdict doesn't apply uniformly across this category — some members are much stronger than others.";
     return "<span class='notall' title='" + escapeHtml(note) + "'>◑ not all</span>";
   }
-  // Full explanation of the "not all" badge, shown in the expanded card so the
-  // within-category variation is spelled out (not just a tooltip).
+  // Within-category guidance for a "not all" food. When we've recorded a per-member
+  // breakdown (`members`), show it in full — each member tagged good / likely / weaker
+  // / worse / unknown — so "which ones actually?" is answered, and "concentrated
+  // evidence" is never mistaken for "only this member works." Otherwise fall back to
+  // the short one-line note.
+  const MEMBER_TAG = {
+    good: { label: "Good", cls: "m-good" },
+    likely: { label: "Likely", cls: "m-likely" },
+    weaker: { label: "Weaker", cls: "m-weaker" },
+    worse: { label: "Worse", cls: "m-worse" },
+    unknown: { label: "Unknown", cls: "m-unknown" },
+  };
   function uniformityNoteHtml(food) {
     if (!isMixed(food)) return "";
+    if (Array.isArray(food.members) && food.members.length) {
+      const rows = food.members.map(function (m) {
+        const t = MEMBER_TAG[m.tag] || MEMBER_TAG.unknown;
+        return "<li class='member'><span class='m-tag " + t.cls + "'>" + escapeHtml(t.label) + "</span>" +
+          "<span class='m-body'><strong>" + escapeHtml(m.name) + "</strong> — " + escapeHtml(m.note) + "</span></li>";
+      }).join("");
+      return (
+        "<div class='members'>" +
+          "<h4 class='block-h'><span class='notall'>◑ not all</span> Within this category <span class='block-sub'>— which members the verdict actually covers</span></h4>" +
+          (food.memberIntro ? "<p class='member-intro'>" + escapeHtml(food.memberIntro) + "</p>" : "") +
+          "<ul class='member-list'>" + rows + "</ul>" +
+          "<p class='member-foot'>“Likely” means it shares the category's profile but hasn't been studied on its own — <em>concentrated evidence isn't the same as a member-specific effect</em>, so it doesn't mean worse.</p>" +
+        "</div>"
+      );
+    }
     const note = food.uniformityNote || "The verdict doesn't apply uniformly across this category — some members are much stronger than others.";
     return (
       "<p class='notall-note'>" +

@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.45";
+const METHODOLOGY_VERSION = "0.46";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -398,6 +398,18 @@ const FOODS = [
     effect: "positive",
     certainty: "low",
     outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
+    // Within-category guidance. The benefit rests on shared compounds, so it likely
+    // GENERALISES across berries — the evidence is just concentrated in the best-studied
+    // ones. "unknown/likely" is honest where a member isn't separately studied; we never
+    // imply a member is bad just for being under-researched. First pass (verified:false).
+    memberIntro: "The berry signal rests on shared compounds (anthocyanins, fibre, low glycaemic load), so it most likely extends across berries — the evidence is just concentrated in the best-studied ones, not exclusive to them.",
+    members: [
+      { name: "Blueberries", tag: "good", note: "Strongest single-fruit signal for type-2 diabetes (Muraki 2013, HR ~0.74 per 3 servings/week); anthocyanin RCTs corroborate on vascular markers." },
+      { name: "Blackberries", tag: "likely", note: "Among the highest-anthocyanin berries — shares blueberries' mechanism, but little berry-specific hard-outcome data." },
+      { name: "Raspberries", tag: "likely", note: "Anthocyanin-rich, high-fibre, low-sugar profile like other berries; not separately studied for hard outcomes." },
+      { name: "Strawberries", tag: "weaker", note: "No clear type-2-diabetes association in cohorts (Muraki 2013) — still a low-sugar, vitamin-C-rich fruit, just not a standout." },
+      { name: "Cranberries", tag: "worse", note: "Usually eaten as sweetened juice or sugar-infused dried fruit, which offsets the benefit; plain/fresh would likely behave like other berries." },
+    ],
     summary: "Berries track with lower diabetes risk — strongest for blueberries; a step above fruit generally.",
     rationale:
       "A berry-specific cohort meta-analysis (Guo 2016) finds ~18% lower type-2-diabetes risk at high vs low intake (RR 0.82), with a graded dose-response; the landmark blueberry signal is stronger still (Muraki 2013, HR ~0.74 per 3 servings/week). Anthocyanin RCTs corroborate on vascular markers (Curtis 2019: blueberries improved endothelial function). Held at Low certainty: moderate heterogeneity, healthy-user confounding, and much berry research is industry-adjacent (funding not always clear).",
