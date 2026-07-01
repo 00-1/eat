@@ -94,6 +94,23 @@
     return "<span class='notall' title='" + escapeHtml(note) + "'>◑ not all</span>";
   }
 
+  // Contested — credible high-quality sources genuinely DISAGREE on the direction
+  // (distinct from low certainty, which is thin-but-consistent). Surfaced honestly
+  // rather than silently picking a side: a badge on the card + a callout in detail.
+  function contestedChip(food) {
+    if (!food || !food.contested) return "";
+    return "<span class='contested-chip' title='Credible sources disagree on the direction — see the card'>⚖ contested</span>";
+  }
+  function contestedNoteHtml(food) {
+    if (!food || !food.contested) return "";
+    return (
+      "<div class='contested-note'>" +
+        "<span class='contested-k'>⚖ Contested verdict</span> " +
+        escapeHtml(food.contested) +
+      "</div>"
+    );
+  }
+
   // A neutral verdict's tilt: shows which way a non-significant point estimate leans
   // (or nothing, when the estimate is genuinely flat). Derived by the engine, never
   // hand-set; it does not change the verdict — it just says more than "neutral".
@@ -625,6 +642,7 @@
               (function () { var t = certaintyOf(food); return "<span class='tier " + t + "'>" + CERTAINTY_LABEL[t] + "</span>"; })() +
               magnitudeChip(food) +
               uniformityChip(food) +
+              contestedChip(food) +
               doseChip(food) +
               groupChips(food) +
               basisChip(food) +
@@ -638,6 +656,7 @@
           "<div class='card-detail'>" +
             "<h4 class='block-h'>Why this verdict</h4>" +
             "<p class='rationale'>" + escapeHtml(food.rationale) + "</p>" +
+            contestedNoteHtml(food) +
             outcomeLedgerHtml(food) +
             groupConclusionsHtml(food) +
             outcomeVerdictsHtml(food) +
@@ -650,7 +669,12 @@
             counterArgsHtml(food) +
             revisionsHtml(food) +
             "<div class='card-foot'>" +
-              "<span class='reviewed'>Last reviewed " + escapeHtml(food.lastReviewed || "—") + "</span>" +
+              "<span class='foot-dates'>" +
+                "<span class='reviewed'>Last reviewed " + escapeHtml(food.lastReviewed || "—") + "</span>" +
+                (food.researchedOn
+                  ? "<span class='reviewed researched' title='When this food last had a dedicated deep-research pass — its evidence is current as of this date'> · deep-researched " + escapeHtml(food.researchedOn) + "</span>"
+                  : "<span class='reviewed researched researched-none' title='No dedicated research pass recorded yet'> · not yet deep-researched</span>") +
+              "</span>" +
               challengeHtml(food) +
             "</div>" +
           "</div>" +

@@ -438,6 +438,14 @@ make a shaky input look authoritative, so this is the top priority.
         verified.** Caveat: WebFetch to PubMed/journals is proxy-blocked, so figures are
         snippet-cross-verified, not page-rendered. Left unclean: green tea, refined grains
         (contested/industry-tinged), leafy-green/cruciferous all-cause (no clean subtype MA).
+      - **Batch 5 done (v0.35):** second background pass over the remaining foods. Verified:
+        cocoa (COSMOS 0.90 NS), alcohol headline (Zhao 2023, no protection → null), milk
+        (Larsson ~0.99; PURE fig is total dairy), red meat headline (Wang 2016 1.10 NS),
+        refined grains (PURE 1.27). **25 of 32 source-verified.** Added the **`contested`
+        flag** (refined grains, red meat, artificial sweeteners) and a per-food
+        **deep-researched date**. Still verified:false (honest gaps): green tea (no N),
+        poultry (no N), coconut oil (no hard-outcome data exists), tomatoes (biomarker-vs-
+        intake contested), cruciferous & leafy greens (no clean subtype meta-analysis).
 - [x] **Cheese verdict — resolved BY THE RULE (v0.19), neutral → Positive (Low).**
       Not a maintainer call: Chen 2017's verified CVD RR 0.90 (0.82–0.99) excludes
       null, so the direction rule + multi-outcome rule produce Positive · Low

@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.34";
+const METHODOLOGY_VERSION = "0.35";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -532,10 +532,12 @@ const FOODS = [
     category: "Grains",
     effect: "negative",
     certainty: "low",
-    outcomes: ["Cardiovascular disease", "Type 2 diabetes"],
-    summary: "High intake is linked to higher heart disease and diabetes risk — largely vs whole grains.",
+    outcomes: ["All-cause mortality", "Cardiovascular disease"],
+    summary: "Contested: some large cohorts link high intake to higher mortality/CVD, others find no CVD effect. We lean negative, but flag the dispute.",
+    contested:
+      "Credible meta-analyses genuinely disagree on the DIRECTION. Large global cohorts (PURE / Swaminathan 2021) link high refined-grain intake to higher mortality and major CVD; but other meta-analyses (Gaesser 2022 Trends Cardiovasc Med; Wei 2022 AJCN) find no association with CVD, CHD, or stroke — and Gaesser has grain-industry ties. The harm may be mostly relative to displacing whole grains, and it is intake- and population-dependent. We currently lean negative (on PURE), but treat this as unresolved pending a resolution pass — not a settled verdict.",
     rationale:
-      "The harm is mostly relative (displacing whole grains and raising glycemic load) rather than absolute, and global cohort data are mixed by region. Graded 'Low'.",
+      "The harm is mostly relative (displacing whole grains and raising glycemic load) rather than absolute, and global cohort data are mixed by region — indeed contested (see below). Graded 'Low'.",
     considerations: {
       substitution: "Much of the risk is the flip side of NOT eating whole grains.",
     },
@@ -547,8 +549,10 @@ const FOODS = [
         search: "Swaminathan refined grains PURE mortality cardiovascular BMJ 2021",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "Source-verified on PURE (Swaminathan 2021 BMJ): all-cause mortality HR 1.27 (1.11–1.46), major CVD 1.33 (1.16–1.52), ≥350 vs <50 g/day, ~149k. pooledRR 1.27 confirmed; N 137k→149k; headline outcome → all-cause mortality. Added a CONTESTED flag: Gaesser 2022 (grain-industry-funded) and Hu 2023 find no CVD association — credible sources disagree on direction, so we flag the dispute rather than assert. Verdict stays negative (leaning on PURE)." },
+    ],
   },
 
   // ============================ NEUTRAL / MIXED ============================
@@ -593,6 +597,8 @@ const FOODS = [
     certainty: "low",
     outcomes: ["All-cause mortality", "Type 2 diabetes"],
     summary: "Associations are weak, contested, and of low certainty — distinct from processed meat.",
+    contested:
+      "Genuinely contested (the NutriRECS controversy). The mortality signal is small, low-certainty and inconsistent across populations: Wang 2016 found unprocessed red meat NOT significantly associated with all-cause mortality overall (RR 1.10, 0.98–1.22), significant only in US cohorts; NutriRECS (Zeraatkar 2019) judged the evidence too weak to recommend cutting back — a conclusion others sharply disputed. We read the headline neutral (leaning bad). The diabetes association is firmer and separate (see the per-outcome verdict).",
     rationale:
       "Some cohorts show modestly higher risk, but a major systematic review judged the certainty low and the absolute effects small; experts genuinely disagree. We label this NEUTRAL/contested — the evidence base is large but conflicting, so 'Low' certainty rather than asserting harm.",
     considerations: {
@@ -622,6 +628,7 @@ const FOODS = [
     lastReviewed: "2026-06-29",
     revisions: [
       { date: "2026-06-29", change: "Very-low → Low under v0.11: neutral verdicts are now scored on the quality of the null evidence (not penalised for lacking an effect size). Red meat is data-rich but contested, which reads as Low, not Very-low. Verdict unchanged." },
+      { date: "2026-07-01", change: "Source-verified headline (grounding pass): all-cause mortality RR 1.10 (0.98–1.22), NS (Wang 2016); low-certainty/contested (Zeraatkar 2019 NutriRECS, >4M). Added a CONTESTED flag (mortality signal small, population-dependent, expert dispute). Verdict/certainty unchanged; the T2D per-outcome verdict stands." },
     ],
   },
   {
@@ -671,8 +678,10 @@ const FOODS = [
         search: "Dehghan dairy consumption cardiovascular mortality PURE Lancet 2018",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "Source-verified (grounding pass): all-cause mortality RR ~0.99 (0.95–1.03) per 200 mL/day (Larsson dose-response MA) → neutral confirmed. pooledRR 0.98→0.99, N up. Clarified that PURE's protective 0.83/0.78 figures are for TOTAL DAIRY, not milk alone. Verdict/certainty unchanged." },
+    ],
   },
   {
     id: "cheese",
@@ -827,12 +836,13 @@ const FOODS = [
         search: "Global Burden Disease alcohol no safe level Lancet 2018",
       },
     ],
-    lastReviewed: "2026-06-28",
+    lastReviewed: "2026-07-01",
     revisions: [
       {
         date: "2026-06-28",
         change: "Moved from 'positive (J-curve)' framing to NEUTRAL/contested, reflecting bias-corrected meta-analyses.",
       },
+      { date: "2026-07-01", change: "Source-verified headline (grounding pass): all-cause mortality low-volume RR 0.93 (0.85–1.01), NS after abstainer/sick-quitter bias adjustment (Zhao/Stockwell 2023, 107 cohorts, ~4.84M) — recorded as null. The cancer per-outcome verdict stands. Verdict/certainty unchanged." },
     ],
   },
   {
@@ -843,6 +853,8 @@ const FOODS = [
     certainty: "low",
     outcomes: ["Type 2 diabetes", "Cardiovascular disease"],
     summary: "Genuinely mixed evidence; net long-term effect is uncertain.",
+    contested:
+      "Cohort and trial evidence point opposite ways. Observational cohorts link higher intake to more CVD (Debras 2022, HR 1.09, 1.01–1.18) — but this is reverse-causation-prone (at-risk people switch to diet products), and substitution RCTs plus Mendelian-randomization generally show NO causal harm (and benefit vs sugar). The WHO's 2023 advice against non-sugar sweeteners is itself conditional, low-certainty. So the direction is genuinely disputed; we hold neutral and flag it rather than pick a side.",
     rationale:
       "Some cohorts link them to cardiometabolic risk (likely partly reverse causation — at-risk people switch to them), while substitution trials replacing sugary drinks show short-term benefit. Large but conflicting evidence → NEUTRAL at 'Low' certainty; flagged as unsettled.",
     considerations: {
@@ -860,6 +872,7 @@ const FOODS = [
     lastReviewed: "2026-06-29",
     revisions: [
       { date: "2026-06-29", change: "Very-low → Low under v0.11 neutral-scoring (a large cohort exists, though conflicting). Verdict (neutral/unsettled) unchanged." },
+      { date: "2026-07-01", change: "Grounding pass: confirmed the cohort signal (Debras 2022 BMJ NutriNet-Santé, total sweeteners CVD HR 1.09, 1.01–1.18, ~103k) but that substitution RCTs / Mendelian randomization show no causal harm → added a CONTESTED flag (cohort-vs-trial disagreement). Left verified:false — we record the net-uncertain neutral, not the Debras harm figure. Verdict unchanged." },
     ],
   },
   {
@@ -1059,8 +1072,10 @@ const FOODS = [
         search: "Sesso COSMOS cocoa flavanol cardiovascular AJCN 2022",
       },
     ],
-    lastReviewed: "2026-06-29",
-    revisions: [],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "Source-verified (grounding pass): COSMOS primary CVD outcome HR 0.90 (0.78–1.02), P=0.11 — NS (Sesso 2022 AJCN, 21,442 randomized). Confirms the trial-grade neutral; NIH-funded but Mars supplied the product. Verdict/certainty unchanged." },
+    ],
   },
 ];
 
@@ -1273,8 +1288,13 @@ const ASSESSMENTS = {
     },
   },
   "refined-grains": {
-    evidence: { pooledRR: 1.27, ciExcludesNull: true, participants: 137000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (cohort quintiles)" },
-    effectEstimate: "Higher mortality/major CVD at highest intake (PURE); mostly relative to whole grains; region-dependent.",
+    evidence: { pooledRR: 1.27, ciExcludesNull: true, participants: 148858, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "≥350 g/day vs <50 g/day (PURE)" },
+    effectEstimate: "Highest vs lowest refined-grain intake: all-cause mortality HR 1.27 (95% CI 1.11–1.46) and major CVD 1.33 (1.16–1.52) in the global PURE cohort (Swaminathan 2021, 21 countries, ~149k). CONTESTED: other meta-analyses (Gaesser 2022, grain-industry-funded; Hu 2023 AJCN) find no CVD association — see the contested note. Harm is largely relative to displacing whole grains and is intake/population-dependent.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "All-cause mortality HR 1.27 (1.11–1.46); major CVD 1.33 (1.16–1.52), ≥350 vs <50 g/day (PURE)", cite: "Swaminathan 2021 BMJ (PURE)", id: "PMID:33536317" },
+      participants: { figure: "148,858 across 21 countries (PURE); contested by Gaesser 2022 (17 cohorts, industry-funded, CVD 1.08 NS)", cite: "Swaminathan 2021 BMJ; Gaesser 2022 Trends Cardiovasc Med", id: "PMID:33536317" },
+    },
   },
   "eggs": {
     evidence: { pooledRR: 0.98, ciExcludesNull: false, participants: 1720108, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "per 1 additional egg/day" },
@@ -1286,8 +1306,13 @@ const ASSESSMENTS = {
     },
   },
   "red-meat": {
-    evidence: { pooledRR: 1.1, ciExcludesNull: false, participants: 1000000, heterogeneity: "high", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "highest vs lowest habitual intake" },
-    effectEstimate: "On all-cause/CV mortality: small, inconsistent excess risk; a GRADE review judged certainty low; interval near/over no-effect → contested (headline = neutral). But see the per-outcome diabetes verdict below.",
+    evidence: { pooledRR: 1.1, ciExcludesNull: false, participants: 4000000, heterogeneity: "high", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "highest vs lowest habitual intake" },
+    effectEstimate: "On all-cause mortality: small, contested, population-dependent — RR 1.10 (0.98–1.22), NOT significant highest-vs-lowest (Wang 2016), significant only in US cohorts; NutriRECS (Zeraatkar 2019) graded the evidence low-certainty and 'not compelling'. Headline = neutral (leaning). The diabetes association is firmer — see the per-outcome verdict below.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Unprocessed red meat, all-cause mortality RR 1.10 (0.98–1.22), NS high-vs-low (Wang 2016); low-certainty/contested (Zeraatkar 2019)", cite: "Wang 2016 Public Health Nutr; Zeraatkar 2019 Ann Intern Med", id: "PMID:26143683" },
+      participants: { figure: "NutriRECS reviewed 55 cohorts, >4,000,000 participants; GRADE low certainty", cite: "Zeraatkar 2019 Ann Intern Med", id: "10.7326/M19-0655" },
+    },
     outcomeVerdicts: [
       {
         outcome: "Type 2 diabetes", effect: "negative",
@@ -1303,8 +1328,13 @@ const ASSESSMENTS = {
     effectEstimate: "≈ no association with CVD; interval spans no-effect → neutral; looks favorable mainly as a substitute.",
   },
   "milk": {
-    evidence: { pooledRR: 0.98, ciExcludesNull: false, participants: 400000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "higher vs lower habitual intake" },
-    effectEstimate: "≈ neutral for mortality/CVD (PURE); whole-fat not worse than low-fat; interval spans no-effect.",
+    evidence: { pooledRR: 0.99, ciExcludesNull: false, participants: 1600000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "per 200 mL/day (~1 glass) increment" },
+    effectEstimate: "≈ neutral for all-cause mortality — RR ~0.99 (0.95–1.03) per 200 mL/day across dose-response meta-analyses (Larsson 2017); interval spans no-effect. Whole-fat not worse than low-fat. NB: PURE's protective 0.83/0.78 figures are for TOTAL DAIRY at high-vs-none, not milk alone — not attributed here.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "All-cause mortality RR ~0.99 (0.95–1.03) per 200 mL/day milk (neutral)", cite: "Larsson 2017 (milk & mortality dose-response MA)", id: "PMID:27927192" },
+      participants: { figure: ">1,600,000 across ~29 cohorts (dose-response MAs); PURE total-dairy corroboration N=136,384", cite: "Larsson 2017; Dehghan 2018 PURE", id: "PMID:27927192" },
+    },
   },
   "cheese": {
     evidence: { pooledRR: 0.90, ciExcludesNull: true, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest (~40 g/day, peak protection)" },
@@ -1343,8 +1373,13 @@ const ASSESSMENTS = {
     },
   },
   "alcohol": {
-    evidence: { pooledRR: 1, ciExcludesNull: false, participants: 4800000, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "high", intakeBasis: "moderate intake vs none (bias-adjusted)" },
-    effectEstimate: "On all-cause mortality: no significant protection after bias adjustment → headline neutral. But cancer risk rises from low intake — see the per-outcome cancer verdict below.",
+    evidence: { pooledRR: 1, ciExcludesNull: false, participants: 4838825, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "high", intakeBasis: "low-volume intake vs occasional-drinker reference (bias-adjusted)" },
+    effectEstimate: "On all-cause mortality: NO significant protection once abstainer/sick-quitter bias is corrected — low-volume RR 0.93 (95% CI 0.85–1.01, NS) referenced to occasional drinkers (Zhao/Stockwell 2023, 107 cohorts, ~4.84M) → recorded as null (headline neutral). The once-famous 'J-curve' is largely a reference-group artifact. But cancer risk rises from low intake — see the per-outcome cancer verdict below.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "All-cause mortality: low-volume RR 0.93 (0.85–1.01), NS — no protection after bias adjustment", cite: "Zhao/Stockwell 2023 JAMA Netw Open", id: "10.1001/jamanetworkopen.2023.6185" },
+      participants: { figure: "4,838,825 participants across 107 cohort studies (425,564 deaths)", cite: "Zhao/Stockwell 2023 JAMA Netw Open", id: "10.1001/jamanetworkopen.2023.6185" },
+    },
     outcomeVerdicts: [
       {
         outcome: "Cancer (breast, aerodigestive)", effect: "negative",
@@ -1408,7 +1443,12 @@ const ASSESSMENTS = {
   },
   "cocoa": {
     evidence: { pooledRR: 0.90, ciExcludesNull: false, participants: 21442, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "outcomes", funding: "mixed", pubBias: "untested", confoundingRisk: "low", intakeBasis: "500 mg cocoa flavanols/day vs placebo (RCT)" },
-    effectEstimate: "COSMOS RCT: no significant cut in total CVD events (HR 0.90, 0.78–1.02) → a trial-grade roughly-null; industry co-funded.",
+    effectEstimate: "COSMOS RCT: total CVD events HR 0.90 (95% CI 0.78–1.02), P=0.11 — not significant → a trial-grade roughly-null (a secondary CVD-death signal aside). NIH-funded but Mars Inc. supplied the cocoa product (industry involvement).",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Total CVD events HR 0.90 (0.78–1.02), P=0.11 (primary outcome, ITT)", cite: "Sesso 2022 Am J Clin Nutr (COSMOS RCT)", id: "PMID:35294962" },
+      participants: { figure: "21,442 randomized (866 primary CVD events; median 3.6 yr)", cite: "Sesso 2022 Am J Clin Nutr (COSMOS RCT)", id: "PMID:35294962" },
+    },
   },
 };
 
@@ -1496,6 +1536,27 @@ for (const _f of FOODS) {
   }
 }
 
+// When each food last had a dedicated deep-research/grounding pass (independent of
+// whether that pass could source-verify it). Surfaced so a verdict's evidence can be
+// read as "current as of this date" — and so stale foods are visible. UPDATE the date
+// for a food whenever it gets a fresh research pass.
+const RESEARCHED_ON = {
+  // grounding batches 1–3 (late June)
+  "tree-nuts": "2026-06-29", "whole-grains": "2026-06-29", "sugary-drinks": "2026-06-29",
+  "trans-fat": "2026-06-29", "butter": "2026-06-29", "white-rice": "2026-06-29",
+  "cheese": "2026-06-29", "coffee": "2026-06-29", "fatty-fish": "2026-06-29",
+  "olive-oil": "2026-06-29", "potatoes": "2026-06-29", "french-fries": "2026-06-29",
+  // grounding batches 4–5 (2026-07-01) — includes foods we researched but could NOT verify
+  "eggs": "2026-07-01", "avocado": "2026-07-01", "yogurt": "2026-07-01",
+  "legumes": "2026-07-01", "soy": "2026-07-01", "whole-fruit": "2026-07-01",
+  "ultra-processed": "2026-07-01", "processed-meat": "2026-07-01", "milk": "2026-07-01",
+  "alcohol": "2026-07-01", "red-meat": "2026-07-01", "refined-grains": "2026-07-01",
+  "cocoa": "2026-07-01", "poultry": "2026-07-01", "green-tea": "2026-07-01",
+  "coconut-oil": "2026-07-01", "artificial-sweeteners": "2026-07-01",
+  "tomatoes": "2026-07-01", "cruciferous": "2026-07-01", "leafy-greens": "2026-07-01",
+};
+for (const _f of FOODS) { if (RESEARCHED_ON[_f.id]) _f.researchedOn = RESEARCHED_ON[_f.id]; }
+
 
 // Holding list — foods people ask about that we DON'T yet have a real verdict for.
 // Rather than create empty, verdict-bearing cards (which would dilute the list and
@@ -1519,5 +1580,5 @@ const HOLDING_LIST = [
 
 // Allow Node (tests) to import this data while the browser loads it as a script.
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, HOLDING_LIST };
+  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, HOLDING_LIST, RESEARCHED_ON };
 }

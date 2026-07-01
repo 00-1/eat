@@ -9,7 +9,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const S = require("../scoring.js");
-const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE, HOLDING_LIST } = require("../data.js");
+const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE, HOLDING_LIST, RESEARCHED_ON } = require("../data.js");
 
 const EFFECTS = ["positive", "negative", "neutral"];
 const CERTAINTIES = ["high", "moderate", "low", "very-low"];
@@ -275,6 +275,27 @@ test("neutral lean is coherent: only neutral foods lean, and it matches the esti
       assert.ok(Math.abs(Math.log(e.pooledRR)) > 0.03, `${f.id}: lean on a within-floor estimate`);
     }
   }
+});
+
+test("researchedOn (where present) is a valid ISO date and maps to a real food", () => {
+  for (const f of FOODS) {
+    if (f.researchedOn == null) continue;
+    assert.match(f.researchedOn, /^\d{4}-\d{2}-\d{2}$/, `${f.id}: bad researchedOn ${f.researchedOn}`);
+  }
+  for (const id of Object.keys(RESEARCHED_ON || {})) {
+    assert.ok(FOODS.some((f) => f.id === id), `RESEARCHED_ON has unknown food: ${id}`);
+  }
+});
+
+test("contested flag (where present) is a non-empty string on a real food", () => {
+  let n = 0;
+  for (const f of FOODS) {
+    if (f.contested == null) continue;
+    n++;
+    assert.equal(typeof f.contested, "string", `${f.id}: contested must be a string`);
+    assert.ok(f.contested.trim().length > 20, `${f.id}: contested note too short`);
+  }
+  assert.ok(n >= 1, "expected at least one contested food");
 });
 
 test("holding list is well-formed and doesn't duplicate a real food", () => {
