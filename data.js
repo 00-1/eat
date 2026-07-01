@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.43";
+const METHODOLOGY_VERSION = "0.44";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -850,14 +850,14 @@ const FOODS = [
   },
   {
     id: "alcohol",
-    name: "Moderate alcohol",
+    name: "Alcohol",
     category: "Beverages",
-    effect: "neutral",
+    effect: "negative",
     certainty: "low",
     outcomes: ["All-cause mortality", "Cancer"],
-    summary: "Once-claimed benefits largely vanish after correcting for bias; increasingly seen as not protective.",
+    summary: "No safe level: the old 'J-curve' is a bias artifact — mortality rises with intake and cancer climbs from the first drink.",
     rationale:
-      "Earlier cohorts suggested a J-curve, but analyses correcting for 'sick-quitter' and abstainer biases find no clear protection and rising harm with intake (cancer risk increases from low levels). We label NEUTRAL (no net benefit) at 'Low', trending toward harm. This is an active area of revision.",
+      "Earlier cohorts suggested a protective J-curve, but correcting 'sick-quitter'/abstainer bias removes it (Zhao/Stockwell 2023, 107 cohorts, ~4.84M): all-cause mortality rises with dose — significant from ~25 g/day in women and ~45 g/day in men — and cancer rises from the very first drink (IARC Group 1). Regrounded (v0.44) from neutral to NEGATIVE: the previous 'neutral' rested on the flattering low-volume contrast, which isn't the honest answer to 'what happens when you add alcohol to your diet.' Low certainty reflects high confounding and heterogeneity, not doubt about the direction. WHO 2023: no safe level.",
     considerations: {
       confounding: "Light drinkers are healthier for reasons other than alcohol; former drinkers contaminate the 'abstainer' group.",
       doseResponse: "Cancer risk rises roughly linearly from low intake; cardiovascular 'benefit' is contested.",
@@ -1320,6 +1320,12 @@ const ASSESSMENTS = {
       pooledRR: { figure: "Total CVD HR 0.84 (0.75–0.95), ≥2 servings/week; per ½ serving/day 0.80 (0.71–0.91)", cite: "Pacheco 2022 J Am Heart Assoc", id: "10.1161/JAHA.121.024014" },
       participants: { figure: "110,487 across two US cohorts (NHS + HPFS), 14,274 CVD events over 30 yr", cite: "Pacheco 2022 J Am Heart Assoc", id: "10.1161/JAHA.121.024014" },
     },
+    doseCurve: {
+      outcome: "Cardiovascular disease", unit: "servings/week", shape: "monotonic-benefit", normalRange: [0, 2],
+      points: [ { x: 0, rr: 1.0 }, { x: 2, rr: 0.84, lo: 0.75, hi: 0.95 }, { x: 3.5, rr: 0.80, lo: 0.71, hi: 0.91 } ],
+      note: "Only two reported points (Pacheco 2022): the ≥2 servings/week category (0.84) and the per-½-serving/day slope (0.80 at ~3.5/week). Avocado is eaten infrequently in the cohorts, so higher intakes are unstudied and the curve is thin.",
+      source: { cite: "Pacheco 2022 J Am Heart Assoc", id: "10.1161/JAHA.121.024014" }, verified: false,
+    },
   },
   "processed-meat": {
     evidence: { pooledRR: 1.18, ciExcludesNull: true, participants: 800000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "mechanism", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~50 g/day (about one serving) vs none" },
@@ -1500,12 +1506,18 @@ const ASSESSMENTS = {
     },
   },
   "alcohol": {
-    evidence: { pooledRR: 1, ciExcludesNull: false, participants: 4838825, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "high", intakeBasis: "low-volume intake vs occasional-drinker reference (bias-adjusted)" },
-    effectEstimate: "On all-cause mortality: NO significant protection once abstainer/sick-quitter bias is corrected — low-volume RR 0.93 (95% CI 0.85–1.01, NS) referenced to occasional drinkers (Zhao/Stockwell 2023, 107 cohorts, ~4.84M) → recorded as null (headline neutral). The once-famous 'J-curve' is largely a reference-group artifact. But cancer risk rises from low intake — see the per-outcome cancer verdict below.",
+    evidence: { pooledRR: 1.19, ciExcludesNull: true, participants: 4838825, heterogeneity: "high", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "high", intakeBasis: "regular intake ≈45 g/day (~3 drinks/day) vs lifetime non-drinkers" },
+    effectEstimate: "Regrounded (v0.44) to realistic regular intake and net harm. There is NO safe level (WHO 2023) and no net protection — the old 'J-curve' is a reference-group / sick-quitter artifact (Zhao/Stockwell 2023, 107 cohorts, ~4.84M): light intake is null vs lifetime non-drinkers, but all-cause mortality rises with dose and is significant from ≥25 g/day in women and ≥45 g/day in men (RR ≈1.19 at ~45 g/day, ≈1.35 at ≥65 g/day). Headline is therefore negative; cancer rises from the very first drink (per-outcome verdict below). Previously recorded neutral on the flattering low-volume contrast — corrected.",
     verified: true,
     sources: {
-      pooledRR: { figure: "All-cause mortality: low-volume RR 0.93 (0.85–1.01), NS — no protection after bias adjustment", cite: "Zhao/Stockwell 2023 JAMA Netw Open", id: "10.1001/jamanetworkopen.2023.6185" },
+      pooledRR: { figure: "All-cause mortality RR ≈1.19 at ~45 g/day and ≈1.35 at ≥65 g/day; significant harm ≥25 g/day (women), ≥45 g/day (men); no protection at low intake", cite: "Zhao/Stockwell 2023 JAMA Netw Open", id: "10.1001/jamanetworkopen.2023.6185" },
       participants: { figure: "4,838,825 participants across 107 cohort studies (425,564 deaths)", cite: "Zhao/Stockwell 2023 JAMA Netw Open", id: "10.1001/jamanetworkopen.2023.6185" },
+    },
+    doseCurve: {
+      outcome: "All-cause mortality", unit: "g/day", shape: "monotonic-harm", normalRange: [0, 25],
+      points: [ { x: 0, rr: 1.0 }, { x: 25, rr: 1.05 }, { x: 45, rr: 1.19, lo: 1.07, hi: 1.31 }, { x: 65, rr: 1.35, lo: 1.23, hi: 1.49 } ],
+      note: "No protective 'J' once abstainer bias is removed: light intake is ~null, then mortality climbs with dose (significant from ~25 g/day in women, ~45 g/day in men). 10 g ≈ one standard drink. Intermediate points from the reported category risks.",
+      source: { cite: "Zhao/Stockwell 2023 JAMA Netw Open", id: "10.1001/jamanetworkopen.2023.6185" }, verified: false,
     },
     outcomeVerdicts: [
       {
