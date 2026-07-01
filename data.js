@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.44";
+const METHODOLOGY_VERSION = "0.45";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1763,7 +1763,45 @@ const HOLDING_LIST = [
   { name: "Fruit juice", reason: "thin", note: "Contrasts with whole fruit (worse for diabetes), but not yet given its own sourced verdict." },
 ];
 
+// ── Absolute population burden (GBD) — a SEPARATE axis from relative effect ──
+// "How much does this food matter at the population level?" is a different question
+// from "how big and sure is its per-serving effect." The principled answer is
+// GBD-style attributable burden (deaths/DALYs a dietary risk accounts for globally),
+// NOT a relative-risk tier. Recorded here per GBD dietary risk factor and mapped to
+// our foods. Crucially this is the RISK-FACTOR's burden (e.g. "diet low in
+// vegetables" worldwide), shared across the foods it covers — not a single food's
+// marginal contribution — so shared entries say so. `deathsM` = attributable deaths
+// in millions/year (null where GBD's appendix figure couldn't be verified from the
+// public summaries). All verified:false — figures are from GBD summaries, not the
+// appendix tables (proxy-blocked). See research/methodology-review.md and ROADMAP §3b.
+const BURDEN = {
+  "low-whole-grains": { risk: "Diet low in whole grains", direction: "low", deathsM: 3.0, deaths: "~3 million/yr", dalysM: 82, rank: 2, tmrel: "~100–150 g/day", foods: ["whole-grains"], note: "Highest DALYs of any single dietary risk.", source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "low-fruit": { risk: "Diet low in fruit", direction: "low", deathsM: 2.0, deaths: "~2 million/yr", dalysM: 65, rank: 3, tmrel: "~200–300 g/day", foods: ["whole-fruit", "berries"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "low-nuts": { risk: "Diet low in nuts & seeds", direction: "low", deathsM: 2.0, deaths: "~2 million/yr", dalysM: 50, rank: 4, tmrel: "~16–25 g/day", foods: ["tree-nuts"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "low-veg": { risk: "Diet low in vegetables", direction: "low", deathsM: 1.5, deaths: "~1.5 million/yr", dalysM: 34, rank: 5, tmrel: "~290–430 g/day", foods: ["leafy-greens", "cruciferous", "tomatoes"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "low-seafood": { risk: "Diet low in seafood omega-3", direction: "low", deathsM: 1.0, deaths: "~1 million/yr (approx; >2% of global deaths, #6)", dalysM: null, rank: 6, tmrel: "~250 mg/day omega-3", foods: ["fatty-fish"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "low-legumes": { risk: "Diet low in legumes", direction: "low", deathsM: null, deaths: "lower tier (global count not isolated)", dalysM: null, rank: null, tmrel: "~50–70 g/day", foods: ["legumes"], note: "A leading diet risk in parts of Latin America, South Asia and sub-Saharan Africa.", source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "high-processed-meat": { risk: "Diet high in processed meat", direction: "high", deathsM: null, deaths: "lower tier (~172k IHD deaths, GBD 2019)", dalysM: null, rank: null, tmrel: "0 g/day", foods: ["processed-meat"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "high-red-meat": { risk: "Diet high in red meat", direction: "high", deathsM: null, deaths: "contested: ~25k/yr (GBD 2017) vs ~896k/yr (GBD 2019)", dalysM: null, rank: null, tmrel: "0 g/day", foods: ["red-meat"], note: "GBD 2019 raised this ~36-fold via a TMREL change, formally contested in the Lancet (2022).", source: { cite: "GBD 2017/2019; Lancet 2022 correspondence", id: "PMID:30954305" } },
+  "high-ssb": { risk: "Diet high in sugar-sweetened beverages", direction: "high", deathsM: null, deaths: "lower tier (global count not isolated)", dalysM: null, rank: null, tmrel: "0 g/day", foods: ["sugary-drinks"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "high-trans-fat": { risk: "Diet high in trans fat", direction: "high", deathsM: null, deaths: "lower tier (global count not isolated)", dalysM: null, rank: null, tmrel: "0% of energy", foods: ["trans-fat"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "low-milk": { risk: "Diet low in milk", direction: "low", deathsM: null, deaths: "lower tier (global count not isolated)", dalysM: null, rank: null, tmrel: "~350–520 g/day", foods: ["milk"], source: { cite: "GBD 2017 Diet Collaborators, Lancet 2019", id: "PMID:30954305" } },
+  "alcohol": { risk: "Alcohol use", direction: "high", deathsM: 2.8, deaths: "~2.8 million/yr", dalysM: null, rank: null, tmrel: "0 drinks/day", foods: ["alcohol"], separate: true, note: "A SEPARATE GBD risk (not one of the 15 dietary risks); #1 risk factor for ages 15–49.", source: { cite: "GBD 2016 Alcohol Collaborators, Lancet 2018", id: "DOI:10.1016/S0140-6736(18)31310-2" } },
+};
+// Map burden onto each covered food (with a "shared across the category" flag where
+// one GBD risk spans several of our foods, so we never imply a single food owns the
+// whole category's burden).
+for (const _k in BURDEN) {
+  const _b = BURDEN[_k];
+  const _shared = _b.foods.length > 1;
+  for (const _id of _b.foods) {
+    if (ASSESSMENTS[_id]) {
+      ASSESSMENTS[_id].burden = Object.assign({}, _b, { key: _k, sharedAcross: _shared ? _b.risk.replace(/^Diet (low|high) in /, "") : null });
+    }
+  }
+}
+
 // Allow Node (tests) to import this data while the browser loads it as a script.
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, HOLDING_LIST, RESEARCHED_ON, MECHANISM };
+  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, HOLDING_LIST, RESEARCHED_ON, MECHANISM, BURDEN };
 }

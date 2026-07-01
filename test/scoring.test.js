@@ -477,3 +477,12 @@ test("optimalBand: contiguous near-best range at the same magnitude tier", () =>
   assert.equal(b2.hiX, 20);
   assert.equal(b2.single, true);
 });
+
+test("burdenTier: population-burden tiers from GBD attributable deaths (millions/yr)", () => {
+  assert.equal(S.burdenTier(3.0), "very-high");
+  assert.equal(S.burdenTier(2.0), "high");
+  assert.equal(S.burdenTier(0.5), "moderate");
+  assert.equal(S.burdenTier(0.1), "low");
+  assert.equal(S.burdenTier(null), "unquantified");
+  assert.equal(S.burdenTier(undefined), "unquantified");
+});

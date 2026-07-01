@@ -81,6 +81,35 @@
     if (!mag) return "";
     return "<span class='mag mag-" + mag + "' title='How much it moves the needle, across all its outcomes'>" + escapeHtml(Scoring.MAGNITUDE_LABEL[mag]) + "</span>";
   }
+  // Absolute population burden — a SEPARATE axis (GBD attributable burden), shown only
+  // where it's notable so the collapsed row isn't cluttered.
+  function burdenChip(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.burden || typeof Scoring === "undefined") return "";
+    const t = Scoring.burdenTier(a.burden.deathsM);
+    if (t === "unquantified" || t === "low") return "";
+    return "<span class='burden-chip burden-" + t + "' title='Population-scale impact (GBD attributable burden) — a separate axis from the per-serving effect'>◍ impact: " + escapeHtml(Scoring.BURDEN_LABEL[t]) + "</span>";
+  }
+  // Full "Population impact" block for the expanded card.
+  function burdenHtml(food) {
+    const a = typeof ASSESSMENTS !== "undefined" ? ASSESSMENTS[food.id] : null;
+    if (!a || !a.burden || typeof Scoring === "undefined") return "";
+    const b = a.burden, t = Scoring.burdenTier(b.deathsM);
+    const bits = [];
+    bits.push("GBD attributes <strong>" + escapeHtml(b.deaths) + "</strong> to <strong>" + escapeHtml(b.risk.toLowerCase()) + "</strong>" +
+      (b.rank ? " — the #" + b.rank + " dietary risk worldwide" : "") + (b.dalysM ? " (~" + b.dalysM + " million DALYs/yr)" : "") + ".");
+    if (b.tmrel) bits.push("Optimal intake ≈ " + escapeHtml(b.tmrel) + ".");
+    if (b.sharedAcross) bits.push("Shared across <em>" + escapeHtml(b.sharedAcross) + "</em> — not this food alone.");
+    if (b.separate) bits.push("Counted as a separate GBD risk, not one of the 15 dietary risks.");
+    if (b.note) bits.push(escapeHtml(b.note));
+    return (
+      "<div class='burden'>" +
+        "<h4 class='block-h'>Population impact <span class='block-sub'>— a separate axis: how much this matters at population scale, not per serving</span></h4>" +
+        "<p class='burden-line'><span class='burden-chip burden-" + t + "'>◍ " + escapeHtml(Scoring.BURDEN_LABEL[t]) + "</span> " + bits.join(" ") + "</p>" +
+        "<p class='burden-cite'>" + escapeHtml(b.source.cite) + " · estimated (GBD summary figures, not appendix-verified)</p>" +
+      "</div>"
+    );
+  }
 
   // "Not all" caveat — shown for entries whose members genuinely diverge
   // (categoryUniformity === "mixed"), so a heterogeneous category is never read as
@@ -787,6 +816,7 @@
             "<div class='card-meta'>" +
               (function () { var t = certaintyOf(food); return "<span class='tier " + t + "'>" + CERTAINTY_LABEL[t] + "</span>"; })() +
               magnitudeChip(food) +
+              burdenChip(food) +
               uniformityChip(food) +
               contestedChip(food) +
               doseChip(food) +
@@ -809,6 +839,7 @@
             outcomeVerdictsHtml(food) +
             lensSectionHtml(food) +
             doseResponseHtml(food) +
+            burdenHtml(food) +
             assessmentHtml(food) +
             studiesHtml(food) +
             considerationsHtml(food) +
@@ -1136,7 +1167,10 @@
         sectionHtml(tier(redEntries, 2), "Strong reasons to cut down", "a notch short, or large only in quantity") +
         sectionHtml(tier(redEntries, 3), "Also worth reducing", "smaller or less certain, but the evidence points to harm") +
         sectionHtml(redOutcome, "Neutral overall — but worth limiting for one risk", "no net verdict, but linked to a specific harm") +
-      "</div>";
+      "</div>" +
+      "<p class='hl-burden-note'>" +
+        "<strong>A different question — population impact.</strong> Some foods are modest per serving but huge in aggregate, because nearly everyone eats too little (or too much) of them. On <em>population burden</em>, GBD ranks eating too little <strong>whole grains (#2)</strong>, <strong>fruit (#3)</strong>, <strong>nuts (#4)</strong> and <strong>vegetables (#5)</strong> among the very top dietary risks worldwide — a different axis from the per-serving effect above. Each card's <em>Population impact</em> section shows it." +
+      "</p>";
 
     // Clicking a row jumps to that card and opens it.
     el.querySelectorAll(".hl-row").forEach(function (row) {

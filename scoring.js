@@ -365,6 +365,20 @@
     minimal: "Minimal effect",
   };
 
+  // Absolute population-burden tier — a SEPARATE axis from relative magnitude,
+  // derived from a dietary risk's GBD attributable deaths (millions/year). This
+  // answers "how much does it matter at population scale," not "how big per serving."
+  // Null (figure unverified in GBD summaries) → "unquantified", stated honestly.
+  var BURDEN_ORDER = { unquantified: -1, low: 0, moderate: 1, high: 2, "very-high": 3 };
+  var BURDEN_LABEL = { "very-high": "Very high", high: "High", moderate: "Moderate", low: "Lower", unquantified: "Not separately quantified" };
+  function burdenTier(deathsM) {
+    if (typeof deathsM !== "number") return "unquantified";
+    if (deathsM >= 2.5) return "very-high";
+    if (deathsM >= 1) return "high";
+    if (deathsM >= 0.3) return "moderate";
+    return "low";
+  }
+
   // Dose-response SHAPE vocabulary — plain-language labels for how risk changes
   // across the range of normal intake. A single RR is one point on this curve; the
   // shape is the rest of the story (the dose makes the poison; diminishing returns;
@@ -577,6 +591,9 @@
     BASIS_LABEL: BASIS_LABEL,
     BASIS_NOTE: BASIS_NOTE,
     MAGNITUDE_ORDER: MAGNITUDE_ORDER,
+    BURDEN_ORDER: BURDEN_ORDER,
+    BURDEN_LABEL: BURDEN_LABEL,
+    burdenTier: burdenTier,
     MAGNITUDE_LABEL: MAGNITUDE_LABEL,
     DOSE_SHAPE: DOSE_SHAPE,
     classifyDoseShape: classifyDoseShape,

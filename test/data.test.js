@@ -9,7 +9,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const S = require("../scoring.js");
-const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE, HOLDING_LIST, RESEARCHED_ON } = require("../data.js");
+const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE, HOLDING_LIST, RESEARCHED_ON, BURDEN } = require("../data.js");
 
 const EFFECTS = ["positive", "negative", "neutral"];
 const CERTAINTIES = ["high", "moderate", "low", "very-low"];
@@ -402,6 +402,23 @@ test("directionality is consistent with the verdict (CI excludes null AND effect
       assert.ok(!S.isDirectional(e), `${f.id}: neutral but evidence is directional by rule`);
     } else {
       assert.ok(S.isDirectional(e), `${f.id}: directional but evidence isn't (CI crosses null or effect below floor)`);
+    }
+  }
+});
+
+test("BURDEN (absolute population impact) is well-formed and maps to real foods", () => {
+  for (const k in BURDEN) {
+    const b = BURDEN[k];
+    assert.ok(b.risk && typeof b.risk === "string", `${k}: risk name`);
+    assert.ok(b.source && b.source.id, `${k}: source with id`);
+    assert.ok(["low", "high"].includes(b.direction), `${k}: direction`);
+    assert.ok(Array.isArray(b.foods) && b.foods.length, `${k}: foods list`);
+    assert.ok(b.deathsM === null || typeof b.deathsM === "number", `${k}: deathsM number|null`);
+    for (const id of b.foods) {
+      assert.ok(FOODS.some((f) => f.id === id), `${k}: unknown food ${id}`);
+      assert.ok(ASSESSMENTS[id].burden, `${id}: burden not attached`);
+      // shared risks flag it; single-food risks don't
+      assert.equal(!!ASSESSMENTS[id].burden.sharedAcross, b.foods.length > 1, `${id}: sharedAcross flag`);
     }
   }
 });

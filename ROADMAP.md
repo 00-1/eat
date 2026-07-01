@@ -601,7 +601,26 @@ reason** (the dose actually eaten), with no all-cause bump needed.
       rank on *population impact* — the axis they legitimately dominate — separately
       from relative effect.
 
-## 3b. Absolute population impact (beyond relative effect)  ⟶ *queued — the "real fix" for population importance (maintainer, 2026-07-01)*
+## 3b. Absolute population impact (beyond relative effect)  ⟶ *v1 SHIPPED (v0.45)*
+
+**v1 done (v0.45):** Added a `BURDEN` record (GBD 2017 dietary-risk attributable
+deaths/DALYs/TMREL, mapped to foods) as a **separate axis** from relative effect.
+Surfaced as a per-card "Population impact" block, a compact chip (notable only), and
+a summary callout — in a distinct indigo so it never reads as a verdict. `Scoring.
+burdenTier` derives the tier from attributable deaths. Honest limits baked in: shared
+risks (veg, fruit) say "shared across the category, not this food alone"; alcohol is
+flagged a separate GBD risk; figures are GBD-summary-level (verified:false), and foods
+with no clean GBD mapping (refined grains, berries-alone, most single veg) simply have
+no burden block. This delivers the payoff — whole grains/fruit/nuts/veg rank at the top
+on *burden* precisely because they're eaten universally, even though they're modest
+per serving.
+**Still to do:** appendix-verify the lower-tier death counts (processed meat, SSB,
+trans fat, legumes); optionally offer the shortlist under a "biggest population impact"
+ordering; resolve the GBD-2017-vs-2019 red-meat figure.
+
+---
+*Original plan (now largely implemented above):*
+## 3b(old). Absolute population impact (beyond relative effect)
 
 Magnitude is currently a *relative*-effect proxy, patched by the all-cause bump
 (§(b)) — a home-grown proxy with no established analog. The methodology review

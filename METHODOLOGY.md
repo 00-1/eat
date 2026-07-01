@@ -1,6 +1,6 @@
 # Methodology
 
-**Version 0.44 — living document.** This file is the canonical description of how
+**Version 0.45 — living document.** This file is the canonical description of how
 this project turns evidence into a *positive / negative / neutral* verdict for a
 food, with an explicit certainty rating. It is meant to be revised. When the
 method changes, bump `METHODOLOGY_VERSION` in `data.js` and record the change in
@@ -208,8 +208,10 @@ outcome where they genuinely act.
 >
 > **Two things magnitude deliberately is NOT.** (1) It is a *relative-effect*
 > proxy, not **absolute population burden** — how much a food matters at population
-> scale (weighting how common/severe the outcome is) is a *separate* axis that would
-> need GBD-style attributable fractions (queued, ROADMAP §3b). (2) A single headline
+> scale is a *separate* axis, now shown as the **"Population impact"** block on each
+> card (GBD attributable deaths/DALYs for the matching dietary risk; `Scoring.burdenTier`).
+> This is why whole grains/fruit/nuts/veg top the burden ranking despite modest
+> per-serving effects. (2) A single headline
 > RR is one point on a **dose-response curve**; how much a food helps *at a realistic
 > or optimal intake* is read off that curve (`Scoring.doseExtremeReading` /
 > `optimalBand`), not from the headline alone. These two — retiring the all-cause
@@ -475,6 +477,7 @@ Full source list and verification notes:
 
 | Version | Date | Change |
 |---------|------|--------|
+| 0.45 | 2026-07-01 | **Absolute population-burden axis (v1).** Added a separate "Population impact" axis (GBD 2017 dietary-risk attributable deaths/DALYs/TMREL, `BURDEN` in data.js, mapped to foods; `Scoring.burdenTier`) — distinct from per-serving relative effect. Surfaced as a per-card block, a compact chip, and a summary callout, in a distinct indigo so it never reads as a verdict. Honest by construction: shared risks (veg, fruit) say "shared across the category"; alcohol flagged as a separate GBD risk; figures are GBD-summary-level (unverified vs appendix); foods with no clean GBD mapping get no block. This is the honest home for the veg/whole-grains story — they dominate on *burden* (eaten universally) despite modest per-serving effects. |
 | 0.44 | 2026-07-01 | **Regrounded alcohol; avocado dose curve; wording.** **Alcohol → negative** (was neutral): the old "neutral" rested on the flattering low-volume-vs-occasional-drinker contrast; regrounded to realistic regular intake, all-cause mortality rises with dose (significant ≥25 g/day women / ≥45 g/day men, Zhao/Stockwell 2023) and cancer rises from the first drink — WHO 2023 "no safe level." Now sits in the main "Worth cutting down" list. Added an **avocado** CVD dose curve from the two real Pacheco 2022 figures (0.84 at ≥2/week, 0.80 per ½-serving/day) so it shows an amount rather than "—" (no invention — both are reported HRs; the curve is honestly flagged thin, as avocado is eaten infrequently in the cohorts). Renamed the outcome-specific summary section "Fine overall" → "Neutral overall" (a food that causes cancer isn't "fine"). |
 | 0.43 | 2026-07-01 | **Summary polish.** Neutral-overall foods with a per-outcome verdict now get their **own section** ("Fine overall — but worth limiting for one risk" / "…helps a specific outcome") instead of being mixed into the directional tiers (red meat → diabetes, alcohol → cancer). Added a dose curve for **French fries** (Mousavi 2025, monotonic → "no safe level") so every row shows an amount. Threshold-harm foods now read "safe below ~X" (clearer than the old "safe up to last-safe-point"). Made the summary panels a solid tint so the white rows are visible (was fading to white). |
 | 0.42 | 2026-07-01 | **Best/worst lists reconceived as tiered SUMMARIES.** The two panels are no longer elite top-10s: **Worth adding** now lists *every* positive-verdict food and **Worth cutting down** lists every negative-verdict food (plus neutral-headline foods with a negative per-outcome verdict — red meat→diabetes, alcohol→cancer — under that outcome), each split into three tiers (*surest+biggest* / *strong* / *also supported/worth reducing*). The "on the cusp" tier and the "Gold standard / Worst offenders" labels are retired. **Every row carries a per-food quantity** read off the dose curve: the near-optimal *band* to add ("best at ~28–45 g/day") or the highest safe dose to cut ("safe below ~X", or **"no safe level"** for monotonic-harm foods). Also removed the top page header (title/tagline) above the tabs. |

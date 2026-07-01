@@ -411,6 +411,22 @@ a { color: var(--accent); }
 .hl-row-meta { font-size: 0.72rem; color: var(--ink-soft); white-space: nowrap; opacity: 0.85; }
 @media (max-width: 720px) { .hl-row { gap: 2px 8px; } }
 
+/* Absolute population burden — a DIFFERENT axis, so it uses an indigo accent
+   distinct from the verdict/severity greens & reds (which mean direction). */
+.burden-chip {
+  font-size: 0.72rem; font-weight: 600; padding: 3px 9px; border-radius: 999px;
+  border: 1px solid #cfd1f0; background: #ecedfb; color: #43468f; white-space: nowrap;
+}
+.burden-chip.burden-very-high { border-color: #9aa0e0; background: #e2e4fb; }
+.burden { margin-top: 14px; }
+.burden-line { margin: 0; font-size: 0.88rem; color: var(--ink); line-height: 1.45; }
+.burden-line .burden-chip { margin-right: 4px; }
+.burden-cite { margin: 6px 0 0; font-size: 0.78rem; color: var(--ink-soft); }
+.hl-burden-note {
+  grid-column: 1 / -1; margin: 4px 0 0; font-size: 0.86rem; color: var(--ink); line-height: 1.5;
+  background: #ecedfb; border: 1px solid #d3d5f0; border-radius: 10px; padding: 12px 15px;
+}
+
 /* Explore: what-if criteria diff */
 .explore {
   border: 1px solid var(--line);

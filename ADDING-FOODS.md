@@ -191,6 +191,19 @@ entity (its own `evidence` → engine → verdict) and renders as an "as part of
 group" conclusion + a collapsed-row chip. Groups are classes of *edible whole
 foods* — **never** nutrient/component abstractions (no "fibre" group).
 
+## Step 3c — Absolute population burden (`BURDEN` in `data.js`)
+
+If the food maps to a **GBD dietary risk factor**, add/extend a `BURDEN` entry with the
+risk's attributable **deaths (`deathsM`, millions/yr) + DALYs + TMREL**, and list the
+food ids it covers. This is a **separate axis** from relative effect ("how much it
+matters at population scale"), rendered as the card's "Population impact" block. Rules:
+one GBD risk often spans several of our foods (e.g. "diet low in vegetables") — list
+them all; the loader flags `sharedAcross` so we never imply one food owns the whole
+category's burden. Leave `deathsM: null` where GBD's appendix figure can't be verified
+from public summaries (shown as "not separately quantified"). Foods with no clean GBD
+mapping (e.g. refined grains) simply get no burden block — don't invent one. All
+`verified: false` until appendix-checked. Source: GBD 2017 Diet Collaborators (Lancet 2019).
+
 ## Step 4 — Run the fixed exception checklist (`exceptions.js`)
 
 Run the food against **every** category — allergy, intolerance/malabsorption,
