@@ -47,6 +47,15 @@ is true **and** the effect clears a trivially-small floor (|ln RR| > 0.03). A
 significant-but-tiny association (e.g. butter, RR 1.0134) stays neutral by rule —
 record the honest `ciExcludesNull: true` and the engine keeps it neutral.
 
+**Pick the intake that honestly answers "what happens when you *add* this food."**
+The `pooledRR`/`intakeBasis` must reflect a **realistic amount actually consumed**,
+not the most flattering contrast. This is a real trap: alcohol looked *neutral* when
+anchored on the low-volume-vs-occasional-drinker contrast, but regrounded to realistic
+regular intake it's **negative** (mortality rises with dose; cancer from the first
+drink). If a food is eaten in large amounts (vegetables), don't judge it on one
+serving — see the dose curve below, which reads the effect across the whole range.
+When you re-anchor an existing food, add a `revisions` entry and bump its `researchedOn`.
+
 ## Step 1b — Provenance (`verified` + `sources`)
 
 Until a fact is checked against the actual paper, leave the food **unverified** (the
@@ -83,6 +92,27 @@ mechanism: {
 Also add the food to `RESEARCHED_ON` with the date of its last dedicated research pass
 (shown in the card footer so staleness is visible); update it each time you re-research.
 
+## Step 1d — Per-outcome verdicts (`ASSESSMENTS[id].outcomeVerdicts`)
+
+A single headline verdict sometimes hides that a food acts differently on different
+outcomes. Where the evidence supports a **specific** direction for a **specific**
+outcome that isn't the headline, record it:
+
+```js
+outcomeVerdicts: [{
+  outcome: "Type 2 diabetes", effect: "negative",
+  evidence: { pooledRR: 1.10, ciExcludesNull: true, /* …same fields as the headline… */ },
+  rationale: "…", doseCurve: { /* optional, same schema */ }, source: {…}, verified: true,
+}]
+```
+
+This is how **red meat** (neutral overall, **negative for type-2 diabetes**) and
+**alcohol** (its cancer verdict) carry an honest signal the headline would bury. The
+engine's `maxMagnitude` already reflects the strongest outcome, and the summary lists
+give a neutral-headline food with a directional per-outcome verdict its **own section**
+("Neutral overall — but worth limiting for one risk / helps a specific outcome"). Each
+per-outcome verdict is scored and sourced exactly like the headline.
+
 ## Step 2 — Let the engine compute the verdict's metadata
 
 `scoring.js` turns those facts into the eight sub-scores, total, **certainty tier**,
@@ -90,6 +120,23 @@ Also add the food to `RESEARCHED_ON` with the date of its last dedicated researc
 `effect` (positive / negative / neutral) from the observed direction under the
 guardrail (mechanism corroborates, never overrides observation), and set
 `certainty` to the tier the engine computes (the test enforces they match).
+
+**Magnitude is pure relative effect** (large/moderate/small/minimal from |ln RR|).
+There is no "all-cause-mortality bump" — that was retired (v0.41). Two things it is
+*not*, so don't try to encode them into the RR: **(a) population importance** — how
+much a food matters at population scale is a separate absolute-burden axis (queued,
+ROADMAP §3b); **(b) effect at high intake** — that comes from the dose curve (below),
+which is how a food eaten in quantity earns a bigger reading. Just record the honest
+relative effect at a realistic intake.
+
+**How the food lands in the "Worth adding / Worth cutting down" summaries** (all
+computed, nothing hand-placed): a `positive` food goes in *Worth adding*, a `negative`
+food in *Worth cutting down*, each in one of three tiers — *surest+biggest*
+(high certainty + large), *strong* (a notch short, **or** large only at high intake if
+source-verified), *also supported/worth reducing* (everything else directional). A
+**neutral** food with a directional per-outcome verdict lands in the separate
+"Neutral overall — but…" section. Each row shows a per-food **amount** from the dose
+curve (see below).
 
 ## Step 3 — Write the human-facing fields (`data.js` → `FOODS`)
 
@@ -103,12 +150,23 @@ guardrail (mechanism corroborates, never overrides observation), and set
 - `lastReviewed`, and a `revisions` entry whenever a later change moves a verdict.
 
 **Optional richer fields:**
-- `doseCurve` — where a published dose-response exists, record its points
-  `[{x, rr, lo?, hi?}]` + `unit`, `normalRange`, `outcome`, `shape`, `source`. The
-  `shape` is *derived* from the points by `Scoring.classifyDoseShape()` (a test
-  asserts your recorded shape matches), so the curve can't be mislabelled. Renders
-  as a small SVG + plain-language label ("Dose makes the poison", "Diminishing
-  returns", "Safe up to a point", …).
+- `doseCurve` — **record one wherever a dose-response exists** (it now drives real
+  UI, not just a chart). Points `[{x, rr, lo?, hi?}]` + `unit`, `normalRange`,
+  `outcome`, `shape`, `source`. The `shape` is *derived* by
+  `Scoring.classifyDoseShape()` (a test asserts your recorded shape matches). Two or
+  more real reported points is enough (you may map a reported "per-X-unit slope" to a
+  point — e.g. "per ½ serving/day HR 0.80" → a point at ½ serving/day; flag
+  `verified: false` and note any extrapolation). What the curve now feeds:
+    - the **best-case reading** on the card ("~28–45 g/day → 20–22% lower risk") and
+      the **amount** shown in the Worth-adding summary — the near-optimal *band*
+      (`Scoring.optimalBand`): the contiguous intake range holding the food's best
+      magnitude tier;
+    - the **safe dose** in the Worth-cutting summary — "safe below ~X" for a
+      threshold-harm curve, or **"no safe level"** for a monotonic-harm curve;
+    - **conditional shortlist promotion** — a food that only reaches a large effect at
+      high intake is promoted with the intake it needs (`ascensionDose`), *if*
+      source-verified. A food with no curve shows "—" for its amount (honest), so a
+      curve is worth adding for any food that could be a contender.
 - `components` — constituent "worries" (saturated fat, sugar) the food's **outcome
   adjudicates**: `[{name, worry, resolution}]`. A component is context, it **never
   sets the verdict** (direction of inference is whole-food → verdict, never
