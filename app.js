@@ -127,7 +127,7 @@
     return (
       " <span class='lean lean-" + lean + "' " +
       "title='The point estimate tilts this way, but the interval crosses no-effect — a non-significant lean, not a verdict.'>" +
-      arrow + " leaning " + word + "</span>"
+      arrow + " lean " + word + "</span>"
     );
   }
 
@@ -208,7 +208,7 @@
     const items = rows
       .map(function (r) {
         const leanTxt = r.effect === "neutral" && r.lean
-          ? " <span class='led-lean lean-" + r.lean + "'>leaning " + (r.lean === "positive" ? "good" : "bad") + "</span>" : "";
+          ? " <span class='led-lean lean-" + r.lean + "'>lean " + (r.lean === "positive" ? "good" : "bad") + "</span>" : "";
         const mark = r.dedicated ? "<span class='led-mark' title='Has its own dedicated evidence'>◆</span>" : "";
         return (
           "<li class='led-row led-" + r.effect + "'>" +
