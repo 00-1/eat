@@ -62,6 +62,27 @@ sources: {
 }
 ```
 
+## Step 1c — Mechanism record + research date (`ASSESSMENTS[id].mechanism`, `RESEARCHED_ON`)
+
+Separately from the observational `evidence`, record what **trials + mechanism alone**
+say — the input for the "Trials & mechanism only" lens and the per-food "Under a
+different lens" section. `experimentalDirection` is **derived** from this record's
+`direction`, so ground it, don't assert it:
+
+```js
+mechanism: {
+  direction: "negative",              // positive | negative | neutral | none
+  trial: "RCT/meta finding + design", // what the strongest trial/marker shows
+  mechanism: "validated pathway + which way it points",
+  source: { cite: "First author Year Journal", id: "PMID:… or DOI:…" },
+  confidence: "high|medium|low",
+  note: "optional — esp. where trials & mechanism CONTRADICT the observed outcome",
+}
+```
+
+Also add the food to `RESEARCHED_ON` with the date of its last dedicated research pass
+(shown in the card footer so staleness is visible); update it each time you re-research.
+
 ## Step 2 — Let the engine compute the verdict's metadata
 
 `scoring.js` turns those facts into the eight sub-scores, total, **certainty tier**,
@@ -92,6 +113,17 @@ guardrail (mechanism corroborates, never overrides observation), and set
   adjudicates**: `[{name, worry, resolution}]`. A component is context, it **never
   sets the verdict** (direction of inference is whole-food → verdict, never
   component → food).
+- `categoryUniformity` — `specific` (a single food) / `uniform` (a category whose
+  members behave alike) / `mixed` (members genuinely diverge). Assessed against one
+  fixed question for **every** item; the "not all" badge derives from `mixed`, and the
+  single champion (★/⚠) requires `specific`/`uniform`. Add a `uniformityNote` on `mixed`.
+- `contested` — a string, present only when credible high-quality sources genuinely
+  **disagree on direction** (≠ low certainty). Renders a ⚖ badge + a callout laying out
+  both sides. Use it instead of silently picking a side.
+- **Name convention:** put example members in a trailing bracket ending in "etc."
+  (e.g. `"Tree nuts (almonds, walnuts, etc.)"`) — the loader lifts them into a muted
+  "e.g. …" subtitle automatically. Brackets that *scope* the verdict (e.g. potatoes
+  "(boiled/baked)") don't end in "etc." and are kept in the name.
 
 ## Step 3b — Food-group membership (`groups.js`)
 
@@ -115,7 +147,13 @@ entry for the food, even if it's `[]`** ("assessed, nothing notable").
 Add the popular, **real, attributed** counter-arguments to the verdict (name the
 proponent/source — no strawmen), each with a `stance` (holds / partial / valid)
 and an honest `assessment` in the model's terms. If the critique has merit or
-matches our uncertainty, say so.
+matches our uncertainty, say so. Use `stance: "certainty"` for a special case — an
+argument that **agrees with our direction but disputes our confidence** (e.g. "why
+are you only Low on olive oil?"); we defend or revisit the certainty, not the verdict.
+
+Foods that aren't ready for a full entry go in `HOLDING_LIST` instead (name + `reason`
+"thin"/"unresearched" + note) — a lightweight "Not yet assessed" list, so a thin food
+isn't turned into an empty verdict-bearing card.
 
 ## Step 6 — Verify
 
