@@ -183,6 +183,12 @@ curve (see below).
   *concentrated evidence ≠ a member-specific effect*. Use `unknown` only when it truly
   hasn't been studied and doesn't clearly share the profile; `worse` for a member that
   genuinely diverges (e.g. cranberries eaten as sweetened juice).
+- `scope` — set in the `FOOD_SCOPE` map: `group` if the card is a whole **class** of
+  many foods (legumes, whole fruit, fried foods, berries…), `item` (the default) if it's
+  a single food. Group cards get a subtle "◎ food group" chip so a class verdict isn't
+  read as a peer of its own members (e.g. "Soy foods" sitting under "Legumes"). Only list
+  group-scope ids in `FOOD_SCOPE`. This is DISTINCT from `groups.js` (the super-groups a
+  food *belongs to*, shown as a secondary verdict) — `scope` labels what the card *is*.
 - `contested` — a string, present only when credible high-quality sources genuinely
   **disagree on direction** (≠ low certainty). Renders a ⚖ badge + a callout laying out
   both sides. Use it instead of silently picking a side.

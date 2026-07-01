@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.56";
+const METHODOLOGY_VERSION = "0.57";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -1981,6 +1981,24 @@ for (const _f of FOODS) {
   if (UNIFORMITY_NOTE[_f.id]) _f.uniformityNote = UNIFORMITY_NOTE[_f.id];
 }
 
+// Scope: is this card a SINGLE food ("item") or a whole CLASS of many foods
+// ("group")? Several cards are class-level verdicts (legumes, whole fruit, whole
+// grains, fried foods…) and sit in the same list as their own members (soy foods,
+// berries, French fries), which reads as if they were peers. Marking the scope lets
+// the UI say "this is a whole food group — the verdict is the average across its
+// members" so a class isn't mistaken for one food. This is DISTINCT from groups.js
+// (which records the super-groups a food BELONGS to, shown as a secondary verdict);
+// here we label what the card ITSELF is. Default is "item".
+const FOOD_SCOPE = {
+  "tree-nuts": "group", "legumes": "group", "whole-grains": "group",
+  "leafy-greens": "group", "cruciferous": "group", "whole-fruit": "group",
+  "fatty-fish": "group", "shellfish": "group", "berries": "group",
+  "soy": "group", "red-meat": "group", "poultry": "group",
+  "processed-meat": "group", "sugary-drinks": "group", "refined-grains": "group",
+  "ultra-processed": "group", "fried-foods": "group", "artificial-sweeteners": "group",
+};
+for (const _f of FOODS) { _f.scope = FOOD_SCOPE[_f.id] || "item"; }
+
 // Lift the redundant "(examples, etc.)" out of category food NAMES into a separate
 // `examples` field (shown as a muted "e.g. …" subtitle instead of cluttering the
 // title). Rule: only brackets that are an EXAMPLE LIST — i.e. end in "etc." — are
@@ -2076,5 +2094,5 @@ for (const _k in BURDEN) {
 
 // Allow Node (tests) to import this data while the browser loads it as a script.
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, HOLDING_LIST, RESEARCHED_ON, MECHANISM, BURDEN };
+  module.exports = { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, CATEGORY_UNIFORMITY, UNIFORMITY_NOTE, FOOD_SCOPE, HOLDING_LIST, RESEARCHED_ON, MECHANISM, BURDEN };
 }

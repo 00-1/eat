@@ -122,6 +122,13 @@
     const note = food.uniformityNote || "The verdict doesn't apply uniformly across this category — some members are much stronger than others.";
     return "<span class='notall' title='" + escapeHtml(note) + "'>◑ not all</span>";
   }
+  // Scope tag: flags a card that is a whole CLASS of foods (not a single item), so a
+  // group verdict (e.g. "Legumes") isn't read as a peer of its own members (e.g.
+  // "Soy foods"). Only shown on group-scope cards; a single food shows nothing.
+  function scopeChip(food) {
+    if (food.scope !== "group") return "";
+    return "<span class='scope-chip' title='This card is a whole food group — the verdict is the average across its members, which can differ. Some members may have their own card.'>◎ food group</span>";
+  }
   // Within-category guidance for a "not all" food. When we've recorded a per-member
   // breakdown (`members`), show it in full — each member tagged good / likely / weaker
   // / worse / unknown — so "which ones actually?" is answered, and "concentrated
@@ -852,6 +859,7 @@
             "<p class='summary'>" + escapeHtml(food.summary) + "</p>" +
             "<div class='card-meta'>" +
               (function () { var t = certaintyOf(food); return "<span class='tier " + t + "'>" + CERTAINTY_LABEL[t] + "</span>"; })() +
+              scopeChip(food) +
               magnitudeChip(food) +
               burdenChip(food) +
               uniformityChip(food) +
@@ -1163,7 +1171,7 @@
         : "<span class='hl-row-dose is-muted'>—</span>";
       // Pills (not-all, population impact) go on their OWN line under the name so they
       // never push the amount onto a new line; the name+amount top line stays clean.
-      const tags = notall + burdenChip(f);
+      const tags = scopeChip(f) + notall + burdenChip(f);
       return (
         "<button class='hl-row' data-food='" + escapeHtml(f.id) + "'>" +
           "<span class='hl-row-top'>" +
@@ -1207,7 +1215,7 @@
     const neutralRow = (f) =>
       "<button class='hl-row' data-food='" + escapeHtml(f.id) + "'>" +
         "<span class='hl-row-top'><span class='hl-row-name'>" + escapeHtml(f.name) + "</span></span>" +
-        (burdenChip(f) ? "<span class='hl-row-tags'>" + burdenChip(f) + "</span>" : "") +
+        ((scopeChip(f) + burdenChip(f)) ? "<span class='hl-row-tags'>" + scopeChip(f) + burdenChip(f) + "</span>" : "") +
       "</button>";
     const neutralSection = (list, title, note) => {
       if (!list.length) return "";

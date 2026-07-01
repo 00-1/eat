@@ -343,6 +343,20 @@ a { color: var(--accent); }
 }
 .notall-note .notall { flex: none; }
 
+/* Scope tag — marks a card that is a whole food GROUP (not a single item), so a
+   class verdict isn't read as a peer of its own members. Understated structural
+   label, not a warning. */
+.scope-chip {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px dashed var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
 /* Within-category member breakdown (the "which berries, actually?" table). */
 .members { margin: 12px 0; }
 .member-intro { margin: 0 0 8px; font-size: 0.88rem; color: var(--ink); }

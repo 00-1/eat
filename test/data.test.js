@@ -9,7 +9,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const S = require("../scoring.js");
-const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE, HOLDING_LIST, RESEARCHED_ON, BURDEN } = require("../data.js");
+const { FOODS, ASSESSMENTS, NUTRIGRADE_RUBRIC, METHODOLOGY_VERSION, UNIFORMITY_NOTE, FOOD_SCOPE, HOLDING_LIST, RESEARCHED_ON, BURDEN } = require("../data.js");
 
 const EFFECTS = ["positive", "negative", "neutral"];
 const CERTAINTIES = ["high", "moderate", "low", "very-low"];
@@ -346,6 +346,24 @@ test("every food records a valid categoryUniformity, evenly applied", () => {
     assert.ok(f, `uniformityNote for unknown food: ${id}`);
     assert.equal(f.categoryUniformity, "mixed", `uniformityNote on non-mixed food: ${id}`);
   }
+});
+
+test("every food records a valid scope, and FOOD_SCOPE maps only real foods", () => {
+  // scope distinguishes a whole-class card (group) from a single food (item), so a
+  // group verdict isn't shown as a peer of its own members.
+  const ok = ["group", "item"];
+  for (const f of FOODS) {
+    assert.ok(ok.includes(f.scope), `${f.id}: bad scope ${f.scope}`);
+  }
+  for (const id of Object.keys(FOOD_SCOPE || {})) {
+    assert.ok(FOODS.some((f) => f.id === id), `FOOD_SCOPE has unknown food: ${id}`);
+    assert.equal(FOOD_SCOPE[id], "group", `FOOD_SCOPE should only list group-scope foods: ${id}`);
+  }
+  // sanity: at least the flagged class verdicts are groups, and a clear single food is an item
+  const scopeOf = (id) => FOODS.find((f) => f.id === id).scope;
+  assert.equal(scopeOf("legumes"), "group");
+  assert.equal(scopeOf("whole-fruit"), "group");
+  assert.equal(scopeOf("eggs"), "item");
 });
 
 test("CHAMPION is reproducible and never a 'not all' entry", () => {
