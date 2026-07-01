@@ -34,7 +34,7 @@
  *   revisions     log of changes to the verdict over time
  */
 
-const METHODOLOGY_VERSION = "0.33";
+const METHODOLOGY_VERSION = "0.34";
 
 // Challenges are handled by the maintainer directly (verdicts are revised through
 // review with AI-assisted research) — there is no public submission form.
@@ -86,11 +86,11 @@ const FOODS = [
     name: "Legumes (beans, lentils, chickpeas, etc.)",
     category: "Legumes",
     effect: "positive",
-    certainty: "low",
-    outcomes: ["Heart disease", "Type 2 diabetes", "Longevity"],
-    summary: "Regular beans/lentils track with lower heart disease and diabetes risk.",
+    certainty: "moderate",
+    outcomes: ["All-cause mortality", "Heart disease"],
+    summary: "Regular beans/lentils track with modestly lower mortality — but the diabetes benefit is soy-specific, not from beans/lentils.",
     rationale:
-      "Consistent inverse associations across cohorts and cuisines, biological plausibility (fiber, low glycemic load), and convergence with trial data on intermediate markers (LDL, glycemic control) support a positive label — though the pooled evidence base is modest and the per-serving effect small, which caps certainty.",
+      "A large dose-response meta-analysis (Zargarzadeh 2023, ~1.14M) finds higher legume intake associated with lower all-cause mortality (HR 0.94), with a graded dose-response and biological plausibility (fibre, low glycemic load). The effect is small and confounding-prone (legumes mark a plant-forward pattern), so Moderate, not High. Note the once-assumed type-2-diabetes benefit does NOT hold for total legumes (Tang 2020, NS) — it is concentrated in SOY specifically — so diabetes is dropped from this verdict.",
     considerations: {
       substitution: "Strongest signal when legumes replace red/processed meat or refined grains.",
       confounding: "Often part of broader plant-forward patterns; hard to fully isolate.",
@@ -103,14 +103,28 @@ const FOODS = [
         search: "Darmadi-Blackberry legumes most important dietary predictor survival older 2004",
       },
       {
+        citation: "Zargarzadeh N, et al. Advances in Nutrition. 2023.",
+        type: "Dose-response meta-analysis (32 cohorts, ~1.14 million)",
+        finding: "Higher legume intake associated with lower all-cause mortality (HR 0.94, 0.91–0.98); 0.94 per 50 g/day.",
+        search: "Zargarzadeh legume intake all-cause mortality dose-response meta-analysis Advances in Nutrition 2023",
+      },
+      {
+        citation: "Tang J, et al. American J Clinical Nutrition. 2020.",
+        type: "Meta-analysis of cohorts (~566,000)",
+        finding: "Total legumes NOT significantly associated with type 2 diabetes (RR 0.95, 0.79–1.14); the protective signal is soy-specific.",
+        search: "Tang legume soy type 2 diabetes meta-analysis American Journal Clinical Nutrition 2020",
+      },
+      {
         citation: "Afshin A, et al. American J Clinical Nutrition. 2014.",
         type: "Meta-analysis of cohorts",
         finding: "4 servings/week of legumes associated with ~14% lower risk of coronary heart disease.",
         search: "Afshin nuts legumes coronary heart disease meta-analysis 2014",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "Source-verified + re-grounded (grounding pass): headline moved to all-cause mortality (HR 0.94, 0.91–0.98; Zargarzadeh 2023 Adv Nutr, ~1.14M), pooledRR 0.86→0.94, N 250k→1.14M → Low→Moderate. Dropped the type-2-diabetes claim: total legumes are NOT significantly associated with T2D (Tang 2020) — that benefit is soy-specific. Verdict stays positive." },
+    ],
   },
   {
     id: "whole-grains",
@@ -215,6 +229,7 @@ const FOODS = [
     lastReviewed: "2026-06-29",
     revisions: [
       { date: "2026-06-29", change: "Low → Moderate under v0.8: effect size re-based from per-serving to realistic 2–3 servings/day intake (RR ≈ 0.90). Now on the cusp of the Gold standard list. Verdict (positive) unchanged." },
+      { date: "2026-07-01", change: "Source-verified (grounding pass): all-cause mortality RR 0.90 (0.86–0.94) per 200 g/day fruit (Aune 2017 Int J Epidemiol, I²=44%); T2D 0.93 (0.88–0.99)/serving (Li 2014). Confirms 0.90; whole fruit only (juice raises T2D). Certainty/verdict unchanged." },
     ],
   },
   {
@@ -294,11 +309,11 @@ const FOODS = [
     name: "Yogurt",
     category: "Dairy",
     effect: "positive",
-    certainty: "low",
+    certainty: "moderate",
     outcomes: ["Type 2 diabetes"],
     summary: "Regular yogurt is linked to modestly lower type 2 diabetes risk.",
     rationale:
-      "Fairly consistent inverse association with diabetes across cohorts, but no strong trial evidence on hard outcomes and meaningful confounding — so 'Low' certainty.",
+      "A large dose-response meta-analysis (Gijsbers 2016, 22 cohorts, ~580k) finds a non-linear inverse association with type 2 diabetes, RR 0.86 at ~80 g/day (plateauing after). The big sample and graded dose-response lift this to Moderate, though it's a single outcome with no hard-outcome trials and is confounding-prone (yogurt eaters eat better overall).",
     considerations: {
       substitution: "Often replaces less healthy snacks; choosing unsweetened matters.",
       confounding: "Yogurt eaters tend to have healthier overall diets.",
@@ -311,9 +326,10 @@ const FOODS = [
         search: "Chen yogurt dairy type 2 diabetes BMC Medicine 2014",
       },
     ],
-    lastReviewed: "2026-06-29",
+    lastReviewed: "2026-07-01",
     revisions: [
       { date: "2026-06-29", change: "Renamed 'Yogurt & fermented dairy' → 'Yogurt': the entry's evidence is yogurt-specific (diabetes), and cheese — also a fermented dairy — is a separate item with a different verdict, so the old name double-counted it. 'Fermented dairy' is being modelled as a food group instead. Verdict unchanged." },
+      { date: "2026-07-01", change: "Source-verified + re-grounded on Gijsbers 2016 (AJCN dose-response, 22 cohorts, ~580k): T2D RR 0.86 at 80 g/day (non-linear plateau). pooledRR 0.82→0.86, N 200k→580k, dose-response some→graded → Low→Moderate. Verdict (positive) unchanged." },
     ],
   },
   {
@@ -370,8 +386,10 @@ const FOODS = [
         search: "Pacheco avocado consumption cardiovascular disease JAHA 2022",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "Source-verified (grounding pass): CVD HR 0.84 (0.75–0.95) at ≥2 servings/week (Pacheco 2022 JAHA, ~110k). Noted it's a 2-cohort pooled analysis, not a meta-analysis, and null for stroke — evidence base stays thin → Low. Verdict unchanged." },
+    ],
   },
 
   // ============================ NEGATIVE ============================
@@ -406,6 +424,7 @@ const FOODS = [
     lastReviewed: "2026-06-29",
     revisions: [
       { date: "2026-06-29", change: "Source-verified (grounding pass): colorectal-cancer RR 1.18 (1.10–1.28) per 50 g/day (Chan 2011 PLoS ONE; IARC 2015; WCRF/CUP 2017); dose curve now source-verified. Certainty (High) / verdict unchanged." },
+      { date: "2026-07-01", change: "Added a per-outcome coronary-heart-disease verdict: RR 1.42 (1.07–1.89) per 50 g/day (Micha 2010 Circulation, ~614k) — a large effect attributed largely to sodium/preservatives. (Unprocessed red meat is null for CHD, RR 1.00, in the same paper.)" },
     ],
   },
   {
@@ -502,8 +521,10 @@ const FOODS = [
         search: "Pagliai ultra-processed food health meta-analysis British Journal Nutrition 2021",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "Source-verified + re-grounded (grounding pass): all-cause mortality HR 1.15 (1.09–1.22) high vs low, 1.10 (1.04–1.16) per 10% increment (Liang 2025 Syst Rev, 18 cohorts, ~1.15M). pooledRR 1.25→1.15, N 300k→1.15M; heterogeneity corrected to high (I²=91%, direction-consistent). Certainty stays Moderate; verdict unchanged." },
+    ],
   },
   {
     id: "refined-grains",
@@ -559,8 +580,10 @@ const FOODS = [
         search: "Zhong egg dietary cholesterol cardiovascular disease mortality JAMA 2019",
       },
     ],
-    lastReviewed: "2026-06-28",
-    revisions: [],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "Source-verified (grounding pass): per 1 egg/day CVD RR 0.98 (0.93–1.03), ~1.72M participants (Drouin-Chartier 2020 BMJ). Confirms neutral; population-dependent (Asian cohorts inverse). Verdict/certainty unchanged." },
+    ],
   },
   {
     id: "red-meat",
@@ -947,8 +970,10 @@ const FOODS = [
         search: "Nachvak soy isoflavone mortality dose-response meta-analysis 2019",
       },
     ],
-    lastReviewed: "2026-06-29",
-    revisions: [],
+    lastReviewed: "2026-07-01",
+    revisions: [
+      { date: "2026-07-01", change: "Source-verified (grounding pass): cancer mortality RR 0.88 (0.79–0.99), ~331k, dose-responsive per 10 mg/day isoflavones (Nachvak 2019). Confirms the figure; strongest in high-intake Asian cohorts. Verdict/certainty unchanged." },
+    ],
   },
   {
     id: "cruciferous",
@@ -1103,8 +1128,13 @@ const ASSESSMENTS = {
     },
   },
   "legumes": {
-    evidence: { pooledRR: 0.86, ciExcludesNull: true, participants: 250000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~4 servings/week vs rarely" },
-    effectEstimate: "Pooled RR ≈ 0.86 for coronary heart disease at ~4 servings/week; interval excludes no-effect.",
+    evidence: { pooledRR: 0.94, ciExcludesNull: true, participants: 1141793, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest habitual intake (per 50 g/day: 0.94)" },
+    effectEstimate: "All-cause mortality HR 0.94 (95% CI 0.91–0.98) highest vs lowest, and 0.94 (0.89–0.99) per 50 g/day (Zargarzadeh 2023, 32 cohorts, ~1.14M). CHD is weaker (~0.90 high-vs-low; per-50g NS). NOTE: the type-2-diabetes benefit is SOY-specific — total legumes are not significantly associated with T2D (Tang 2020) — so it's dropped from the headline.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "All-cause mortality HR 0.94 (0.91–0.98) high vs low; 0.94 (0.89–0.99) per 50 g/day", cite: "Zargarzadeh 2023 Adv Nutr", id: "PMID:36811595" },
+      participants: { figure: "1,141,793 participants, 93,373 deaths, 32 cohorts", cite: "Zargarzadeh 2023 Adv Nutr", id: "PMID:36811595" },
+    },
   },
   "whole-grains": {
     evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 700000, heterogeneity: "high", directionallyConsistent: true, outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~90 g/day vs low intake" },
@@ -1126,8 +1156,13 @@ const ASSESSMENTS = {
     effectEstimate: "Part of the fruit-and-veg dose-response; lower CVD/mortality up to ~800 g/day F&V; interval excludes no-effect.",
   },
   "whole-fruit": {
-    evidence: { pooledRR: 0.9, ciExcludesNull: true, participants: 800000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~2–3 servings/day vs low intake" },
-    effectEstimate: "At ~2–3 servings/day, whole fruit tracks with ~10% lower mortality (RR ≈ 0.90) and lower type 2 diabetes; fruit JUICE goes the other way.",
+    evidence: { pooledRR: 0.9, ciExcludesNull: true, participants: 833234, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "per 200 g/day fruit (~2–3 servings/day)" },
+    effectEstimate: "All-cause mortality RR 0.90 (95% CI 0.86–0.94) per 200 g/day fruit (Aune 2017, I²=44%); type 2 diabetes RR 0.93 (0.88–0.99) per serving (Li 2014). Whole fruit only — fruit JUICE goes the other way (raises T2D; Muraki 2013). Berries/apples/grapes show the strongest signal.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "All-cause mortality RR 0.90 (0.86–0.94) per 200 g/day fruit; I²=44%", cite: "Aune 2017 Int J Epidemiol", id: "PMID:28338764" },
+      participants: { figure: "833,234 participants, 56,423 deaths, 16 cohorts (fruit & mortality)", cite: "Wang 2014 BMJ", id: "PMID:25073782" },
+    },
   },
   "fatty-fish": {
     evidence: { pooledRR: 0.85, ciExcludesNull: true, participants: 1140000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (~1–2 servings/week)" },
@@ -1148,8 +1183,13 @@ const ASSESSMENTS = {
     },
   },
   "yogurt": {
-    evidence: { pooledRR: 0.82, ciExcludesNull: true, participants: 200000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "~1 serving/day vs none" },
-    effectEstimate: "≈18% lower type 2 diabetes at 1 serving/day; single-outcome, no hard-outcome trials.",
+    evidence: { pooledRR: 0.86, ciExcludesNull: true, participants: 579832, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "80 g/day vs none (dose-response plateau)" },
+    effectEstimate: "Type 2 diabetes RR 0.86 (95% CI 0.83–0.90) at 80 g/day — a non-linear dose-response that plateaus (~14% lower, no added benefit above ~80 g/day; Gijsbers 2016, 22 cohorts). Single-outcome, confounding-prone (healthy-user), no hard-outcome trials.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "T2D RR 0.86 (0.83–0.90) at 80 g/day; non-linear, plateaus", cite: "Gijsbers 2016 Am J Clin Nutr", id: "PMID:26912494" },
+      participants: { figure: "579,832 individuals, 43,118 T2D cases, 22 cohorts", cite: "Gijsbers 2016 Am J Clin Nutr", id: "PMID:26912494" },
+    },
   },
   "coffee": {
     evidence: { pooledRR: 0.83, ciExcludesNull: true, participants: 520000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "3–4 cups/day vs none" },
@@ -1167,8 +1207,13 @@ const ASSESSMENTS = {
     },
   },
   "avocado": {
-    evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 110000, heterogeneity: "unknown", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "≥2 servings/week vs none" },
-    effectEstimate: "≈16–21% lower CVD at ≥2 servings/week; small evidence base, wide interval.",
+    evidence: { pooledRR: 0.84, ciExcludesNull: true, participants: 110487, heterogeneity: "unknown", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "≥2 servings/week vs never (per ½ serving/day: 0.80)" },
+    effectEstimate: "Total CVD HR 0.84 (95% CI 0.75–0.95) at ≥2 servings/week; per ½ serving/day 0.80 (0.71–0.91) (Pacheco 2022, two US cohorts). Note: a 2-cohort POOLED analysis, not a meta-analysis of independent studies; no association with stroke. Small evidence base → Low certainty.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Total CVD HR 0.84 (0.75–0.95), ≥2 servings/week; per ½ serving/day 0.80 (0.71–0.91)", cite: "Pacheco 2022 J Am Heart Assoc", id: "10.1161/JAHA.121.024014" },
+      participants: { figure: "110,487 across two US cohorts (NHS + HPFS), 14,274 CVD events over 30 yr", cite: "Pacheco 2022 J Am Heart Assoc", id: "10.1161/JAHA.121.024014" },
+    },
   },
   "processed-meat": {
     evidence: { pooledRR: 1.18, ciExcludesNull: true, participants: 800000, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "mechanism", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~50 g/day (about one serving) vs none" },
@@ -1184,6 +1229,15 @@ const ASSESSMENTS = {
       note: "Risk rises ~18% per 50 g/day with no clear safe threshold for cancer.",
       source: { cite: "Chan 2011 PLoS ONE; IARC/Bouvard 2015", id: "PMID:21674008" }, verified: true,
     },
+    outcomeVerdicts: [
+      {
+        outcome: "Coronary heart disease", effect: "negative",
+        evidence: { pooledRR: 1.42, ciExcludesNull: true, participants: 614062, heterogeneity: "high", outcomeType: "hard", doseResponse: "some", rctLevel: "mechanism", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "per 50 g/day" },
+        rationale: "Beyond colorectal cancer, processed meat raises coronary heart disease: RR 1.42 (95% CI 1.07–1.89) per 50 g/day (Micha 2010) — a large per-serving effect the authors attribute largely to sodium/preservatives (~4× the sodium of unprocessed red meat), not saturated fat. Contrast unprocessed red meat, which is null for CHD (RR 1.00).",
+        source: { cite: "Micha 2010 Circulation", id: "PMID:20479151" },
+        verified: true,
+      },
+    ],
   },
   "sugary-drinks": {
     evidence: { pooledRR: 1.26, ciExcludesNull: true, participants: 310819, heterogeneity: "low", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "1–2 servings/day vs none (highest vs lowest)" },
@@ -1210,16 +1264,26 @@ const ASSESSMENTS = {
     },
   },
   "ultra-processed": {
-    evidence: { pooledRR: 1.25, ciExcludesNull: true, participants: 300000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (cohort quintiles)" },
-    effectEstimate: "Higher mortality/CVD at highest intake; an inpatient RCT showed ~500 kcal/day overeating; category is heterogeneous.",
+    evidence: { pooledRR: 1.15, ciExcludesNull: true, participants: 1148387, heterogeneity: "high", directionallyConsistent: true, outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "highest vs lowest intake (per 10% increment: 1.10)" },
+    effectEstimate: "All-cause mortality HR 1.15 (95% CI 1.09–1.22) highest vs lowest, and 1.10 (1.04–1.16) per 10% increment of UPF (Liang 2025, 18 cohorts, ~1.15M) — linear dose-response. Very high heterogeneity (I²=91%); an inpatient RCT (Hall 2019) showed ~500 kcal/day overeating. Broad, heterogeneous category and high confounding (UPF tracks smoking/low SES).",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "All-cause mortality HR 1.15 (1.09–1.22) high vs low; 1.10 (1.04–1.16) per 10% increment; I²=91%", cite: "Liang 2025 Syst Rev", id: "10.1186/s13643-025-02800-8" },
+      participants: { figure: "1,148,387 participants, 173,107 deaths, 18 cohorts", cite: "Liang 2025 Syst Rev", id: "10.1186/s13643-025-02800-8" },
+    },
   },
   "refined-grains": {
     evidence: { pooledRR: 1.27, ciExcludesNull: true, participants: 137000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (cohort quintiles)" },
     effectEstimate: "Higher mortality/major CVD at highest intake (PURE); mostly relative to whole grains; region-dependent.",
   },
   "eggs": {
-    evidence: { pooledRR: 1, ciExcludesNull: false, participants: 1700000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "some", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "~1 egg/day vs rarely" },
-    effectEstimate: "Pooled RR ≈ 1.0 for CVD in the general population; interval spans no-effect → neutral; subgroups disagree.",
+    evidence: { pooledRR: 0.98, ciExcludesNull: false, participants: 1720108, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "none", rctLevel: "markers", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "per 1 additional egg/day" },
+    effectEstimate: "Per 1 egg/day, CVD RR 0.98 (95% CI 0.93–1.03) in the general population — interval spans no-effect → neutral (Drouin-Chartier 2020 BMJ, ~1.72M). Population-dependent (US/European ≈ null, Asian inverse ~0.92); diabetic-subgroup evidence is heterogeneous and contested.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "CVD RR 0.98 (0.93–1.03) per 1 egg/day; I²=62.3%", cite: "Drouin-Chartier 2020 BMJ", id: "PMID:32132002" },
+      participants: { figure: "1,720,108 participants, 139,195 CVD events (33 risk estimates)", cite: "Drouin-Chartier 2020 BMJ", id: "PMID:32132002" },
+    },
   },
   "red-meat": {
     evidence: { pooledRR: 1.1, ciExcludesNull: false, participants: 1000000, heterogeneity: "high", outcomeType: "hard", doseResponse: "none", rctLevel: "none", funding: "independent", pubBias: "untested", confoundingRisk: "high", intakeBasis: "highest vs lowest habitual intake" },
@@ -1326,8 +1390,13 @@ const ASSESSMENTS = {
     },
   },
   "soy": {
-    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 331000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "high vs low intake (~25–40 mg isoflavones/day)" },
-    effectEstimate: "≈12% lower cancer mortality (and ~10% lower all-cause for isoflavones) at higher intake; dose-responsive.",
+    evidence: { pooledRR: 0.88, ciExcludesNull: true, participants: 330826, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "markers", funding: "independent", pubBias: "untested", confoundingRisk: "moderate", intakeBasis: "highest vs lowest intake (~25–40 mg isoflavones/day)" },
+    effectEstimate: "Cancer mortality RR 0.88 (95% CI 0.79–0.99) highest vs lowest; each 10 mg/day isoflavones ~7% lower cancer mortality, ~10% lower all-cause (Nachvak 2019, 23 studies). Strongest in high-intake Asian cohorts; generalisability to low-intake Western diets uncertain.",
+    verified: true,
+    sources: {
+      pooledRR: { figure: "Cancer mortality RR 0.88 (0.79–0.99) high vs low; dose-response per 10 mg/day isoflavones", cite: "Nachvak 2019 J Acad Nutr Diet", id: "PMID:31278047" },
+      participants: { figure: "330,826 participants, 23 prospective studies", cite: "Nachvak 2019 J Acad Nutr Diet", id: "PMID:31278047" },
+    },
   },
   "cruciferous": {
     evidence: { pooledRR: 0.90, ciExcludesNull: true, participants: 2000000, heterogeneity: "moderate", outcomeType: "hard", doseResponse: "graded", rctLevel: "none", funding: "independent", pubBias: "tested-clean", confoundingRisk: "moderate", intakeBasis: "higher vs lower intake (within the F&V dose-response)" },

@@ -428,6 +428,16 @@ make a shaky input look authoritative, so this is the top priority.
         2023; magnitude Large→Moderate, stays Moderate; Asian-vs-Western noted;
         supplement RCTs null). Olive oil verified (Guasch-Ferré 2022, 0.81) and (a4)
         settled — PREDIMED is pattern-level, stays Low. **11 of 31 source-verified.**
+      - **Batch 4 done (v0.34):** background multi-agent research pass. Verified: eggs
+        (Drouin-Chartier 2020, 0.98 → neutral), avocado (Pacheco 2022, 0.84; a 2-cohort
+        pooled analysis), soy (Nachvak 2019, 0.88), whole fruit (Aune 2017, 0.90/200 g).
+        Re-grounded: yogurt 0.82→0.86 (Gijsbers 2016) Low→Moderate; legumes → all-cause
+        mortality 0.94 (Zargarzadeh 2023) Low→Moderate + **dropped the T2D claim (soy-
+        specific, Tang 2020)**; ultra-processed 1.25→1.15 (Liang 2025, I²=91%). Added
+        processed-meat CHD per-outcome verdict (Micha 2010, 1.42). **20 of 32 source-
+        verified.** Caveat: WebFetch to PubMed/journals is proxy-blocked, so figures are
+        snippet-cross-verified, not page-rendered. Left unclean: green tea, refined grains
+        (contested/industry-tinged), leafy-green/cruciferous all-cause (no clean subtype MA).
 - [x] **Cheese verdict — resolved BY THE RULE (v0.19), neutral → Positive (Low).**
       Not a maintainer call: Chen 2017's verified CVD RR 0.90 (0.82–0.99) excludes
       null, so the direction rule + multi-outcome rule produce Positive · Low
