@@ -131,11 +131,14 @@ a { color: var(--accent); }
   padding: 0;
   /* Row-major grid: cards read left-to-right across the top, then wrap to the next
      row. Pinned foods are ordered first, so opening up to three puts them across the
-     top row for side-by-side comparison. align-items:start keeps each card its
-     natural height (a tall, expanded pinned card doesn't stretch its neighbours). */
+     top row for side-by-side comparison. Masonry "box stacking" is restored via JS
+     (layoutMasonry): fine grid-auto-rows + a per-card grid-row span proportional to
+     its height, so shorter cards pack up beside a tall expanded/pinned card without
+     changing the order. align-items:start keeps each card at its own height. */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 16px;
+  grid-auto-rows: 8px;
   align-items: start;
 }
 .grid-hint { margin: -4px 0 14px; font-size: 0.82rem; color: var(--ink-soft); }
@@ -148,6 +151,7 @@ a { color: var(--accent); }
 }
 /* A pinned (expanded, top-row) card gets a subtle ring so it reads as pinned. */
 .card-pinned { border-color: var(--accent); box-shadow: 0 0 0 2px var(--pos-bg), var(--shadow); }
+.pin-badge { font-size: 0.95rem; line-height: 1; margin-left: 2px; flex: none; }
 
 /* Verdict / severity accent: a SOLID, SQUARE (non-curved) bar, inset from the
    rounded corners so it reads as a deliberate marker rather than a border that

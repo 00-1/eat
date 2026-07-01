@@ -748,6 +748,7 @@
               "</div>" +
               "<span class='badge " + eff + "'>" + EFFECT_LABEL[eff] + "</span>" +
               leanChip(eff, aEv) +
+              (isPinned ? "<span class='pin-badge' title='Pinned for comparison — click to unpin'>📌</span>" : "") +
             "</div>" +
             "<p class='summary'>" + escapeHtml(food.summary) + "</p>" +
             "<div class='card-meta'>" +
@@ -762,7 +763,7 @@
               ((food.outcomes || []).length
                 ? "<span class='outcomes' title='The outcome(s) this verdict is about'>for " + escapeHtml(food.outcomes.join(" · ")) + "</span>"
                 : "") +
-              "<span class='expand-hint'>" + (isPinned ? "Unpin ▴" : "Pin & compare ▾") + "</span>" +
+              "<span class='expand-hint'>" + (isPinned ? "📌 Unpin ▴" : "Pin & compare ▾") + "</span>" +
             "</div>" +
           "</summary>" +
           "<div class='card-detail'>" +
@@ -835,7 +836,43 @@
       filteredCount === total
         ? "Showing all " + total + " foods"
         : "Showing " + filteredCount + " of " + total + " foods";
+    layoutMasonry();
   }
+
+  // ---- Masonry packing (keeps DOM order + pinning) ----
+  // The grid reads row-major (pinned first, across the top). With uniform-height
+  // collapsed cards that packs fine, but a tall expanded/pinned card leaves a gap
+  // under the short cards beside it. We restore vertical "box stacking" WITHOUT
+  // reordering: each card is given a grid-row span proportional to its own height,
+  // so shorter cards pack up into the space beside a tall one. Order is untouched
+  // (default sparse row auto-flow), so pinning and sort order still hold.
+  function layoutMasonry() {
+    if (!listEl) return;
+    const cs = getComputedStyle(listEl);
+    if (cs.display !== "grid") return;
+    const rowUnit = parseFloat(cs.gridAutoRows) || 8;
+    const rowGap = parseFloat(cs.rowGap) || 0;
+    const cards = listEl.children;
+    // Measure with spans reset so each card reports its natural content height.
+    for (let i = 0; i < cards.length; i++) cards[i].style.gridRowEnd = "";
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+      const inner = card.firstElementChild || card; // the <details>, unclipped by the card's overflow
+      const h = inner.getBoundingClientRect().height;
+      if (!h) continue;
+      const span = Math.max(1, Math.ceil((h + rowGap) / (rowUnit + rowGap)));
+      card.style.gridRowEnd = "span " + span;
+    }
+  }
+  let _masonryRAF = 0;
+  function scheduleMasonry() {
+    if (_masonryRAF) cancelAnimationFrame(_masonryRAF);
+    _masonryRAF = requestAnimationFrame(function () { _masonryRAF = 0; layoutMasonry(); });
+  }
+  window.addEventListener("resize", scheduleMasonry);
+  // Fonts/late layout can change heights after first paint — re-pack once settled.
+  window.addEventListener("load", scheduleMasonry);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleMasonry);
 
   // ---- Provenance: are a food's recorded facts source-verified yet? ----
   function isVerified(food) {
