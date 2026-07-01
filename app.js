@@ -88,7 +88,7 @@
     if (!a || !a.burden || typeof Scoring === "undefined") return "";
     const t = Scoring.burdenTier(a.burden.deathsM);
     if (t === "unquantified" || t === "low") return "";
-    return "<span class='burden-chip burden-" + t + "' title='Population-scale impact (GBD attributable burden) — a separate axis from the per-serving effect'>◍ impact: " + escapeHtml(Scoring.BURDEN_LABEL[t]) + "</span>";
+    return "<span class='burden-chip burden-" + t + "' title='How much this matters at POPULATION scale (GBD attributable burden) — a different axis from the per-serving effect'>◍ " + escapeHtml(Scoring.BURDEN_LABEL[t].toLowerCase()) + " population impact</span>";
   }
   // Full "Population impact" block for the expanded card.
   function burdenHtml(food) {
